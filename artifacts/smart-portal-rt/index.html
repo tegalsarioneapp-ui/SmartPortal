@@ -7,6 +7,12 @@
     <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Portal RT 005">
+    <meta name="application-name" content="Portal RT 005">
+    <meta name="description" content="Sistem Manajemen Warga RT 005 RW 012 Tegalsari, Candisari, Semarang">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="Lambang_Kota_Semarang.png">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <title>Smart Portal RT 005 Tegalsari</title>
     <script src="_sync.js"></script>
     
@@ -3000,6 +3006,45 @@ html[data-theme="dark"] select option {
         
     
 
+
+    <script>
+    // === SERVICE WORKER (PWA) ===
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                console.info('[SW] Registered, scope:', reg.scope);
+            }).catch(function(err) {
+                console.warn('[SW] Registration failed:', err);
+            });
+        });
+    }
+
+    // === PWA INSTALL PROMPT ===
+    var _pwaInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        _pwaInstallPrompt = e;
+        // Show install button after 3 seconds if not already installed
+        setTimeout(function() {
+            var btn = document.getElementById('pwa-install-btn');
+            if (btn) btn.style.display = 'flex';
+        }, 3000);
+    });
+    window.triggerPWAInstall = function() {
+        if (!_pwaInstallPrompt) return;
+        _pwaInstallPrompt.prompt();
+        _pwaInstallPrompt.userChoice.then(function(result) {
+            var btn = document.getElementById('pwa-install-btn');
+            if (btn) btn.style.display = 'none';
+            _pwaInstallPrompt = null;
+        });
+    };
+    window.addEventListener('appinstalled', function() {
+        var btn = document.getElementById('pwa-install-btn');
+        if (btn) btn.style.display = 'none';
+        if (typeof Toast !== 'undefined') Toast.fire({icon:'success', title:'Aplikasi berhasil diinstall!'});
+    });
+    </script>
 </head>
 <body>
 
@@ -3793,12 +3838,25 @@ html[data-theme="dark"] select option {
                     <button class="btn-submit bg-blue" onclick="simpanPengaturanSistem()">Simpan Pengaturan</button>
                 </div>
             </div>
-            <div class="card" style="text-align: center;">
-                <h3>Database Backup & Restore</h3>
-                <button class="btn-action bg-green" onclick="exportData()">Download Backup (JSON)</button>
-                <input type="file" id="import_file" accept=".json" style="display:none" onchange="prosesImportData(event)">
-                <button class="btn-action bg-blue" onclick="document.getElementById('import_file').click()">Restore Data</button>
-                
+            <div class="card">
+                <div class="card-title-header" style="margin-bottom:16px;">
+                    <h3><i class="fa-solid fa-database" style="color:#10b981;"></i> Backup &amp; Restore Database</h3>
+                    <span id="backup-row-count" style="font-size:0.8rem;color:#64748b;"></span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;">
+                    <div style="background:var(--card-bg,#f8fafc);border:1px solid #e2e8f0;border-radius:12px;padding:16px;text-align:left;">
+                        <div style="font-weight:700;color:#10b981;margin-bottom:6px;"><i class="fa-solid fa-cloud-arrow-down"></i> Download Backup</div>
+                        <div style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Unduh seluruh data dari server PostgreSQL dalam format JSON terenkripsi.</div>
+                        <button class="btn-action bg-green" style="width:100%;margin:0;" onclick="exportData()"><i class="fa-solid fa-download"></i> Download Backup (JSON)</button>
+                    </div>
+                    <div style="background:var(--card-bg,#f8fafc);border:1px solid #e2e8f0;border-radius:12px;padding:16px;text-align:left;">
+                        <div style="font-weight:700;color:#3b82f6;margin-bottom:6px;"><i class="fa-solid fa-cloud-arrow-up"></i> Restore Data</div>
+                        <div style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Pulihkan data dari file backup JSON ke server PostgreSQL. Semua perangkat akan diperbarui.</div>
+                        <input type="file" id="import_file" accept=".json" style="display:none" onchange="prosesImportData(event)">
+                        <button class="btn-action bg-blue" style="width:100%;margin:0;" onclick="document.getElementById('import_file').click()"><i class="fa-solid fa-upload"></i> Restore Data (JSON)</button>
+                    </div>
+                </div>
+                <p style="font-size:0.78rem;color:#94a3b8;text-align:center;margin-top:8px;"><i class="fa-solid fa-shield-halved"></i> Backup diambil langsung dari PostgreSQL — bukan localStorage. Aman untuk multi-device.</p>
                 <hr style="border-top:1px dashed #cbd5e1; margin: 30px 0 20px 0;">
                 <h3 style="color: var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> Zona Berbahaya (Reset Database)</h3>
                 <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Fitur ini digunakan untuk menghapus data spesifik atau mereset aplikasi ke pengaturan pabrik.</p>
@@ -6860,18 +6918,91 @@ html[data-theme="dark"] select option {
         if(document.getElementById('pdf-nama-rw')) document.getElementById('pdf-nama-rw').innerText = s.namaRW;
         if(document.getElementById('pdf-nama-rt')) document.getElementById('pdf-nama-rt').innerText = s.namaRT;
     };
-    window.exportData = function() {
-        let data = {}; for (let i = 0; i < localStorage.length; i++) { let key = localStorage.key(i); data[key] = localStorage.getItem(key); }
-        let blob = new Blob([JSON.stringify(data)], {type: 'application/json'}); let a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-        a.download = `Backup_Database_RT005_${new Date().toISOString().slice(0,10)}.json`; a.click();
+    // === BACKUP & RESTORE DARI SERVER (POSTGRESQL) ===
+    window.exportData = async function() {
+        try {
+            Swal.fire({ title: 'Mengunduh backup...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            const resp = await fetch('/api/kv', { cache: 'no-store' });
+            if (!resp.ok) throw new Error('Gagal menghubungi server');
+            const data = await resp.json();
+            const entries = data.entries || [];
+            const backup = {
+                _meta: {
+                    version: 2,
+                    source: 'postgresql',
+                    exportedAt: new Date().toISOString(),
+                    app: 'Smart Portal RT 005 Tegalsari',
+                    rowCount: entries.length
+                },
+                entries: entries
+            };
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `Backup_SmartPortalRT005_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            Swal.fire({
+                icon: 'success',
+                title: 'Backup Berhasil!',
+                html: `<b>${entries.length} data</b> berhasil diunduh dari server PostgreSQL.<br><small style="color:#64748b">File: ${a.download}</small>`,
+                confirmButtonColor: '#10b981'
+            });
+        } catch(err) {
+            Swal.fire('Gagal', 'Tidak bisa mengunduh backup: ' + err.message, 'error');
+        }
     };
     window.prosesImportData = function(e) {
-        let file = e.target.files[0]; if (!file) return; let reader = new FileReader();
-        reader.onload = function(evt) {
-            try { let data = JSON.parse(evt.target.result); Object.keys(data).forEach(k => localStorage.setItem(k, data[k])); syncSemuaData(); Swal.fire('Berhasil', 'Database sukses di-restore.', 'success'); } 
-            catch(err) { Swal.fire('Error', 'File backup rusak atau tidak valid.', 'error'); }
+        let file = e.target.files[0]; if (!file) return;
+        let reader = new FileReader();
+        reader.onload = async function(evt) {
+            try {
+                let parsed = JSON.parse(evt.target.result);
+                let entries = [];
+                if (parsed._meta && parsed._meta.version === 2 && Array.isArray(parsed.entries)) {
+                    entries = parsed.entries;
+                } else if (typeof parsed === 'object' && !Array.isArray(parsed)) {
+                    entries = Object.entries(parsed).map(([key, value]) => ({ key, value }));
+                } else {
+                    throw new Error('Format file tidak dikenali');
+                }
+                const LOCAL_ONLY_KEYS = ['isLoggedIn','loggedInAs','loggedInWarga','gt_theme','gt_notif_read'];
+                entries = entries.filter(en => en.key && !LOCAL_ONLY_KEYS.includes(en.key) && !en.key.startsWith('gt_local_'));
+                if (!entries.length) throw new Error('Tidak ada data untuk di-restore');
+
+                const confirm = await Swal.fire({
+                    icon: 'warning',
+                    title: 'Konfirmasi Restore',
+                    html: `Akan me-restore <b>${entries.length} data</b> ke server.<br>Data yang ada di server akan <b>ditimpa</b>.<br><br>Lanjutkan?`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Restore!',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#3b82f6'
+                });
+                if (!confirm.isConfirmed) { e.target.value = ''; return; }
+
+                Swal.fire({ title: 'Me-restore data...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                const BATCH = 50;
+                for (let i = 0; i < entries.length; i += BATCH) {
+                    const batch = entries.slice(i, i + BATCH);
+                    await fetch('/api/kv', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ writes: batch, originId: 'restore-' + Date.now() })
+                    });
+                }
+                entries.forEach(entry => { try { localStorage.setItem(entry.key, entry.value); } catch(_){} });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Restore Berhasil!',
+                    html: `<b>${entries.length} data</b> berhasil di-restore ke server PostgreSQL.<br>Semua perangkat akan menerima data ini secara otomatis.`,
+                    confirmButtonColor: '#10b981'
+                });
+            } catch(err) {
+                Swal.fire('Error', 'File backup rusak atau tidak valid: ' + err.message, 'error');
+            }
         };
-        reader.readAsText(file); e.target.value = '';
+        reader.readAsText(file);
+        e.target.value = '';
     };
     window.bukaMenuResetData = function() {
         Swal.fire({
@@ -8691,5 +8822,11 @@ function updateSemuaWaktu() {
   tryWrap();
 })();
 </script>
+
+<!-- PWA Install Button -->
+<div id="pwa-install-btn" style="display:none;position:fixed;bottom:70px;right:16px;z-index:9997;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;border-radius:16px;padding:10px 16px;font-size:0.82rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(29,78,216,0.4);align-items:center;gap:8px;transition:opacity 0.3s;" onclick="triggerPWAInstall()">
+  <i class="fa-solid fa-download"></i> Install Aplikasi
+</div>
+
 </body>
 </html>
