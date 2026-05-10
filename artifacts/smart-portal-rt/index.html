@@ -5105,7 +5105,18 @@ html[data-theme="dark"] select option {
           // === 2. LOGIN & AUTENTIKASI ===
     window.toggleUnivPass = function() { let p = document.getElementById('univ-pass'), i = document.getElementById('univ-eye'); if(p.type === 'password') { p.type = 'text'; i.classList.replace('fa-eye-slash','fa-eye'); i.style.color = 'var(--primary-blue)'; } else { p.type = 'password'; i.classList.replace('fa-eye','fa-eye-slash'); i.style.color = '#94a3b8'; } };
     window.lupaPassword = function() { Swal.fire({ icon: 'info', title: 'Lupa Password?', text: 'Hubungi Sekretaris RT untuk mereset password.', confirmButtonColor: '#0ea5e9' }); };
-    window.logout = function() { loggedInWarga = null; location.reload(); };
+    window.logout = function() {
+        loggedInWarga = null;
+        // Flush semua pending writes ke server SEBELUM reload
+        // agar data tidak hilang akibat debounce yang belum selesai
+        var doReload = function(){ location.reload(); };
+        if(typeof window.GT_FLUSH_NOW === 'function'){
+            window.GT_FLUSH_NOW().then(doReload).catch(doReload);
+            setTimeout(doReload, 2000); // fallback: reload dalam 2 detik jika flush gagal
+        } else {
+            doReload();
+        }
+    };
     window.loginSebagaiTamu = function() { loggedInWarga = { id: 'guest_'+Date.now(), nama: "Tamu / Pengunjung", isGuest: true }; window.BukaPortal('warga'); };
     
     window.prosesLoginUniversal = function(e) {
@@ -5307,7 +5318,10 @@ html[data-theme="dark"] select option {
             localStorage.setItem('data_warga_mandiri', JSON.stringify(dbMandiri));
             Swal.fire({icon:'success', title:'Aktivasi Selesai!', text:'Silakan login kembali dengan sandi baru.', confirmButtonColor: '#10b981'}).then(async function(){
                 try { if (typeof window.tawarkanAktivasiBiometrik === 'function') { await window.tawarkanAktivasiBiometrik(window.loggedInWarga); } } catch(_){}
-                location.reload();
+                if(typeof window.GT_FLUSH_NOW === 'function'){
+                    window.GT_FLUSH_NOW().finally(function(){ location.reload(); });
+                    setTimeout(function(){ location.reload(); }, 2000);
+                } else { location.reload(); }
             });
             return;
         }

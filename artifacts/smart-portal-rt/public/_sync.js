@@ -1,4 +1,4 @@
-// SMART PORTAL RT _sync.js (CLEAN FIXED VERSION)
+// SMART PORTAL RT _sync.js
 (function(){
     if(window.GT_SYNC_INSTALLED) return;
     window.GT_SYNC_INSTALLED = true;
@@ -9,7 +9,7 @@
     var AUDIT_URL = '/api/audit';
     var POLL_MS = 8000;
     var POLL_MS_NO_SSE = 2500;
-    var DEBOUNCE_MS = 500;
+    var DEBOUNCE_MS = 100;
     var ECHO_GUARD_MS = 2500;
     
     var ORIGIN_ID = 'o-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,8);
@@ -45,7 +45,7 @@
         var el = document.createElement('div');
         el.id = 'gt_sync_overlay';
         el.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#fff;display:flex;align-items:center;justify-content:center';
-        el.innerHTML = '<div><div id="gt_sync_msg">Memuat data dari server...</div><button id="gt_sync_retry" style="display:none">Coba lagi</button></div>';
+        el.innerHTML = '<div style="text-align:center"><div id="gt_sync_msg" style="font-size:1.1rem;margin-bottom:12px">Memuat data dari server...</div><button id="gt_sync_retry" style="display:none;padding:8px 20px;background:#3b82f6;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:1rem">Coba lagi</button></div>';
         host.appendChild(el);
         bootOverlay = el;
         el.querySelector('#gt_sync_retry').onclick = function(){ bootLoad(); };
@@ -66,25 +66,15 @@
     
     function runRefreshers(){
         var names = [
-            // Dashboard & data warga
             'loadDashboardWarga','loadTabelKKAdmin','populateDropdownWarga',
-            // Pengaturan sistem
             'loadPengaturan',
-            // Profil & arisan warga
             'loadProfilPribadiWarga','loadFormArisan',
-            // Mutasi & pengurus
             'loadMutasi','loadPengurus',
-            // Berita & kegiatan
             'loadBeritaAdmin','loadBeritaWarga','loadKegiatan',
-            // Aduan
             'loadAduanAdmin','loadAduanWarga',
-            // Kas & keuangan
             'loadKasBendahara','loadAnalisaUangMeja','loadMatriksIuran','loadArsipBA',
-            // Koperasi
             'loadKoperasiData','loadKopLaporan',
-            // Darurat & surat
             'loadDaruratAdmin','loadDaruratWarga','loadSuratAdmin','loadSuratWarga',
-            // Notulen & iuran warga
             'loadNotulenAdmin','loadIuranPribadiWarga'
         ];
         for(var i=0; i<names.length; i++){
@@ -123,7 +113,7 @@
         fetch(API_BASE, {headers:{Accept:'application/json'}, cache:'no-store'})
         .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
         .then(function(data){ applyBootData(data, true); })
-        .catch(function(){ setBootStatus('error','Tidak bisa menghubungi server'); });
+        .catch(function(){ setBootStatus('error','Tidak bisa menghubungi server. Periksa koneksi internet.'); });
     }
     
     function bootLoad(){
@@ -151,30 +141,43 @@
     var lastLocalWrite = {};
     var flushTimer = null;
     var flushing = false;
+    var flushResolvers = [];
     
     function pendingCount(){ var n=0; for(var k in pendingWrites) n++; return n; }
+    
+    function notifyFlushResolvers(){
+        var r = flushResolvers.slice();
+        flushResolvers = [];
+        for(var i=0; i<r.length; i++){ try{ r[i](); }catch(_){} }
+    }
     
     function queueWrite(key, val){
         pendingWrites[key] = val;
         lastLocalWrite[key] = {value:val, ts:Date.now()};
-        if(!flushTimer) flushTimer = setTimeout(flush, DEBOUNCE_MS);
+        if(flushTimer) clearTimeout(flushTimer);
+        flushTimer = setTimeout(flush, DEBOUNCE_MS);
     }
     
     function flush(){
         flushTimer = null;
-        if(flushing) return;
+        if(flushing){
+            setTimeout(flush, 200);
+            return;
+        }
         var keys = Object.keys(pendingWrites);
-        if(!keys.length) return;
+        if(!keys.length){
+            notifyFlushResolvers();
+            return;
+        }
         var writes = [];
         var deletes = [];
         
         for(var i=0; i<keys.length; i++){
             var v = pendingWrites[keys[i]];
-            if(v === null) {
+            if(v === null){
                 deletes.push(keys[i]);
             } else {
-                // BUG FIXED: Menggunakan keys[i] bukan keys
-                writes.push({key: keys[i], value: v}); 
+                writes.push({key: keys[i], value: v});
             }
         }
         
@@ -189,14 +192,72 @@
             if(resp.serverTime) serverTime = resp.serverTime;
             for(var i=0; i<keys.length; i++) delete pendingWrites[keys[i]];
             setPill({mode:'online'});
+            notifyFlushResolvers();
         })
-        .catch(function(){ setPill({mode:'offline'}); })
-        .finally(function(){ flushing = false; if(pendingCount()) setTimeout(flush, 800); });
+        .catch(function(){ setPill({mode:'offline'}); notifyFlushResolvers(); })
+        .finally(function(){ flushing = false; if(pendingCount()) setTimeout(flush, 200); });
     }
+
+    // Kirim pending writes sebelum halaman ditutup/reload menggunakan sendBeacon
+    // Ini mencegah kehilangan data saat logout (location.reload())
+    function flushViaBeacon(){
+        var keys = Object.keys(pendingWrites);
+        if(!keys.length) return;
+        var writes = [];
+        var deletes = [];
+        for(var i=0; i<keys.length; i++){
+            var v = pendingWrites[keys[i]];
+            if(v === null){ deletes.push(keys[i]); }
+            else { writes.push({key: keys[i], value: v}); }
+        }
+        if(!writes.length && !deletes.length) return;
+        var payload = JSON.stringify({writes: writes, deletes: deletes, originId: ORIGIN_ID});
+        if(navigator.sendBeacon){
+            navigator.sendBeacon(API_BASE, new Blob([payload], {type:'application/json'}));
+        }
+    }
+
+    window.addEventListener('beforeunload', function(){
+        if(flushTimer){ clearTimeout(flushTimer); flushTimer = null; }
+        flushViaBeacon();
+    });
     
-    ls.setItem = function(k, v){ origSet(k, String(v)); if(!isLocalOnly(k)) queueWrite(k, String(v)); };
-    ls.removeItem = function(k){ origRemove(k); if(!isLocalOnly(k)) queueWrite(k, null); };
-    ls.clear = function(){ origClear(); };
+    ls.setItem = function(k, v){
+        origSet(k, String(v));
+        if(!isLocalOnly(k)) queueWrite(k, String(v));
+    };
+    ls.removeItem = function(k){
+        origRemove(k);
+        if(!isLocalOnly(k)) queueWrite(k, null);
+    };
+    ls.clear = function(){
+        // Kumpulkan semua key yang perlu dihapus dari server sebelum clear
+        var toDelete = [];
+        for(var i=0; i<ls.length; i++){
+            var k = ls.key(i);
+            if(k && !isLocalOnly(k)) toDelete.push(k);
+        }
+        origClear();
+        // Queue semua delete ke server
+        for(var j=0; j<toDelete.length; j++){
+            pendingWrites[toDelete[j]] = null;
+        }
+        if(toDelete.length){
+            if(flushTimer) clearTimeout(flushTimer);
+            flushTimer = setTimeout(flush, DEBOUNCE_MS);
+        }
+    };
+
+    // Fungsi flush paksa yang mengembalikan Promise
+    // Dipakai oleh logout agar data terkirim dulu sebelum reload
+    window.GT_FLUSH_NOW = function(){
+        if(flushTimer){ clearTimeout(flushTimer); flushTimer = null; }
+        if(!pendingCount()) return Promise.resolve();
+        return new Promise(function(resolve){
+            flushResolvers.push(resolve);
+            flush();
+        });
+    };
     
     function applyRemote(entries){
         var changed = false;
@@ -222,11 +283,11 @@
             var map = {};
             for(var i=0; i<data.keys.length; i++) map[data.keys[i]] = 1;
             var del = [];
-            for(i=0; i<ls.length; i++){
+            for(var i=0; i<ls.length; i++){
                 var k = ls.key(i);
                 if(k && !isLocalOnly(k) && !map[k]) del.push(k);
             }
-            for(i=0; i<del.length; i++) origRemove(del[i]);
+            for(var i=0; i<del.length; i++) origRemove(del[i]);
         });
     }
     
@@ -245,20 +306,16 @@
             if(data && data.serverTime) serverTime = data.serverTime;
             if(data && data.entries) applyRemote(data.entries);
         })
-        .catch(function(){ /* network error — just retry next interval */ })
+        .catch(function(){ })
         .finally(function(){ polling = false; });
     }
 
-    // Adaptive polling: fast when SSE is unavailable, slow when SSE is active.
-    // POLL_MS_NO_SSE (2500ms) ensures changes appear within 2-3 seconds even
-    // if the SSE stream is broken or not supported by an intermediate proxy.
     var pollTimer = null;
     var sseActive = false;
     function startPolling(ms){
         if(pollTimer) clearInterval(pollTimer);
         pollTimer = setInterval(pollNow, ms);
     }
-    // Start with fast polling; switches to slow when SSE connects
     startPolling(POLL_MS_NO_SSE);
 
     document.addEventListener('visibilitychange', function(){
@@ -280,7 +337,6 @@
             es.addEventListener('open', function(){
                 sseConnecting = false;
                 sseActive = true;
-                // SSE is live — slow down polling as fallback only
                 startPolling(POLL_MS);
                 setPill({mode:'online'});
             });
@@ -296,7 +352,6 @@
                 es = null;
                 sseConnecting = false;
                 sseActive = false;
-                // SSE failed — speed up polling to compensate
                 startPolling(POLL_MS_NO_SSE);
                 if(!sseReconnectTimer){
                     sseReconnectTimer = setTimeout(function(){
