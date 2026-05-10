@@ -1,9 +1,8 @@
-// Smart Portal RT 005 — Service Worker
-// Cache static assets untuk loading lebih cepat, selalu fetch-fresh untuk /api
+// Smart Portal RT 005 — Service Worker v2
+// Cache static assets, push notifications, offline support
 
-const CACHE_NAME = 'smart-portal-rt-v1';
+const CACHE_NAME = 'smart-portal-rt-v2';
 
-// Aset statis yang di-cache saat install
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -13,7 +12,7 @@ const STATIC_ASSETS = [
   '/favicon.svg'
 ];
 
-// Install: pre-cache aset statis
+// ─── Install ────────────────────────────────────────────────────────────────
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -22,7 +21,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate: hapus cache lama
+// ─── Activate ────────────────────────────────────────────────────────────────
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -33,25 +32,25 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: strategi Network-first untuk /api, Cache-first untuk aset statis
+// ─── Fetch ───────────────────────────────────────────────────────────────────
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // /api dan SSE stream: selalu ke network (tidak di-cache)
+  // /api: always network (never cache)
   if (url.pathname.startsWith('/api')) {
     event.respondWith(fetch(event.request));
     return;
   }
 
-  // CDN external: network-first dengan fallback cache
-  if (!url.origin.includes(self.location.origin)) {
+  // External CDN: network-first, fallback to cache
+  if (url.origin !== self.location.origin) {
     event.respondWith(
       fetch(event.request).catch(() => caches.match(event.request))
     );
     return;
   }
 
-  // Aset lokal: cache-first dengan network fallback + update cache di background
+  // Local assets: cache-first + background update
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const fetchPromise = fetch(event.request).then((response) => {
@@ -63,15 +62,83 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       }).catch(() => cached);
-
       return cached || fetchPromise;
     })
   );
 });
 
-// Pesan dari halaman utama
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
+// ─── Push Notifications ──────────────────────────────────────────────────────
+self.addEventListener('push', (event) => {
+  let data = { title: 'Portal RT 005', body: 'Ada update baru!', icon: '/Lambang_Kota_Semarang.png', badge: '/Lambang_Kota_Semarang.png', url: '/' };
+
+  if (event.data) {
+    try { data = { ...data, ...JSON.parse(event.data.text()) }; } catch {}
   }
+
+  const options = {
+    body: data.body,
+    icon: data.icon,
+    badge: data.badge,
+    vibrate: [200, 100, 200],
+    tag: 'rt005-notif',
+    renotify: true,
+    requireInteraction: false,
+    data: { url: data.url },
+    actions: [
+      { action: 'open', title: 'Buka Portal' },
+      { action: 'close', title: 'Tutup' }
+    ]
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
+
+// ─── Notification Click ───────────────────────────────────────────────────────
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  if (event.action === 'close') return;
+
+  const targetUrl = event.notification.data?.url ?? '/';
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      // Focus existing tab if open
+      for (const client of clients) {
+        if ('focus' in client) {
+          client.focus();
+          if ('navigate' in client) client.navigate(targetUrl);
+          return;
+        }
+      }
+      // Open new tab
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(targetUrl);
+      }
+    })
+  );
+});
+
+// ─── Push Subscription Change ────────────────────────────────────────────────
+self.addEventListener('pushsubscriptionchange', (event) => {
+  // Re-subscribe automatically when subscription expires
+  event.waitUntil(
+    self.registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: event.oldSubscription?.options?.applicationServerKey
+    }).then((sub) => {
+      return fetch('/api/push/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sub)
+      });
+    }).catch(() => {})
+  );
+});
+
+// ─── Message ─────────────────────────────────────────────────────────────────
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });

@@ -3243,7 +3243,21 @@ html[data-theme="dark"] select option {
             <div id="warga-view-data">
                 <div class="card-title-header"><h3><i class="fa-solid fa-users"></i> Data Keluarga Saya</h3><button class="btn-action bg-green" onclick="tampilFormKeluarga(true)"><i class="fa-solid fa-plus"></i> Tambah / Edit Data</button></div>
                 <div class="table-responsive" style="margin-bottom: 30px;"><table><thead><tr><th>Kepala Keluarga & NIK</th><th>Alamat Rumah</th><th>Aksi</th></tr></thead><tbody id="tbody-profil-saya"></tbody></table></div>
-                <div class="card-title-header" style="margin-top:20px;"><h3><i class="fa-solid fa-key"></i> Pengaturan Keamanan</h3></div>
+                <div class="card-title-header" style="margin-top:20px;">
+                    <h3><i class="fa-solid fa-key"></i> Pengaturan Keamanan & Notifikasi</h3>
+                </div>
+                <div class="card" style="max-width:500px;margin:0 auto 16px auto;border-top:3px solid #7c3aed;">
+                    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                        <div style="flex:1;min-width:180px;">
+                            <div style="font-weight:700;font-size:0.95rem;color:#7c3aed;"><i class="fa-solid fa-bell"></i> Notifikasi Push</div>
+                            <div style="font-size:0.8rem;color:#64748b;margin-top:3px;" id="push-status-warga">Belum aktif di perangkat ini</div>
+                        </div>
+                        <button id="btn-toggle-push" class="btn-action" style="background:#7c3aed;color:#fff;border:none;margin:0;" onclick="togglePushSubscription()">
+                            <i class="fa-solid fa-bell-slash"></i> Aktifkan Notifikasi
+                        </button>
+                    </div>
+                    <p style="font-size:0.75rem;color:#94a3b8;margin-top:10px;margin-bottom:0;"><i class="fa-solid fa-circle-info"></i> Aktifkan agar mendapat pemberitahuan dari RT (pengumuman, jadwal rapat, dll) walau aplikasi ditutup.</p>
+                </div>
                 <div class="card" style="max-width:500px; margin:0 auto;"><div class="form-group"><label>Password Lama</label><input type="password" id="pw-lama" placeholder="Ketik password saat ini"></div><div class="form-group"><label>Password Baru</label><input type="password" id="pw-baru" placeholder="Ketik password baru"></div><button onclick="ubahPasswordWarga()" class="btn-submit bg-blue"><i class="fa-solid fa-lock"></i> Update Password</button></div>
             </div>
             <div id="warga-form-data" style="display: none;">
@@ -3933,7 +3947,39 @@ html[data-theme="dark"] select option {
                 </div>
             </div>
 
-            <hr style="border-top:1px dashed #cbd5e1; margin: 30px 0 20px 0;">
+            
+            <!-- Push Notification Card -->
+            <div class="card" style="margin-top:16px;border-top:4px solid #7c3aed;">
+                <div class="card-title-header" style="margin-bottom:16px;">
+                    <h3><i class="fa-solid fa-bell" style="color:#7c3aed;"></i> Notifikasi Push ke Warga</h3>
+                    <span id="push-sub-count" style="font-size:0.82rem;color:#64748b;background:#f3e8ff;padding:4px 10px;border-radius:20px;"></span>
+                </div>
+                <div class="form-grid" style="gap:12px;">
+                    <div class="form-group" style="margin:0;">
+                        <label>Judul Notifikasi</label>
+                        <input type="text" id="push-title" placeholder="Contoh: Pengumuman RT 005" maxlength="60">
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label>Isi Pesan</label>
+                        <input type="text" id="push-body" placeholder="Contoh: Rapat warga Sabtu 19:30 di balai RT" maxlength="120">
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center;">
+                    <button class="btn-action" style="background:#7c3aed;color:#fff;border:none;" onclick="kirimPushNotifikasi()">
+                        <i class="fa-solid fa-paper-plane"></i> Kirim ke Semua Perangkat
+                    </button>
+                    <button class="btn-action" style="background:#94a3b8;color:#fff;border:none;" onclick="refreshPushCount()">
+                        <i class="fa-solid fa-rotate"></i> Refresh Jumlah Subscriber
+                    </button>
+                </div>
+                <p style="font-size:0.78rem;color:#94a3b8;margin-top:10px;">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Notifikasi dikirim ke semua warga yang sudah mengaktifkan izin notifikasi di perangkat mereka.
+                    Warga bisa aktifkan di menu Portal Warga &rarr; Data Keluarga &rarr; Pengaturan Notifikasi.
+                </p>
+            </div>
+
+<hr style="border-top:1px dashed #cbd5e1; margin: 30px 0 20px 0;">
                 <h3 style="color: var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> Zona Berbahaya (Reset Database)</h3>
                 <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Fitur ini digunakan untuk menghapus data spesifik atau mereset aplikasi ke pengaturan pabrik.</p>
                 <button class="btn-submit bg-red" onclick="bukaMenuResetData()" style="max-width: 300px; margin: 0 auto; box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3) !important;"><i class="fa-solid fa-trash-can"></i> Hapus / Reset Data</button>
@@ -7228,7 +7274,161 @@ html[data-theme="dark"] select option {
         } catch(e) { Swal.fire('Error', 'Gagal export Excel: ' + e.message, 'error'); }
     };
 
-    window.bukaMenuResetData = function() {
+
+    // ═══════════════════════════════════════════════════════════════
+    // WEB PUSH NOTIFICATIONS
+    // ═══════════════════════════════════════════════════════════════
+    var _gtPushPublicKey = null;
+    var _gtPushSub = null;
+
+    // Convert VAPID base64 key to Uint8Array
+    function urlBase64ToUint8Array(base64String) {
+        var padding = '='.repeat((4 - base64String.length % 4) % 4);
+        var base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+        var rawData = atob(base64);
+        var outputArray = new Uint8Array(rawData.length);
+        for (var i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
+        return outputArray;
+    }
+
+    // Load VAPID public key from server
+    async function loadPushPublicKey() {
+        if (_gtPushPublicKey) return _gtPushPublicKey;
+        try {
+            var r = await fetch('/api/push/vapid-public-key');
+            var d = await r.json();
+            _gtPushPublicKey = d.publicKey;
+        } catch(e) {}
+        return _gtPushPublicKey;
+    }
+
+    // Check current push subscription status and update UI
+    window.checkPushStatus = async function() {
+        var statusEl = document.getElementById('push-status-warga');
+        var btnEl = document.getElementById('btn-toggle-push');
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+            if (statusEl) statusEl.textContent = 'Perangkat tidak mendukung notifikasi push';
+            if (btnEl) btnEl.style.display = 'none';
+            return;
+        }
+        try {
+            var reg = await navigator.serviceWorker.ready;
+            var sub = await reg.pushManager.getSubscription();
+            _gtPushSub = sub;
+            if (sub) {
+                if (statusEl) statusEl.textContent = '✓ Aktif — notifikasi akan masuk ke perangkat ini';
+                if (btnEl) { btnEl.innerHTML = '<i class="fa-solid fa-bell-slash"></i> Nonaktifkan Notifikasi'; btnEl.style.background = '#ef4444'; }
+            } else {
+                if (statusEl) statusEl.textContent = 'Belum aktif di perangkat ini';
+                if (btnEl) { btnEl.innerHTML = '<i class="fa-solid fa-bell"></i> Aktifkan Notifikasi'; btnEl.style.background = '#7c3aed'; }
+            }
+        } catch(e) {}
+    };
+
+    // Toggle subscribe/unsubscribe
+    window.togglePushSubscription = async function() {
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+            Swal.fire('Tidak Didukung', 'Perangkat atau browser ini tidak mendukung notifikasi push.', 'warning');
+            return;
+        }
+        try {
+            var reg = await navigator.serviceWorker.ready;
+            var sub = await reg.pushManager.getSubscription();
+            if (sub) {
+                // Unsubscribe
+                await fetch('/api/push/unsubscribe', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({endpoint: sub.endpoint}) });
+                await sub.unsubscribe();
+                _gtPushSub = null;
+                window.checkPushStatus();
+                if (typeof Toast !== 'undefined') Toast.fire({icon:'info', title:'Notifikasi dinonaktifkan'});
+            } else {
+                // Subscribe — request permission first
+                var perm = await Notification.requestPermission();
+                if (perm !== 'granted') {
+                    Swal.fire('Izin Ditolak', 'Aktifkan izin notifikasi di pengaturan browser Anda, lalu coba lagi.', 'warning');
+                    return;
+                }
+                var publicKey = await loadPushPublicKey();
+                if (!publicKey) { Swal.fire('Error', 'Gagal mengambil kunci notifikasi dari server.', 'error'); return; }
+                var newSub = await reg.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(publicKey)
+                });
+                _gtPushSub = newSub;
+                var r = await fetch('/api/push/subscribe', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(newSub) });
+                var d = await r.json();
+                window.checkPushStatus();
+                if (typeof Toast !== 'undefined') Toast.fire({icon:'success', title:'Notifikasi diaktifkan! (' + d.total + ' perangkat terdaftar)'});
+            }
+        } catch(e) {
+            Swal.fire('Error', 'Gagal mengubah pengaturan notifikasi: ' + e.message, 'error');
+        }
+    };
+
+    // Admin: refresh subscriber count
+    window.refreshPushCount = async function() {
+        try {
+            var r = await fetch('/api/push/count');
+            var d = await r.json();
+            var el = document.getElementById('push-sub-count');
+            if (el) el.textContent = d.count + ' perangkat terdaftar';
+        } catch(e) {}
+    };
+
+    // Admin: kirim push notification ke semua subscriber
+    window.kirimPushNotifikasi = async function() {
+        var title = (document.getElementById('push-title') || {}).value?.trim();
+        var body = (document.getElementById('push-body') || {}).value?.trim();
+        if (!title || !body) { Swal.fire('Lengkapi', 'Judul dan isi pesan wajib diisi.', 'warning'); return; }
+        var confirm = await Swal.fire({
+            icon: 'question',
+            title: 'Kirim Notifikasi?',
+            html: `Judul: <b>${title}</b><br>Isi: ${body}<br><br>Akan dikirim ke semua perangkat yang sudah berlangganan.`,
+            showCancelButton: true, confirmButtonText: 'Kirim!', cancelButtonText: 'Batal', confirmButtonColor: '#7c3aed'
+        });
+        if (!confirm.isConfirmed) return;
+        Swal.fire({title:'Mengirim notifikasi...', allowOutsideClick:false, didOpen:()=>Swal.showLoading()});
+        try {
+            var r = await fetch('/api/push/send', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({title, body}) });
+            var d = await r.json();
+            Swal.fire({
+                icon: d.sent > 0 ? 'success' : 'info',
+                title: d.sent > 0 ? 'Notifikasi Terkirim!' : 'Tidak Ada Subscriber',
+                html: `Terkirim: <b>${d.sent}</b> perangkat${d.failed ? ` | Gagal: ${d.failed}` : ''}`,
+                confirmButtonColor: '#7c3aed'
+            });
+            window.refreshPushCount();
+            document.getElementById('push-title').value = '';
+            document.getElementById('push-body').value = '';
+        } catch(e) { Swal.fire('Error', 'Gagal mengirim: ' + e.message, 'error'); }
+    };
+
+    // Auto-check push status when warga profil tab opens
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            if (typeof checkPushStatus === 'function') checkPushStatus();
+        }, 2000);
+        // Also run when tab is shown
+        var origOpenWargaTab = window.openWargaTab;
+        if (typeof origOpenWargaTab === 'function' && !origOpenWargaTab.__pushWrapped) {
+            window.openWargaTab = function(tab) {
+                origOpenWargaTab(tab);
+                if (tab === 'warga-profil') setTimeout(checkPushStatus, 300);
+            };
+            window.openWargaTab.__pushWrapped = true;
+        }
+        // Refresh push count when admin enters pengaturan
+        var origOpenAdminTab2 = window.openAdminTab;
+        if (typeof origOpenAdminTab2 === 'function' && !origOpenAdminTab2.__pushWrapped) {
+            window.openAdminTab = function(tab) {
+                origOpenAdminTab2(tab);
+                if (tab === 'pengaturan') { setTimeout(refreshPushCount, 400); setTimeout(refreshInfoAplikasi, 400); }
+            };
+            window.openAdminTab.__pushWrapped = true;
+        }
+    });
+
+        window.bukaMenuResetData = function() {
         Swal.fire({
             title: 'Pilih Data yang Akan Dihapus',
             input: 'select',
