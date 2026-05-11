@@ -107,6 +107,7 @@
         hideBootOverlay();
         if(viaAsync) runRefreshers();
         console.info('✓ Smart Portal RT terhubung ke PostgreSQL pusat');
+        renderPill();
     }
     
     function bootLoadAsync(){
@@ -134,8 +135,61 @@
     
     bootLoad();
     
-    var pillState = {mode:'syncing', pending:0, lastSync:null};
-    function setPill(p){ for(var k in p) pillState[k] = p[k]; }
+    // -----------------------------------------------------------------------
+    // Status pill — floating indicator at bottom-right showing sync health
+    // -----------------------------------------------------------------------
+    var pillState = {mode:'syncing'};
+    var pillEl = null;
+
+    function getOrCreatePill(){
+        if(pillEl && pillEl.parentNode) return pillEl;
+        var host = document.body || document.documentElement;
+        if(!host) return null;
+        pillEl = document.createElement('div');
+        pillEl.id = 'gt_sync_pill';
+        pillEl.style.cssText = [
+            'position:fixed','bottom:16px','right:16px','z-index:9998',
+            'background:rgba(15,23,42,0.82)','backdrop-filter:blur(10px)',
+            'color:#e2e8f0','font-size:0.7rem','font-family:monospace',
+            'padding:4px 10px','border-radius:20px',
+            'box-shadow:0 2px 10px rgba(0,0,0,0.35)',
+            'pointer-events:none','transition:opacity 0.4s',
+            'border:1px solid rgba(255,255,255,0.1)','white-space:nowrap'
+        ].join(';');
+        host.appendChild(pillEl);
+        return pillEl;
+    }
+
+    function renderPill(){
+        if(!window.GT_SYNC_BOOTED) return;
+        var el = getOrCreatePill();
+        if(!el) return;
+        var pending = pendingCount();
+        var hms = new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+        var txt, color;
+        if(pillState.mode === 'offline'){
+            txt = '⚠ Offline – menyambung ulang';
+            color = '#fca5a5';
+            el.style.opacity = '1';
+        } else if(pending > 0){
+            txt = '⟳ Syncing… · ' + pending + ' pending';
+            color = '#fbbf24';
+            el.style.opacity = '1';
+        } else {
+            txt = '● Online · ' + hms;
+            color = '#86efac';
+            el.style.opacity = '0.75';
+        }
+        el.style.color = color;
+        el.textContent = txt;
+    }
+
+    setInterval(renderPill, 1000);
+
+    function setPill(p){
+        for(var k in p) pillState[k] = p[k];
+        renderPill();
+    }
     
     var pendingWrites = {};
     var lastLocalWrite = {};
@@ -156,6 +210,7 @@
         lastLocalWrite[key] = {value:val, ts:Date.now()};
         if(flushTimer) clearTimeout(flushTimer);
         flushTimer = setTimeout(flush, DEBOUNCE_MS);
+        renderPill();
     }
     
     function flush(){
@@ -199,7 +254,6 @@
     }
 
     // Kirim pending writes sebelum halaman ditutup/reload menggunakan sendBeacon
-    // Ini mencegah kehilangan data saat logout (location.reload())
     function flushViaBeacon(){
         var keys = Object.keys(pendingWrites);
         if(!keys.length) return;
@@ -231,14 +285,12 @@
         if(!isLocalOnly(k)) queueWrite(k, null);
     };
     ls.clear = function(){
-        // Kumpulkan semua key yang perlu dihapus dari server sebelum clear
         var toDelete = [];
         for(var i=0; i<ls.length; i++){
             var k = ls.key(i);
             if(k && !isLocalOnly(k)) toDelete.push(k);
         }
         origClear();
-        // Queue semua delete ke server
         for(var j=0; j<toDelete.length; j++){
             pendingWrites[toDelete[j]] = null;
         }
@@ -248,8 +300,6 @@
         }
     };
 
-    // Fungsi flush paksa yang mengembalikan Promise
-    // Dipakai oleh logout agar data terkirim dulu sebelum reload
     window.GT_FLUSH_NOW = function(){
         if(flushTimer){ clearTimeout(flushTimer); flushTimer = null; }
         if(!pendingCount()) return Promise.resolve();
@@ -353,6 +403,7 @@
                 sseConnecting = false;
                 sseActive = false;
                 startPolling(POLL_MS_NO_SSE);
+                setPill({mode:'offline'});
                 if(!sseReconnectTimer){
                     sseReconnectTimer = setTimeout(function(){
                         sseReconnectTimer = null;
@@ -369,5 +420,9 @@
     
     window.GT_SYNC_REFRESH = function(){ return pollNow().then(reconcileKeys); };
     window.GT_SYNC_AUDIT = function(){ return fetch(AUDIT_URL).then(function(r){ return r.json(); }); };
+
+    // Legacy aliases used in older parts of the app
+    window.__GT_SYNC_REFRESH__ = window.GT_SYNC_REFRESH;
+    window.__GT_SYNC_AUDIT__ = window.GT_SYNC_AUDIT;
 
 })();

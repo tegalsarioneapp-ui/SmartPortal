@@ -8,12 +8,17 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import path from "path";
 import { existsSync } from "fs";
+import { rateLimit } from "express-rate-limit";
 import router from "./routes";
 import { logger } from "./lib/logger";
 
 const app: Express = express();
 
 app.disable("x-powered-by");
+
+// Trust the first proxy (Replit's edge/Vite proxy) so express-rate-limit
+// can read the real client IP from X-Forwarded-For.
+app.set("trust proxy", 1);
 
 app.use(
   pinoHttp({
@@ -51,14 +56,46 @@ app.use(
       if (!allowedOrigins) {
         // Allow all origins — in production the Express server serves both
         // frontend and API from the same port, so CORS is not needed.
-        // Allowing all origins here ensures SSE and fetch requests work
-        // even through any intermediate proxy layer.
         return cb(null, true);
       }
       return cb(null, allowedOrigins.includes(origin));
     },
   }),
 );
+
+// ---------------------------------------------------------------------------
+// Rate limiting — prevents abuse of the KV store endpoints.
+// SSE stream (/api/kv/stream) is exempt because it is a long-lived connection,
+// not a repeated request.
+// ---------------------------------------------------------------------------
+
+// General API limiter: 120 requests / minute per IP (2 req/s average).
+// Polling happens every 2.5–8 s, so this is very generous for normal use.
+const generalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 120,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many requests, please slow down." },
+  skip: (req) => req.path === "/kv/stream", // SSE is exempt
+});
+
+// Write limiter: 60 PUT/DELETE / minute per IP (1/s average).
+const writeLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many write requests, please slow down." },
+});
+
+app.use("/api", generalLimiter);
+app.use("/api/kv", (req, res, next) => {
+  if (req.method === "PUT" || req.method === "DELETE") {
+    return writeLimiter(req, res, next);
+  }
+  next();
+});
 
 // Limit dinaikkan ke 12 MB untuk mendukung upload PDF (mis. SK Struktur Pengurus)
 // yang disimpan sebagai base64 di key store.
@@ -98,11 +135,8 @@ app.use(
 // ---------------------------------------------------------------------------
 // Production: serve the Vite-built frontend static files directly from
 // Express, eliminating any proxy layer that could buffer SSE streams.
-// The frontend build output is at artifacts/smart-portal-rt/dist/public/
-// relative to the workspace root.
 // ---------------------------------------------------------------------------
 if (process.env["NODE_ENV"] === "production") {
-  // Try multiple candidate paths to find the static build output.
   const candidates = [
     path.resolve(import.meta.dirname, "../../smart-portal-rt/dist/public"),
     path.resolve(process.cwd(), "artifacts/smart-portal-rt/dist/public"),
@@ -111,10 +145,8 @@ if (process.env["NODE_ENV"] === "production") {
 
   logger.info({ staticDir }, "Serving static frontend from Express");
 
-  // Serve assets (JS, CSS, images, _sync.js, etc.)
   app.use(express.static(staticDir, { maxAge: 0, etag: false }));
 
-  // SPA fallback — all other routes serve index.html (Express 5 wildcard syntax)
   app.get("/{*path}", (_req, res) => {
     res.sendFile(path.join(staticDir, "index.html"));
   });
