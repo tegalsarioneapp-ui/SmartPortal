@@ -3569,6 +3569,23 @@ html[data-theme="dark"] select option {
                         </div>
                     </div>
                 </div>
+
+                <div class="card" style="margin-bottom:0; border-top: 5px solid #8b5cf6; padding: 20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px;">
+                        <h3 style="margin:0; font-size:1.1rem;"><i class="fa-solid fa-hand-holding-heart" style="color:#8b5cf6;"></i> Pos Iuran Sosial</h3>
+                        <div id="badge-status-sosial"></div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap: 10px; margin-top: 15px;">
+                        <div style="background:#f5f3ff; padding:15px; border-radius:12px; border:1px solid #ddd6fe; display:flex; justify-content:space-between; align-items:center;">
+                            <div style="color:#6d28d9; font-size:0.8rem; font-weight:bold;">TERKUMPUL</div>
+                            <div id="tagih-sosial-terkumpul" style="font-size:1.5rem; font-weight:900; color:#6d28d9;">Rp 0</div>
+                        </div>
+                        <div style="background:#fffbeb; padding:15px; border-radius:12px; border:1px solid #fde68a; display:flex; justify-content:space-between; align-items:center;">
+                            <div style="color:#b45309; font-size:0.8rem; font-weight:bold;">BELUM MASUK</div>
+                            <div id="tagih-sosial-kurang" style="font-size:1.5rem; font-weight:900; color:#b45309;">Rp 0</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="card" style="border-top: 4px solid var(--success);">
@@ -6238,7 +6255,7 @@ html[data-theme="dark"] select option {
     // === 9. KEUANGAN (BENDAHARA & KOPERASI) ===
     window.simpanSaldoAwal = function() { localStorage.setItem('db_saldo_awal', document.getElementById('ben-saldo-awal-input').value); syncSemuaData(); Toast.fire({icon:'success',title:'Dikunci'}); };
     window.simpanKas = function(e) { e.preventDefault(); let db = JSON.parse(localStorage.getItem('db_kas')) || []; db.push({ id: Date.now(), tgl: document.getElementById('ben-tgl').value, uraian: document.getElementById('ben-desc').value, tipe: document.getElementById('ben-tipe').value, nominal: parseInt(document.getElementById('ben-amt').value) }); localStorage.setItem('db_kas', JSON.stringify(db)); localStorage.setItem('ts_kas', new Date().toISOString()); e.target.reset(); if (typeof syncSemuaData === 'function') syncSemuaData(true); Toast.fire({icon:'success',title:'Disimpan'}); };
-    window.hitungOtomatisIuran = function() { let t = document.querySelectorAll('.cb-bulan:checked').length * 20000; if(document.getElementById('ben-iuran-amt')) document.getElementById('ben-iuran-amt').value = t; };
+    window.hitungOtomatisIuran = function() { let t = document.querySelectorAll('.cb-bulan:checked').length * 25000; if(document.getElementById('ben-iuran-amt')) document.getElementById('ben-iuran-amt').value = t; };
     window.simpanIuranKolektif = function(e) {
     if(e && e.preventDefault) e.preventDefault();
     
@@ -6260,15 +6277,16 @@ html[data-theme="dark"] select option {
     let warga = masterWarga.find(w => String(w.id) === String(idWarga));
     let namaWarga = warga ? warga.nama : "Warga";
 
-    // 2. PROSES INPUT KE KAS (Breakdown 20rb: 10rb, 5rb, 5rb)
+    // 2. PROSES INPUT KE KAS (Breakdown 25rb: 10rb, 5rb, 5rb, 5rb)
     bulanTerpilih.forEach(bln => {
         let tglSekarang = new Date().toISOString().split('T')[0];
         let randomID = Date.now() + Math.random();
         
-        // Catat ke Kas Bendahara (3 baris breakdown)
-        dbKas.push({ id: randomID, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran Kas RT (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: 10000 });
-        dbKas.push({ id: randomID + 1, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran Sampah (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: 5000 });
-        dbKas.push({ id: randomID + 2, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran Sosial (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: 5000 });
+        // Catat ke Kas Bendahara (4 baris breakdown)
+        dbKas.push({ id: randomID, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran Pembangunan (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: 10000 });
+        dbKas.push({ id: randomID + 1, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran Uang Meja (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: 5000 });
+        dbKas.push({ id: randomID + 2, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran 17 Agustus (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: 5000 });
+        dbKas.push({ id: randomID + 3, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran Sosial (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: 5000 });
     });
 
     // Simpan Kas kembali ke storage
@@ -6289,7 +6307,7 @@ html[data-theme="dark"] select option {
                 nama: namaWarga,
                 bulan: bln,
                 tahun: new Date().getFullYear(),
-                nominal: 20000,
+                nominal: 25000,
                 tgl: new Date().toISOString().split('T')[0]
             });
         }
@@ -6705,7 +6723,7 @@ html[data-theme="dark"] select option {
         let jmlBayar = dbIuran.length;
         let totalWarga = validWarga.length;
 
-        let st = JSON.parse(localStorage.getItem('status_setor_' + bulanSkg)) || { meja:0, bangun:0, agustus:0 };
+        let st = JSON.parse(localStorage.getItem('status_setor_' + bulanSkg)) || { meja:0, bangun:0, agustus:0, sosial:0 };
         const getBadgeHTML = (val) => {
             if(val === 2) return `<span class="badge badge-masuk" style="background:#dcfce7; color:#166534;"><i class="fa-solid fa-check-double"></i> Diterima Valid</span>`;
             if(val === 1) return `<span class="badge badge-menunggu" style="background:#fef08a; color:#854d0e;"><i class="fa-solid fa-clock"></i> Proses Setor</span>`;
@@ -6736,6 +6754,12 @@ html[data-theme="dark"] select option {
         if(document.getElementById('tagih-agustus-kurang')) document.getElementById('tagih-agustus-kurang').innerText = fmt(agustusKurang > 0 ? agustusKurang : 0);
         if(document.getElementById('badge-status-agustus')) document.getElementById('badge-status-agustus').innerHTML = getBadgeHTML(st.agustus);
 
+        // 4. IURAN SOSIAL
+        let sosialTerkumpul = jmlBayar * 5000; let sosialTarget = totalWarga * 5000; let sosialKurang = sosialTarget - sosialTerkumpul;
+        if(document.getElementById('tagih-sosial-terkumpul')) document.getElementById('tagih-sosial-terkumpul').innerText = fmt(sosialTerkumpul);
+        if(document.getElementById('tagih-sosial-kurang')) document.getElementById('tagih-sosial-kurang').innerText = fmt(sosialKurang > 0 ? sosialKurang : 0);
+        if(document.getElementById('badge-status-sosial')) document.getElementById('badge-status-sosial').innerHTML = getBadgeHTML(st.sosial);
+
         // MENGGAMBAR DAFTAR KE ID BARU YANG UNIK
         let tb = document.getElementById('tbody-daftar-warga-final'); 
         if(!tb) return; 
@@ -6751,12 +6775,12 @@ html[data-theme="dark"] select option {
             let statusBadge = dataBayar ? `<span class="badge badge-masuk"><i class="fa-solid fa-check-circle"></i> LUNAS</span>` : `<span class="badge badge-menunggu"><i class="fa-solid fa-clock"></i> BELUM BAYAR</span>`;
             
             let rincianHTML = dataBayar 
-                ? `<div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;"><i class="fa-solid fa-check" style="color:var(--success)"></i> Pembangunan: 10k | Meja: 5k | 17 Agt: 5k</div>` 
+                ? `<div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;"><i class="fa-solid fa-check" style="color:var(--success)"></i> Pembangunan: 10k | Meja: 5k | 17 Agt: 5k | Sosial: 5k</div>` 
                 : `<div style="font-size:0.85rem; color:var(--danger); margin-top:6px;">Belum ada setoran bulan ini</div>`;
             
             let tombolAksi = dataBayar 
                 ? `<button class="btn-action bg-blue" onclick="lihatKartuWarga(${w.id})" style="font-size:0.8rem; padding:6px 12px;"><i class="fa-solid fa-id-card"></i> Lihat Kartu</button>` 
-                : `<button class="btn-action bg-gold" onclick="bayarCepatTagihan(${w.id}, '${w.nama.replace(/'/g,"\\'")}')" style="font-size:0.85rem; padding:8px 12px; font-weight:900;"><i class="fa-solid fa-hand-holding-dollar"></i> Bayar 20k</button>`;
+                : `<button class="btn-action bg-gold" onclick="bayarCepatTagihan(${w.id}, '${w.nama.replace(/'/g,"\\'")}')" style="font-size:0.85rem; padding:8px 12px; font-weight:900;"><i class="fa-solid fa-hand-holding-dollar"></i> Bayar 25k</button>`;
             
             tb.innerHTML += `<tr class="row-tagihan-unik">
                 <td><b class="nama-warga-pencarian" style="font-size:1.05rem;">${w.nama}</b></td>
@@ -6786,7 +6810,7 @@ html[data-theme="dark"] select option {
     // Fungsi Tombol Setor Tunai (Opsi 4 Pilihan)
     window.promptSetorIuran = function() {
         let bulanSkg = new Intl.DateTimeFormat('id-ID', { month: 'long' }).format(new Date());
-        let st = JSON.parse(localStorage.getItem('status_setor_' + bulanSkg)) || { meja:0, bangun:0, agustus:0 };
+        let st = JSON.parse(localStorage.getItem('status_setor_' + bulanSkg)) || { meja:0, bangun:0, agustus:0, sosial:0 };
         
         Swal.fire({
             title: 'Setorkan Uang Tunai',
@@ -6798,6 +6822,7 @@ html[data-theme="dark"] select option {
                     <label style="cursor:pointer;"><input type="radio" name="opt_setor" value="meja" ${st.meja>=1?'disabled':''}> Setor Pos Uang Meja ${st.meja>=1?'(Sudah)':''}</label>
                     <label style="cursor:pointer;"><input type="radio" name="opt_setor" value="bangun" ${st.bangun>=1?'disabled':''}> Setor Pos Pembangunan ${st.bangun>=1?'(Sudah)':''}</label>
                     <label style="cursor:pointer;"><input type="radio" name="opt_setor" value="agustus" ${st.agustus>=1?'disabled':''}> Setor Pos 17 Agustus ${st.agustus>=1?'(Sudah)':''}</label>
+                    <label style="cursor:pointer;"><input type="radio" name="opt_setor" value="sosial" ${st.sosial>=1?'disabled':''}> Setor Pos Iuran Sosial ${st.sosial>=1?'(Sudah)':''}</label>
                     <hr style="border-top:1px dashed #cbd5e1;">
                     <label style="cursor:pointer; font-weight:bold; color:var(--primary-dark);"><input type="radio" name="opt_setor" value="semua" checked> Setorkan SEMUA Pos Sekaligus</label>
                 </div>
@@ -6814,6 +6839,7 @@ html[data-theme="dark"] select option {
                     if(st.meja === 0) st.meja = 1;
                     if(st.bangun === 0) st.bangun = 1;
                     if(st.agustus === 0) st.agustus = 1;
+                    if(st.sosial === 0) st.sosial = 1;
                 } else {
                     st[val] = 1;
                 }
@@ -6828,10 +6854,10 @@ html[data-theme="dark"] select option {
     // Fungsi Validasi Terima oleh Bendahara
     window.validasiTerimaSetoran = function() {
         let bulanSkg = new Intl.DateTimeFormat('id-ID', { month: 'long' }).format(new Date());
-        let st = JSON.parse(localStorage.getItem('status_setor_' + bulanSkg)) || { meja:0, bangun:0, agustus:0 };
+        let st = JSON.parse(localStorage.getItem('status_setor_' + bulanSkg)) || { meja:0, bangun:0, agustus:0, sosial:0 };
         
         // Cek apakah ada yang statusnya 1 (sedang diproses)
-        if(st.meja !== 1 && st.bangun !== 1 && st.agustus !== 1) {
+        if(st.meja !== 1 && st.bangun !== 1 && st.agustus !== 1 && st.sosial !== 1) {
             return Swal.fire('Info', 'Tidak ada setoran tertunda yang perlu divalidasi saat ini.', 'info');
         }
 
@@ -6845,6 +6871,7 @@ html[data-theme="dark"] select option {
                     <label style="cursor:pointer;"><input type="radio" name="opt_terima" value="meja" ${st.meja!==1?'disabled':''}> Terima Uang Meja</label>
                     <label style="cursor:pointer;"><input type="radio" name="opt_terima" value="bangun" ${st.bangun!==1?'disabled':''}> Terima Uang Pembangunan</label>
                     <label style="cursor:pointer;"><input type="radio" name="opt_terima" value="agustus" ${st.agustus!==1?'disabled':''}> Terima Uang 17 Agustus</label>
+                    <label style="cursor:pointer;"><input type="radio" name="opt_terima" value="sosial" ${st.sosial!==1?'disabled':''}> Terima Iuran Sosial</label>
                     <hr style="border-top:1px dashed #cbd5e1;">
                     <label style="cursor:pointer; font-weight:bold; color:var(--success);"><input type="radio" name="opt_terima" value="semua" checked> Terima SEMUA Setoran Tertunda</label>
                 </div>
@@ -6861,6 +6888,7 @@ html[data-theme="dark"] select option {
                     if(st.meja === 1) st.meja = 2;
                     if(st.bangun === 1) st.bangun = 2;
                     if(st.agustus === 1) st.agustus = 2;
+                    if(st.sosial === 1) st.sosial = 2;
                 } else {
                     st[val] = 2;
                 }
@@ -7021,13 +7049,13 @@ html[data-theme="dark"] select option {
             namaRT: document.getElementById('set_nama_rt').value || "Bapak Kasimin",
             namaRW: document.getElementById('set_nama_rw').value || "Bapak Mulyono",
             namaBen: document.getElementById('set_nama_ben').value || "Bapak Parmin",
-            nomIuran: parseInt(document.getElementById('set_nominal_iuran').value) || 20000,
+            nomIuran: parseInt(document.getElementById('set_nominal_iuran').value) || 25000,
             bungaKop: parseInt(document.getElementById('set_bunga_kop').value) || 10
         };
         localStorage.setItem('db_settings', JSON.stringify(settings)); if (typeof syncSemuaData === 'function') syncSemuaData(true); Swal.fire('Berhasil', 'Parameter sistem diperbarui.', 'success');
     };
     window.loadPengaturan = function() {
-        let s = JSON.parse(localStorage.getItem('db_settings')) || {namaRT: "Bapak Kasimin", namaRW: "Bapak Mulyono", namaBen: "Bapak Parmin", nomIuran: 20000, bungaKop: 10};
+        let s = JSON.parse(localStorage.getItem('db_settings')) || {namaRT: "Bapak Kasimin", namaRW: "Bapak Mulyono", namaBen: "Bapak Parmin", nomIuran: 25000, bungaKop: 10};
         if(document.getElementById('set_nama_rt')) document.getElementById('set_nama_rt').value = s.namaRT;
         if(document.getElementById('set_nama_rw')) document.getElementById('set_nama_rw').value = s.namaRW;
         if(document.getElementById('set_nama_ben')) document.getElementById('set_nama_ben').value = s.namaBen;
@@ -7499,11 +7527,11 @@ html[data-theme="dark"] select option {
         let uangTertahan = dbIuran.filter(x => !x.posted).reduce((s,i) => s + i.nominal, 0); 
         let uangMasukKas = dbIuran.filter(x => x.posted).reduce((s,i) => s + i.nominal, 0); 
 
-        let p1T = (10000 / 20000) * uangTertahan; let p2T = (5000 / 20000) * uangTertahan; let p3T = (5000 / 20000) * uangTertahan;
-        let p1M = (10000 / 20000) * uangMasukKas; let p2M = (5000 / 20000) * uangMasukKas; let p3M = (5000 / 20000) * uangMasukKas;
+        let p1T = (10000 / 25000) * uangTertahan; let p2T = (5000 / 25000) * uangTertahan; let p3T = (5000 / 25000) * uangTertahan; let p4T = (5000 / 25000) * uangTertahan;
+        let p1M = (10000 / 25000) * uangMasukKas; let p2M = (5000 / 25000) * uangMasukKas; let p3M = (5000 / 25000) * uangMasukKas; let p4M = (5000 / 25000) * uangMasukKas;
 
-        let detailTertahan = `<div style="font-size:0.85rem; font-weight:600; margin-top:12px; padding-top:10px; border-top:1px dashed #cbd5e1; color:var(--text-muted); line-height:1.6; width:100%;"><span style="color:var(--primary-dark)">• Pembangunan:</span> ${fmt(p1T)}<br><span style="color:var(--primary-dark)">• Uang Meja:</span> ${fmt(p2T)}<br><span style="color:var(--primary-dark)">• 17 Agustus:</span> ${fmt(p3T)}</div>`;
-        let detailMasuk = `<div style="font-size:0.85rem; font-weight:600; margin-top:12px; padding-top:10px; border-top:1px dashed #cbd5e1; color:var(--text-muted); line-height:1.6; width:100%;"><span style="color:var(--primary-dark)">• Pembangunan:</span> ${fmt(p1M)}<br><span style="color:var(--primary-dark)">• Uang Meja:</span> ${fmt(p2M)}<br><span style="color:var(--primary-dark)">• 17 Agustus:</span> ${fmt(p3M)}</div>`;
+        let detailTertahan = `<div style="font-size:0.85rem; font-weight:600; margin-top:12px; padding-top:10px; border-top:1px dashed #cbd5e1; color:var(--text-muted); line-height:1.6; width:100%;"><span style="color:var(--primary-dark)">• Pembangunan:</span> ${fmt(p1T)}<br><span style="color:var(--primary-dark)">• Uang Meja:</span> ${fmt(p2T)}<br><span style="color:var(--primary-dark)">• 17 Agustus:</span> ${fmt(p3T)}<br><span style="color:var(--primary-dark)">• Iuran Sosial:</span> ${fmt(p4T)}</div>`;
+        let detailMasuk = `<div style="font-size:0.85rem; font-weight:600; margin-top:12px; padding-top:10px; border-top:1px dashed #cbd5e1; color:var(--text-muted); line-height:1.6; width:100%;"><span style="color:var(--primary-dark)">• Pembangunan:</span> ${fmt(p1M)}<br><span style="color:var(--primary-dark)">• Uang Meja:</span> ${fmt(p2M)}<br><span style="color:var(--primary-dark)">• 17 Agustus:</span> ${fmt(p3M)}<br><span style="color:var(--primary-dark)">• Iuran Sosial:</span> ${fmt(p4M)}</div>`;
         
         if(document.getElementById('ben-iuran-hold')) document.getElementById('ben-iuran-hold').innerHTML = fmt(uangTertahan) + (uangTertahan > 0 ? detailTertahan : ''); 
         if(document.getElementById('ben-total-iuran-terkumpul')) document.getElementById('ben-total-iuran-terkumpul').innerHTML = fmt(uangMasukKas) + (uangMasukKas > 0 ? detailMasuk : ''); 
@@ -7585,7 +7613,7 @@ html[data-theme="dark"] select option {
 
     window.bayarCepatTagihan = function(idWarga, namaWarga) {
         let bulanSkg = new Intl.DateTimeFormat('id-ID', { month: 'long' }).format(new Date());
-        let nominalDefault = JSON.parse(localStorage.getItem('db_settings'))?.nomIuran || 20000;
+        let nominalDefault = JSON.parse(localStorage.getItem('db_settings'))?.nomIuran || 25000;
         Swal.fire({ title: 'Input Pembayaran', html: `Mencatat iuran untuk <b>${namaWarga}</b><br>Bulan: ${bulanSkg}`, input: 'number', inputValue: nominalDefault, inputLabel: 'Masukkan Nominal (Rp)', showCancelButton: true, confirmButtonText: 'Simpan Pembayaran', confirmButtonColor: '#10b981' }).then(res => {
             if(res.isConfirmed && res.value) {
                 let db = JSON.parse(localStorage.getItem('db_iuran')) || [];
@@ -7636,6 +7664,7 @@ html[data-theme="dark"] select option {
             <table style="width:100%; border-collapse:collapse; font-size:1.05rem; margin-bottom:20px; color:black;">
                 <tr><td style="padding:6px 0;">1. Tabungan Uang Meja (Terkumpul)</td><td style="text-align:right; font-weight:bold;">${fmt(ba.masukMeja)}</td></tr>
                 <tr><td style="padding:6px 0;">2. Tabungan 17 Agustus (Terkumpul)</td><td style="text-align:right; font-weight:bold;">${fmt(ba.masukAgustus)}</td></tr>
+                <tr><td style="padding:6px 0;">3. Tabungan Iuran Sosial (Terkumpul)</td><td style="text-align:right; font-weight:bold;">${fmt(ba.masukSosial || 0)}</td></tr>
             </table>
             <p style="font-size:1.05rem; line-height:1.6; text-align:justify; margin-bottom: 40px; color:black;">
                 Demikian Berita Acara Laporan Keuangan ini dibuat dengan sebenar-benarnya dan penuh transparansi untuk dapat diketahui serta disetujui oleh seluruh warga RT 005.
@@ -7653,10 +7682,11 @@ html[data-theme="dark"] select option {
                 let periode = r.value; let dbKas = JSON.parse(localStorage.getItem('db_kas')) || []; let sAwal = parseInt(localStorage.getItem('db_saldo_awal')) || 0;
                 let tMasukMeja = dbKas.filter(x => x.tipe === 'masuk' && x.uraian.toLowerCase().includes('uang meja')).reduce((s,i) => s + i.nominal, 0);
                 let tMasukAgustus = dbKas.filter(x => x.tipe === 'masuk' && x.uraian.toLowerCase().includes('17 agustus')).reduce((s,i) => s + i.nominal, 0);
-                let tMasukUtama = dbKas.filter(x => x.tipe === 'masuk' && !x.uraian.toLowerCase().includes('uang meja') && !x.uraian.toLowerCase().includes('17 agustus')).reduce((s,i) => s + i.nominal, 0);
+                let tMasukSosial = dbKas.filter(x => x.tipe === 'masuk' && x.uraian.toLowerCase().includes('iuran sosial')).reduce((s,i) => s + i.nominal, 0);
+                let tMasukUtama = dbKas.filter(x => x.tipe === 'masuk' && !x.uraian.toLowerCase().includes('uang meja') && !x.uraian.toLowerCase().includes('17 agustus') && !x.uraian.toLowerCase().includes('iuran sosial')).reduce((s,i) => s + i.nominal, 0);
                 let tKeluarUtama = dbKas.filter(x => x.tipe === 'keluar').reduce((s,i) => s + i.nominal, 0);
                 let sAkhirUtama = sAwal + tMasukUtama - tKeluarUtama; let tgl = new Date().toLocaleDateString('id-ID');
-                let dataBA = { id: Date.now(), tgl: tgl, periode: periode, sAwal: sAwal, masukUtama: tMasukUtama, keluarUtama: tKeluarUtama, saldoUtama: sAkhirUtama, masukMeja: tMasukMeja, masukAgustus: tMasukAgustus };
+                let dataBA = { id: Date.now(), tgl: tgl, periode: periode, sAwal: sAwal, masukUtama: tMasukUtama, keluarUtama: tKeluarUtama, saldoUtama: sAkhirUtama, masukMeja: tMasukMeja, masukAgustus: tMasukAgustus, masukSosial: tMasukSosial };
                 let settings = JSON.parse(localStorage.getItem('db_settings')) || { namaRT: "Bapak Kasimin", namaBen: "Bapak Parmin" };
                 
                 let previewHTML = buatTemplateSuratBA(dataBA, settings);
@@ -7819,10 +7849,11 @@ html[data-theme="dark"] select option {
             // Hitung total uang yang masih ditahan Bendahara
             let total = unposted.reduce((s, i) => s + (Number(i.nominal) || 0), 0); 
             
-            // Rumus pemecahan 20k -> 10k, 5k, 5k
-            let posPembangunan = (10000 / 20000) * total;
-            let posMeja = (5000 / 20000) * total;
-            let posAgustus = (5000 / 20000) * total;
+            // Rumus pemecahan 25k -> 10k, 5k, 5k, 5k
+            let posPembangunan = (10000 / 25000) * total;
+            let posMeja = (5000 / 25000) * total;
+            let posAgustus = (5000 / 25000) * total;
+            let posSosial = (5000 / 25000) * total;
 
             // Format Rupiah yang aman
             const formatRp = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
@@ -7835,7 +7866,8 @@ html[data-theme="dark"] select option {
                     <p style="margin-top:0; font-size:0.9rem; color:var(--text-muted); font-weight:bold;">Sistem akan memecah otomatis ke Buku Kas:</p>
                     <div style="margin-bottom:8px;"><b>🏗️ Pembangunan:</b> <span style="color:var(--primary-blue); font-weight:900; float:right;">${formatRp(posPembangunan)}</span></div>
                     <div style="margin-bottom:8px;"><b>🪑 Uang Meja:</b> <span style="color:var(--accent-gold); font-weight:900; float:right;">${formatRp(posMeja)}</span></div>
-                    <div><b>🇮🇩 17 Agustus:</b> <span style="color:var(--danger); font-weight:900; float:right;">${formatRp(posAgustus)}</span></div>
+                    <div style="margin-bottom:8px;"><b>🇮🇩 17 Agustus:</b> <span style="color:var(--danger); font-weight:900; float:right;">${formatRp(posAgustus)}</span></div>
+                    <div><b>🤝 Iuran Sosial:</b> <span style="color:var(--success); font-weight:900; float:right;">${formatRp(posSosial)}</span></div>
                 </div>`,
                 showCancelButton: true, 
                 confirmButtonColor: '#10b981', 
@@ -7850,6 +7882,7 @@ html[data-theme="dark"] select option {
                     if(posPembangunan > 0) dbKas.push({ id: Date.now(), tgl: tglSkrg, uraian: 'Setoran Iuran (Dana Pembangunan)', tipe: 'masuk', nominal: posPembangunan }); 
                     if(posMeja > 0) dbKas.push({ id: Date.now()+1, tgl: tglSkrg, uraian: 'Setoran Iuran (Uang Meja)', tipe: 'masuk', nominal: posMeja }); 
                     if(posAgustus > 0) dbKas.push({ id: Date.now()+2, tgl: tglSkrg, uraian: 'Setoran Iuran (Dana 17 Agustus)', tipe: 'masuk', nominal: posAgustus }); 
+                    if(posSosial > 0) dbKas.push({ id: Date.now()+3, tgl: tglSkrg, uraian: 'Setoran Iuran (Iuran Sosial)', tipe: 'masuk', nominal: posSosial }); 
                     
                     localStorage.setItem('db_kas', JSON.stringify(dbKas)); 
                     
@@ -7892,9 +7925,10 @@ html[data-theme="dark"] select option {
                 let nom = Number(i.nominal) || 0;
                 total += nom;
                 
-                let p1 = (10000 / 20000) * nom;
-                let p2 = (5000 / 20000) * nom;
-                let p3 = (5000 / 20000) * nom;
+                let p1 = (10000 / 25000) * nom;
+                let p2 = (5000 / 25000) * nom;
+                let p3 = (5000 / 25000) * nom;
+                let p4 = (5000 / 25000) * nom;
                 
                 let badgeStatus = i.posted 
                     ? `<span class="badge badge-masuk"><i class="fa-solid fa-check-double"></i> Valid</span>`
@@ -7918,7 +7952,8 @@ html[data-theme="dark"] select option {
                             <div style="font-size:0.9rem; color:var(--text-dark); width: 300px;">
                                 <div style="margin-bottom:8px; display:flex; justify-content:space-between;"><span><i class="fa-solid fa-screwdriver-wrench" style="color:var(--success); width:20px;"></i> Pembangunan</span> <b>${fmt(p1)}</b></div>
                                 <div style="margin-bottom:8px; display:flex; justify-content:space-between;"><span><i class="fa-solid fa-chair" style="color:var(--accent-gold); width:20px;"></i> Uang Meja</span> <b>${fmt(p2)}</b></div>
-                                <div style="display:flex; justify-content:space-between;"><span><i class="fa-solid fa-flag" style="color:var(--danger); width:20px;"></i> 17 Agustus</span> <b>${fmt(p3)}</b></div>
+                                <div style="margin-bottom:8px; display:flex; justify-content:space-between;"><span><i class="fa-solid fa-flag" style="color:var(--danger); width:20px;"></i> 17 Agustus</span> <b>${fmt(p3)}</b></div>
+                                <div style="display:flex; justify-content:space-between;"><span><i class="fa-solid fa-hand-holding-heart" style="color:#8b5cf6; width:20px;"></i> Iuran Sosial</span> <b>${fmt(p4)}</b></div>
                             </div>
                             <div style="text-align:right; font-size:0.8rem; color:var(--text-muted);">
                                 <i class="fa-solid fa-hand-pointer"></i> Klik baris lagi untuk menutup
