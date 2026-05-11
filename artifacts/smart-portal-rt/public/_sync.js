@@ -76,7 +76,8 @@
             'loadKasBendahara','loadAnalisaUangMeja','loadMatriksIuran','loadArsipBA',
             'loadKoperasiData','loadKopLaporan',
             'loadDaruratAdmin','loadDaruratWarga','loadSuratAdmin','loadSuratWarga',
-            'loadNotulenAdmin','loadIuranPribadiWarga'
+            'loadNotulenAdmin','loadIuranPribadiWarga',
+            'loadRekapIuranBulanan'
         ];
         for(var i=0; i<names.length; i++){
             var fn = window[names[i]];
