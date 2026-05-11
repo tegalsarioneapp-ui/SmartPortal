@@ -9,6 +9,7 @@
     var AUDIT_URL = '/api/audit';
     var POLL_MS = 8000;
     var POLL_MS_NO_SSE = 2500;
+    var RECONCILE_INTERVAL_MS = 30000; // periodic reconcile to catch deletes when SSE is down
     var DEBOUNCE_MS = 100;
     var ECHO_GUARD_MS = 2500;
     
@@ -91,11 +92,14 @@
         
         for(i=0; i<entries.length; i++){
             if(isLocalOnly(entries[i].key)) continue;
+            // Boot is a full snapshot — only non-null values are returned.
+            // Any local key not in server snapshot will be pruned below.
             serverKeys[entries[i].key] = 1;
             if(entries[i].value == null) origRemove(entries[i].key);
             else origSet(entries[i].key, entries[i].value);
         }
         
+        // Remove local keys that are absent from the server — server wins.
         var stale = [];
         for(i=0; i<ls.length; i++){
             k = ls.key(i);
@@ -309,6 +313,11 @@
         });
     };
     
+    // -----------------------------------------------------------------------
+    // applyRemote — apply entries received from SSE push or delta polling.
+    // value=null means "deleted" — remove from localStorage.
+    // Skips echo (own writes still in echo guard window).
+    // -----------------------------------------------------------------------
     function applyRemote(entries){
         var changed = false;
         for(var i=0; i<entries.length; i++){
@@ -324,9 +333,15 @@
         }
         if(changed) runRefreshers();
     }
-    
+
+    // -----------------------------------------------------------------------
+    // reconcileKeys — fetch the authoritative key list from the server and
+    // remove any local keys that no longer exist on the server.
+    // Called periodically AND on visibility/focus/online events.
+    // FIX: now calls runRefreshers() after pruning so the UI reflects deletions.
+    // -----------------------------------------------------------------------
     function reconcileKeys(){
-        return fetch(KEYS_URL)
+        return fetch(KEYS_URL, {cache:'no-store'})
         .then(function(r){ return r.ok ? r.json() : null; })
         .then(function(data){
             if(!data || !data.keys) return;
@@ -337,8 +352,13 @@
                 var k = ls.key(i);
                 if(k && !isLocalOnly(k) && !map[k]) del.push(k);
             }
-            for(var i=0; i<del.length; i++) origRemove(del[i]);
-        });
+            if(del.length){
+                for(var i=0; i<del.length; i++) origRemove(del[i]);
+                // FIX: refresh UI after removing stale keys so deletions are reflected
+                runRefreshers();
+            }
+        })
+        .catch(function(){}); // non-fatal
     }
     
     var polling = false;
@@ -347,6 +367,9 @@
         polling = true;
         var url = API_BASE;
         if(serverTime){
+            // Subtract 5 s to tolerate slight clock skew between server ticks.
+            // The server returns ALL rows (including soft-deleted tombstones with
+            // value=null) updated after this timestamp, so deletes are visible.
             var t = new Date(new Date(serverTime).getTime() - 5000);
             url = API_BASE + '?since=' + encodeURIComponent(t.toISOString());
         }
@@ -367,6 +390,12 @@
         pollTimer = setInterval(pollNow, ms);
     }
     startPolling(POLL_MS_NO_SSE);
+
+    // FIX: periodic reconcileKeys every 30 s — ensures hard deletions made on
+    // other devices are reflected even when SSE is down and the user has not
+    // changed tab visibility. Without this, deletes from other devices only
+    // appeared when the user switched tabs or refocused the window.
+    setInterval(function(){ reconcileKeys(); }, RECONCILE_INTERVAL_MS);
 
     document.addEventListener('visibilitychange', function(){
         if(document.visibilityState === 'visible') pollNow().then(reconcileKeys);
@@ -394,6 +423,9 @@
                 try{
                     var d = JSON.parse(ev.data || '{}');
                     if(d.originId === ORIGIN_ID) return;
+                    // FIX: update serverTime from SSE events so the next delta
+                    // poll window is anchored to the latest known server time.
+                    if(d.serverTime) serverTime = d.serverTime;
                     if(d.entries) applyRemote(d.entries);
                 }catch(e){}
             });
