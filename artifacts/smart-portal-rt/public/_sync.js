@@ -77,7 +77,8 @@
             'loadKoperasiData','loadKopLaporan',
             'loadDaruratAdmin','loadDaruratWarga','loadSuratAdmin','loadSuratWarga',
             'loadNotulenAdmin','loadIuranPribadiWarga',
-            'loadRekapIuranBulanan'
+            'loadRekapIuranBulanan',
+            'loadAdminDashboard','updateNavBadges'
         ];
         for(var i=0; i<names.length; i++){
             var fn = window[names[i]];
