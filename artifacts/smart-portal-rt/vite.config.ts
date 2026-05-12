@@ -1,26 +1,20 @@
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import path from "path";
 
-const rawPort = process.env.PORT;
-const port = rawPort ? Number(rawPort) : 25803;
-
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
-
-const basePath = process.env.BASE_PATH || "/";
-
 export default defineConfig({
-  base: basePath,
-  root: path.resolve(import.meta.dirname),
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    outDir: "dist",
     emptyOutDir: true,
   },
-  publicDir: path.resolve(import.meta.dirname, "public"),
   server: {
-    port,
-    strictPort: true,
+    port: 5000,
     host: "0.0.0.0",
     allowedHosts: true,
     proxy: {
@@ -31,14 +25,7 @@ export default defineConfig({
     },
   },
   preview: {
-    port,
+    port: 4173,
     host: "0.0.0.0",
-    allowedHosts: true,
-    proxy: {
-      "/api": {
-        target: process.env.API_URL || "http://localhost:8080",
-        changeOrigin: true,
-      },
-    },
   },
 });
