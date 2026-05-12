@@ -9,7 +9,6 @@
     var AUDIT_URL = '/api/audit';
     var POLL_MS = 8000;
     var POLL_MS_NO_SSE = 2500;
-    var RECONCILE_INTERVAL_MS = 30000; // periodic reconcile to catch deletes when SSE is down
     var DEBOUNCE_MS = 100;
     var ECHO_GUARD_MS = 2500;
     
@@ -76,9 +75,7 @@
             'loadKasBendahara','loadAnalisaUangMeja','loadMatriksIuran','loadArsipBA',
             'loadKoperasiData','loadKopLaporan',
             'loadDaruratAdmin','loadDaruratWarga','loadSuratAdmin','loadSuratWarga',
-            'loadNotulenAdmin','loadIuranPribadiWarga',
-            'loadRekapIuranBulanan',
-            'loadAdminDashboard','updateNavBadges'
+            'loadNotulenAdmin','loadIuranPribadiWarga'
         ];
         for(var i=0; i<names.length; i++){
             var fn = window[names[i]];
@@ -94,14 +91,11 @@
         
         for(i=0; i<entries.length; i++){
             if(isLocalOnly(entries[i].key)) continue;
-            // Boot is a full snapshot — only non-null values are returned.
-            // Any local key not in server snapshot will be pruned below.
             serverKeys[entries[i].key] = 1;
             if(entries[i].value == null) origRemove(entries[i].key);
             else origSet(entries[i].key, entries[i].value);
         }
         
-        // Remove local keys that are absent from the server — server wins.
         var stale = [];
         for(i=0; i<ls.length; i++){
             k = ls.key(i);
@@ -113,7 +107,6 @@
         hideBootOverlay();
         if(viaAsync) runRefreshers();
         console.info('✓ Smart Portal RT terhubung ke PostgreSQL pusat');
-        renderPill();
     }
     
     function bootLoadAsync(){
@@ -141,61 +134,8 @@
     
     bootLoad();
     
-    // -----------------------------------------------------------------------
-    // Status pill — floating indicator at bottom-right showing sync health
-    // -----------------------------------------------------------------------
-    var pillState = {mode:'syncing'};
-    var pillEl = null;
-
-    function getOrCreatePill(){
-        if(pillEl && pillEl.parentNode) return pillEl;
-        var host = document.body || document.documentElement;
-        if(!host) return null;
-        pillEl = document.createElement('div');
-        pillEl.id = 'gt_sync_pill';
-        pillEl.style.cssText = [
-            'position:fixed','bottom:16px','right:16px','z-index:9998',
-            'background:rgba(15,23,42,0.82)','backdrop-filter:blur(10px)',
-            'color:#e2e8f0','font-size:0.7rem','font-family:monospace',
-            'padding:4px 10px','border-radius:20px',
-            'box-shadow:0 2px 10px rgba(0,0,0,0.35)',
-            'pointer-events:none','transition:opacity 0.4s',
-            'border:1px solid rgba(255,255,255,0.1)','white-space:nowrap'
-        ].join(';');
-        host.appendChild(pillEl);
-        return pillEl;
-    }
-
-    function renderPill(){
-        if(!window.GT_SYNC_BOOTED) return;
-        var el = getOrCreatePill();
-        if(!el) return;
-        var pending = pendingCount();
-        var hms = new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-        var txt, color;
-        if(pillState.mode === 'offline'){
-            txt = '⚠ Offline – menyambung ulang';
-            color = '#fca5a5';
-            el.style.opacity = '1';
-        } else if(pending > 0){
-            txt = '⟳ Syncing… · ' + pending + ' pending';
-            color = '#fbbf24';
-            el.style.opacity = '1';
-        } else {
-            txt = '● Online · ' + hms;
-            color = '#86efac';
-            el.style.opacity = '0.75';
-        }
-        el.style.color = color;
-        el.textContent = txt;
-    }
-
-    setInterval(renderPill, 1000);
-
-    function setPill(p){
-        for(var k in p) pillState[k] = p[k];
-        renderPill();
-    }
+    var pillState = {mode:'syncing', pending:0, lastSync:null};
+    function setPill(p){ for(var k in p) pillState[k] = p[k]; }
     
     var pendingWrites = {};
     var lastLocalWrite = {};
@@ -216,7 +156,6 @@
         lastLocalWrite[key] = {value:val, ts:Date.now()};
         if(flushTimer) clearTimeout(flushTimer);
         flushTimer = setTimeout(flush, DEBOUNCE_MS);
-        renderPill();
     }
     
     function flush(){
@@ -260,6 +199,7 @@
     }
 
     // Kirim pending writes sebelum halaman ditutup/reload menggunakan sendBeacon
+    // Ini mencegah kehilangan data saat logout (location.reload())
     function flushViaBeacon(){
         var keys = Object.keys(pendingWrites);
         if(!keys.length) return;
@@ -291,12 +231,14 @@
         if(!isLocalOnly(k)) queueWrite(k, null);
     };
     ls.clear = function(){
+        // Kumpulkan semua key yang perlu dihapus dari server sebelum clear
         var toDelete = [];
         for(var i=0; i<ls.length; i++){
             var k = ls.key(i);
             if(k && !isLocalOnly(k)) toDelete.push(k);
         }
         origClear();
+        // Queue semua delete ke server
         for(var j=0; j<toDelete.length; j++){
             pendingWrites[toDelete[j]] = null;
         }
@@ -306,6 +248,8 @@
         }
     };
 
+    // Fungsi flush paksa yang mengembalikan Promise
+    // Dipakai oleh logout agar data terkirim dulu sebelum reload
     window.GT_FLUSH_NOW = function(){
         if(flushTimer){ clearTimeout(flushTimer); flushTimer = null; }
         if(!pendingCount()) return Promise.resolve();
@@ -315,11 +259,6 @@
         });
     };
     
-    // -----------------------------------------------------------------------
-    // applyRemote — apply entries received from SSE push or delta polling.
-    // value=null means "deleted" — remove from localStorage.
-    // Skips echo (own writes still in echo guard window).
-    // -----------------------------------------------------------------------
     function applyRemote(entries){
         var changed = false;
         for(var i=0; i<entries.length; i++){
@@ -335,15 +274,9 @@
         }
         if(changed) runRefreshers();
     }
-
-    // -----------------------------------------------------------------------
-    // reconcileKeys — fetch the authoritative key list from the server and
-    // remove any local keys that no longer exist on the server.
-    // Called periodically AND on visibility/focus/online events.
-    // FIX: now calls runRefreshers() after pruning so the UI reflects deletions.
-    // -----------------------------------------------------------------------
+    
     function reconcileKeys(){
-        return fetch(KEYS_URL, {cache:'no-store'})
+        return fetch(KEYS_URL)
         .then(function(r){ return r.ok ? r.json() : null; })
         .then(function(data){
             if(!data || !data.keys) return;
@@ -354,13 +287,8 @@
                 var k = ls.key(i);
                 if(k && !isLocalOnly(k) && !map[k]) del.push(k);
             }
-            if(del.length){
-                for(var i=0; i<del.length; i++) origRemove(del[i]);
-                // FIX: refresh UI after removing stale keys so deletions are reflected
-                runRefreshers();
-            }
-        })
-        .catch(function(){}); // non-fatal
+            for(var i=0; i<del.length; i++) origRemove(del[i]);
+        });
     }
     
     var polling = false;
@@ -369,9 +297,6 @@
         polling = true;
         var url = API_BASE;
         if(serverTime){
-            // Subtract 5 s to tolerate slight clock skew between server ticks.
-            // The server returns ALL rows (including soft-deleted tombstones with
-            // value=null) updated after this timestamp, so deletes are visible.
             var t = new Date(new Date(serverTime).getTime() - 5000);
             url = API_BASE + '?since=' + encodeURIComponent(t.toISOString());
         }
@@ -392,12 +317,6 @@
         pollTimer = setInterval(pollNow, ms);
     }
     startPolling(POLL_MS_NO_SSE);
-
-    // FIX: periodic reconcileKeys every 30 s — ensures hard deletions made on
-    // other devices are reflected even when SSE is down and the user has not
-    // changed tab visibility. Without this, deletes from other devices only
-    // appeared when the user switched tabs or refocused the window.
-    setInterval(function(){ reconcileKeys(); }, RECONCILE_INTERVAL_MS);
 
     document.addEventListener('visibilitychange', function(){
         if(document.visibilityState === 'visible') pollNow().then(reconcileKeys);
@@ -425,9 +344,6 @@
                 try{
                     var d = JSON.parse(ev.data || '{}');
                     if(d.originId === ORIGIN_ID) return;
-                    // FIX: update serverTime from SSE events so the next delta
-                    // poll window is anchored to the latest known server time.
-                    if(d.serverTime) serverTime = d.serverTime;
                     if(d.entries) applyRemote(d.entries);
                 }catch(e){}
             });
@@ -437,7 +353,6 @@
                 sseConnecting = false;
                 sseActive = false;
                 startPolling(POLL_MS_NO_SSE);
-                setPill({mode:'offline'});
                 if(!sseReconnectTimer){
                     sseReconnectTimer = setTimeout(function(){
                         sseReconnectTimer = null;
@@ -454,9 +369,5 @@
     
     window.GT_SYNC_REFRESH = function(){ return pollNow().then(reconcileKeys); };
     window.GT_SYNC_AUDIT = function(){ return fetch(AUDIT_URL).then(function(r){ return r.json(); }); };
-
-    // Legacy aliases used in older parts of the app
-    window.__GT_SYNC_REFRESH__ = window.GT_SYNC_REFRESH;
-    window.__GT_SYNC_AUDIT__ = window.GT_SYNC_AUDIT;
 
 })();
