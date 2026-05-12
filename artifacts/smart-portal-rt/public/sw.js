@@ -2,6 +2,7 @@
 // Cache static assets, push notifications, offline support
 
 const CACHE_NAME = 'smart-portal-rt-v2';
+const BACKEND_URL = 'https://smartportal-production.up.railway.app';
 
 const STATIC_ASSETS = [
   '/',
@@ -36,8 +37,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // /api: always network (never cache)
-  if (url.pathname.startsWith('/api')) {
+  // API calls to backend: always network (never cache)
+  if (url.hostname === 'smartportal-production.up.railway.app' || url.pathname.startsWith('/api')) {
     event.respondWith(fetch(event.request));
     return;
   }
@@ -129,7 +130,7 @@ self.addEventListener('pushsubscriptionchange', (event) => {
       userVisibleOnly: true,
       applicationServerKey: event.oldSubscription?.options?.applicationServerKey
     }).then((sub) => {
-      return fetch('/api/push/subscribe', {
+      return fetch(BACKEND_URL + '/api/push/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(sub)
@@ -138,7 +139,7 @@ self.addEventListener('pushsubscriptionchange', (event) => {
   );
 });
 
-// ─── Message ─────────────────────────────────────────────────────────────────
+// ─── Message ──────────────────────────────────────────────────────────────────
 self.addEventListener('message', (event) => {
   if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });
