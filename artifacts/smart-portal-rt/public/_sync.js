@@ -3,7 +3,7 @@
     if(window.GT_SYNC_INSTALLED) return;
     window.GT_SYNC_INSTALLED = true;
     
-    const API_BASE_URL = window.__VITE_API_URL__ || "https://smartportal-production.up.railway.app";
+    const API_BASE_URL = "https://smartportal-production.up.railway.app";
     var API_BASE = API_BASE_URL + '/api/kv';
     var KEYS_URL = API_BASE_URL + '/api/kv/keys';
     var SSE_URL = API_BASE_URL + '/api/kv/stream';
