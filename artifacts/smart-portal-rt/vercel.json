@@ -1,0 +1,6 @@
+{
+  "buildCommand": "pnpm run build --filter @workspace/smart-portal-rt",
+  "outputDirectory": "artifacts/smart-portal-rt/dist/public",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "vite"
+}
