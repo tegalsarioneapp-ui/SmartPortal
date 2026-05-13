@@ -2,7 +2,7 @@
 // Cache static assets, push notifications, offline support
 
 const CACHE_NAME = 'smart-portal-rt-v2';
-const BACKEND_URL = 'https://smartportal-production.up.railway.app';
+const BACKEND_URL = '';
 
 const STATIC_ASSETS = [
   '/',
@@ -38,7 +38,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
   // API calls to backend: always network (never cache)
-  if (url.hostname === 'smartportal-production.up.railway.app' || url.pathname.startsWith('/api')) {
+  if (url.pathname.startsWith('/api')) {
     event.respondWith(fetch(event.request));
     return;
   }

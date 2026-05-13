@@ -3,11 +3,10 @@
     if(window.GT_SYNC_INSTALLED) return;
     window.GT_SYNC_INSTALLED = true;
     
-    const API_BASE_URL = "https://smartportal-production.up.railway.app";
-    var API_BASE = API_BASE_URL + '/api/kv';
-    var KEYS_URL = API_BASE_URL + '/api/kv/keys';
-    var SSE_URL = API_BASE_URL + '/api/kv/stream';
-    var AUDIT_URL = API_BASE_URL + '/api/audit';
+    var API_BASE = '/api/kv';
+    var KEYS_URL = '/api/kv/keys';
+    var SSE_URL = '/api/kv/stream';
+    var AUDIT_URL = '/api/audit';
     var POLL_MS = 8000;
     var POLL_MS_NO_SSE = 2500;
     var DEBOUNCE_MS = 100;

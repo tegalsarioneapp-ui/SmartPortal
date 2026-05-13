@@ -7,7 +7,7 @@
   if (window.__GT_SESSION_INSTALLED__) return;
   window.__GT_SESSION_INSTALLED__ = true;
 
-  const API_BASE_URL = window.__VITE_API_URL__ || "https://smartportal-production.up.railway.app";
+  const API_BASE_URL = "";
 
   var sessionToken = null;
   var sessionRole = null;
