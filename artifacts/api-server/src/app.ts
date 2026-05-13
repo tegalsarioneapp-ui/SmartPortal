@@ -77,7 +77,9 @@ const generalLimiter = rateLimit({
   standardHeaders: "draft-7",
   legacyHeaders: false,
   message: { error: "Too many requests, please slow down." },
-  skip: (req) => req.path === "/kv/stream", // SSE is exempt
+  // Health probes and SSE stream are exempt from rate limiting.
+  // Health probes come from Railway's infra every few seconds and must never be throttled.
+  skip: (req) => req.path === "/kv/stream" || req.path === "/health" || req.path === "/healthz",
 });
 
 // Write limiter: 60 PUT/DELETE / minute per IP (1/s average).
