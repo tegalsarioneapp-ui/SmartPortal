@@ -107,7 +107,7 @@
         }
         for(i=0; i<stale.length; i++) origRemove(stale[i]);
         
-        window.GT_SYNC_BOOTED = true;
+        window.__GT_SYNC_BOOTED__ = true;
         hideBootOverlay();
         if(viaAsync) runRefreshers();
         console.info('✓ Smart Portal RT terhubung ke PostgreSQL pusat');
