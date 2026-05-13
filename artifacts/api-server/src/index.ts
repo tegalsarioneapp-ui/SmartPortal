@@ -29,13 +29,22 @@ async function ensureSchema() {
 }
 
 async function startServer() {
+  // Log DB presence (not the URL value) so connection issues are visible early.
+  logger.info(
+    { hasDbUrl: Boolean(process.env["DATABASE_URL"]) },
+    "Database configuration check",
+  );
+
   await ensureSchema();
 
-  const server = app.listen(port);
+  // Bind to 0.0.0.0 explicitly — Railway (and most PaaS) require this.
+  // Binding only to 127.0.0.1 (Node default) makes the process unreachable
+  // from outside the container.
+  const server = app.listen(port, "0.0.0.0");
 
   server.on("listening", () => {
     const addr = server.address() as AddressInfo | null;
-    logger.info({ port: addr?.port ?? port }, "Server listening");
+    logger.info({ port: addr?.port ?? port, host: "0.0.0.0" }, "Server listening");
   });
 
   server.on("error", (err: NodeJS.ErrnoException) => {

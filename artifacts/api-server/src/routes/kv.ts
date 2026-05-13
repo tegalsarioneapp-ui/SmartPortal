@@ -67,6 +67,16 @@ vacuum();
 setInterval(vacuum, 60 * 60 * 1000).unref?.();
 
 router.get("/kv/stream", (req, res) => {
+  // Explicitly set CORS headers on the SSE response.
+  // The global cors() middleware sets these on the initial response, but some
+  // proxies (nginx, Vercel edge, Railway) strip or fail to forward middleware
+  // headers on long-lived streaming responses. Setting them directly here
+  // guarantees the browser never sees a CORS error on EventSource connections.
+  const origin = req.headers["origin"] ?? "*";
+  res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Vary", "Origin");
+
   res.status(200);
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache, no-store, no-transform");

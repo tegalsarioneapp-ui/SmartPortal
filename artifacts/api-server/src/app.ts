@@ -4,7 +4,7 @@ import express, {
   type Request,
   type Response,
 } from "express";
-import cors from "cors";
+import cors, { type CorsOptions } from "cors";
 import pinoHttp from "pino-http";
 import path from "path";
 import { existsSync } from "fs";
@@ -48,20 +48,39 @@ const allowedOrigins = allowedOriginsRaw
       .filter(Boolean)
   : null;
 
-app.use(
-  cors({
-    origin: (origin, cb) => {
-      // Same-origin / non-browser callers (no Origin header) are always allowed.
-      if (!origin) return cb(null, true);
-      if (!allowedOrigins) {
-        // Allow all origins — in production the Express server serves both
-        // frontend and API from the same port, so CORS is not needed.
-        return cb(null, true);
-      }
-      return cb(null, allowedOrigins.includes(origin));
-    },
-  }),
-);
+// ---------------------------------------------------------------------------
+// CORS — must be declared before all routes, including OPTIONS preflight.
+//
+// credentials:true is required so browsers include cookies/auth headers in
+// cross-origin requests (Vercel frontend → Railway backend).
+//
+// The explicit app.options("*", cors()) handler answers preflight requests
+// (OPTIONS method) before they reach any rate limiter or route handler.
+// Without it, browsers block the actual request after a failed preflight.
+// ---------------------------------------------------------------------------
+const corsOptions: CorsOptions = {
+  origin: (origin, cb) => {
+    // Same-origin / non-browser callers (no Origin header) are always allowed.
+    if (!origin) return cb(null, true);
+    if (!allowedOrigins) {
+      // No whitelist configured → allow all origins.
+      // This is the correct setting when Railway serves a Vercel frontend.
+      return cb(null, true);
+    }
+    return cb(null, allowedOrigins.includes(origin));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  exposedHeaders: ["X-Request-Id"],
+  maxAge: 86400,   // browsers cache preflight response for 24 h
+};
+
+// Handle every OPTIONS preflight immediately — before rate limiters or body parsers.
+// Express 5 uses path-to-regexp v8 which requires named wildcards; "/{*path}"
+// matches every path including "/" itself.
+app.options("/{*path}", cors(corsOptions));
+app.use(cors(corsOptions));
 
 // ---------------------------------------------------------------------------
 // Rate limiting — prevents abuse of the KV store endpoints.
