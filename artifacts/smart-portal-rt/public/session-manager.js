@@ -7,7 +7,10 @@
   if (window.__GT_SESSION_INSTALLED__) return;
   window.__GT_SESSION_INSTALLED__ = true;
 
-  const API_BASE_URL = "";
+  const _h = window.location.hostname;
+  const API_BASE_URL = (_h === 'localhost' || _h.includes('replit') || _h.includes('127.0.0.1'))
+    ? ''
+    : 'https://smartportal-production.up.railway.app';
 
   var sessionToken = null;
   var sessionRole = null;

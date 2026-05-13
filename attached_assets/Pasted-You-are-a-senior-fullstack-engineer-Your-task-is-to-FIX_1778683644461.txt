@@ -1,0 +1,207 @@
+You are a senior fullstack engineer.
+
+Your task is to FIX and STABILIZE my fullstack project so it works perfectly in BOTH:
+
+* Development (Replit / localhost)
+* Production (Vercel frontend + Railway backend)
+
+This MUST work automatically without manual changes.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+PROJECT STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━
+
+* Monorepo
+* Frontend: artifacts/smart-portal-rt (Vite + React)
+* Backend: artifacts/api-server (Express)
+* GitHub connected to Vercel & Railway (auto deploy)
+
+Backend URL (production):
+https://smartportal-production.up.railway.app
+
+━━━━━━━━━━━━━━━━━━━━━━━
+CURRENT PROBLEM
+━━━━━━━━━━━━━━━━━━━━━━━
+
+Frontend shows:
+"Tidak bisa menghubungi server"
+
+Cause:
+API calls are inconsistent between development and production.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+GOAL
+━━━━━━━━━━━━━━━━━━━━━━━
+
+* Frontend connects to backend successfully
+* Works in BOTH dev and production
+* No API errors
+* No overlay "Coba lagi"
+* Auto deploy works from GitHub
+
+━━━━━━━━━━━━━━━━━━━━━━━
+TASKS (DO ALL, NO EXPLANATION)
+━━━━━━━━━━━━━━━━━━━━━━━
+
+1. FIX API CONNECTION (CRITICAL)
+
+File:
+artifacts/smart-portal-rt/_sync.js
+
+REPLACE ALL API BASE LOGIC WITH:
+
+const API_BASE_URL =
+window.location.hostname.includes("replit") ||
+window.location.hostname === "localhost"
+? ""
+: "https://smartportal-production.up.railway.app";
+
+Then enforce ALL requests:
+
+fetch(`${API_BASE_URL}/api/...`)
+
+Apply to:
+
+* _sync.js
+* session-manager.js
+* ALL fetch / XMLHttpRequest usage
+
+REMOVE COMPLETELY:
+
+* window.**VITE_API_URL**
+* import.meta.env
+* any old API config
+
+Ensure:
+NO broken relative-only calls
+NO inconsistent URLs
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+2. FIX SERVICE WORKER
+
+File:
+artifacts/smart-portal-rt/public/sw.js
+
+SET:
+
+const BACKEND_URL = "https://smartportal-production.up.railway.app";
+
+Ensure ALL API calls use:
+
+fetch(`${BACKEND_URL}/api/...`)
+
+DO NOT use relative `/api` in service worker.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+3. FIX BLOCKING REQUEST FAILURE
+
+In _sync.js:
+
+* Detect failed API request
+* DO NOT crash app
+* DO NOT freeze UI
+* Replace blocking error with retry logic
+
+Ensure:
+App still loads even if API temporarily fails
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+4. VERIFY BACKEND API
+
+Ensure endpoint exists:
+
+GET /api/kv
+
+Response MUST be:
+
+{
+"entries": [],
+"serverTime": "ISO_STRING"
+}
+
+If missing → implement route.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+5. FIX BACKEND CONFIG
+
+File:
+artifacts/api-server/src/app.ts
+
+Ensure:
+
+import cors from "cors";
+app.use(cors({ origin: "*" }));
+
+Ensure:
+
+const port = process.env.PORT || 8080;
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+6. REMOVE MONOREPO ISSUES
+
+Backend must NOT use:
+"workspace:*"
+
+Replace/remove all workspace dependencies.
+
+Ensure Railway build works with npm.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+7. ENSURE DEPLOY WORKS
+
+Frontend (Vercel):
+
+* Root: artifacts/smart-portal-rt
+* Build: pnpm build
+* Output: dist
+
+Backend (Railway):
+
+* Root: artifacts/api-server
+* Must auto start
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+8. VALIDATE FINAL RESULT
+
+Frontend must call:
+
+https://smartportal-production.up.railway.app/api/...
+
+NOT only:
+/api/...
+
+Must work in:
+
+* Replit (dev)
+* Vercel (production)
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+9. OUTPUT RESULT
+
+Provide:
+
+* All modified files
+* Final code
+* Confirmation:
+
+✔ API works
+✔ No "Tidak bisa menghubungi server"
+✔ App loads normally
+✔ Ready for production auto deploy
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+RULES:
+
+* DO NOT explain
+* DO NOT suggest
+* DO NOT ask questions
+* JUST FIX EVERYTHING COMPLETELY

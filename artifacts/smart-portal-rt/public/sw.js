@@ -2,7 +2,9 @@
 // Cache static assets, push notifications, offline support
 
 const CACHE_NAME = 'smart-portal-rt-v2';
-const BACKEND_URL = '';
+const BACKEND_URL = (self.location.hostname === 'localhost' || self.location.hostname.includes('replit') || self.location.hostname.includes('127.0.0.1'))
+  ? ''
+  : 'https://smartportal-production.up.railway.app';
 
 const STATIC_ASSETS = [
   '/',
