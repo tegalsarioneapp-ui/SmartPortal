@@ -125,6 +125,13 @@ app.use("/api/kv", (req, res, next) => {
 app.use(express.json({ limit: "12mb" }));
 app.use(express.urlencoded({ extended: true, limit: "12mb" }));
 
+// 🔥 TAMBAHKAN DI SINI
+app.get("/api/test", (req, res) => {
+  res.json({ ok: true });
+});
+
+app.use("/api", router);
+
 app.use("/api", router);
 
 // 404 for unknown /api/* routes (HTML defaults leak framework info).
