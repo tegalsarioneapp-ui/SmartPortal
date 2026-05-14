@@ -1,14 +1,25 @@
+# Railway / Nixpacks build configuration
+# Nixpacks v1.34+ reads "packageManager" from root package.json and activates
+# corepack automatically. The phases below make that explicit so there is no
+# ambiguity regardless of Nixpacks version.
+
 [phases.setup]
 nixPkgs = ["nodejs_24"]
 
 [phases.install]
+# corepack is bundled with Node 24 and respects the "packageManager" field in
+# package.json. This is the correct, PATH-safe way to install pnpm on Railway.
+# "npm install -g pnpm" is NOT used because npm's global bin is not in PATH
+# inside the Nixpacks Docker layer, causing "pnpm: command not found".
 cmds = [
   "corepack enable",
-  "corepack prepare pnpm@latest --activate",
+  "corepack prepare pnpm@10.26.1 --activate",
   "pnpm install --frozen-lockfile"
 ]
 
 [phases.build]
+# Only build the API server — do NOT run the root "build" script which also
+# runs typecheck across all packages and would fail without frontend deps.
 cmds = ["pnpm --filter @workspace/api-server run build"]
 
 [start]
