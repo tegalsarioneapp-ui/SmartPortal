@@ -22,6 +22,14 @@ if (!connectionString) {
   );
 }
 
+// Enable SSL for external hosts (Railway, Supabase, etc.).
+// Replit's internal "helium" host and localhost never need SSL.
+const isExternalHost =
+  connectionString &&
+  !connectionString.includes("localhost") &&
+  !connectionString.includes("helium") &&
+  !connectionString.includes("127.0.0.1");
+
 export const pool = new Pool({
   // Fall back to a local placeholder — pg will fail at connect() time,
   // not at Pool construction time, so the module always loads cleanly.
@@ -29,7 +37,10 @@ export const pool = new Pool({
   // Cap pool size to avoid exhausting Railway's connection limit.
   max: 10,
   idleTimeoutMillis: 30_000,
-  connectionTimeoutMillis: 2_000,
+  connectionTimeoutMillis: 5_000,
+  // Railway PostgreSQL requires SSL on external connections.
+  // rejectUnauthorized:false accepts self-signed certs (standard on Railway).
+  ...(isExternalHost ? { ssl: { rejectUnauthorized: false } } : {}),
 });
 
 // CRITICAL: Without this handler, any error on an idle pg client (connection
