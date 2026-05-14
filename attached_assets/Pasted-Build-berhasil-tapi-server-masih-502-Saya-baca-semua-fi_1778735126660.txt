@@ -1,0 +1,54 @@
+Build berhasil tapi server masih 502. Saya baca semua file kritis sekaligus untuk diagnosis lengkap:
+
+
+4 actions
+Saya temukan root cause sebenarnya. Ada 3 bug kritis yang menyebabkan server crash:
+
+pg Pool tidak punya error listener → pool emit error event → Node.js crash karena unhandled EventEmitter error (ini paling fatal)
+Path dist/public salah — Vite output ke dist/ bukan dist/public/
+Frontend tidak dibangun → res.sendFile gagal di production
+Saya fix semua sekarang paralel:
+
+
+6 actions
+Sekarang saya fix app.ts (path salah + sendFile crash-proof) dan index.ts (global error handlers) sekaligus:
+
+
+2 actions
+Sekarang saya tambahkan global error handlers di index.ts dan update railway.json untuk build frontend juga:
+
+
+2 actions
+Sekarang update railway.json agar frontend juga di-build di Railway, lalu check package name smart-portal-rt:
+
+
+5 actions
+Sekarang mari verifikasi semua perubahan build lokal, sekaligus cek konfigurasi Vercel:
+
+
+3 actions
+Build berhasil. Semua perubahan sudah siap. Sekarang saya commit dan instruksikan push ke GitHub:
+
+
+2 actions
+Semua perubahan kode sudah siap. Saya perlu Anda push ke GitHub agar Railway bisa redeploy. Buka Terminal di Replit, jalankan:
+
+git add lib/db/src/index.ts artifacts/api-server/src/index.ts artifacts/api-server/src/app.ts railway.json
+git commit -m "fix: prevent 502 - pool error handler, global rejection handlers, correct static path, build frontend"
+git push origin main
+
+Setelah push, update juga di Railway dashboard → Settings → Build Command (ganti dengan yang include frontend):
+
+corepack enable && corepack prepare pnpm@10.26.1 --activate && pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server run build && pnpm --filter smart-portal-rt run build
+
+Start Command tetap sama:
+
+node --enable-source-maps ./artifacts/api-server/dist/index.mjs
+
+Ringkasan 3 bug yang sudah saya fix:
+
+Bug	Efek	Fix
+pg.Pool tidak ada error listener	Setiap koneksi DB error → Node.js crash → 502	pool.on('error', handler) di lib/db/src/index.ts
+Tidak ada global rejection handler	Promise unhandled → proses crash di Node 15+	process.on('unhandledRejection') + uncaughtException di index.ts
+Path static dist/public/ salah	Vite output ke dist/, bukan dist/public/ → frontend tidak terlayani	Fix path candidates + sendFile dengan callback di app.ts
+Bug #1 adalah penyebab utama 502: setiap kali koneksi DB di-reset (hal biasa di cloud), pool emit error event → karena tidak ada listener → Node.js throw uncaught exception → server crash.

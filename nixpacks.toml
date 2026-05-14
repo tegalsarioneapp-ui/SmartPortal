@@ -15,9 +15,8 @@ cmds = [
 ]
 
 [phases.build]
-# Only build the API server — do NOT run the root "build" script which also
-# runs typecheck across all packages and would fail without frontend deps.
-cmds = ["pnpm --filter @workspace/api-server run build"]
+# Build both API server and frontend for single-process production deployment.
+cmds = ["pnpm --filter @workspace/api-server run build && pnpm --filter smart-portal-rt run build"]
 
 [start]
 cmd = "NODE_ENV=production node --enable-source-maps ./artifacts/api-server/dist/index.mjs"
