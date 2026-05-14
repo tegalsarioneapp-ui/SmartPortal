@@ -11,8 +11,9 @@ async function checkDb(timeoutMs = 3000): Promise<{
   error?: string;
 }> {
   const t0 = Date.now();
-  const client = await pool.connect();
+  let client: Awaited<ReturnType<typeof pool.connect>> | undefined;
   try {
+    client = await pool.connect();
     await Promise.race([
       client.query("SELECT 1"),
       new Promise<never>((_, reject) =>
@@ -21,13 +22,14 @@ async function checkDb(timeoutMs = 3000): Promise<{
     ]);
     return { ok: true, latencyMs: Date.now() - t0 };
   } catch (err) {
+    console.error("[Health] DB check failed:", err instanceof Error ? err.message : String(err));
     return {
       ok: false,
       latencyMs: Date.now() - t0,
       error: err instanceof Error ? err.message : String(err),
     };
   } finally {
-    client.release();
+    client?.release();
   }
 }
 
@@ -58,7 +60,7 @@ router.get("/health", async (_req: Request, res: Response) => {
     memory: memoryMb(),
   };
 
-  res.status(db.ok ? 200 : 503).json(payload);
+  res.status(200).json(payload);
 });
 
 router.get("/healthz", (_req: Request, res: Response) => {

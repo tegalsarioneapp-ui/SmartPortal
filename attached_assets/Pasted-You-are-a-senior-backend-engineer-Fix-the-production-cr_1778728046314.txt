@@ -1,0 +1,143 @@
+You are a senior backend engineer. Fix the production crash causing HTTP 500 on `/api/health` in a Railway Node.js app.
+
+## PROBLEM
+
+* `/api/health` returns HTTP 500
+* Server is running but crashes during request handling
+* Likely caused by database or blocking logic
+
+---
+
+## REQUIRED FIXES (DO ALL)
+
+### 1. NEVER crash health endpoint
+
+Rewrite `/api/health` to ALWAYS return 200:
+
+```js
+app.get("/api/health", async (req, res) => {
+  try {
+    let dbOk = false;
+
+    try {
+      if (pool) {
+        await pool.query("SELECT 1");
+        dbOk = true;
+      }
+    } catch (err) {
+      console.error("[Health] DB check failed:", err.message);
+    }
+
+    res.json({
+      status: "ok",
+      db: dbOk
+    });
+
+  } catch (err) {
+    console.error("[Health] Fatal error:", err);
+    res.json({
+      status: "ok",
+      db: false
+    });
+  }
+});
+```
+
+---
+
+### 2. REMOVE ALL THROW AT MODULE LEVEL (CRITICAL)
+
+In ANY file (especially db module):
+
+❌ REMOVE:
+
+```js
+if (!process.env.DATABASE_URL) {
+  throw new Error(...)
+}
+```
+
+✔ REPLACE WITH:
+
+```js
+if (!process.env.DATABASE_URL) {
+  console.error("DATABASE_URL missing");
+}
+```
+
+---
+
+### 3. SAFE DATABASE INIT
+
+Ensure DB does NOT crash app:
+
+```js
+let pool;
+
+try {
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL
+  });
+} catch (err) {
+  console.error("DB init failed:", err);
+}
+```
+
+---
+
+### 4. DO NOT BLOCK SERVER START
+
+❌ REMOVE:
+
+```js
+await ensureSchema();
+```
+
+✔ REPLACE:
+
+```js
+ensureSchema().catch(err => {
+  console.error("Schema error:", err);
+});
+```
+
+---
+
+### 5. GLOBAL ERROR HANDLER
+
+Add this at bottom:
+
+```js
+app.use((err, req, res, next) => {
+  console.error("[GLOBAL ERROR]", err);
+  res.status(500).json({ error: "Internal Server Error" });
+});
+```
+
+---
+
+### 6. LOG EVERYTHING
+
+At startup:
+
+```js
+console.log("PORT:", process.env.PORT);
+console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
+```
+
+---
+
+## OUTPUT
+
+After fixing:
+
+1. Show updated `/api/health`
+2. Show DB init code
+3. Confirm server does not crash if DB fails
+4. Confirm `/api/health` returns 200 even if DB is down
+
+---
+
+DO NOT change frontend.
+DO NOT change deployment settings.
+ONLY fix backend runtime stability.
