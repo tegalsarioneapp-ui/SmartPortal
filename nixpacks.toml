@@ -3,9 +3,6 @@
 # corepack automatically. The phases below make that explicit so there is no
 # ambiguity regardless of Nixpacks version.
 
-[phases.setup]
-nixPkgs = ["nodejs_24"]
-
 [phases.install]
 # corepack is bundled with Node 24 and respects the "packageManager" field in
 # package.json. This is the correct, PATH-safe way to install pnpm on Railway.
