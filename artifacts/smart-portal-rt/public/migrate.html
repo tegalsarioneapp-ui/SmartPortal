@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migrasi Data — Smart Portal RT</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 40px 20px; }
+    .container { max-width: 760px; margin: 0 auto; }
+
+    h1 { font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 4px; }
+    .subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 32px; }
+
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+    .card-title { font-size: 1rem; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .card-title .icon { font-size: 1.3rem; }
+    .card-desc { font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px; line-height: 1.6; }
+
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 10px; border: none; cursor: pointer; font-size: 0.9rem; font-weight: 700; transition: all 0.2s; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-blue  { background: #3b82f6; color: white; }
+    .btn-blue:hover:not(:disabled)  { background: #2563eb; }
+    .btn-green { background: #10b981; color: white; }
+    .btn-green:hover:not(:disabled) { background: #059669; }
+    .btn-amber { background: #f59e0b; color: white; }
+    .btn-amber:hover:not(:disabled) { background: #d97706; }
+    .btn-outline { background: transparent; color: #94a3b8; border: 1px solid #475569; }
+    .btn-outline:hover:not(:disabled) { background: #1e293b; color: #e2e8f0; }
+
+    .status-row { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 10px; font-size: 0.88rem; font-weight: 600; }
+    .status-ok   { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
+    .status-err  { background: rgba(239,68,68,0.12);  border: 1px solid rgba(239,68,68,0.3);  color: #fca5a5; }
+    .status-warn { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d; }
+    .status-idle { background: rgba(100,116,139,0.12);border: 1px solid rgba(100,116,139,0.3); color: #94a3b8; }
+
+    .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .dot-green { background: #10b981; box-shadow: 0 0 6px #10b981; }
+    .dot-red   { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+    .dot-amber { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+    .dot-gray  { background: #64748b; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .dot-pulse { animation: pulse 1.2s infinite; }
+
+    pre { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 16px; font-size: 0.78rem; color: #7dd3fc; overflow-x: auto; max-height: 260px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; margin-top: 16px; }
+
+    .file-drop { border: 2px dashed #475569; border-radius: 12px; padding: 28px; text-align: center; cursor: pointer; transition: 0.2s; color: #64748b; font-size: 0.9rem; margin-bottom: 16px; }
+    .file-drop:hover, .file-drop.dragover { border-color: #3b82f6; color: #93c5fd; background: rgba(59,130,246,0.05); }
+    .file-drop input { display: none; }
+
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .stat-pill { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 8px 14px; font-size: 0.8rem; color: #94a3b8; }
+    .stat-pill strong { color: #e2e8f0; }
+
+    .divider { border: none; border-top: 1px solid #1e293b; margin: 8px 0 20px; }
+    .small { font-size: 0.78rem; color: #64748b; margin-top: 6px; }
+
+    #import-progress { display: none; }
+    .progress-bar-wrap { background: #0f172a; border-radius: 8px; overflow: hidden; height: 8px; margin-top: 12px; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); border-radius: 8px; transition: width 0.3s; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>🔄 Alat Migrasi Data</h1>
+  <p class="subtitle">Export & import data KV Store antar environment (Replit ↔ Railway) tanpa perlu terminal.</p>
+
+  <!-- STATUS DB -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔌</span> Status Koneksi Database</div>
+    <div class="card-desc">Cek apakah server dan database terhubung dengan baik di environment ini.</div>
+    <div id="db-status" class="status-row status-idle">
+      <div class="dot dot-gray"></div>
+      <span>Belum dicek — klik tombol di bawah</span>
+    </div>
+    <pre id="db-detail" style="display:none"></pre>
+    <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn btn-blue" onclick="checkDb()">🔍 Cek Koneksi</button>
+      <button class="btn btn-outline" onclick="document.getElementById('db-detail').style.display = document.getElementById('db-detail').style.display==='none'?'block':'none'">Detail JSON</button>
+    </div>
+  </div>
+
+  <!-- EXPORT -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📤</span> Export Data (dari environment ini)</div>
+    <div class="card-desc">
+      Unduh semua data KV Store sebagai file JSON. Gunakan file ini untuk diimport ke environment lain (misalnya Railway).
+    </div>
+    <div id="export-status" class="status-row status-idle" style="display:none">
+      <div class="dot dot-gray"></div><span></span>
+    </div>
+    <div id="export-stats" class="row" style="margin-bottom:16px; display:none"></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn btn-green" onclick="exportData(true)">⬇️ Download JSON</button>
+      <button class="btn btn-outline" onclick="exportData(false)">👁️ Preview di halaman</button>
+    </div>
+    <pre id="export-preview" style="display:none"></pre>
+  </div>
+
+  <!-- IMPORT -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📥</span> Import Data (ke environment ini)</div>
+    <div class="card-desc">
+      Upload file JSON hasil export untuk memuat data ke database environment ini. Semua entri akan di-<em>upsert</em> — entri yang sudah ada akan ditimpa.
+    </div>
+
+    <div class="file-drop" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleDrop(event)">
+      <input type="file" id="file-input" accept=".json,application/json" onchange="handleFile(this.files[0])">
+      <div id="drop-label">Klik atau seret file JSON ke sini</div>
+    </div>
+
+    <div id="import-progress">
+      <div id="import-file-info" class="row" style="margin-bottom:12px"></div>
+      <button class="btn btn-amber" id="import-btn" onclick="importData()">🚀 Mulai Import</button>
+      <div class="progress-bar-wrap" id="progress-wrap" style="display:none">
+        <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div id="import-status" class="status-row status-idle" style="display:none; margin-top:16px">
+      <div class="dot dot-gray"></div><span></span>
+    </div>
+    <pre id="import-result" style="display:none"></pre>
+  </div>
+
+  <p class="small" style="text-align:center; margin-top:8px;">Smart Portal RT 005 — Migration Tool · Hanya bisa diakses oleh administrator</p>
+
+</div>
+
+<script>
+let importFileData = null;
+
+async function checkDb() {
+  const statusEl = document.getElementById('db-status');
+  const detailEl = document.getElementById('db-detail');
+  setStatus(statusEl, 'warn', 'Menghubungkan…', 'pulse');
+  try {
+    const r = await fetch('/api/debug/db');
+    const json = await r.json();
+    detailEl.textContent = JSON.stringify(json, null, 2);
+    if (json.ok) {
+      setStatus(statusEl, 'ok', `Terhubung · ${json.database?.connection?.serverVersion ?? 'PostgreSQL'} · Latency ${json.database?.connection?.latencyMs ?? '?'}ms`, 'green');
+    } else {
+      setStatus(statusEl, 'err', `Gagal: ${json.database?.connection?.error ?? 'Unknown error'}`, 'red');
+    }
+  } catch (e) {
+    setStatus(statusEl, 'err', `Tidak dapat menghubungi server: ${e.message}`, 'red');
+  }
+}
+
+async function exportData(download) {
+  const statusEl = document.getElementById('export-status');
+  const statsEl  = document.getElementById('export-stats');
+  const previewEl = document.getElementById('export-preview');
+  statusEl.style.display = 'flex';
+  statsEl.style.display = 'none';
+  previewEl.style.display = 'none';
+  setStatus(statusEl, 'warn', 'Mengambil data dari server…', 'pulse');
+
+  if (download) {
+    try {
+      const r = await fetch('/api/debug/export?download=1');
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const d = new Date().toISOString().slice(0,10);
+      a.download = `kv-export-${d}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setStatus(statusEl, 'ok', 'File berhasil diunduh!', 'green');
+    } catch(e) {
+      setStatus(statusEl, 'err', `Gagal download: ${e.message}`, 'red');
+    }
+    return;
+  }
+
+  try {
+    const r = await fetch('/api/debug/export');
+    const json = await r.json();
+    if (!r.ok) throw new Error(json.error ?? `HTTP ${r.status}`);
+    const count = json.entries?.length ?? 0;
+    const total = json.source?.totalRowsInTable ?? count;
+    setStatus(statusEl, 'ok', `${count} entri ditemukan`, 'green');
+    statsEl.innerHTML = `
+      <div class="stat-pill">Entri live: <strong>${count}</strong></div>
+      <div class="stat-pill">Total di DB: <strong>${total}</strong></div>
+      <div class="stat-pill">Diekspor: <strong>${json.exportedAt?.slice(0,19).replace('T',' ')}</strong></div>
+    `;
+    statsEl.style.display = 'flex';
+    previewEl.textContent = JSON.stringify(json, null, 2);
+    previewEl.style.display = 'block';
+  } catch(e) {
+    setStatus(statusEl, 'err', `Gagal: ${e.message}`, 'red');
+  }
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+}
+
+function handleFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const json = JSON.parse(e.target.result);
+      importFileData = json;
+      const count = json.entries?.length ?? 0;
+      document.getElementById('drop-label').textContent = `✅ ${file.name} (${count} entri)`;
+      document.getElementById('import-file-info').innerHTML = `
+        <div class="stat-pill">File: <strong>${file.name}</strong></div>
+        <div class="stat-pill">Entri: <strong>${count}</strong></div>
+        <div class="stat-pill">Ukuran: <strong>${(file.size/1024).toFixed(1)} KB</strong></div>
+      `;
+      document.getElementById('import-progress').style.display = 'block';
+      document.getElementById('import-status').style.display = 'none';
+      document.getElementById('import-result').style.display = 'none';
+    } catch(err) {
+      alert('File bukan JSON yang valid: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+async function importData() {
+  if (!importFileData) return;
+  const statusEl  = document.getElementById('import-status');
+  const resultEl  = document.getElementById('import-result');
+  const btn       = document.getElementById('import-btn');
+  const wrap      = document.getElementById('progress-wrap');
+  const bar       = document.getElementById('progress-bar');
+
+  btn.disabled = true;
+  wrap.style.display = 'block';
+  bar.style.width = '30%';
+  statusEl.style.display = 'flex';
+  resultEl.style.display = 'none';
+  setStatus(statusEl, 'warn', 'Mengimport data ke server…', 'pulse');
+
+  try {
+    bar.style.width = '60%';
+    const r = await fetch('/api/debug/import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(importFileData),
+    });
+    bar.style.width = '100%';
+    const json = await r.json();
+    resultEl.textContent = JSON.stringify(json, null, 2);
+    resultEl.style.display = 'block';
+    if (json.ok) {
+      setStatus(statusEl, 'ok', `✅ Berhasil import ${json.imported} entri · Total di DB: ${json.totalLiveRowsAfterImport}`, 'green');
+    } else {
+      setStatus(statusEl, 'err', `Selesai dengan error: ${json.imported} berhasil, ${json.failed} gagal`, 'red');
+    }
+  } catch(e) {
+    bar.style.width = '100%';
+    setStatus(statusEl, 'err', `Gagal menghubungi server: ${e.message}`, 'red');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function setStatus(el, type, msg, dot) {
+  el.className = `status-row status-${type}`;
+  const dotClass = dot === 'green' ? 'dot dot-green' : dot === 'red' ? 'dot dot-red' : dot === 'pulse' ? 'dot dot-amber dot-pulse' : 'dot dot-amber';
+  el.innerHTML = `<div class="${dotClass}"></div><span>${msg}</span>`;
+}
+
+// Auto-check DB on load
+window.addEventListener('DOMContentLoaded', checkDb);
+</script>
+</body>
+</html>
