@@ -5,7 +5,7 @@ import pushRouter from "./push";
 
 const router: IRouter = Router();
 
-router.use(healthRouter);
+router.use("/health", healthRouter);
 router.use(kvRouter);
 router.use(pushRouter);
 
