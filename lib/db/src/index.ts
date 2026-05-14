@@ -29,7 +29,7 @@ export const pool = new Pool({
   // Cap pool size to avoid exhausting Railway's connection limit.
   max: 10,
   idleTimeoutMillis: 30_000,
-  connectionTimeoutMillis: 5_000,
+  connectionTimeoutMillis: 2_000,
 });
 
 // CRITICAL: Without this handler, any error on an idle pg client (connection
