@@ -2,7 +2,11 @@
 -- PostgreSQL database dump
 --
 
+<<<<<<< HEAD
 \restrict why4uLXYhpiJ3O1qIDcS7PIfjofbGEgwhkLgDoWGdZMBYP8wuIS70bm8gj6tLgF
+=======
+\restrict EUm4dfKx3N50nLeCVLkMFiGrCI5pFpq0M3vMAw941QF1EQMJIlfro2EPQyzLx8D
+>>>>>>> 1038fc7 (save before pull)
 
 -- Dumped from database version 16.10
 -- Dumped by pg_dump version 16.10
@@ -40,6 +44,11 @@ ALTER TABLE public.kv_store OWNER TO postgres;
 --
 
 COPY public.kv_store (key, value, updated_at) FROM stdin;
+<<<<<<< HEAD
+=======
+replit-pill-preference	hidden	2026-05-11 14:45:13.574775+00
+ts_last_sync	2026-05-11T15:35:17.863Z	2026-05-11 15:35:06.391775+00
+>>>>>>> 1038fc7 (save before pull)
 \.
 
 
@@ -55,5 +64,9 @@ ALTER TABLE ONLY public.kv_store
 -- PostgreSQL database dump complete
 --
 
+<<<<<<< HEAD
 \unrestrict why4uLXYhpiJ3O1qIDcS7PIfjofbGEgwhkLgDoWGdZMBYP8wuIS70bm8gj6tLgF
+=======
+\unrestrict EUm4dfKx3N50nLeCVLkMFiGrCI5pFpq0M3vMAw941QF1EQMJIlfro2EPQyzLx8D
+>>>>>>> 1038fc7 (save before pull)
 
