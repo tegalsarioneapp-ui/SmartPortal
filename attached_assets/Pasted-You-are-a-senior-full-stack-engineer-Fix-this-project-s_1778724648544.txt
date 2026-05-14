@@ -1,0 +1,103 @@
+You are a senior full-stack engineer. Fix this project so it runs correctly on Railway production.
+
+## CRITICAL CONTEXT
+- Build already succeeds
+- Runtime fails with HTTP 500 and ECONNREFUSED
+- This means the server is NOT running correctly or NOT listening to the correct port
+
+---
+
+## NON-NEGOTIABLE REQUIREMENTS
+
+### 1. SERVER MUST LISTEN ON RAILWAY PORT
+You MUST ensure:
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("Server running on port", PORT);
+});
+
+FAILURE TO DO THIS WILL BREAK THE APP.
+
+---
+
+### 2. VERIFY SERVER ACTUALLY STARTS
+- Add console.log at startup
+- Ensure no crash before listen()
+- Wrap startup in try/catch
+
+---
+
+### 3. FIX ENTRY POINT (CRITICAL)
+- Identify the real backend entry file
+- Ensure build outputs to:
+  dist/index.js OR dist/index.mjs
+
+- Ensure ONLY this is used in production:
+  node dist/index.js
+  OR
+  node dist/index.mjs
+
+DO NOT use:
+- vite preview
+- npm run preview
+
+---
+
+### 4. FORCE HEALTH ENDPOINT
+This MUST work:
+
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
+---
+
+### 5. ENSURE EXPRESS APP IS INITIALIZED CORRECTLY
+- app.use(express.json())
+- app.use(cors({ origin: "*" }))
+
+---
+
+### 6. DATABASE MUST NOT CRASH SERVER
+- Use process.env.DATABASE_URL
+- If missing, log error but DO NOT crash
+- Wrap DB connection in try/catch
+
+---
+
+### 7. REMOVE ALL FRONTEND / VITE LOGIC FROM BACKEND
+Backend must be pure API server only
+
+---
+
+### 8. PACKAGE.JSON MUST BE CLEAN
+
+"scripts": {
+  "build": "...",
+  "start": "node dist/index.js"
+}
+
+---
+
+### 9. VALIDATE OUTPUT
+After fixing:
+- Server must start without crash
+- /api/health must return 200
+- No ECONNREFUSED
+- No HTTP 500
+
+---
+
+## OUTPUT FORMAT
+
+1. Final package.json
+2. Final server entry file
+3. Exact Railway Start Command
+4. Explanation of what was broken
+
+---
+
+DO NOT ASK QUESTIONS.
+DO NOT PARTIALLY FIX.
+ENSURE THE SERVER ACTUALLY RUNS.

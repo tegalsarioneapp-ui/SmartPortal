@@ -7,7 +7,8 @@ const rawPort = process.env["PORT"];
 const port = rawPort ? Number(rawPort) : 8080;
 
 if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
+  console.error(`[Server] Invalid PORT value: "${rawPort}"`);
+  process.exit(1);
 }
 
 async function ensureSchema() {
@@ -21,36 +22,48 @@ async function ensureSchema() {
       )
     `);
     logger.info("DB schema verified — kv_store table ready");
+    console.log("[DB] Schema ready");
   } catch (err) {
-    logger.error({ err }, "Failed to ensure DB schema — server will start anyway");
+    logger.error({ err }, "Failed to ensure DB schema");
+    console.error("[DB] Schema check failed:", (err as Error).message);
   } finally {
     client.release();
   }
 }
 
 async function startServer() {
-  // Log DB presence (not the URL value) so connection issues are visible early.
-  logger.info(
-    { hasDbUrl: Boolean(process.env["DATABASE_URL"]) },
-    "Database configuration check",
-  );
+  // Log startup context for Railway logs visibility.
+  console.log(`[Server] Starting on port ${port}, NODE_ENV=${process.env["NODE_ENV"] ?? "development"}`);
+  console.log(`[DB] DATABASE_URL present: ${Boolean(process.env["DATABASE_URL"])}`);
 
-  await ensureSchema();
-
-  // Bind to 0.0.0.0 explicitly — Railway (and most PaaS) require this.
-  // Binding only to 127.0.0.1 (Node default) makes the process unreachable
-  // from outside the container.
-  const server = app.listen(port, "0.0.0.0");
-
-  server.on("listening", () => {
+  // -------------------------------------------------------------------------
+  // CRITICAL: bind to port FIRST, schema check runs in background.
+  //
+  // Railway's health check hits /api/health immediately after process start.
+  // If we await ensureSchema() before listen(), a slow/cold DB connection
+  // causes the health check to time out and Railway marks the deploy as failed.
+  // -------------------------------------------------------------------------
+  const server = app.listen(port, "0.0.0.0", () => {
     const addr = server.address() as AddressInfo | null;
-    logger.info({ port: addr?.port ?? port, host: "0.0.0.0" }, "Server listening");
+    const bound = addr?.port ?? port;
+    logger.info({ port: bound, host: "0.0.0.0" }, "Server listening");
+    console.log(`[Server] Listening on 0.0.0.0:${bound}`);
   });
 
   server.on("error", (err: NodeJS.ErrnoException) => {
     logger.error({ err }, "Error listening on port");
+    console.error("[Server] Failed to bind:", err.message);
     process.exit(1);
+  });
+
+  // Run schema migration in background — does not block the health check.
+  ensureSchema().catch((err: unknown) => {
+    console.error("[DB] Background schema check failed:", (err as Error).message);
   });
 }
 
-startServer();
+// Wrap top-level call so any unexpected synchronous error is logged cleanly.
+startServer().catch((err: unknown) => {
+  console.error("[Server] Fatal startup error:", (err as Error).message);
+  process.exit(1);
+});
