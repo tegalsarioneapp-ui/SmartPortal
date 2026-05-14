@@ -1,5 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
-import { pool } from "@workspace/db";
+import { pool, db, kvStoreTable } from "@workspace/db";
+import { isNotNull, sql } from "drizzle-orm";
 
 const router: IRouter = Router();
 
@@ -169,6 +170,170 @@ router.get("/debug/db", async (_req: Request, res: Response) => {
   };
 
   res.status(connectionTest.ok ? 200 : 503).json(payload);
+});
+
+// ---------------------------------------------------------------------------
+// GET /api/debug/export
+//
+// Exports ALL live (non-null) KV store entries as a JSON file.
+// Use this to migrate data from Replit's PostgreSQL to Railway's PostgreSQL
+// (or any other external database).
+//
+// ?download=1  → triggers browser file download (Content-Disposition: attachment)
+// ?include_deleted=1 → also include soft-deleted (null-value) tombstone rows
+//
+// Migration steps:
+//   1. GET https://<replit-app>/api/debug/export?download=1  → save kv-export.json
+//   2. POST https://<railway-app>/api/debug/import  (body = the saved JSON)
+// ---------------------------------------------------------------------------
+router.get("/debug/export", async (req: Request, res: Response) => {
+  const includeDeleted = req.query["include_deleted"] === "1";
+  const download = req.query["download"] === "1";
+
+  let rows: { key: string; value: string | null; updatedAt: Date | null }[] = [];
+  let dbOk = false;
+  let dbError: string | undefined;
+
+  try {
+    if (includeDeleted) {
+      rows = await db.select().from(kvStoreTable);
+    } else {
+      rows = await db.select().from(kvStoreTable).where(isNotNull(kvStoreTable.value));
+    }
+    dbOk = true;
+  } catch (err) {
+    dbError = err instanceof Error ? err.message : String(err);
+    console.error("[Export] DB read failed:", dbError);
+  }
+
+  if (!dbOk) {
+    res.status(503).json({
+      ok: false,
+      error: dbError,
+      hint: "Database is not reachable. Run /api/debug/db for diagnostics.",
+    });
+    return;
+  }
+
+  const countResult = await db
+    .select({ total: sql<number>`cast(count(*) as int)` })
+    .from(kvStoreTable)
+    .catch(() => [{ total: 0 }]);
+  const totalIncludingDeleted = countResult[0]?.total ?? 0;
+
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    environment: process.env["NODE_ENV"] ?? "development",
+    nodeVersion: process.version,
+    source: {
+      host: maskDatabaseUrl(process.env["DATABASE_URL"]),
+      rowCount: rows.length,
+      totalRowsInTable: totalIncludingDeleted,
+      includesDeleted: includeDeleted,
+    },
+    entries: rows.map((r) => ({
+      key: r.key,
+      value: r.value,
+      updatedAt: r.updatedAt ? new Date(r.updatedAt).toISOString() : null,
+    })),
+    importInstructions: [
+      "1. Copy this file or its contents.",
+      "2. POST to https://<target-server>/api/debug/import with Content-Type: application/json",
+      "3. The import endpoint does an upsert — existing keys are overwritten.",
+      "4. Verify by calling /api/debug/db on the target server.",
+    ],
+  };
+
+  if (download) {
+    const filename = `kv-export-${new Date().toISOString().slice(0, 10)}.json`;
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader("Content-Type", "application/json");
+    res.send(JSON.stringify(payload, null, 2));
+    return;
+  }
+
+  res.json(payload);
+});
+
+// ---------------------------------------------------------------------------
+// POST /api/debug/import
+//
+// Imports KV entries exported by GET /api/debug/export.
+// Body must be the JSON object returned by the export endpoint.
+// All entries are upserted — existing keys are overwritten.
+//
+// Usage:
+//   curl -X POST https://<railway-app>/api/debug/import \
+//     -H "Content-Type: application/json" \
+//     -d @kv-export.json
+// ---------------------------------------------------------------------------
+router.post("/debug/import", async (req: Request, res: Response) => {
+  const body = req.body as {
+    entries?: { key: string; value: string | null; updatedAt?: string }[];
+  };
+
+  if (!body?.entries || !Array.isArray(body.entries)) {
+    res.status(400).json({
+      ok: false,
+      error: "Invalid body: expected { entries: [...] }. Use GET /api/debug/export to produce a valid export.",
+    });
+    return;
+  }
+
+  const entries = body.entries.filter(
+    (e) => typeof e?.key === "string" && e.key.length > 0,
+  );
+
+  if (entries.length === 0) {
+    res.json({ ok: true, imported: 0, skipped: 0, message: "No valid entries to import." });
+    return;
+  }
+
+  let imported = 0;
+  let failed = 0;
+  const errors: string[] = [];
+
+  for (const entry of entries) {
+    try {
+      await db
+        .insert(kvStoreTable)
+        .values({
+          key: entry.key,
+          value: entry.value ?? null,
+          updatedAt: entry.updatedAt ? new Date(entry.updatedAt) : new Date(),
+        })
+        .onConflictDoUpdate({
+          target: kvStoreTable.key,
+          set: {
+            value: entry.value ?? null,
+            updatedAt: entry.updatedAt ? new Date(entry.updatedAt) : new Date(),
+          },
+        });
+      imported++;
+    } catch (err) {
+      failed++;
+      const msg = err instanceof Error ? err.message : String(err);
+      if (errors.length < 5) errors.push(`${entry.key}: ${msg}`);
+    }
+  }
+
+  const countResult = await db
+    .select({ total: sql<number>`cast(count(*) as int)` })
+    .from(kvStoreTable)
+    .where(isNotNull(kvStoreTable.value))
+    .catch(() => [{ total: 0 }]);
+
+  res.status(failed > 0 && imported === 0 ? 503 : 200).json({
+    ok: failed === 0,
+    imported,
+    failed,
+    totalLiveRowsAfterImport: countResult[0]?.total ?? 0,
+    ...(errors.length > 0 ? { sampleErrors: errors } : {}),
+    message:
+      failed === 0
+        ? `Successfully imported ${imported} entries.`
+        : `Imported ${imported}, failed ${failed}. Check sampleErrors for details.`,
+  });
 });
 
 export default router;
