@@ -179,11 +179,12 @@ if (process.env["NODE_ENV"] === "production") {
 
     const indexHtml = path.join(staticDir, "index.html");
     if (existsSync(indexHtml)) {
-      app.get("/{*path}", (_req, res, next) => {
-        res.sendFile(indexHtml, (err) => {
-          if (err) next(err);
-        });
-      });
+      app.get("/{*path}", (req, res, next) => {
+  if (req.path.startsWith("/api")) return next();
+  res.sendFile(indexHtml, (err) => {
+    if (err) next(err);
+  });
+});
     }
   } else {
     logger.warn("Frontend dist/ not found — static file serving disabled. API-only mode.");
