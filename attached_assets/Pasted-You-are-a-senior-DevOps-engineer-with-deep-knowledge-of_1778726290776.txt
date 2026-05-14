@@ -1,0 +1,131 @@
+You are a senior DevOps engineer with deep knowledge of Railway + Nixpacks + pnpm monorepos.
+
+Fix this project so it builds and runs correctly on Railway.
+
+## CONTEXT
+
+* Monorepo using pnpm workspaces
+* Backend located at: artifacts/api-server
+* Railway build fails with:
+  pnpm: command not found
+* Root cause:
+
+  * Nixpacks auto-detects npm and runs:
+    npm install -g pnpm && pnpm install
+  * pnpm gets installed in /root/.npm/bin but NOT added to PATH
+* Also:
+
+  * Previous nixpacks.toml install commands were ignored
+* Required fix:
+  Use packageManager field + proper Nixpacks config
+
+---
+
+## TASKS
+
+### 1. FIX ROOT package.json (CRITICAL)
+
+Add EXACT field:
+
+"packageManager": "pnpm@10.26.1"
+
+Do NOT remove anything else.
+
+This ensures Nixpacks uses corepack instead of npm global install.
+
+---
+
+### 2. FIX nixpacks.toml
+
+Ensure the file exists at project root with EXACT content:
+
+[phases.setup]
+nixPkgs = ["nodejs_24"]
+
+[phases.install]
+cmds = [
+"corepack enable",
+"corepack prepare pnpm@10.26.1 --activate",
+"pnpm install --frozen-lockfile"
+]
+
+[phases.build]
+cmds = [
+"pnpm --filter @workspace/api-server run build"
+]
+
+[start]
+cmd = "node artifacts/api-server/dist/index.mjs"
+
+---
+
+### 3. ENSURE BUILD OUTPUT EXISTS
+
+Verify that after build:
+
+artifacts/api-server/dist/index.mjs
+
+exists.
+
+If not:
+
+* fix build script inside artifacts/api-server/package.json
+
+---
+
+### 4. ENSURE SERVER START IS CORRECT
+
+Inside API server:
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+console.log("Server listening on", PORT);
+});
+
+---
+
+### 5. ENSURE DB DOES NOT CRASH APP
+
+* Do NOT throw if DATABASE_URL missing
+* Log error instead
+* Server must still start
+
+---
+
+### 6. ENSURE HEALTH ENDPOINT EXISTS
+
+app.get("/api/health", (req, res) => {
+res.json({ status: "ok" });
+});
+
+---
+
+### 7. DO NOT BREAK EXISTING DEPLOYMENT
+
+STRICT RULES:
+
+* Do NOT remove pnpm workspace
+* Do NOT switch to npm
+* Do NOT modify frontend
+* Do NOT remove nixpacks.toml
+* Do NOT change start command
+
+---
+
+## OUTPUT REQUIRED
+
+After fixing, show:
+
+1. Updated root package.json (only relevant section)
+2. Final nixpacks.toml
+3. API build script
+4. Confirmation:
+
+   * pnpm is detected correctly
+   * build runs without error
+   * server starts
+   * /api/health returns 200
+
+DO NOT ASK QUESTIONS.
+JUST FIX THE CONFIGURATION.

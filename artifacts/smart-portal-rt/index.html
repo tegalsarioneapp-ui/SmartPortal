@@ -3893,6 +3893,37 @@ html[data-theme="dark"] select option {
                     <button class="btn-submit bg-blue" onclick="simpanPengaturanSistem()">Simpan Pengaturan</button>
                 </div>
             </div>
+
+            <!-- ===== KARTU GANTI PASSWORD SISTEM ===== -->
+            <div class="card" style="margin-top:0;border-top:4px solid #ef4444;">
+                <div class="card-title-header" style="margin-bottom:4px;">
+                    <h3><i class="fa-solid fa-key" style="color:#ef4444;"></i> Ganti Password Sistem</h3>
+                </div>
+                <p style="font-size:0.83rem;color:#64748b;margin-bottom:16px;">Ubah password default login petugas. Kosongkan field yang tidak ingin diubah. Password tersimpan di server dan berlaku di semua perangkat.</p>
+                <div class="form-grid" style="gap:12px;">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-user-shield" style="color:#6366f1;"></i> Password Admin</label>
+                        <input type="password" id="set_pw_admin" placeholder="(default: admin005)" autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-vault" style="color:#f59e0b;"></i> Password Bendahara</label>
+                        <input type="password" id="set_pw_bendahara" placeholder="(default: benda005)" autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-handshake" style="color:#10b981;"></i> Password Koperasi</label>
+                        <input type="password" id="set_pw_koperasi" placeholder="(default: koperasi005)" autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-users" style="color:#3b82f6;"></i> Password Warga (akses umum)</label>
+                        <input type="password" id="set_pw_warga" placeholder="(default: rt005)" autocomplete="new-password">
+                    </div>
+                </div>
+                <div style="background:#fef9c3;border:1px solid #fde047;border-radius:10px;padding:10px 14px;margin:12px 0;font-size:0.8rem;color:#78350f;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Catat password baru sebelum menyimpan. Jika lupa, hubungi pengembang untuk reset.
+                </div>
+                <button class="btn-submit" style="background:#ef4444;" onclick="simpanPasswordSistem()"><i class="fa-solid fa-floppy-disk"></i> Simpan Password Baru</button>
+            </div>
+
             <div class="card">
                 <div class="card-title-header" style="margin-bottom:16px;">
                     <h3><i class="fa-solid fa-database" style="color:#10b981;"></i> Backup &amp; Restore Database</h3>
@@ -5312,13 +5343,20 @@ html[data-theme="dark"] select option {
         let targetPortal = null; // Variabel untuk menyimpan tujuan portal jika login sukses
 
         // === 1. TAHAP PENGECEKAN PASSWORD ===
-        if(id === 'admin' && pass === 'admin005') {
+        // Baca password dari db_passwords (set oleh admin via Pengaturan Sistem)
+        // Fallback ke password default jika belum pernah diubah
+        let _pwDb = JSON.parse(localStorage.getItem('db_passwords')) || {};
+        let _pwAdmin    = _pwDb.admin      || 'admin005';
+        let _pwBendahara = _pwDb.bendahara || 'benda005';
+        let _pwKoperasi  = _pwDb.koperasi  || 'koperasi005';
+        let _pwWarga     = _pwDb.warga     || 'rt005';
+        if(id === 'admin' && pass === _pwAdmin) {
             targetPortal = 'admin';
-        } else if(id === 'bendahara' && pass === 'benda005') {
+        } else if(id === 'bendahara' && pass === _pwBendahara) {
             targetPortal = 'bendahara';
-        } else if(id === 'koperasi' && pass === 'koperasi005') {
+        } else if(id === 'koperasi' && pass === _pwKoperasi) {
             targetPortal = 'koperasi';
-        } else if(id === 'warga' && pass === 'rt005') {
+        } else if(id === 'warga' && pass === _pwWarga) {
             loggedInWarga = { id: "global_"+Date.now(), nama: "Warga RT 005 (Akses Publik)", isGuest: true }; 
             targetPortal = 'warga';
         } else {
@@ -5326,10 +5364,10 @@ html[data-theme="dark"] select option {
             let akunWarga = masterWarga.find(w => w.nama.trim().toLowerCase() === id || (w.nik && String(w.nik).trim() === id));
             if(akunWarga) {
                 let akunMandiri = dbMandiri.find(m => String(m.id) === String(akunWarga.id));
-                let passAktif = akunMandiri ? (akunMandiri.password || 'rt005') : 'rt005';
+                let passAktif = akunMandiri ? (akunMandiri.password || _pwWarga) : _pwWarga;
                 if(pass === passAktif) { 
                     loggedInWarga = { id: akunWarga.id, nama: akunWarga.nama, nik: akunWarga.nik, alamat: akunWarga.alamat }; 
-                    if(pass === 'rt005') loggedInWarga.isNew = true; 
+                    if(pass === _pwWarga && pass === 'rt005') loggedInWarga.isNew = true; 
                     targetPortal = 'warga'; 
                 }
             }
@@ -7027,6 +7065,37 @@ html[data-theme="dark"] select option {
         };
         localStorage.setItem('db_settings', JSON.stringify(settings)); if (typeof syncSemuaData === 'function') syncSemuaData(true); Swal.fire('Berhasil', 'Parameter sistem diperbarui.', 'success');
     };
+    window.simpanPasswordSistem = async function() {
+        let pwDb = JSON.parse(localStorage.getItem('db_passwords')) || {};
+        let fields = [
+            {id:'set_pw_admin',      key:'admin',      label:'Admin'},
+            {id:'set_pw_bendahara',  key:'bendahara',  label:'Bendahara'},
+            {id:'set_pw_koperasi',   key:'koperasi',   label:'Koperasi'},
+            {id:'set_pw_warga',      key:'warga',      label:'Warga'},
+        ];
+        let changed = [];
+        fields.forEach(function(f) {
+            let val = (document.getElementById(f.id) || {}).value;
+            if (val && val.trim()) { pwDb[f.key] = val.trim(); changed.push(f.label); }
+        });
+        if (!changed.length) return Swal.fire('Info', 'Tidak ada password yang diubah (semua field kosong).', 'info');
+        let confirm = await Swal.fire({
+            icon: 'warning',
+            title: 'Konfirmasi Ganti Password',
+            html: 'Password untuk <b>' + changed.join(', ') + '</b> akan diubah.<br>Pastikan Anda sudah mencatatnya!',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Simpan!',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#ef4444'
+        });
+        if (!confirm.isConfirmed) return;
+        localStorage.setItem('db_passwords', JSON.stringify(pwDb));
+        if (typeof syncSemuaData === 'function') syncSemuaData(true);
+        fields.forEach(function(f) { let el = document.getElementById(f.id); if(el) el.value = ''; });
+        // Update placeholder to reflect saved status
+        if(typeof loadPengaturan === 'function') loadPengaturan();
+        Swal.fire({icon:'success', title:'Password Diperbarui!', html: 'Password <b>' + changed.join(', ') + '</b> berhasil diubah dan disinkron ke server.', confirmButtonColor:'#10b981'});
+    };
     window.loadPengaturan = function() {
         let s = JSON.parse(localStorage.getItem('db_settings')) || {namaRT: "Bapak Kasimin", namaRW: "Bapak Mulyono", namaBen: "Bapak Parmin", nomIuran: 20000, bungaKop: 10};
         if(document.getElementById('set_nama_rt')) document.getElementById('set_nama_rt').value = s.namaRT;
@@ -7035,6 +7104,15 @@ html[data-theme="dark"] select option {
         if(document.getElementById('set_nominal_iuran')) document.getElementById('set_nominal_iuran').value = s.nomIuran;
         if(document.getElementById('set_bunga_kop')) document.getElementById('set_bunga_kop').value = s.bungaKop;
         
+        // Perbarui placeholder field password sesuai status tersimpan
+        let _savedPw = JSON.parse(localStorage.getItem('db_passwords')) || {};
+        let _defaultPw = {admin:'admin005', bendahara:'benda005', koperasi:'koperasi005', warga:'rt005'};
+        ['admin','bendahara','koperasi','warga'].forEach(function(role) {
+            let el = document.getElementById('set_pw_' + role);
+            if(el) el.placeholder = _savedPw[role]
+                ? '(sudah diubah — isi untuk ganti lagi)'
+                : '(default: ' + _defaultPw[role] + ')';
+        });
         // Sinkronisasi Nama Pengurus ke Kertas PDF / Surat
         if(document.getElementById('p_nama_rw')) document.getElementById('p_nama_rw').innerText = s.namaRW;
         if(document.getElementById('p_nama_rt')) document.getElementById('p_nama_rt').innerText = s.namaRT;
