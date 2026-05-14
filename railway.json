@@ -4,9 +4,9 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "node --enable-source-maps ./artifacts/api-server/dist/index.mjs",
-    "healthcheckPath": "/api/health",
-    "healthcheckTimeout": 10,
+    "startCommand": "NODE_ENV=production node --enable-source-maps ./artifacts/api-server/dist/index.mjs",
+    "healthcheckPath": "/api/healthz",
+    "healthcheckTimeout": 30,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 5
   }

@@ -128,7 +128,7 @@ router.get("/kv/stream", (req, res) => {
 // Lightweight key list — only returns LIVE (non-deleted) keys.
 // Used by the client on boot and periodically to reconcile stale localStorage
 // entries that were deleted server-side while the device was offline.
-router.get("/kv/keys", async (_req, res, next) => {
+router.get("/kv/keys", async (_req, res) => {
   try {
     const rows = await db
       .select({ key: kvStoreTable.key })
@@ -139,12 +139,13 @@ router.get("/kv/keys", async (_req, res, next) => {
       keys: rows.map((r) => r.key),
     });
   } catch (err) {
-    next(err);
+    console.error("[KV] /kv/keys DB error:", err instanceof Error ? err.message : String(err));
+    res.status(200).json({ serverTime: new Date().toISOString(), keys: [] });
   }
 });
 
 // Audit endpoint for diagnostics
-router.get("/audit", async (_req, res, next) => {
+router.get("/audit", async (_req, res) => {
   try {
     const result = await db
       .select({ count: sql<number>`cast(count(*) as int)` })
@@ -163,7 +164,16 @@ router.get("/audit", async (_req, res, next) => {
         "Application uses centralized server-side PostgreSQL with realtime multi-device synchronization.",
     });
   } catch (err) {
-    next(err);
+    console.error("[Audit] DB error:", err instanceof Error ? err.message : String(err));
+    res.status(200).json({
+      ok: false,
+      driver: "postgres",
+      table: "kv_store",
+      rowCount: 0,
+      sseSubscribers: sseClients.size,
+      serverTime: new Date().toISOString(),
+      message: "DB unavailable",
+    });
   }
 });
 

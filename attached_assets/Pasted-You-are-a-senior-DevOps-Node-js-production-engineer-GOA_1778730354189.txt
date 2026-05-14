@@ -1,0 +1,167 @@
+You are a senior DevOps + Node.js production engineer.
+
+## GOAL
+
+Fix this project so the Railway deployment runs the BACKEND server (NOT Vite preview), and all API endpoints work.
+
+---
+
+## CURRENT PROBLEM (CRITICAL)
+
+Railway logs show:
+
+* "vite preview" is running
+* /api/* returns 500
+* ECONNREFUSED
+* Frontend cannot connect to backend
+
+This means Railway is running the frontend instead of the backend server.
+
+---
+
+## YOUR TASK (STRICT — FOLLOW EXACTLY)
+
+### 1. FORCE Railway to run backend only
+
+* Ensure production start command runs ONLY backend server
+* DO NOT run Vite, preview, or frontend
+
+---
+
+### 2. Fix package.json (ROOT)
+
+Update scripts:
+
+```json
+"scripts": {
+  "build": "pnpm -r build",
+  "start": "node artifacts/api-server/dist/index.mjs"
+}
+```
+
+REMOVE or IGNORE:
+
+* vite preview
+* preview script usage in production
+
+---
+
+### 3. Ensure backend build output exists
+
+Verify:
+
+artifacts/api-server/dist/index.mjs
+
+If not:
+
+* fix build script in api-server package
+* ensure TypeScript compiles correctly
+
+---
+
+### 4. Fix nixpacks.toml (IMPORTANT)
+
+Ensure Railway installs pnpm correctly and builds backend only:
+
+```toml
+[phases.install]
+cmds = [
+  "corepack enable",
+  "corepack prepare pnpm@10.26.1 --activate",
+  "pnpm install --frozen-lockfile"
+]
+
+[phases.build]
+cmds = [
+  "pnpm --filter @workspace/api-server run build"
+]
+
+[start]
+cmd = "node artifacts/api-server/dist/index.mjs"
+```
+
+---
+
+### 5. REMOVE any frontend start behavior
+
+Search entire repo and REMOVE or DISABLE:
+
+* vite preview
+* npm run preview
+* any script that starts frontend server in production
+
+---
+
+### 6. Ensure backend server is correct
+
+In backend entry (index.ts / index.js):
+
+* MUST include:
+
+```js
+const port = process.env.PORT || 3000;
+
+app.listen(port, "0.0.0.0", () => {
+  console.log("Server running on port", port);
+});
+```
+
+---
+
+### 7. Ensure health endpoint ALWAYS returns 200
+
+```js
+app.get("/api/health", async (req, res) => {
+  try {
+    res.status(200).json({
+      status: "healthy"
+    });
+  } catch (err) {
+    res.status(200).json({
+      status: "error",
+      message: err.message
+    });
+  }
+});
+```
+
+---
+
+### 8. DO NOT break existing logic
+
+* Do not change database logic unnecessarily
+* Do not change frontend
+* Only fix production runtime
+
+---
+
+## FINAL VALIDATION (MANDATORY)
+
+After fix, confirm:
+
+1. Railway runs:
+   node artifacts/api-server/dist/index.mjs
+
+2. This URL works:
+   /api/health → HTTP 200 JSON
+
+3. NO logs contain:
+
+   * vite preview
+   * ECONNREFUSED
+
+---
+
+## OUTPUT REQUIRED
+
+Provide:
+
+1. Updated package.json
+2. Updated nixpacks.toml
+3. Final start command
+4. Confirmation that backend (not Vite) is running
+
+---
+
+DO NOT ask questions.
+Fix everything needed so Railway runs backend correctly.
