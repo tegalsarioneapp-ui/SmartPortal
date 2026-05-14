@@ -112,8 +112,8 @@ const writeLimiter = rateLimit({
   message: { error: "Too many write requests, please slow down." },
 });
 
-app.use("/api", generalLimiter);
-app.use("/api/kv", (req, res, next) => {
+// app.use("/api", generalLimiter);
+// app.use("/api/kv", (req, res, next) => {
   if (req.method === "PUT" || req.method === "DELETE") {
     return writeLimiter(req, res, next);
   }
@@ -130,7 +130,7 @@ app.get("/api/test", (req, res) => {
   res.json({ ok: true });
 });
 
-app.use("/api", router);
+
 
 app.use("/api", router);
 
