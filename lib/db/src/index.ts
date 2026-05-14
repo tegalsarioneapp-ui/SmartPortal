@@ -32,6 +32,14 @@ export const pool = new Pool({
   connectionTimeoutMillis: 5_000,
 });
 
+// CRITICAL: Without this handler, any error on an idle pg client (connection
+// reset, DB restart, network blip) emits an 'error' event on the Pool.
+// EventEmitter errors without a listener throw an uncaught exception and
+// CRASH the entire Node process. This is the #1 cause of 502s on Railway.
+pool.on("error", (err) => {
+  console.error("[DB] Unexpected error on idle pool client:", err.message);
+});
+
 export const db = drizzle(pool, { schema });
 
 export * from "./schema";

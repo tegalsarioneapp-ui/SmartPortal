@@ -156,21 +156,38 @@ app.use(
 // ---------------------------------------------------------------------------
 // Production: serve the Vite-built frontend static files directly from
 // Express, eliminating any proxy layer that could buffer SSE streams.
+//
+// Vite outputs to dist/ (not dist/public/). We check multiple candidates to
+// handle both Railway (CWD = /app) and Replit deploy layouts. Only register
+// the SPA fallback when the index.html actually exists so a missing build
+// never causes sendFile errors that could crash Express 5 async handlers.
 // ---------------------------------------------------------------------------
 if (process.env["NODE_ENV"] === "production") {
   const candidates = [
-    path.resolve(import.meta.dirname, "../../smart-portal-rt/dist/public"),
+    // Built relative to the bundled api-server (dist/index.mjs → ../../smart-portal-rt/dist)
+    path.resolve(import.meta.dirname, "../../smart-portal-rt/dist"),
+    // Built from repo root CWD (Railway: /app)
+    path.resolve(process.cwd(), "artifacts/smart-portal-rt/dist"),
+    // Legacy path kept as last resort
     path.resolve(process.cwd(), "artifacts/smart-portal-rt/dist/public"),
   ];
-  const staticDir = candidates.find((d) => existsSync(d)) ?? candidates[0];
+  const staticDir = candidates.find((d) => existsSync(d)) ?? null;
 
-  logger.info({ staticDir }, "Serving static frontend from Express");
+  if (staticDir) {
+    logger.info({ staticDir }, "Serving static frontend from Express");
+    app.use(express.static(staticDir, { maxAge: 0, etag: false }));
 
-  app.use(express.static(staticDir, { maxAge: 0, etag: false }));
-
-  app.get("/{*path}", (_req, res) => {
-    res.sendFile(path.join(staticDir, "index.html"));
-  });
+    const indexHtml = path.join(staticDir, "index.html");
+    if (existsSync(indexHtml)) {
+      app.get("/{*path}", (_req, res, next) => {
+        res.sendFile(indexHtml, (err) => {
+          if (err) next(err);
+        });
+      });
+    }
+  } else {
+    logger.warn("Frontend dist/ not found — static file serving disabled. API-only mode.");
+  }
 }
 
 export default app;

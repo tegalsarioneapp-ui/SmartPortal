@@ -3,6 +3,25 @@ import { logger } from "./lib/logger";
 import { pool } from "@workspace/db";
 import type { AddressInfo } from "net";
 
+// ---------------------------------------------------------------------------
+// Global safety net — must be registered before anything else.
+//
+// In Node.js 15+, an unhandledRejection (e.g. a fire-and-forget Promise that
+// rejects without a .catch()) terminates the process by default. In a Railway
+// container that means a 502 for every subsequent request until the restart
+// policy kicks in. We log and survive instead of dying.
+// ---------------------------------------------------------------------------
+process.on("unhandledRejection", (reason) => {
+  console.error("[Server] Unhandled promise rejection (survived):", reason);
+  logger.error({ reason }, "Unhandled promise rejection");
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("[Server] Uncaught exception (survived):", err.message, err.stack);
+  logger.error({ err }, "Uncaught exception");
+  // Do NOT call process.exit() — keep the HTTP server alive.
+});
+
 const rawPort = process.env["PORT"];
 const port = rawPort ? Number(rawPort) : 8080;
 
