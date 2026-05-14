@@ -17,6 +17,7 @@
     "drizzle-orm": "catalog:",
     "express": "^5",
     "express-rate-limit": "^8.5.1",
+    "pg": "^8.20.0",
     "pino": "^9",
     "pino-http": "^10",
     "web-push": "^3.6.7"

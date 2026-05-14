@@ -1,6 +1,7 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { pool, db, kvStoreTable } from "@workspace/db";
 import { isNotNull, sql } from "drizzle-orm";
+import pg from "pg";
 
 const router: IRouter = Router();
 
@@ -334,6 +335,97 @@ router.post("/debug/import", async (req: Request, res: Response) => {
         ? `Successfully imported ${imported} entries.`
         : `Imported ${imported}, failed ${failed}. Check sampleErrors for details.`,
   });
+});
+
+// ---------------------------------------------------------------------------
+// POST /api/debug/push-to
+//
+// Push semua data KV Store dari database Replit langsung ke database target
+// (misalnya Railway PostgreSQL) — tanpa perlu Railway server hidup.
+// Body: { targetDatabaseUrl: string }
+// ---------------------------------------------------------------------------
+router.post("/debug/push-to", async (req: Request, res: Response) => {
+  const { targetDatabaseUrl } = req.body as { targetDatabaseUrl?: string };
+
+  if (!targetDatabaseUrl || typeof targetDatabaseUrl !== "string") {
+    res.status(400).json({ ok: false, error: "targetDatabaseUrl wajib diisi di body request." });
+    return;
+  }
+
+  // Ambil semua data dari Replit DB
+  let rows: { key: string; value: string | null; updatedAt: Date | null }[] = [];
+  try {
+    rows = await db.select().from(kvStoreTable).where(isNotNull(kvStoreTable.value));
+  } catch (err) {
+    res.status(503).json({ ok: false, error: "Gagal membaca data dari Replit: " + (err instanceof Error ? err.message : String(err)) });
+    return;
+  }
+
+  // Koneksi ke target database (Railway)
+  const { Pool: TargetPool } = pg;
+  const targetPool = new TargetPool({
+    connectionString: targetDatabaseUrl,
+    ssl: { rejectUnauthorized: false },
+    max: 3,
+    connectionTimeoutMillis: 8000,
+  });
+
+  try {
+    const client = await targetPool.connect();
+    try {
+      // Pastikan tabel ada di target
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS "kv_store" (
+          "key" text PRIMARY KEY,
+          "value" text,
+          "updated_at" timestamptz NOT NULL DEFAULT now()
+        )
+      `);
+
+      let imported = 0;
+      let failed = 0;
+      const errors: string[] = [];
+
+      for (const row of rows) {
+        try {
+          await client.query(
+            `INSERT INTO kv_store (key, value, updated_at)
+             VALUES ($1, $2, $3)
+             ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = $3`,
+            [row.key, row.value, row.updatedAt ?? new Date()]
+          );
+          imported++;
+        } catch (err) {
+          failed++;
+          if (errors.length < 5) errors.push(`${row.key}: ${err instanceof Error ? err.message : String(err)}`);
+        }
+      }
+
+      const countResult = await client.query<{ total: string }>("SELECT COUNT(*) as total FROM kv_store WHERE value IS NOT NULL");
+      const totalAfter = parseInt(countResult.rows[0]?.total ?? "0", 10);
+
+      res.json({
+        ok: failed === 0,
+        imported,
+        failed,
+        totalLiveRowsAfterImport: totalAfter,
+        ...(errors.length > 0 ? { sampleErrors: errors } : {}),
+        message: failed === 0
+          ? `Berhasil push ${imported} entri ke Railway.`
+          : `Push selesai: ${imported} berhasil, ${failed} gagal.`,
+      });
+    } finally {
+      client.release();
+    }
+  } catch (err) {
+    res.status(503).json({
+      ok: false,
+      error: "Gagal terhubung ke database Railway: " + (err instanceof Error ? err.message : String(err)),
+      hint: "Pastikan DATABASE_URL Railway sudah benar dan database bisa diakses dari luar (public URL).",
+    });
+  } finally {
+    await targetPool.end().catch(() => {});
+  }
 });
 
 export default router;
