@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-import * as schema from "./schema.js";
+import * as schema from "./schema/index.js";
 
 const { Pool } = pg;
 
@@ -58,4 +58,4 @@ export async function ensureSchema(): Promise<void> {
   }
 }
 
-export * from "./schema.js";
+export * from "./schema/index.js";
