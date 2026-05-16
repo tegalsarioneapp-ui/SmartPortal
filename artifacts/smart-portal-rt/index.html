@@ -3906,7 +3906,7 @@ html[data-theme="dark"] select option {
                     <span><i class="fa-solid fa-house" style="color:var(--accent-gold);margin-right:8px;"></i> Identitas Lingkungan</span>
                     <i class="fa-solid fa-chevron-down acc-chevron"></i>
                 </div>
-                <div class="acc-body" id="acc-identitas" style="display:none;">
+                <div class="acc-body" id="acc-identitas">
                     <div class="acc-body-inner">
                         <div class="form-grid" style="gap:12px;">
                             <div class="form-group" style="margin:0;"><label>Nama RT</label><input type="text" id="set_nama_rt"></div>
@@ -3924,7 +3924,7 @@ html[data-theme="dark"] select option {
                     <span><i class="fa-solid fa-list-check" style="color:#6366f1;margin-right:8px;"></i> Jenis Iuran Bulanan</span>
                     <i class="fa-solid fa-chevron-down acc-chevron"></i>
                 </div>
-                <div class="acc-body" id="acc-iuran" style="display:none;">
+                <div class="acc-body" id="acc-iuran">
                     <div class="acc-body-inner">
                         <p style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Atur komponen iuran bulanan. Total nominal otomatis dihitung.</p>
                         <div id="list-jenis-iuran" style="margin-bottom:12px;"></div>
@@ -3939,7 +3939,7 @@ html[data-theme="dark"] select option {
                     <span><i class="fa-solid fa-key" style="color:#ef4444;margin-right:8px;"></i> Ganti Password Sistem</span>
                     <i class="fa-solid fa-chevron-down acc-chevron"></i>
                 </div>
-                <div class="acc-body" id="acc-password" style="display:none;">
+                <div class="acc-body" id="acc-password">
                     <div class="acc-body-inner">
                         <p style="font-size:0.83rem;color:#64748b;margin-bottom:16px;">Ubah password login petugas. Kosongkan field yang tidak ingin diubah.</p>
                         <div class="form-grid" style="gap:12px;">
@@ -3974,7 +3974,7 @@ html[data-theme="dark"] select option {
                     <span><i class="fa-solid fa-database" style="color:#10b981;margin-right:8px;"></i> Backup &amp; Restore Database</span>
                     <i class="fa-solid fa-chevron-down acc-chevron"></i>
                 </div>
-                <div class="acc-body" id="acc-backup" style="display:none;">
+                <div class="acc-body" id="acc-backup">
                     <div class="acc-body-inner">
                         <span id="backup-row-count" style="font-size:0.8rem;color:#64748b;display:block;margin-bottom:12px;"></span>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;">
@@ -4001,7 +4001,7 @@ html[data-theme="dark"] select option {
                     <span><i class="fa-solid fa-circle-info" style="color:#6366f1;margin-right:8px;"></i> Info Aplikasi &amp; Status Server</span>
                     <i class="fa-solid fa-chevron-down acc-chevron"></i>
                 </div>
-                <div class="acc-body" id="acc-info" style="display:none;">
+                <div class="acc-body" id="acc-info">
                     <div class="acc-body-inner">
                         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;">
                             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;">
@@ -4039,7 +4039,7 @@ html[data-theme="dark"] select option {
                     <span><i class="fa-solid fa-bell" style="color:#7c3aed;margin-right:8px;"></i> Notifikasi Push ke Warga</span>
                     <i class="fa-solid fa-chevron-down acc-chevron"></i>
                 </div>
-                <div class="acc-body" id="acc-push" style="display:none;">
+                <div class="acc-body" id="acc-push">
                     <div class="acc-body-inner">
                         <span id="push-sub-count" style="font-size:0.82rem;color:#64748b;background:#f3e8ff;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:12px;"></span>
                         <div class="form-grid" style="gap:12px;">
@@ -4067,7 +4067,7 @@ html[data-theme="dark"] select option {
                     <span><i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;margin-right:8px;"></i> Zona Berbahaya (Reset Database)</span>
                     <i class="fa-solid fa-chevron-down acc-chevron"></i>
                 </div>
-                <div class="acc-body" id="acc-danger" style="display:none;">
+                <div class="acc-body" id="acc-danger">
                     <div class="acc-body-inner">
                         <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:15px;">Fitur ini digunakan untuk menghapus data spesifik atau mereset aplikasi ke pengaturan pabrik.</p>
                         <button class="btn-submit bg-red" onclick="bukaMenuResetData()" style="max-width:300px;margin:0 auto;box-shadow:0 10px 20px rgba(239,68,68,0.3) !important;"><i class="fa-solid fa-trash-can"></i> Hapus / Reset Data</button>
@@ -4198,13 +4198,15 @@ html[data-theme="dark"] select option {
     window.toggleAcc = function(id, header) {
         var body = document.getElementById(id);
         if (!body) return;
-        var isHidden = body.style.display === "none" || body.style.display === "";
-        if (isHidden) {
-            body.style.display = "block";
-            if (header) header.classList.add("open");
-        } else {
-            body.style.display = "none";
+        var isOpen = body.classList.contains("open");
+        if (isOpen) {
+            body.classList.remove("open");
+            body.style.display = "";
             if (header) header.classList.remove("open");
+        } else {
+            body.classList.add("open");
+            body.style.display = "";
+            if (header) header.classList.add("open");
         }
     };
 
