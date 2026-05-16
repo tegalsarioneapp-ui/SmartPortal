@@ -6534,93 +6534,167 @@ html[data-theme="dark"] select option {
     window.loadKasBendahara = function() { let dbKas = JSON.parse(localStorage.getItem('db_kas')) || []; let sAwal = parseInt(localStorage.getItem('db_saldo_awal')) || 0; if(document.getElementById('ben-display-saldo-awal')) document.getElementById('ben-display-saldo-awal').innerText = fmt(sAwal); let sAkhir = sAwal; let tb = document.getElementById('tbody-laporan-kas'); if(tb) { tb.innerHTML=''; dbKas.sort((a,b)=>new Date(a.tgl)-new Date(b.tgl)).forEach(k => { if(k.tipe==='masuk') sAkhir+=k.nominal; else sAkhir-=k.nominal; tb.innerHTML+=`<tr><td>${k.tgl}</td><td><b>${k.uraian}</b></td><td>${k.tipe}</td><td>${fmt(k.nominal)} <small>(Saldo: ${fmt(sAkhir)})</small></td><td><button class="btn-table btn-tbl-del" onclick="hapusKas(${k.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`; }); } if(document.getElementById('warga-saldo-kas')) document.getElementById('warga-saldo-kas').innerText=fmt(sAkhir); if(document.getElementById('ben-saldo-kas-input')) document.getElementById('ben-saldo-kas-input').innerText=fmt(sAkhir); };
     window.hapusKas = function(id) { let db = JSON.parse(localStorage.getItem('db_kas')) || []; localStorage.setItem('db_kas', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); };
 
+    
     window.cetakLaporanKas = function() {
-        var dbKas = JSON.parse(localStorage.getItem('db_kas') || '[]');
-        var sAwal = parseInt(localStorage.getItem('db_saldo_awal') || '0') || 0;
-        var settings = JSON.parse(localStorage.getItem('db_settings') || '{}');
-        var namaRT  = settings.namaRT  || 'Bapak Kasimin';
-        var namaRW  = settings.namaRW  || 'Bapak Mulyono';
-        var namaBen = settings.namaBen || 'Bapak Parmin';
-        var tgl = new Date().toLocaleDateString('id-ID', { day:'2-digit', month:'long', year:'numeric' });
-
-        dbKas.sort(function(a,b){ return new Date(a.tgl) - new Date(b.tgl); });
-
-        var sAkhir = sAwal;
-        var totalMasuk = 0;
-        var totalKeluar = 0;
-        var rows = '';
-
-        dbKas.forEach(function(k, idx) {
-            if (k.tipe === 'masuk') { sAkhir += k.nominal; totalMasuk += k.nominal; }
-            else                    { sAkhir -= k.nominal; totalKeluar += k.nominal; }
-            rows += '<tr>' +
-                '<td style="border:1px solid #cbd5e1; padding:6px 10px; text-align:center;">' + (idx+1) + '</td>' +
-                '<td style="border:1px solid #cbd5e1; padding:6px 10px;">' + (k.tgl || '-') + '</td>' +
-                '<td style="border:1px solid #cbd5e1; padding:6px 10px;">' + (k.uraian || '-') + '</td>' +
-                '<td style="border:1px solid #cbd5e1; padding:6px 10px; text-align:center; color:' + (k.tipe==='masuk'?'#166534':'#991b1b') + '; font-weight:700;">' +
-                (k.tipe === 'masuk' ? 'Pemasukan' : 'Pengeluaran') + '</td>' +
-                '<td style="border:1px solid #cbd5e1; padding:6px 10px; text-align:right;">' + fmt(k.nominal) + '</td>' +
-                '<td style="border:1px solid #cbd5e1; padding:6px 10px; text-align:right;">' + fmt(sAkhir) + '</td>' +
-                '</tr>';
+        var now = new Date();
+        var BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        var bulanOpts = BULAN.map(function(b,i){ return '<option value="'+i+'"'+(i===now.getMonth()?' selected':'')+'>'+b+'</option>'; }).join('');
+        var thnOpts = '';
+        for (var y = now.getFullYear()-2; y <= now.getFullYear()+1; y++) {
+            thnOpts += '<option value="'+y+'"'+(y===now.getFullYear()?' selected':'')+'>'+y+'</option>';
+        }
+        Swal.fire({
+            title: '<i class="fa-solid fa-print"></i> Cetak Laporan Kas',
+            html: '<div style="text-align:left;font-size:0.9rem;color:#1e293b;">'+
+                  '<label style="font-weight:700;display:block;margin-bottom:6px;">Pilih Bulan</label>'+
+                  '<select id="swal-bulan" style="width:100%;padding:8px;border-radius:8px;border:1px solid #cbd5e1;margin-bottom:14px;">'+bulanOpts+'</select>'+
+                  '<label style="font-weight:700;display:block;margin-bottom:6px;">Pilih Tahun</label>'+
+                  '<select id="swal-tahun" style="width:100%;padding:8px;border-radius:8px;border:1px solid #cbd5e1;">'+thnOpts+'</select>'+
+                  '</div>',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-file-pdf"></i> Cetak PDF',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#1e40af',
+            background: '#fff',
+            color: '#1e293b',
+        }).then(function(r){
+            if (!r.isConfirmed) return;
+            var bln = parseInt(document.getElementById('swal-bulan').value);
+            var thn = parseInt(document.getElementById('swal-tahun').value);
+            window._doCetakKas(bln, thn);
         });
-
-        if (rows === '') {
-            rows = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#64748b;">Belum ada transaksi kas</td></tr>';
-        }
-
-        var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-        '<title>Laporan Kas RT 005</title>' +
-        '<style>' +
-        'body { font-family: Arial, sans-serif; font-size: 12px; color: #1e293b; margin: 0; padding: 20px; }' +
-        '.kop { display:flex; align-items:center; gap:16px; border-bottom:3px solid #1e293b; padding-bottom:10px; margin-bottom:16px; }' +
-        '.kop img { width:60px; }' +
-        '.kop-text { flex:1; text-align:center; }' +
-        '.kop-text h2 { margin:0; font-size:14px; text-transform:uppercase; }' +
-        '.kop-text h3 { margin:2px 0; font-size:11px; font-weight:normal; }' +
-        'h4 { text-align:center; margin:10px 0 16px; font-size:13px; text-transform:uppercase; text-decoration:underline; }' +
-        '.summary { display:flex; gap:16px; margin-bottom:16px; }' +
-        '.sum-box { flex:1; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; }' +
-        '.sum-box .label { font-size:10px; color:#64748b; font-weight:600; }' +
-        '.sum-box .value { font-size:14px; font-weight:800; margin-top:4px; }' +
-        'table { width:100%; border-collapse:collapse; margin-bottom:20px; }' +
-        'thead th { background:#1e293b; color:#fff; padding:8px 10px; font-size:11px; border:1px solid #1e293b; }' +
-        '.ttd { display:flex; justify-content:space-between; margin-top:40px; }' +
-        '.ttd-box { text-align:center; width:45%; }' +
-        '@media print { body { padding:0; } }' +
-        '</style></head><body>' +
-        '<div class="kop">' +
-        '<img src="/Lambang_Kota_Semarang.png" style="filter:grayscale(100%);">' +
-        '<div class="kop-text">' +
-        '<h2>Pengurus Rukun Tetangga 005 Rukun Warga 012</h2>' +
-        '<h3>Kelurahan Tegalsari, Kecamatan Candisari, Kota Semarang</h3>' +
-        '</div></div>' +
-        '<h4>Laporan Kas RT 005 / RW 012</h4>' +
-        '<div class="summary">' +
-        '<div class="sum-box"><div class="label">Saldo Awal</div><div class="value" style="color:#1e40af;">' + fmt(sAwal) + '</div></div>' +
-        '<div class="sum-box"><div class="label">Total Pemasukan</div><div class="value" style="color:#166534;">' + fmt(totalMasuk) + '</div></div>' +
-        '<div class="sum-box"><div class="label">Total Pengeluaran</div><div class="value" style="color:#991b1b;">' + fmt(totalKeluar) + '</div></div>' +
-        '<div class="sum-box"><div class="label">Saldo Akhir</div><div class="value" style="color:#92400e;">' + fmt(sAkhir) + '</div></div>' +
-        '</div>' +
-        '<table><thead><tr>' +
-        '<th style="width:40px;">No</th><th>Tanggal</th><th>Uraian</th><th>Tipe</th><th>Nominal</th><th>Saldo</th>' +
-        '</tr></thead><tbody>' + rows + '</tbody></table>' +
-        '<div class="ttd">' +
-        '<div class="ttd-box">Mengetahui,<br>Ketua RT 005<br><br><br><br>' +
-        '<b style="text-decoration:underline;">' + namaRT + '</b></div>' +
-        '<div class="ttd-box">Semarang, ' + tgl + '<br>Bendahara RT 005<br><br><br><br>' +
-        '<b style="text-decoration:underline;">' + namaBen + '</b></div>' +
-        '</div>' +
-        '</body></html>';
-
-        if (typeof window.downloadPdfFromHtml === 'function') {
-            window.downloadPdfFromHtml(html, 'Laporan-Kas-RT005');
-        } else if (typeof window.printViaIframe === 'function') {
-            window.printViaIframe(html, 'Laporan Kas RT 005');
-        } else {
-            var w = window.open('', '_blank');
-            if (w) { w.document.write(html); w.document.close(); w.print(); }
-        }
     };
+
+    window._doCetakKas = function(bln, thn) {
+        var BULAN    = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        var dbKas    = JSON.parse(localStorage.getItem('db_kas')||'[]');
+        var sAwal    = parseInt(localStorage.getItem('db_saldo_awal')||'0')||0;
+        var st       = JSON.parse(localStorage.getItem('db_settings')||'{}');
+        var namaRT   = st.namaRT  || 'Bapak Kasimin';
+        var namaRW   = st.namaRW  || 'Bapak Mulyono';
+        var namaBen  = st.namaBen || 'Bapak Parmin';
+        var blnStr   = BULAN[bln] + ' ' + thn;
+        var tglCetak = new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+
+        function fmtRp(n){ return 'Rp '+Number(n||0).toLocaleString('id-ID'); }
+        function tglFmt(s){ if(!s) return '-'; return new Date(s).toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'}); }
+        function isKhusus(u){ var x=(u||'').toLowerCase(); return ['uang meja','uang sosial','17 agustus','agustusan'].some(function(k){return x.indexOf(k)!==-1;}); }
+
+        var all = dbKas.filter(function(k){
+            if(!k.tgl) return false;
+            var d = new Date(k.tgl);
+            return d.getMonth()===bln && d.getFullYear()===thn;
+        });
+        all.sort(function(a,b){ return new Date(a.tgl)-new Date(b.tgl); });
+
+        var utama  = all.filter(function(k){ return !isKhusus(k.uraian); });
+        var khusus = all.filter(function(k){ return  isKhusus(k.uraian); });
+
+        var totMU = utama.filter(function(k){return k.tipe==='masuk';}).reduce(function(s,k){return s+k.nominal;},0);
+        var totKU = utama.filter(function(k){return k.tipe==='keluar';}).reduce(function(s,k){return s+k.nominal;},0);
+        var sAkh  = sAwal + totMU - totKU;
+        var totMK = khusus.filter(function(k){return k.tipe==='masuk';}).reduce(function(s,k){return s+k.nominal;},0);
+        var totKK = khusus.filter(function(k){return k.tipe==='keluar';}).reduce(function(s,k){return s+k.nominal;},0);
+
+        var kop = buatKop(namaRT, namaRW);
+        var css = buatCSS();
+
+        var saldoRow = sAwal;
+        var rowsUtama = utama.length === 0
+            ? '<tr><td colspan="6" style="text-align:center;padding:16px;color:#64748b;">Tidak ada transaksi kas utama</td></tr>'
+            : utama.map(function(k,i){
+                if(k.tipe==='masuk') saldoRow+=k.nominal; else saldoRow-=k.nominal;
+                return '<tr><td style="text-align:center;">'+(i+1)+'</td>'+
+                    '<td>'+tglFmt(k.tgl)+'</td>'+
+                    '<td>'+(k.uraian||'-')+'</td>'+
+                    '<td style="text-align:center;" class="'+k.tipe+'">'+(k.tipe==='masuk'?'Pemasukan':'Pengeluaran')+'</td>'+
+                    '<td style="text-align:right;" class="'+k.tipe+'">'+fmtRp(k.nominal)+'</td>'+
+                    '<td style="text-align:right;font-weight:700;">'+fmtRp(saldoRow)+'</td></tr>';
+              }).join('');
+
+        var rowsKhusus = khusus.length === 0
+            ? '<tr><td colspan="5" style="text-align:center;padding:16px;color:#64748b;">Tidak ada transaksi dana khusus</td></tr>'
+            : khusus.map(function(k,i){
+                return '<tr><td style="text-align:center;">'+(i+1)+'</td>'+
+                    '<td>'+tglFmt(k.tgl)+'</td>'+
+                    '<td>'+(k.uraian||'-')+'</td>'+
+                    '<td style="text-align:center;" class="'+k.tipe+'">'+(k.tipe==='masuk'?'Pemasukan':'Pengeluaran')+'</td>'+
+                    '<td style="text-align:right;" class="'+k.tipe+'">'+fmtRp(k.nominal)+'</td></tr>';
+              }).join('');
+
+        var rowsLampiran = all.length === 0
+            ? '<tr><td colspan="5" style="text-align:center;padding:16px;color:#64748b;">Tidak ada transaksi</td></tr>'
+            : all.map(function(k,i){
+                return '<tr><td style="text-align:center;">'+(i+1)+'</td>'+
+                    '<td>'+tglFmt(k.tgl)+'</td>'+
+                    '<td>'+(k.uraian||'-')+'</td>'+
+                    '<td style="text-align:center;" class="'+k.tipe+'">'+(k.tipe==='masuk'?'Pemasukan':'Pengeluaran')+'</td>'+
+                    '<td style="text-align:right;" class="'+k.tipe+'">'+fmtRp(k.nominal)+'</td></tr>';
+              }).join('');
+
+        var ttd = '<div class="ttd">'+
+            '<div class="ttd-box">Mengetahui,<br>Ketua RT 005<br><br><br><br><b style="text-decoration:underline;">'+namaRT+'</b></div>'+
+            '<div class="ttd-box">Semarang, '+tglCetak+'<br>Bendahara RT 005<br><br><br><br><b style="text-decoration:underline;">'+namaBen+'</b></div>'+
+            '</div>';
+
+        var htmlOut = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Laporan Kas RT 005</title>'+css+'</head><body>'+
+            kop+
+            '<div class="judul">Berita Acara Laporan Kas Utama</div>'+
+            '<div class="sub">RT 005 / RW 012 Kelurahan Tegalsari &mdash; Periode: '+blnStr+'</div>'+
+            '<div class="sum">'+
+                '<div class="sb"><div class="l">Saldo Awal</div><div class="v">'+fmtRp(sAwal)+'</div></div>'+
+                '<div class="sb"><div class="l">Total Pemasukan</div><div class="v" style="color:#166534 !important;">'+fmtRp(totMU)+'</div></div>'+
+                '<div class="sb"><div class="l">Total Pengeluaran</div><div class="v" style="color:#991b1b !important;">'+fmtRp(totKU)+'</div></div>'+
+                '<div class="sb"><div class="l">Saldo Akhir</div><div class="v" style="color:#92400e !important;">'+fmtRp(sAkh)+'</div></div>'+
+            '</div>'+
+            '<table><thead><tr>'+
+                '<th style="width:35px;">No</th><th style="width:90px;">Tanggal</th><th>Uraian Transaksi</th>'+
+                '<th style="width:90px;text-align:center;">Tipe</th><th style="width:110px;text-align:right;">Nominal</th>'+
+                '<th style="width:110px;text-align:right;">Saldo</th>'+
+            '</tr></thead><tbody>'+rowsUtama+'</tbody>'+
+            '<tfoot><tr>'+
+                '<td colspan="4" style="text-align:right;font-weight:700;border:1px solid #000;padding:6px 8px;">SALDO AKHIR KAS UTAMA</td>'+
+                '<td colspan="2" style="text-align:right;font-weight:800;font-size:13px;border:1px solid #000;padding:6px 8px;">'+fmtRp(sAkh)+'</td>'+
+            '</tr></tfoot></table>'+
+            ttd+
+            '<div class="pagebreak"></div>'+
+            kop+
+            '<div class="judul">Laporan Dana Khusus</div>'+
+            '<div class="sub">RT 005 / RW 012 Kelurahan Tegalsari &mdash; Periode: '+blnStr+'</div>'+
+            '<div class="sub" style="font-size:10px;">(Uang Meja, Uang Sosial, 17 Agustus)</div>'+
+            '<div class="sum">'+
+                '<div class="sb"><div class="l">Total Pemasukan Dana Khusus</div><div class="v" style="color:#166534 !important;">'+fmtRp(totMK)+'</div></div>'+
+                '<div class="sb"><div class="l">Total Pengeluaran Dana Khusus</div><div class="v" style="color:#991b1b !important;">'+fmtRp(totKK)+'</div></div>'+
+                '<div class="sb"><div class="l">Saldo Dana Khusus</div><div class="v" style="color:#92400e !important;">'+fmtRp(totMK-totKK)+'</div></div>'+
+            '</div>'+
+            '<table><thead><tr>'+
+                '<th style="width:35px;">No</th><th style="width:90px;">Tanggal</th><th>Uraian</th>'+
+                '<th style="width:100px;text-align:center;">Tipe</th><th style="width:110px;text-align:right;">Nominal</th>'+
+            '</tr></thead><tbody>'+rowsKhusus+'</tbody>'+
+            '<tfoot><tr>'+
+                '<td colspan="3" style="text-align:right;font-weight:700;border:1px solid #000;padding:6px 8px;">SALDO DANA KHUSUS</td>'+
+                '<td colspan="2" style="text-align:right;font-weight:800;font-size:13px;border:1px solid #000;padding:6px 8px;">'+fmtRp(totMK-totKK)+'</td>'+
+            '</tr></tfoot></table>'+
+            ttd+
+            '<div class="pagebreak"></div>'+
+            kop+
+            '<div class="judul">Lampiran: Rincian Seluruh Transaksi Bendahara</div>'+
+            '<div class="sub">RT 005 / RW 012 Kelurahan Tegalsari &mdash; Periode: '+blnStr+'</div>'+
+            '<table><thead><tr>'+
+                '<th style="width:35px;">No</th><th style="width:90px;">Tanggal</th><th>Uraian Transaksi</th>'+
+                '<th style="width:100px;text-align:center;">Tipe</th><th style="width:110px;text-align:right;">Nominal</th>'+
+            '</tr></thead><tbody>'+rowsLampiran+'</tbody>'+
+            '<tfoot><tr>'+
+                '<td colspan="3" style="text-align:right;font-weight:700;border:1px solid #000;padding:6px 8px;">TOTAL TRANSAKSI</td>'+
+                '<td colspan="2" style="text-align:right;font-weight:800;font-size:13px;border:1px solid #000;padding:6px 8px;">'+all.length+' transaksi</td>'+
+            '</tr></tfoot></table>'+
+            ttd+
+            '</body></html>';
+
+        var w = window.open('', '_blank');
+        if (w) { w.document.write(htmlOut); w.document.close(); setTimeout(function(){ w.print(); }, 800); }
+    };
+
 
     window.simpanKopTabungan = function(e) { e.preventDefault(); let s=document.getElementById('k_simpan_warga'); if(!s.value) return; let amt = parseInt(document.getElementById('k_simpan_amt').value)||0; if(amt<=0) return Swal.fire('Nominal kosong','Mohon isi nominal tabungan.','warning'); let db=JSON.parse(localStorage.getItem('db_kop_simpan'))||[]; db.push({id:Date.now(), idWarga:s.value, namaWarga:s.options[s.selectedIndex].text, jenis:document.getElementById('k_simpan_jenis').value, nominal:amt, tgl:new Date().toLocaleDateString('id-ID'), tglIso: new Date().toISOString()}); localStorage.setItem('db_kop_simpan',JSON.stringify(db)); localStorage.setItem('ts_kop_simpan', new Date().toISOString()); e.target.reset(); if(typeof jQuery !== 'undefined') $(s).val('').trigger('change'); if(typeof syncSemuaData==='function') syncSemuaData(true); if(typeof loadKoperasiData==='function') loadKoperasiData(); Toast.fire({icon:'success',title:'Catat Tabungan Berhasil'}); };
     window.runRTChecking = function() { let w = document.getElementById('k_pinjam_warga').value; let db = JSON.parse(localStorage.getItem('db_kop_pinjam'))||[]; let a = db.find(x=>String(x.idWarga)===String(w)&&x.status!=='Lunas'); document.getElementById('rt-checking-result').innerHTML = a ? `<span style="color:red">Ditolak: Masih ada hutang Rp ${fmt(a.sisa)}</span>` : `<span style="color:green">Layak Diproses</span>`; document.getElementById('form-pinjaman-container').style.display = a?'none':'block'; };
