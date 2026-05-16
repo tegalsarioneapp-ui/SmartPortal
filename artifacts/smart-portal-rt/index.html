@@ -5212,7 +5212,22 @@ html[data-theme="dark"] select option {
         // Buat container offscreen lebar 794px (≈ A4 96dpi)
         var holder = document.createElement('div');
         holder.style.cssText = 'position:fixed; left:-10000px; top:0; width:794px; padding:0; background:white; color:black; font-family:"Times New Roman",Times,serif; z-index:-1;';
-        holder.innerHTML = '<div class="gt-pdf-page" style="background:white; color:black; padding:0;">' + htmlBody + '</div>';
+        // Reset dark mode agar PDF selalu putih
+        var pdfResetCSS = '<style>'+
+            ':root, html, body { color-scheme: light !important; background: white !important; color: black !important; }'+
+            '*, *::before, *::after { background-color: white !important; color: black !important; border-color: #94a3b8 !important; box-shadow: none !important; }'+
+            'table, thead, tbody, tfoot, tr, th, td { background-color: white !important; color: black !important; }'+
+            'thead tr th { background-color: #1e293b !important; color: white !important; }'+
+            'tbody tr:nth-child(even) td { background-color: #f1f5f9 !important; }'+
+            '.masuk, .masuk * { color: #166534 !important; background-color: transparent !important; }'+
+            '.keluar, .keluar * { color: #991b1b !important; background-color: transparent !important; }'+
+            'img { filter: none !important; }'+
+            '.sum { background-color: #f8fafc !important; border: 1px solid #cbd5e1 !important; }'+
+            '.sb { background-color: transparent !important; }'+
+            '.sb .l { color: #334155 !important; }'+
+            '.sb .v { background-color: transparent !important; }'+
+            '</style>';
+        holder.innerHTML = pdfResetCSS + '<div class="gt-pdf-page" style="background:white !important; color:black !important; padding:0;">' + htmlBody + '</div>';
         document.body.appendChild(holder);
 
         // Loading SwAlert
@@ -6578,7 +6593,7 @@ html[data-theme="dark"] select option {
 
         function fmtRp(n){ return 'Rp '+Number(n||0).toLocaleString('id-ID'); }
         function tglFmt(s){ if(!s) return '-'; return new Date(s).toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'}); }
-        function isKhusus(u){ var x=(u||'').toLowerCase(); return ['uang meja','uang sosial','17 agustus','agustusan'].some(function(k){return x.indexOf(k)!==-1;}); }
+        function isKhusus(u){ var x=(u||'').toLowerCase(); return ['uang meja','uang sosial','iuran sosial','17 agustus','agustusan'].some(function(k){return x.indexOf(k)!==-1;}); }
 
         var all = dbKas.filter(function(k){
             if(!k.tgl) return false;
@@ -6663,9 +6678,20 @@ html[data-theme="dark"] select option {
             '<div class="sub">RT 005 / RW 012 Kelurahan Tegalsari &mdash; Periode: '+blnStr+'</div>'+
             '<div class="sub" style="font-size:10px;">(Uang Meja, Uang Sosial, 17 Agustus)</div>'+
             '<div class="sum">'+
-                '<div class="sb"><div class="l">Total Pemasukan Dana Khusus</div><div class="v" style="color:#166534 !important;">'+fmtRp(totMK)+'</div></div>'+
-                '<div class="sb"><div class="l">Total Pengeluaran Dana Khusus</div><div class="v" style="color:#991b1b !important;">'+fmtRp(totKK)+'</div></div>'+
-                '<div class="sb"><div class="l">Saldo Dana Khusus</div><div class="v" style="color:#92400e !important;">'+fmtRp(totMK-totKK)+'</div></div>'+
+                (function(){
+                var sosial  = khusus.filter(function(k){return (k.uraian||'').toLowerCase().indexOf('sosial')!==-1;});
+                var meja    = khusus.filter(function(k){return (k.uraian||'').toLowerCase().indexOf('uang meja')!==-1;});
+                var agustus = khusus.filter(function(k){var u=(k.uraian||'').toLowerCase();return u.indexOf('agustus')!==-1;});
+                var totSos  = sosial.filter(function(k){return k.tipe==='masuk';}).reduce(function(s,k){return s+k.nominal;},0);
+                var totMej  = meja.filter(function(k){return k.tipe==='masuk';}).reduce(function(s,k){return s+k.nominal;},0);
+                var totAgs  = agustus.filter(function(k){return k.tipe==='masuk';}).reduce(function(s,k){return s+k.nominal;},0);
+                return '<div class="sb"><div class="l">Uang Sosial</div><div class="v" style="color:#1d4ed8 !important;">'+fmtRp(totSos)+'</div></div>'+
+                       '<div class="sb"><div class="l">Uang Meja</div><div class="v" style="color:#6d28d9 !important;">'+fmtRp(totMej)+'</div></div>'+
+                       '<div class="sb"><div class="l">Dana 17 Agustus</div><div class="v" style="color:#b45309 !important;">'+fmtRp(totAgs)+'</div></div>'+
+                       '<div class="sb"><div class="l">Total Pemasukan</div><div class="v" style="color:#166534 !important;">'+fmtRp(totMK)+'</div></div>'+
+                       '<div class="sb"><div class="l">Total Pengeluaran</div><div class="v" style="color:#991b1b !important;">'+fmtRp(totKK)+'</div></div>'+
+                       '<div class="sb"><div class="l">Saldo Dana Khusus</div><div class="v" style="color:#92400e !important;">'+fmtRp(totMK-totKK)+'</div></div>';
+                })()+
             '</div>'+
             '<table><thead><tr>'+
                 '<th style="width:35px;">No</th><th style="width:90px;">Tanggal</th><th>Uraian</th>'+
