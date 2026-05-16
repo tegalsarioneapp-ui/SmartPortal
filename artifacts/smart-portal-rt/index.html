@@ -6717,8 +6717,9 @@ html[data-theme="dark"] select option {
             ttd+
             '</body></html>';
 
-        var w = window.open('', '_blank');
-        if (w) { w.document.write(htmlOut); w.document.close(); setTimeout(function(){ w.print(); }, 800); }
+        // Download sebagai PDF
+        var bodyOnly = htmlOut.replace(/^[\s\S]*?<body[^>]*>/i,'').replace(/<\/body>[\s\S]*$/i,'');
+        window.downloadPdfFromHtml(bodyOnly, 'BA_Kas_' + blnStr.replace(/\s+/g,'_'));
     };
 
 
