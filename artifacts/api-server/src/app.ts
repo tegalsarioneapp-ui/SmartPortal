@@ -78,7 +78,7 @@ app.use(express.urlencoded({ extended: true, limit: "12mb" }));
 
 // Simple health check — no DB dependency, responds immediately
 app.get("/api/health", (_req, res) => {
-  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+  res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
 });
 app.get("/api/healthz", (_req, res) => {
   res.status(200).json({ status: "ok" });
