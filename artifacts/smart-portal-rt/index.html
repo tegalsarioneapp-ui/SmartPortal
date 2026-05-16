@@ -3535,6 +3535,50 @@ html[data-theme="dark"] select option {
                 </div>
             </div>
         </div>
+        <div id="ben-laporan" class="ben-tab-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:15px;">
+                <h2 style="margin:0; color:var(--primary-dark); font-size:1.8rem;"><i class="fa-solid fa-book"></i> Laporan Kas</h2>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="btn-action bg-gold" onclick="cetakLaporanKas()"><i class="fa-solid fa-print"></i> Cetak Laporan</button>
+                </div>
+            </div>
+            <div class="stats-grid" style="margin-bottom:18px;">
+                <div class="stat-box" style="border-color:var(--primary-blue);">
+                    <i class="fa-solid fa-wallet bg-icon" style="color:var(--primary-blue) !important;"></i>
+                    <h4>Saldo Awal</h4>
+                    <h2 id="ben-display-saldo-awal">Rp 0</h2>
+                </div>
+                <div class="stat-box" style="border-color:var(--success);">
+                    <i class="fa-solid fa-circle-arrow-up bg-icon" style="color:var(--success) !important;"></i>
+                    <h4>Total Pemasukan</h4>
+                    <h2 id="ben-total-masuk">Rp 0</h2>
+                </div>
+                <div class="stat-box" style="border-color:var(--danger);">
+                    <i class="fa-solid fa-circle-arrow-down bg-icon" style="color:var(--danger) !important;"></i>
+                    <h4>Total Pengeluaran</h4>
+                    <h2 id="ben-total-keluar">Rp 0</h2>
+                </div>
+                <div class="stat-box" style="border-color:var(--accent-gold);">
+                    <i class="fa-solid fa-sack-dollar bg-icon" style="color:var(--accent-gold) !important;"></i>
+                    <h4>Saldo Akhir</h4>
+                    <h2 id="ben-saldo-kas-input">Rp 0</h2>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title-header">
+                    <h3><i class="fa-solid fa-list"></i> Riwayat Transaksi Kas</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Tanggal</th><th>Uraian</th><th>Tipe</th><th>Nominal / Saldo</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="tbody-laporan-kas"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div id="ben-matriks" class="ben-tab-content">
             <div class="stats-grid" style="margin-bottom:18px;">
                 <div class="stat-box" style="border-color:var(--accent-gold);"><i class="fa-solid fa-sack-dollar bg-icon" style="color:var(--accent-gold) !important;"></i><h4>Dana Iuran Terkumpul</h4><h2 id="ben-total-iuran-terkumpul">Rp 0</h2></div>
