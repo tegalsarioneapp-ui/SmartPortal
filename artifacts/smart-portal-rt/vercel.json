@@ -1,16 +1,11 @@
 {
-  "framework": "vite",
-  "buildCommand": "pnpm build",
+  "buildCommand": "bash build-static.sh",
   "outputDirectory": "dist",
-  "installCommand": "pnpm install",
+  "installCommand": "echo skip",
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "https://smartportal-production.up.railway.app/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }
