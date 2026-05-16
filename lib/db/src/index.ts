@@ -24,7 +24,6 @@ export const pool = new Pool({
   ...(isExternalHost ? { ssl: { rejectUnauthorized: false } } : {}),
 });
 
-// CRITICAL: tanpa ini idle client error -> Node crash -> 502
 pool.on("error", (err) => {
   console.error("[DB] Unexpected pool error:", err.message);
 });

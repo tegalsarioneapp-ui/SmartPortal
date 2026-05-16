@@ -13,10 +13,9 @@ router.get("/health", async (_req: Request, res: Response) => {
     latencyMs = Date.now() - t0;
     dbOk = true;
   } catch (err) {
-    console.error("[Health] DB check failed:", (err as Error).message);
+    console.error("[Health] DB check failed:", err.message);
   }
 
-  // Selalu 200 — Railway health check tidak boleh fail karena DB lambat
   res.status(200).json({
     status: "ok",
     db: { ok: dbOk, latencyMs },
@@ -42,7 +41,7 @@ router.get("/debug/db", async (_req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       connected: false,
-      error: (err as Error).message,
+      error: err.message,
       envSet: !!process.env["DATABASE_URL"],
     });
   }
