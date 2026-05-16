@@ -3445,6 +3445,7 @@ html[data-theme="dark"] select option {
         <div id="view-bendahara" class="tab-view">
         <div class="admin-nav-tabs no-print">
             <button class="admin-tab-btn active" onclick="openBenTab('ben-input')"><i class="fa-solid fa-cash-register"></i><span>Input Data</span></button>
+            <button class="admin-tab-btn" onclick="openBenTab('ben-iuran')"><i class="fa-solid fa-hand-holding-dollar"></i><span>Iuran Kolektif</span></button>
             <button class="admin-tab-btn" onclick="openBenTab('ben-laporan')"><i class="fa-solid fa-book"></i><span>Laporan Kas</span></button>
             <button class="admin-tab-btn" onclick="openBenTab('ben-matriks')"><i class="fa-solid fa-table-cells"></i><span>Matriks Iuran</span></button>
             <button class="admin-tab-btn" onclick="openBenTab('ben-penagihan')"><i class="fa-solid fa-file-invoice-dollar"></i><span>Analisa & Tagihan</span></button>
@@ -3468,27 +3469,72 @@ html[data-theme="dark"] select option {
                         <button type="submit" class="btn-submit bg-green"><i class="fa-solid fa-check-circle"></i> Simpan Transaksi</button>
                     </form>
                 </div>
-                <div class="card" style="margin-bottom:0; border-top: 4px solid var(--accent-gold);">
-                    <div class="card-title-header"><h3><i class="fa-solid fa-users-rectangle"></i> Input Iuran Kolektif</h3></div>
-                    <form onsubmit="event.preventDefault(); simpanIuranKolektif(event)">
-                        <div class="form-group"><label>Pilih Warga Pembayar</label><select id="ben-warga" required></select></div>
-                        <div class="form-group"><label>Ceklis Bulan</label>
-                            <div class="checkbox-grid" style="grid-template-columns: repeat(3, 1fr);">
-                                <label class="cb-label"><input type="checkbox" value="Januari" class="cb-bulan" onchange="hitungOtomatisIuran()"> Jan</label><label class="cb-label"><input type="checkbox" value="Februari" class="cb-bulan" onchange="hitungOtomatisIuran()"> Feb</label><label class="cb-label"><input type="checkbox" value="Maret" class="cb-bulan" onchange="hitungOtomatisIuran()"> Mar</label><label class="cb-label"><input type="checkbox" value="April" class="cb-bulan" onchange="hitungOtomatisIuran()"> Apr</label><label class="cb-label"><input type="checkbox" value="Mei" class="cb-bulan" onchange="hitungOtomatisIuran()"> Mei</label><label class="cb-label"><input type="checkbox" value="Juni" class="cb-bulan" onchange="hitungOtomatisIuran()"> Jun</label><label class="cb-label"><input type="checkbox" value="Juli" class="cb-bulan" onchange="hitungOtomatisIuran()"> Jul</label><label class="cb-label"><input type="checkbox" value="Agustus" class="cb-bulan" onchange="hitungOtomatisIuran()"> Agu</label><label class="cb-label"><input type="checkbox" value="September" class="cb-bulan" onchange="hitungOtomatisIuran()"> Sep</label><label class="cb-label"><input type="checkbox" value="Oktober" class="cb-bulan" onchange="hitungOtomatisIuran()"> Okt</label><label class="cb-label"><input type="checkbox" value="November" class="cb-bulan" onchange="hitungOtomatisIuran()"> Nov</label><label class="cb-label"><input type="checkbox" value="Desember" class="cb-bulan" onchange="hitungOtomatisIuran()"> Des</label>
-                            </div>
+        </div>
+        </div>
+
+        <!-- ═══ TAB IURAN KOLEKTIF ═══ -->
+        <div id="ben-iuran" class="ben-tab-content">
+            <!-- Stat boxes -->
+            <div class="stats-grid" style="margin-bottom:18px;">
+                <div class="stat-box" style="border-color:var(--accent-gold);"><i class="fa-solid fa-users bg-icon" style="color:var(--accent-gold) !important;"></i><h4>Total Warga</h4><h2 id="iuran-stat-total-warga">0</h2></div>
+                <div class="stat-box" style="border-color:var(--success);"><i class="fa-solid fa-circle-check bg-icon" style="color:var(--success) !important;"></i><h4>Lunas Bulan Ini</h4><h2 id="iuran-stat-lunas">0</h2></div>
+                <div class="stat-box" style="border-color:var(--danger);"><i class="fa-solid fa-circle-xmark bg-icon" style="color:var(--danger) !important;"></i><h4>Belum Bayar</h4><h2 id="iuran-stat-belum">0</h2></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start;">
+                <!-- PANEL KIRI: Cari & Pilih Warga -->
+                <div class="card" style="border-top:4px solid var(--accent-gold); margin-bottom:0;">
+                    <div class="card-title-header"><h3><i class="fa-solid fa-magnifying-glass"></i> Pilih Warga</h3></div>
+                    <div style="margin-bottom:12px;">
+                        <input type="text" id="iuran-search-warga" class="search-box" placeholder="🔍 Ketik nama warga..." oninput="filterWargaIuran()" style="width:100%;">
+                    </div>
+                    <div id="iuran-list-warga" style="max-height:320px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;">
+                        <div style="text-align:center; color:var(--text-muted); padding:20px;">Memuat data warga...</div>
+                    </div>
+                </div>
+
+                <!-- PANEL KANAN: Status Bulan + Catat -->
+                <div class="card" style="border-top:4px solid var(--success); margin-bottom:0;">
+                    <div class="card-title-header">
+                        <h3><i class="fa-solid fa-calendar-check"></i> Status Bulan</h3>
+                        <span id="iuran-nama-terpilih" style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">— Pilih warga dulu</span>
+                    </div>
+
+                    <div id="iuran-bulan-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px;">
+                        <!-- diisi loadBulanIuran() -->
+                        <div style="text-align:center; color:var(--text-muted); padding:20px; grid-column:1/-1;">Pilih warga untuk melihat status bulan</div>
+                    </div>
+
+                    <div style="background:var(--bg-light); border-radius:10px; padding:14px; margin-bottom:14px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Total Pembayaran:</span>
+                            <span id="iuran-total-display" style="font-size:1.4rem; font-weight:800; color:var(--accent-gold);">Rp 0</span>
                         </div>
-                        <div class="form-group"><label>Total Nominal Terkalkulasi (Rp)</label><input type="number" id="ben-iuran-amt" value="0" readonly style="color:var(--primary-dark); font-weight:800; font-size:1.3rem;"></div>
-                        <button type="submit" class="btn-submit bg-gold"><i class="fa-solid fa-save"></i> Catat Penerimaan Iuran</button>
-                    </form>
+                        <div id="iuran-breakdown-display" style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;"></div>
+                    </div>
+
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-submit bg-gold" style="flex:1;" onclick="simpanIuranKolektifBaru()">
+                            <i class="fa-solid fa-save"></i> Catat Pembayaran
+                        </button>
+                        <button class="btn-submit" style="width:auto; background:#64748b;" onclick="resetPilihWargaIuran()">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Riwayat Hari Ini -->
+            <div class="card" style="margin-top:18px; border-top:4px solid var(--primary-blue);">
+                <div class="card-title-header"><h3><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Iuran Hari Ini</h3></div>
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Warga</th><th>Bulan Dibayar</th><th>Nominal</th><th>Status</th></tr></thead>
+                        <tbody id="tbody-iuran-hari-ini"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
-
-        <div id="ben-laporan" class="ben-tab-content">
-            <div class="card"><div class="card-title-header"><h3><i class="fa-solid fa-book-open"></i> Buku Kas Umum</h3><button class="btn-action" style="background:#059669;color:#fff;border:none;margin-right:4px;" onclick="exportExcelKas()"><i class="fa-solid fa-file-excel"></i> Export Excel</button><button class="btn-action bg-gold" onclick="promptBAKas()"><i class="fa-solid fa-print"></i> Buat Laporan BA Kas</button></div><div class="table-responsive"><table><thead><tr><th>Tanggal</th><th>Uraian Transaksi</th><th>Jenis</th><th>Nominal Saldo</th><th>Aksi</th></tr></thead><tbody id="tbody-laporan-kas"></tbody></table></div></div>
-        </div>
-        <div id="ben-matriks" class="ben-tab-content">
-            <div class="stats-grid">
                 <div class="stat-box" style="border-color:var(--accent-gold);"><i class="fa-solid fa-sack-dollar bg-icon" style="color:var(--accent-gold) !important;"></i><h4>Dana Iuran Terkumpul</h4><h2 id="ben-total-iuran-terkumpul">Rp 0</h2></div>
                 <div class="stat-box" style="border-color:var(--danger);"><i class="fa-solid fa-hand-holding-dollar bg-icon" style="color:var(--danger) !important;"></i><h4>Belum di-Posting ke Kas</h4><h2 id="ben-iuran-hold">Rp 0</h2></div>
             </div>
@@ -7877,6 +7923,7 @@ html[data-theme="dark"] select option {
     window.scrollTo({top: 0, behavior: 'smooth'});
     const bLoaders = {
         'ben-input':      function(){ if(typeof populateDropdownWarga==='function') populateDropdownWarga(); },
+        'ben-iuran':      function(){ if(typeof loadTabIuranKolektif==='function') loadTabIuranKolektif(); },
         'ben-laporan':    function(){ if(typeof loadKasBendahara==='function') loadKasBendahara(); },
         'ben-matriks':    function(){ if(typeof loadMatriksIuran==='function') loadMatriksIuran(); },
         'ben-penagihan':  function(){ if(typeof loadAnalisaUangMeja==='function') loadAnalisaUangMeja(); },
@@ -7885,6 +7932,167 @@ html[data-theme="dark"] select option {
     if(bLoaders[t]) bLoaders[t]();
 };
     // === FITUR POP-UP KARTU DIGITAL WARGA (UPGRADE DESAIN & ANTI-MACET) ===
+    var _iuranWargaTerpilih = null;
+
+    window.loadTabIuranKolektif = function() {
+        _iuranWargaTerpilih = null;
+        var dbWarga = JSON.parse(localStorage.getItem('db_warga') || '[]');
+        var dbIuran = JSON.parse(localStorage.getItem('db_iuran') || '[]');
+        var bulanIni = new Date().toLocaleString('id-ID',{month:'long'});
+        var lunas = dbWarga.filter(function(w){
+            return dbIuran.some(function(x){ return String(x.idWarga)===String(w.id) && x.bulan===bulanIni && x.posted; });
+        }).length;
+        if(document.getElementById('iuran-stat-total-warga')) document.getElementById('iuran-stat-total-warga').innerText = dbWarga.length;
+        if(document.getElementById('iuran-stat-lunas')) document.getElementById('iuran-stat-lunas').innerText = lunas;
+        if(document.getElementById('iuran-stat-belum')) document.getElementById('iuran-stat-belum').innerText = dbWarga.length - lunas;
+        window._iuranDbWarga = dbWarga;
+        window._iuranDbIuran = dbIuran;
+        window.renderListWargaIuran(dbWarga);
+        window.renderRiwayatIuranHariIni();
+    };
+
+    window.renderListWargaIuran = function(list) {
+        var dbIuran = window._iuranDbIuran || [];
+        var bulanIni = new Date().toLocaleString('id-ID',{month:'long'});
+        var container = document.getElementById('iuran-list-warga');
+        if(!container) return;
+        if(!list || list.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">Tidak ada data warga</div>';
+            return;
+        }
+        container.innerHTML = list.map(function(w) {
+            var sudahLunas = dbIuran.some(function(x){ return String(x.idWarga)===String(w.id) && x.bulan===bulanIni && x.posted; });
+            var badge = sudahLunas
+                ? '<span style="font-size:0.7rem;background:#dcfce7;color:#166534;border-radius:999px;padding:2px 8px;font-weight:700;">&#10003; Lunas</span>'
+                : '<span style="font-size:0.7rem;background:#fee2e2;color:#991b1b;border-radius:999px;padding:2px 8px;font-weight:700;">&#10007; Belum</span>';
+            var isActive = _iuranWargaTerpilih && String(_iuranWargaTerpilih.id)===String(w.id);
+            return '<div onclick="pilihWargaIuran('+w.id+')" style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:8px;cursor:pointer;border:2px solid '+(isActive?'var(--accent-gold)':'#e2e8f0')+';background:'+(isActive?'#fffbeb':'#fff')+';transition:all 0.2s;margin-bottom:4px;">'
+                + '<span style="font-weight:600;font-size:0.9rem;">'+w.nama+'</span>'
+                + badge
+                + '</div>';
+        }).join('');
+    };
+
+    window.filterWargaIuran = function() {
+        var q = (document.getElementById('iuran-search-warga').value || '').toLowerCase();
+        var list = (window._iuranDbWarga || []).filter(function(w){ return w.nama.toLowerCase().indexOf(q) > -1; });
+        window.renderListWargaIuran(list);
+    };
+
+    window.pilihWargaIuran = function(idWarga) {
+        var dbWarga = window._iuranDbWarga || [];
+        var dbIuran = window._iuranDbIuran || [];
+        _iuranWargaTerpilih = dbWarga.find(function(w){ return String(w.id)===String(idWarga); });
+        if(!_iuranWargaTerpilih) return;
+        var elNama = document.getElementById('iuran-nama-terpilih');
+        if(elNama) elNama.innerText = _iuranWargaTerpilih.nama;
+        var q = (document.getElementById('iuran-search-warga').value || '').toLowerCase();
+        var list = dbWarga.filter(function(w){ return w.nama.toLowerCase().indexOf(q) > -1; });
+        window.renderListWargaIuran(list);
+        var bulanList = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        var grid = document.getElementById('iuran-bulan-grid');
+        if(!grid) return;
+        grid.innerHTML = bulanList.map(function(b) {
+            var sudah = dbIuran.some(function(x){ return String(x.idWarga)===String(idWarga) && x.bulan===b && x.posted; });
+            return '<div onclick="toggleBulanIuran(this,\''+b+'\')" data-bulan="'+b+'" data-checked="false" style="text-align:center;padding:10px 4px;border-radius:8px;border:2px solid '+(sudah?'#16a34a':'#e2e8f0')+';background:'+(sudah?'#dcfce7':'#fff')+';color:'+(sudah?'#166534':'#1e293b')+';font-size:0.8rem;font-weight:700;cursor:'+(sudah?'not-allowed':'pointer')+';position:relative;">'
+                +(sudah?'<i class="fa-solid fa-lock" style="font-size:0.6rem;position:absolute;top:3px;right:4px;color:#16a34a;"></i>':'')
+                +'<div>'+b.substring(0,3)+'</div>'
+                +'<div style="font-size:0.65rem;margin-top:2px;">'+(sudah?'&#10003;':'')+'</div>'
+                +'</div>';
+        }).join('');
+        window.hitungTotalIuranBaru();
+    };
+
+    window.toggleBulanIuran = function(el, bulan) {
+        if(!_iuranWargaTerpilih) return;
+        var dbIuran = window._iuranDbIuran || [];
+        var sudah = dbIuran.some(function(x){ return String(x.idWarga)===String(_iuranWargaTerpilih.id) && x.bulan===bulan && x.posted; });
+        if(sudah) return;
+        var checked = el.getAttribute('data-checked') === 'true';
+        el.setAttribute('data-checked', checked ? 'false' : 'true');
+        el.style.background = checked ? '#fff' : '#fffbeb';
+        el.style.borderColor = checked ? '#e2e8f0' : 'var(--accent-gold)';
+        el.style.color = checked ? '#1e293b' : '#92400e';
+        el.querySelector('div:last-child').innerText = checked ? '' : '✓';
+        window.hitungTotalIuranBaru();
+    };
+
+    window.hitungTotalIuranBaru = function() {
+        var dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
+        var nominalIuran = Number(dbSettings.nominalIuran) || 25000;
+        var checked = document.querySelectorAll('#iuran-bulan-grid [data-checked="true"]');
+        var total = checked.length * nominalIuran;
+        var elTotal = document.getElementById('iuran-total-display');
+        var elBreak = document.getElementById('iuran-breakdown-display');
+        if(elTotal) elTotal.innerText = fmt(total);
+        if(elBreak) {
+            if(checked.length === 0) { elBreak.innerText = ''; return; }
+            var dbJenis = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+            if(dbJenis.length > 0) {
+                elBreak.innerHTML = dbJenis.map(function(j){
+                    return '<span style="margin-right:8px;">• '+j.nama+': '+fmt(Math.round((j.nominal/nominalIuran)*total))+'</span>';
+                }).join('');
+            }
+        }
+    };
+
+    window.simpanIuranKolektifBaru = function() {
+        if(!_iuranWargaTerpilih) return Swal.fire('Gagal','Pilih warga terlebih dahulu!','error');
+        var checked = document.querySelectorAll('#iuran-bulan-grid [data-checked="true"]');
+        if(checked.length === 0) return Swal.fire('Gagal','Pilih minimal satu bulan!','error');
+        var bulanDipilih = Array.from(checked).map(function(el){ return el.getAttribute('data-bulan'); });
+        var dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
+        var nominalIuran = Number(dbSettings.nominalIuran) || 25000;
+        var dbIuran = JSON.parse(localStorage.getItem('db_iuran') || '[]');
+        var dbKas = JSON.parse(localStorage.getItem('db_kas') || '[]');
+        var tgl = new Date().toISOString().split('T')[0];
+        var idBase = Date.now();
+        bulanDipilih.forEach(function(bulan, idx) {
+            var idIuran = idBase + idx;
+            dbIuran.push({ id: idIuran, idWarga: _iuranWargaTerpilih.id, namaWarga: _iuranWargaTerpilih.nama, bulan: bulan, nominal: nominalIuran, tanggal: tgl, posted: true });
+            dbKas.push({ id: idBase + 1000 + idx, tanggal: tgl, keterangan: 'Iuran '+bulan+' - '+_iuranWargaTerpilih.nama, tipe: 'masuk', nominal: nominalIuran, sumber: 'iuran' });
+        });
+        localStorage.setItem('db_iuran', JSON.stringify(dbIuran));
+        localStorage.setItem('db_kas', JSON.stringify(dbKas));
+        window._iuranDbIuran = dbIuran;
+        Swal.fire('Berhasil!', _iuranWargaTerpilih.nama+' — '+bulanDipilih.length+' bulan tercatat!', 'success');
+        window.loadTabIuranKolektif();
+    };
+
+    window.resetPilihWargaIuran = function() {
+        _iuranWargaTerpilih = null;
+        var elNama = document.getElementById('iuran-nama-terpilih');
+        if(elNama) elNama.innerText = '— Pilih warga dulu';
+        var grid = document.getElementById('iuran-bulan-grid');
+        if(grid) grid.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;grid-column:1/-1;">Pilih warga untuk melihat status bulan</div>';
+        var elTotal = document.getElementById('iuran-total-display');
+        if(elTotal) elTotal.innerText = 'Rp 0';
+        var elBreak = document.getElementById('iuran-breakdown-display');
+        if(elBreak) elBreak.innerText = '';
+        window.renderListWargaIuran(window._iuranDbWarga || []);
+    };
+
+    window.renderRiwayatIuranHariIni = function() {
+        var dbIuran = window._iuranDbIuran || [];
+        var tgl = new Date().toISOString().split('T')[0];
+        var hariIni = dbIuran.filter(function(x){ return x.tanggal === tgl; });
+        var tb = document.getElementById('tbody-iuran-hari-ini');
+        if(!tb) return;
+        if(hariIni.length === 0) {
+            tb.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-muted);">Belum ada transaksi iuran hari ini</td></tr>';
+            return;
+        }
+        tb.innerHTML = hariIni.sort(function(a,b){ return b.id - a.id; }).map(function(x){
+            return '<tr>'
+                + '<td><b>'+x.namaWarga+'</b></td>'
+                + '<td>'+x.bulan+'</td>'
+                + '<td>'+fmt(x.nominal)+'</td>'
+                + '<td><span style="background:#dcfce7;color:#166534;border-radius:999px;padding:2px 8px;font-size:0.75rem;font-weight:700;">&#10003; Tercatat</span></td>'
+                + '</tr>';
+        }).join('');
+    };
+
+    window.filterMatriksIuran = function(q) {
     window.filterMatriksIuran = function(q) {
         try {
             q = String(q || '').trim().toLowerCase();
