@@ -3902,6 +3902,12 @@ html[data-theme="dark"] select option {
                     <div class="form-group"><label>Bunga Koperasi (%)</label><input type="number" id="set_bunga_kop"></div>
                     <button class="btn-submit bg-blue" onclick="simpanPengaturanSistem()">Simpan Pengaturan</button>
                 </div>
+                <div class="card" style="border-top:4px solid #6366f1; margin-top:0;">
+                  <h3><i class="fa-solid fa-list-check" style="color:#6366f1;"></i> Jenis Iuran</h3>
+                  <p style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Atur komponen iuran bulanan. Total nominal otomatis dihitung.</p>
+                  <div id="list-jenis-iuran" style="margin-bottom:12px;"></div>
+                  <button class="btn-action bg-blue" style="width:100%;" onclick="tambahJenisIuran()"><i class="fa-solid fa-plus"></i> Tambah Jenis Iuran</button>
+                </div>
             </div>
 
             <!-- ===== KARTU GANTI PASSWORD SISTEM ===== -->
@@ -6287,7 +6293,13 @@ html[data-theme="dark"] select option {
     // === 9. KEUANGAN (BENDAHARA & KOPERASI) ===
     window.simpanSaldoAwal = function() { localStorage.setItem('db_saldo_awal', document.getElementById('ben-saldo-awal-input').value); syncSemuaData(); Toast.fire({icon:'success',title:'Dikunci'}); };
     window.simpanKas = function(e) { e.preventDefault(); let db = JSON.parse(localStorage.getItem('db_kas')) || []; db.push({ id: Date.now(), tgl: document.getElementById('ben-tgl').value, uraian: document.getElementById('ben-desc').value, tipe: document.getElementById('ben-tipe').value, nominal: parseInt(document.getElementById('ben-amt').value) }); localStorage.setItem('db_kas', JSON.stringify(db)); localStorage.setItem('ts_kas', new Date().toISOString()); e.target.reset(); if (typeof syncSemuaData === 'function') syncSemuaData(true); Toast.fire({icon:'success',title:'Disimpan'}); };
-    window.hitungOtomatisIuran = function() { let t = document.querySelectorAll('.cb-bulan:checked').length * 20000; if(document.getElementById('ben-iuran-amt')) document.getElementById('ben-iuran-amt').value = t; };
+    window.hitungOtomatisIuran = function() {
+    let ji = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+    if (!ji.length) ji = [{nama:'Kas RT',nominal:10000},{nama:'Sampah',nominal:5000},{nama:'Sosial',nominal:5000}];
+    let tot = ji.reduce(function(s,x){return s+(x.nominal||0);},0);
+    let t = document.querySelectorAll('.cb-bulan:checked').length * tot;
+    if(document.getElementById('ben-iuran-amt')) document.getElementById('ben-iuran-amt').value = t;
+};
     window.simpanIuranKolektif = function(e) {
     if(e && e.preventDefault) e.preventDefault();
     
@@ -6314,10 +6326,12 @@ html[data-theme="dark"] select option {
         let tglSekarang = new Date().toISOString().split('T')[0];
         let randomID = Date.now() + Math.random();
         
-        // Catat ke Kas Bendahara (3 baris breakdown)
-        dbKas.push({ id: randomID, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran Kas RT (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: 10000 });
-        dbKas.push({ id: randomID + 1, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran Sampah (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: 5000 });
-        dbKas.push({ id: randomID + 2, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran Sosial (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: 5000 });
+        // Catat ke Kas Bendahara (dinamis dari db_jenis_iuran)
+        let ji = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+        if (!ji.length) ji = [{nama:'Kas RT',nominal:10000},{nama:'Sampah',nominal:5000},{nama:'Sosial',nominal:5000}];
+        ji.forEach(function(j, idx) {
+            dbKas.push({ id: randomID + idx, idWarga: idWarga, tgl: tglSekarang, uraian: `Iuran ${j.nama} (${bln}) - ${namaWarga}`, tipe: 'masuk', nominal: j.nominal });
+        });
     });
 
     // Simpan Kas kembali ke storage
@@ -6338,7 +6352,7 @@ html[data-theme="dark"] select option {
                 nama: namaWarga,
                 bulan: bln,
                 tahun: new Date().getFullYear(),
-                nominal: 20000,
+                nominal: (function(){ let ji = JSON.parse(localStorage.getItem('db_jenis_iuran')||'[]'); return ji.length ? ji.reduce(function(s,x){return s+(x.nominal||0);},0) : 20000; })(),
                 tgl: new Date().toISOString().split('T')[0]
             });
         }
@@ -7112,6 +7126,7 @@ html[data-theme="dark"] select option {
         if(document.getElementById('set_nama_rw')) document.getElementById('set_nama_rw').value = s.namaRW;
         if(document.getElementById('set_nama_ben')) document.getElementById('set_nama_ben').value = s.namaBen;
         if(document.getElementById('set_nominal_iuran')) document.getElementById('set_nominal_iuran').value = s.nomIuran;
+        if(typeof renderJenisIuran === 'function') renderJenisIuran();
         if(document.getElementById('set_bunga_kop')) document.getElementById('set_bunga_kop').value = s.bungaKop;
         
         // Perbarui placeholder field password sesuai status tersimpan
@@ -9343,6 +9358,56 @@ function updateSemuaWaktu() {
   };
   tryWrap();
 })();
+
+    // === JENIS IURAN DINAMIS ===
+    window.renderJenisIuran = function() {
+        let ji = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+        if (!ji.length) {
+            ji = [{nama:'Kas RT',nominal:10000},{nama:'Sampah',nominal:5000},{nama:'Sosial',nominal:5000}];
+            localStorage.setItem('db_jenis_iuran', JSON.stringify(ji));
+        }
+        let el = document.getElementById('list-jenis-iuran');
+        if (!el) return;
+        let total = ji.reduce(function(s,x){return s+(x.nominal||0);},0);
+        let html2 = '<table style="width:100%;border-collapse:collapse;font-size:0.9rem;">';
+        html2 += '<tr style="background:#f1f5f9;"><th style="padding:8px;text-align:left;">Nama Jenis</th><th style="padding:8px;text-align:right;">Nominal</th><th style="padding:8px;">Aksi</th></tr>';
+        ji.forEach(function(j, i) {
+            html2 += '<tr style="border-bottom:1px solid #e2e8f0;">';
+            html2 += '<td style="padding:8px;"><input type="text" value="'+j.nama+'" style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;width:100%;" onchange="updateJenisIuran('+i+',\'nama\',this.value)"></td>';
+            html2 += '<td style="padding:8px;"><input type="number" value="'+j.nominal+'" style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;width:100%;text-align:right;" onchange="updateJenisIuran('+i+',\'nominal\',parseInt(this.value)||0)"></td>';
+            html2 += '<td style="padding:8px;text-align:center;"><button onclick="hapusJenisIuran('+i+')" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;"><i class="fa-solid fa-trash"></i></button></td>';
+            html2 += '</tr>';
+        });
+        html2 += '<tr style="background:#f8fafc;font-weight:700;"><td style="padding:8px;">TOTAL</td><td style="padding:8px;text-align:right;color:#10b981;">'+fmt(total)+'</td><td></td></tr>';
+        html2 += '</table>';
+        el.innerHTML = html2;
+        let elNom = document.getElementById('set_nominal_iuran');
+        if (elNom) elNom.value = total;
+    };
+
+    window.tambahJenisIuran = function() {
+        let ji = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+        if (!ji.length) ji = [{nama:'Kas RT',nominal:10000},{nama:'Sampah',nominal:5000},{nama:'Sosial',nominal:5000}];
+        ji.push({nama:'Jenis Baru',nominal:0});
+        localStorage.setItem('db_jenis_iuran', JSON.stringify(ji));
+        renderJenisIuran();
+    };
+
+    window.hapusJenisIuran = function(idx) {
+        let ji = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+        ji.splice(idx, 1);
+        localStorage.setItem('db_jenis_iuran', JSON.stringify(ji));
+        renderJenisIuran();
+    };
+
+    window.updateJenisIuran = function(idx, field, val) {
+        let ji = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+        ji[idx][field] = val;
+        localStorage.setItem('db_jenis_iuran', JSON.stringify(ji));
+        let elNom = document.getElementById('set_nominal_iuran');
+        let total = ji.reduce(function(s,x){return s+(x.nominal||0);},0);
+        if (elNom) elNom.value = total;
+    };
 </script>
 
 <!-- PWA Install Button -->
