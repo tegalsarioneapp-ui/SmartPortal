@@ -7955,6 +7955,59 @@ html[data-theme="dark"] select option {
         window.renderRiwayatIuranHariIni();
     };
 
+    window.renderListWargaIuran = function(list) {
+        var el = document.getElementById('iuran-list-warga');
+        if (!el) return;
+        if (!list || list.length === 0) {
+            el.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">Tidak ada warga ditemukan.</div>';
+            return;
+        }
+        var dbIuran = window._iuranDbIuran || JSON.parse(localStorage.getItem('db_iuran') || '[]');
+        var bulanIni = new Date().toLocaleString('id-ID', {month:'long'});
+        var html = '';
+        list.forEach(function(w) {
+            var lunas = dbIuran.some(function(x) {
+                return String(x.idWarga) === String(w.id) && x.bulan === bulanIni && x.posted;
+            });
+            var isActive = window._iuranWargaTerpilih && String(window._iuranWargaTerpilih.id) === String(w.id);
+            html += '<div onclick="pilihWargaIuran(' + w.id + ')" style="' +
+                'padding:10px 14px; border-radius:10px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;' +
+                'background:' + (isActive ? 'var(--primary-blue)' : 'var(--gt-surface, #f8fafc)') + ';' +
+                'color:' + (isActive ? '#fff' : 'inherit') + ';' +
+                'border:1px solid ' + (isActive ? 'var(--primary-blue)' : '#e2e8f0') + ';' +
+                'transition:all 0.15s;">' +
+                '<span style="font-weight:600; font-size:0.92rem;">' + w.nama + '</span>' +
+                '<span style="font-size:0.78rem; font-weight:700; padding:3px 8px; border-radius:20px; background:' +
+                (lunas ? '#dcfce7' : '#fee2e2') + '; color:' + (lunas ? '#166534' : '#991b1b') + ';">' +
+                (lunas ? '✓ Lunas' : '✗ Belum') + '</span>' +
+                '</div>';
+        });
+        el.innerHTML = html;
+    };
+
+    window.filterWargaIuran = function() {
+        var q = (document.getElementById('iuran-search-warga') || {}).value || '';
+        var dbWarga = window._iuranDbWarga || JSON.parse(localStorage.getItem('db_warga') || '[]');
+        var filtered = q.trim() === '' ? dbWarga : dbWarga.filter(function(w) {
+            return w.nama && w.nama.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+        });
+        window.renderListWargaIuran(filtered);
+    };
+
+    window.pilihWargaIuran = function(id) {
+        var dbWarga = window._iuranDbWarga || JSON.parse(localStorage.getItem('db_warga') || '[]');
+        var w = dbWarga.find(function(x) { return String(x.id) === String(id); });
+        if (!w) return;
+        window._iuranWargaTerpilih = w;
+        var elNama = document.getElementById('iuran-nama-terpilih');
+        if (elNama) elNama.innerText = w.nama;
+        // Re-render list agar highlight aktif
+        window.filterWargaIuran();
+        // Load status bulan
+        if (typeof window.loadBulanIuran === 'function') window.loadBulanIuran(w);
+    };
+
+
     window.simpanIuranKolektifBaru = function() {
         if(!_iuranWargaTerpilih) return Swal.fire('Gagal','Pilih warga terlebih dahulu!','error');
         var checked = document.querySelectorAll('#iuran-bulan-grid [data-checked="true"]');
@@ -7989,6 +8042,81 @@ html[data-theme="dark"] select option {
         if(elBreak) elBreak.innerText = '';
         window.renderListWargaIuran(window._iuranDbWarga || []);
     };
+
+    window.loadBulanIuran = function(w) {
+        var grid = document.getElementById('iuran-bulan-grid');
+        if (!grid) return;
+        var dbIuran = window._iuranDbIuran || JSON.parse(localStorage.getItem('db_iuran') || '[]');
+        var dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
+        var nominalIuran = Number(dbSettings.nominalIuran) || 25000;
+        var BULAN = ['Januari','Februari','Maret','April','Mei','Juni',
+                     'Juli','Agustus','September','Oktober','November','Desember'];
+        var html = '';
+        var totalDipilih = 0;
+        var jumlahDipilih = 0;
+
+        BULAN.forEach(function(bulan) {
+            var sudahBayar = dbIuran.some(function(x) {
+                return String(x.idWarga) === String(w.id) && x.bulan === bulan && x.posted;
+            });
+            if (sudahBayar) {
+                html += '<div style="padding:10px 6px; border-radius:10px; text-align:center; font-size:0.82rem; font-weight:700;' +
+                    'background:#dcfce7; color:#166534; border:2px solid #86efac; cursor:not-allowed;">' +
+                    '<i class="fa-solid fa-check"></i><br>' + bulan + '</div>';
+            } else {
+                html += '<div data-bulan="' + bulan + '" data-checked="false" onclick="toggleBulanIuran(this)" ' +
+                    'style="padding:10px 6px; border-radius:10px; text-align:center; font-size:0.82rem; font-weight:700;' +
+                    'background:var(--gt-surface,#f8fafc); color:var(--text-dark); border:2px solid #e2e8f0; cursor:pointer;' +
+                    'transition:all 0.15s;">' +
+                    bulan + '</div>';
+            }
+        });
+
+        grid.innerHTML = html;
+
+        // Reset total
+        var elTotal = document.getElementById('iuran-total-display');
+        if (elTotal) elTotal.innerText = 'Rp 0';
+        var elBreak = document.getElementById('iuran-breakdown-display');
+        if (elBreak) elBreak.innerText = '';
+    };
+
+    window.toggleBulanIuran = function(el) {
+        var checked = el.getAttribute('data-checked') === 'true';
+        var dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
+        var nominalIuran = Number(dbSettings.nominalIuran) || 25000;
+
+        if (checked) {
+            el.setAttribute('data-checked', 'false');
+            el.style.background = 'var(--gt-surface,#f8fafc)';
+            el.style.borderColor = '#e2e8f0';
+            el.style.color = 'var(--text-dark)';
+        } else {
+            el.setAttribute('data-checked', 'true');
+            el.style.background = 'var(--primary-blue)';
+            el.style.borderColor = 'var(--primary-blue)';
+            el.style.color = '#fff';
+        }
+
+        // Hitung total
+        var allChecked = document.querySelectorAll('#iuran-bulan-grid [data-checked="true"]');
+        var total = allChecked.length * nominalIuran;
+        var elTotal = document.getElementById('iuran-total-display');
+        if (elTotal) elTotal.innerText = 'Rp ' + total.toLocaleString('id-ID');
+
+        // Breakdown
+        var dbJenis = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+        var elBreak = document.getElementById('iuran-breakdown-display');
+        if (elBreak && dbJenis.length > 0 && allChecked.length > 0) {
+            var breakHtml = dbJenis.map(function(j) {
+                return j.nama + ': Rp ' + (Number(j.nominal) * allChecked.length).toLocaleString('id-ID');
+            }).join(' &nbsp;|&nbsp; ');
+            elBreak.innerHTML = breakHtml;
+        } else if (elBreak) {
+            elBreak.innerText = '';
+        }
+    };
+
 
     window.renderRiwayatIuranHariIni = function() {
         var dbIuran = window._iuranDbIuran || [];
