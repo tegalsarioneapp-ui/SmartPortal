@@ -7134,7 +7134,7 @@ html[data-theme="dark"] select option {
         try {
             Swal.fire({ title: 'Mengunduh backup...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
             const API_URL = "https://smartportal-production.up.railway.app";
-            const resp = await fetch(`${API_URL}/api/kv`)kv', { cache: 'no-store' });
+            const resp = await fetch(`${API_URL}/api/kv`, { cache: 'no-store' });
             if (!resp.ok) throw new Error('Gagal menghubungi server');
             const data = await resp.json();
             const entries = data.entries || [];
@@ -7197,7 +7197,7 @@ html[data-theme="dark"] select option {
                 for (let i = 0; i < entries.length; i += BATCH) {
                     const batch = entries.slice(i, i + BATCH);
                     const API_URL = "https://smartportal-production.up.railway.app";
-                    await fetch(`${API_URL}/api/kv`)kv', {
+                    await fetch(`${API_URL}/api/kv`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ writes: batch, originId: 'restore-' + Date.now() })
@@ -7268,7 +7268,7 @@ html[data-theme="dark"] select option {
     window.refreshInfoAplikasi = async function() {
         try {
             const API_URL = "https://smartportal-production.up.railway.app";
-            var resp = await fetch(`${API_URL}/api/kv`)audit', {cache:'no-store'});
+            var resp = await fetch(`${API_URL}/api/audit`, {cache:'no-store'});
             var data = await resp.json();
             var elTotal = document.getElementById('info-total-data');
             var elSSE = document.getElementById('info-sse-status');
@@ -7291,7 +7291,7 @@ html[data-theme="dark"] select option {
     window.showAuditDetail = async function() {
         try {
             const API_URL = "https://smartportal-production.up.railway.app";
-            var resp = await fetch(`${API_URL}/api/kv`)audit', {cache:'no-store'});
+            var resp = await fetch(`${API_URL}/api/audit`, {cache:'no-store'});
             var d = await resp.json();
             await Swal.fire({
                 title: '<i class="fa-solid fa-stethoscope"></i> Audit Server',
@@ -7389,7 +7389,7 @@ html[data-theme="dark"] select option {
         if (_gtPushPublicKey) return _gtPushPublicKey;
         try {
             const API_URL = "https://smartportal-production.up.railway.app";
-            var r = await fetch(`${API_URL}/api/kv`)push/vapid-public-key');
+            var r = await fetch(`${API_URL}/api/push/vapid-public-key`);
             var d = await r.json();
             _gtPushPublicKey = d.publicKey;
         } catch(e) {}
@@ -7431,7 +7431,7 @@ html[data-theme="dark"] select option {
             if (sub) {
                 // Unsubscribe
                 const API_URL = "https://smartportal-production.up.railway.app";
-                await fetch(`${API_URL}/api/kv`)push/unsubscribe', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({endpoint: sub.endpoint}) });
+                await fetch(`${API_URL}/api/push/unsubscribe`, { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({endpoint: sub.endpoint}) });
                 await sub.unsubscribe();
                 _gtPushSub = null;
                 window.checkPushStatus();
@@ -7451,7 +7451,7 @@ html[data-theme="dark"] select option {
                 });
                 _gtPushSub = newSub;
                 const API_URL = "https://smartportal-production.up.railway.app";
-                var r = await fetch(`${API_URL}/api/kv`)push/subscribe', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(newSub) });
+                var r = await fetch(`${API_URL}/api/push/subscribe`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(newSub) });
                 var d = await r.json();
                 window.checkPushStatus();
                 if (typeof Toast !== 'undefined') Toast.fire({icon:'success', title:'Notifikasi diaktifkan! (' + d.total + ' perangkat terdaftar)'});
@@ -7465,7 +7465,7 @@ html[data-theme="dark"] select option {
     window.refreshPushCount = async function() {
         try {
             const API_URL = "https://smartportal-production.up.railway.app";
-            var r = await fetch(`${API_URL}/api/kv`)push/count');
+            var r = await fetch(`${API_URL}/api/push/count`);
             var d = await r.json();
             var el = document.getElementById('push-sub-count');
             if (el) el.textContent = d.count + ' perangkat terdaftar';
@@ -7487,7 +7487,7 @@ html[data-theme="dark"] select option {
         Swal.fire({title:'Mengirim notifikasi...', allowOutsideClick:false, didOpen:()=>Swal.showLoading()});
         try {
             const API_URL = "https://smartportal-production.up.railway.app";
-            var r = await fetch(`${API_URL}/api/kv`)push/send', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({title, body}) });
+            var r = await fetch(`${API_URL}/api/push/send`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({title, body}) });
             var d = await r.json();
             Swal.fire({
                 icon: d.sent > 0 ? 'success' : 'info',
