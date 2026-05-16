@@ -7133,7 +7133,7 @@ html[data-theme="dark"] select option {
     window.exportData = async function() {
         try {
             Swal.fire({ title: 'Mengunduh backup...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-            const API_URL = import.meta.env.VITE_API_URL;
+            const API_URL = "https://smartportal-production.up.railway.app";
             const resp = await fetch(`${API_URL}/api/kv`)kv', { cache: 'no-store' });
             if (!resp.ok) throw new Error('Gagal menghubungi server');
             const data = await resp.json();
@@ -7196,7 +7196,7 @@ html[data-theme="dark"] select option {
                 const BATCH = 50;
                 for (let i = 0; i < entries.length; i += BATCH) {
                     const batch = entries.slice(i, i + BATCH);
-                    const API_URL = import.meta.env.VITE_API_URL;
+                    const API_URL = "https://smartportal-production.up.railway.app";
                     await fetch(`${API_URL}/api/kv`)kv', {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
@@ -7267,7 +7267,7 @@ html[data-theme="dark"] select option {
     // === INFO APLIKASI ===
     window.refreshInfoAplikasi = async function() {
         try {
-            const API_URL = import.meta.env.VITE_API_URL;
+            const API_URL = "https://smartportal-production.up.railway.app";
             var resp = await fetch(`${API_URL}/api/kv`)audit', {cache:'no-store'});
             var data = await resp.json();
             var elTotal = document.getElementById('info-total-data');
@@ -7290,7 +7290,7 @@ html[data-theme="dark"] select option {
     };
     window.showAuditDetail = async function() {
         try {
-            const API_URL = import.meta.env.VITE_API_URL;
+            const API_URL = "https://smartportal-production.up.railway.app";
             var resp = await fetch(`${API_URL}/api/kv`)audit', {cache:'no-store'});
             var d = await resp.json();
             await Swal.fire({
@@ -7388,7 +7388,7 @@ html[data-theme="dark"] select option {
     async function loadPushPublicKey() {
         if (_gtPushPublicKey) return _gtPushPublicKey;
         try {
-            const API_URL = import.meta.env.VITE_API_URL;
+            const API_URL = "https://smartportal-production.up.railway.app";
             var r = await fetch(`${API_URL}/api/kv`)push/vapid-public-key');
             var d = await r.json();
             _gtPushPublicKey = d.publicKey;
@@ -7430,7 +7430,7 @@ html[data-theme="dark"] select option {
             var sub = await reg.pushManager.getSubscription();
             if (sub) {
                 // Unsubscribe
-                const API_URL = import.meta.env.VITE_API_URL;
+                const API_URL = "https://smartportal-production.up.railway.app";
                 await fetch(`${API_URL}/api/kv`)push/unsubscribe', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({endpoint: sub.endpoint}) });
                 await sub.unsubscribe();
                 _gtPushSub = null;
@@ -7450,7 +7450,7 @@ html[data-theme="dark"] select option {
                     applicationServerKey: urlBase64ToUint8Array(publicKey)
                 });
                 _gtPushSub = newSub;
-                const API_URL = import.meta.env.VITE_API_URL;
+                const API_URL = "https://smartportal-production.up.railway.app";
                 var r = await fetch(`${API_URL}/api/kv`)push/subscribe', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(newSub) });
                 var d = await r.json();
                 window.checkPushStatus();
@@ -7464,7 +7464,7 @@ html[data-theme="dark"] select option {
     // Admin: refresh subscriber count
     window.refreshPushCount = async function() {
         try {
-            const API_URL = import.meta.env.VITE_API_URL;
+            const API_URL = "https://smartportal-production.up.railway.app";
             var r = await fetch(`${API_URL}/api/kv`)push/count');
             var d = await r.json();
             var el = document.getElementById('push-sub-count');
@@ -7486,7 +7486,7 @@ html[data-theme="dark"] select option {
         if (!confirm.isConfirmed) return;
         Swal.fire({title:'Mengirim notifikasi...', allowOutsideClick:false, didOpen:()=>Swal.showLoading()});
         try {
-            const API_URL = import.meta.env.VITE_API_URL;
+            const API_URL = "https://smartportal-production.up.railway.app";
             var r = await fetch(`${API_URL}/api/kv`)push/send', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({title, body}) });
             var d = await r.json();
             Swal.fire({
