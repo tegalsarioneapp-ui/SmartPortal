@@ -3535,6 +3535,8 @@ html[data-theme="dark"] select option {
                 </div>
             </div>
         </div>
+        <div id="ben-matriks" class="ben-tab-content">
+            <div class="stats-grid" style="margin-bottom:18px;">
                 <div class="stat-box" style="border-color:var(--accent-gold);"><i class="fa-solid fa-sack-dollar bg-icon" style="color:var(--accent-gold) !important;"></i><h4>Dana Iuran Terkumpul</h4><h2 id="ben-total-iuran-terkumpul">Rp 0</h2></div>
                 <div class="stat-box" style="border-color:var(--danger);"><i class="fa-solid fa-hand-holding-dollar bg-icon" style="color:var(--danger) !important;"></i><h4>Belum di-Posting ke Kas</h4><h2 id="ben-iuran-hold">Rp 0</h2></div>
             </div>
@@ -5580,7 +5582,7 @@ html[data-theme="dark"] select option {
     const wLoaders = {
         'warga-dashboard':  function(){ if(typeof loadDashboardWarga==='function') loadDashboardWarga(); if(typeof loadBeritaWarga==='function') loadBeritaWarga(); if(typeof loadKegiatan==='function') loadKegiatan(); },
         'warga-profil':     function(){ if(typeof loadProfilPribadiWarga==='function') loadProfilPribadiWarga(); },
-        'warga-keuangan':   function(){ if(typeof loadIuranPribadiWarga==='function') loadIuranPribadiWarga(); if(typeof loadMatriksIuran==='function') loadMatriksIuran(); },
+        'warga-keuangan':   function(){ if(typeof loadIuranPribadiWarga==='function') loadIuranPribadiWarga(); },
         'warga-surat':      function(){ if(typeof loadSuratWarga==='function') loadSuratWarga(); },
         'warga-aduan':      function(){ if(typeof loadAduanWarga==='function') loadAduanWarga(); },
         'warga-koperasi':   function(){ if(typeof loadKoperasiData==='function') loadKoperasiData(); },
