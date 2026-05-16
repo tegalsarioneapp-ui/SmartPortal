@@ -1,29 +1,15 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-import * as schema from "./schema";
+import * as schema from "./schema.js";
 
 const { Pool } = pg;
 
-// ---------------------------------------------------------------------------
-// DATABASE_URL guard — log clearly but do NOT throw at module level.
-//
-// Throwing here would crash the process before app.listen() is called,
-// causing ECONNREFUSED on Railway even though the build succeeded.
-// Routes that need the DB will fail at query time (with proper 5xx responses)
-// which is far better than the entire server never starting.
-// ---------------------------------------------------------------------------
 const connectionString = process.env["DATABASE_URL"];
 
 if (!connectionString) {
-  console.error(
-    "[DB] ERROR: DATABASE_URL is not set. " +
-    "The server will start but all database queries will fail. " +
-    "Add DATABASE_URL to your Railway environment variables.",
-  );
+  console.error("[DB] ERROR: DATABASE_URL is not set — server starts but DB queries will fail.");
 }
 
-// Enable SSL for external hosts (Railway, Supabase, etc.).
-// Replit's internal "helium" host and localhost never need SSL.
 const isExternalHost =
   connectionString &&
   !connectionString.includes("localhost") &&
@@ -31,26 +17,46 @@ const isExternalHost =
   !connectionString.includes("127.0.0.1");
 
 export const pool = new Pool({
-  // Fall back to a local placeholder — pg will fail at connect() time,
-  // not at Pool construction time, so the module always loads cleanly.
   connectionString: connectionString ?? "postgresql://localhost/placeholder",
-  // Cap pool size to avoid exhausting Railway's connection limit.
   max: 10,
   idleTimeoutMillis: 30_000,
   connectionTimeoutMillis: 5_000,
-  // Railway PostgreSQL requires SSL on external connections.
-  // rejectUnauthorized:false accepts self-signed certs (standard on Railway).
   ...(isExternalHost ? { ssl: { rejectUnauthorized: false } } : {}),
 });
 
-// CRITICAL: Without this handler, any error on an idle pg client (connection
-// reset, DB restart, network blip) emits an 'error' event on the Pool.
-// EventEmitter errors without a listener throw an uncaught exception and
-// CRASH the entire Node process. This is the #1 cause of 502s on Railway.
+// CRITICAL: tanpa ini idle client error -> Node crash -> 502
 pool.on("error", (err) => {
-  console.error("[DB] Unexpected error on idle pool client:", err.message);
+  console.error("[DB] Unexpected pool error:", err.message);
 });
 
 export const db = drizzle(pool, { schema });
 
-export * from "./schema";
+export async function testConnection(): Promise<boolean> {
+  try {
+    await pool.query("SELECT 1");
+    return true;
+  } catch (err) {
+    console.error("[DB] Connection test failed:", err.message);
+    return false;
+  }
+}
+
+export async function ensureSchema(): Promise<void> {
+  const client = await pool.connect();
+  try {
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS "kv_store" (
+        "key"        text        PRIMARY KEY,
+        "value"      text,
+        "updated_at" timestamptz NOT NULL DEFAULT now()
+      )
+    `);
+    console.log("[DB] Schema ready");
+  } catch (err) {
+    console.error("[DB] Schema check failed:", err.message);
+  } finally {
+    client.release();
+  }
+}
+
+export * from "./schema.js";

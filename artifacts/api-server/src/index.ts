@@ -1,25 +1,17 @@
-import app from "./app";
-import { logger } from "./lib/logger";
-import { pool } from "@workspace/db";
+import app from "./app.js";
+import { logger } from "./lib/logger.js";
+import { pool, ensureSchema } from "@workspace/db";
 import type { AddressInfo } from "net";
 
-// ---------------------------------------------------------------------------
-// Global safety net — must be registered before anything else.
-//
-// In Node.js 15+, an unhandledRejection (e.g. a fire-and-forget Promise that
-// rejects without a .catch()) terminates the process by default. In a Railway
-// container that means a 502 for every subsequent request until the restart
-// policy kicks in. We log and survive instead of dying.
-// ---------------------------------------------------------------------------
+// Global crash prevention — HARUS di atas segalanya
 process.on("unhandledRejection", (reason) => {
-  console.error("[Server] Unhandled promise rejection (survived):", reason);
+  console.error("[Server] Unhandled rejection (survived):", reason);
   logger.error({ reason }, "Unhandled promise rejection");
 });
 
 process.on("uncaughtException", (err) => {
-  console.error("[Server] Uncaught exception (survived):", err.message, err.stack);
+  console.error("[Server] Uncaught exception (survived):", (err as Error).message);
   logger.error({ err }, "Uncaught exception");
-  // Do NOT call process.exit() — keep the HTTP server alive.
 });
 
 const rawPort = process.env["PORT"];
@@ -30,59 +22,29 @@ if (Number.isNaN(port) || port <= 0) {
   process.exit(1);
 }
 
-async function ensureSchema() {
-  const client = await pool.connect();
-  try {
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS "kv_store" (
-        "key"        text        PRIMARY KEY,
-        "value"      text,
-        "updated_at" timestamptz NOT NULL DEFAULT now()
-      )
-    `);
-    logger.info("DB schema verified — kv_store table ready");
-    console.log("[DB] Schema ready");
-  } catch (err) {
-    logger.error({ err }, "Failed to ensure DB schema");
-    console.error("[DB] Schema check failed:", (err as Error).message);
-  } finally {
-    client.release();
-  }
-}
+console.log(`[Server] Starting — port=${port} NODE_ENV=${process.env["NODE_ENV"] ?? "development"}`);
+console.log(`[DB] DATABASE_URL present: ${Boolean(process.env["DATABASE_URL"])}`);
 
-async function startServer() {
-  // Log startup context for Railway logs visibility.
-  console.log(`[Server] Starting on port ${port}, NODE_ENV=${process.env["NODE_ENV"] ?? "development"}`);
-  console.log(`[DB] DATABASE_URL present: ${Boolean(process.env["DATABASE_URL"])}`);
+// CRITICAL: listen() DULU, schema check belakangan
+// Railway health check hit /api/health langsung setelah start
+// Kalau await ensureSchema() dulu -> timeout -> deploy fail
+const server = app.listen(port, "0.0.0.0", () => {
+  const addr = server.address() as AddressInfo | null;
+  console.log(`[Server] Listening on 0.0.0.0:${addr?.port ?? port}`);
 
-  // -------------------------------------------------------------------------
-  // CRITICAL: bind to port FIRST, schema check runs in background.
-  //
-  // Railway's health check hits /api/health immediately after process start.
-  // If we await ensureSchema() before listen(), a slow/cold DB connection
-  // causes the health check to time out and Railway marks the deploy as failed.
-  // -------------------------------------------------------------------------
-  const server = app.listen(port, "0.0.0.0", () => {
-    const addr = server.address() as AddressInfo | null;
-    const bound = addr?.port ?? port;
-    logger.info({ port: bound, host: "0.0.0.0" }, "Server listening");
-    console.log(`[Server] Listening on 0.0.0.0:${bound}`);
-  });
+  // Test DB connection setelah server sudah listen
+  pool.query("SELECT 1")
+    .then(() => console.log("[DB] Connection: OK"))
+    .catch((err) => console.error("[DB] Connection: FAILED —", err.message));
 
-  server.on("error", (err: NodeJS.ErrnoException) => {
-    logger.error({ err }, "Error listening on port");
-    console.error("[Server] Failed to bind:", err.message);
-    process.exit(1);
-  });
+  // Schema check non-blocking
+  ensureSchema().catch((err) =>
+    console.error("[DB] ensureSchema error:", err.message)
+  );
+});
 
-  // Run schema migration in background — does not block the health check.
-  ensureSchema().catch((err: unknown) => {
-    console.error("[DB] Background schema check failed:", (err as Error).message);
-  });
-}
-
-// Wrap top-level call so any unexpected synchronous error is logged cleanly.
-startServer().catch((err: unknown) => {
-  console.error("[Server] Fatal startup error:", (err as Error).message);
+server.on("error", (err: NodeJS.ErrnoException) => {
+  console.error("[Server] Listen error:", err.message);
+  logger.error({ err }, "Server listen error");
   process.exit(1);
 });
