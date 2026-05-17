@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <script>
@@ -8458,7 +8458,7 @@ window.loadMatriksIuran = function() {
                     }
                 } else {
                     if(sudahTiba)adaTunggakan=true;
-                    selHTML+='<td style="text-align:center;padding:8px 4px;" title="'+bln+(sudahTiba?\' Belum Bayar\':' Belum Tiba')+'">';
+                    selHTML+='<td style="text-align:center;padding:8px 4px;" title="'+bln+(sudahTiba?' Belum Bayar':' Belum Tiba')+'">';
                     if(sudahTiba){
                         selHTML+='<span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#fee2e2;cursor:pointer;" onclick="inputIuranCepat('+w.id+',\''+bln+'\')"><i class="fa-solid fa-xmark" style="color:#dc2626;font-size:0.75rem;"></i></span>';
                     } else {
@@ -8487,33 +8487,6 @@ window.loadMatriksIuran = function() {
         window._matriksAllRows=Array.from(tb.querySelectorAll('tr.row-matriks'));
         if(el('matriks-search-info'))el('matriks-search-info').textContent='Total: '+validWarga.length+' warga';
     };
-+(statusIni===\'lunas\'?\'lunas\':adaTunggakan?\'tunggakan\':adaPending?\'pending\':\'belum\')+'"';
-            var tr='<tr '+dataAttr+' style="border-bottom:1px solid #f1f5f9;transition:background 0.2s;'+rowBg+'">'
-                +'<td style="padding:10px 16px;white-space:nowrap;position:sticky;left:0;background:'+(adaTunggakan?'#fff8f8':'#fff')+';z-index:1;">'
-                +'<div style="display:flex;align-items:center;gap:8px;">'
-                +'<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:0.8rem;flex-shrink:0;">'
-                +String(w.nama).charAt(0).toUpperCase()
-                +'</div>'
-                +'<div><div style="font-weight:700;color:#1e293b;font-size:0.88rem;">'+w.nama+'</div>'
-                +'<div style="font-size:0.72rem;color:#64748b;">'+（w.alamat||'—')+'</div></div>'
-                +badge+'</div></td>'
-                +selHTML
-                +'<td style="text-align:center;padding:8px;font-weight:800;color:#6366f1;white-space:nowrap;">'+fmt(totalRow)+'</td>'
-                +'<td style="text-align:center;padding:8px;">'
-                +'<button class="btn-action bg-blue" style="padding:5px 10px;font-size:0.75rem;" onclick="lihatKartuWarga('+w.id+')" title="Detail Kartu"><i class="fa-solid fa-id-card"></i></button>'
-                +'</td></tr>';
-            tb.innerHTML+=tr;
-        });
-        var bulanKey=['jan','feb','mar','apr','mei','jun','jul','agu','sep','okt','nov','des'];
-        bulanKey.forEach(function(k,i){
-            var el2=document.getElementById('tfoot-'+k);
-            if(el2) el2.textContent=tfootTotal[i]>0?fmt(tfootTotal[i]):'-';
-        });
-        if(el('tfoot-grandtotal')) el('tfoot-grandtotal').textContent=fmt(grandTotal);
-        window._matriksAllRows=Array.from(tb.querySelectorAll('tr'));
-        if(el('matriks-search-info')) el('matriks-search-info').textContent='Total: '+validWarga.length+' warga';
-    };
-
     window.filterMatriksIuran = function(q) {
         var rows=window._matriksAllRows||[];
         var status=document.getElementById('mtrx-filter-status');
@@ -9036,7 +9009,7 @@ window.loadMatriksIuran = function() {
                 '<td>Rp ' + x.seharusnya.toLocaleString('id-ID') + '</td>' +
                 '<td style="color:#d97706; font-weight:800;">Rp ' + x.kurang.toLocaleString('id-ID') + '</td>' +
                 '<td><button class="btn-table" style="background:#fef9c3;color:#92400e;border:1px solid #fde047;" ' +
-                'onclick="lunasiSatuKurangBayar(' + JSON.stringify(x.idWarga) + ','' + x.bulan + '',' + x.kurang + ','' + x.namaWarga + '')">' +
+                'onclick="lunasiSatuKurangBayar(' + JSON.stringify(x.idWarga) + ',\'' + x.bulan + '\',' + x.kurang + ',\'' + x.namaWarga + '\')">' +
                 '<i class="fa-solid fa-coins"></i> Lunasi</button></td>' +
                 '</tr>';
         });
@@ -10659,13 +10632,10 @@ function updateSemuaWaktu() {
         window.open('https://wa.me/' + ADMIN_WA + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
         Toast.fire({ icon:'info', title:'WhatsApp ke sekretaris dibuka' });
       };
-    })();
-</script>
-
-<script>
-  };
   tryWrap();
 })();
+</script>
+<script>
 
     // === JENIS IURAN DINAMIS ===
     window.renderJenisIuran = function() {
