@@ -1,6 +1,6 @@
-{
-  "buildCommand": "bash build-static.sh",
+﻿{
   "outputDirectory": "dist",
+  "buildCommand": "cp -r public dist && echo done",
   "installCommand": "echo skip",
   "rewrites": [
     {
