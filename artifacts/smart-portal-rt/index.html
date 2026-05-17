@@ -3479,6 +3479,7 @@ html[data-theme="dark"] select option {
                 <div class="stat-box" style="border-color:var(--accent-gold);"><i class="fa-solid fa-users bg-icon" style="color:var(--accent-gold) !important;"></i><h4>Total Warga</h4><h2 id="iuran-stat-total-warga">0</h2></div>
                 <div class="stat-box" style="border-color:var(--success);"><i class="fa-solid fa-circle-check bg-icon" style="color:var(--success) !important;"></i><h4>Lunas Bulan Ini</h4><h2 id="iuran-stat-lunas">0</h2></div>
                 <div class="stat-box" style="border-color:var(--danger);"><i class="fa-solid fa-circle-xmark bg-icon" style="color:var(--danger) !important;"></i><h4>Belum Bayar</h4><h2 id="iuran-stat-belum">0</h2></div>
+                <div class="stat-box" style="border-color:#f59e0b;"><i class="fa-solid fa-triangle-exclamation bg-icon" style="color:#f59e0b !important;"></i><h4>Ada Kurang Bayar</h4><h2 id="iuran-stat-kurang" style="color:#f59e0b;">0</h2></div>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start;">
@@ -3532,6 +3533,37 @@ html[data-theme="dark"] select option {
                         <thead><tr><th>Warga</th><th>Bulan Dibayar</th><th>Nominal</th><th>Status</th></tr></thead>
                         <tbody id="tbody-iuran-hari-ini"></tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- Kurang Bayar -->
+            <div class="card" style="margin-top:18px; border-top:4px solid #f59e0b;" id="card-kurang-bayar">
+                <div class="card-title-header" style="flex-wrap:wrap; gap:8px;">
+                    <h3><i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i> Daftar Kurang Bayar</h3>
+                    <span style="font-size:0.78rem; color:#64748b; background:#fef9c3; border:1px solid #fde047; padding:4px 10px; border-radius:20px;">
+                        Jan-Mei 2026 = Rp 20.000 &nbsp;|&nbsp; Jun 2026+ = Rp 25.000
+                    </span>
+                </div>
+                <p style="font-size:0.82rem; color:#64748b; margin-bottom:12px;">
+                    Warga yang membayar Rp 20.000 untuk bulan Jan-Mei 2026 — kurang Rp 5.000/bulan (komponen Uang Sosial).
+                </p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Warga</th><th>Bulan</th><th>Dibayar</th><th>Seharusnya</th><th>Kurang</th><th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-kurang-bayar">
+                            <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Memuat...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                    <button class="btn-action bg-gold" onclick="lunasiSemuaKurangBayar()">
+                        <i class="fa-solid fa-check-double"></i> Lunasi Semua Kekurangan
+                    </button>
+                    <span id="kurang-bayar-total" style="font-size:0.85rem; color:#92400e; font-weight:700;"></span>
                 </div>
             </div>
         </div>
@@ -8383,6 +8415,7 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
         window._iuranDbIuran = dbIuran;
         window.renderListWargaIuran(dbWarga);
         window.renderRiwayatIuranHariIni();
+        window.renderKurangBayar();
     };
 
     window.renderListWargaIuran = function(list) {
@@ -8547,6 +8580,195 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
         }
     };
 
+
+    // ═══ SISTEM KURANG BAYAR ═══
+    // Nominal seharusnya per periode:
+    // Jan-Mei 2026 = 20000 (3 komponen)
+    // Jun 2026+    = 25000 (4 komponen, tambah Uang Sosial)
+    var BULAN_LIST = ['Januari','Februari','Maret','April','Mei','Juni',
+                      'Juli','Agustus','September','Oktober','November','Desember'];
+
+    function getNominalSeharusnya(bulan, tahun) {
+        tahun = tahun || 2026;
+        var idx = BULAN_LIST.indexOf(bulan);
+        if (tahun < 2026) return 20000;
+        if (tahun === 2026 && idx <= 4) return 20000; // Jan=0 s/d Mei=4
+        return 25000;
+    }
+
+    window.hitungKurangBayar = function() {
+        var dbIuran = JSON.parse(localStorage.getItem('db_iuran') || '[]');
+        var dbWarga = JSON.parse(localStorage.getItem('db_warga') || '[]');
+        var hasil = [];
+
+        dbIuran.forEach(function(x) {
+            if (!x.posted) return;
+            var nominalDibayar = Number(x.nominal) || 0;
+            var tahun = 2026;
+            // Coba baca tahun dari field tanggal jika ada
+            if (x.tanggal) {
+                var t = new Date(x.tanggal);
+                if (!isNaN(t)) tahun = t.getFullYear();
+            }
+            var seharusnya = getNominalSeharusnya(x.bulan, tahun);
+            var kurang = seharusnya - nominalDibayar;
+            if (kurang > 0) {
+                var warga = dbWarga.find(function(w) {
+                    return String(w.id) === String(x.idWarga);
+                });
+                hasil.push({
+                    idIuran: x.id,
+                    idWarga: x.idWarga,
+                    namaWarga: x.namaWarga || (warga ? warga.nama : 'Unknown'),
+                    bulan: x.bulan,
+                    tanggal: x.tanggal || '',
+                    nominalDibayar: nominalDibayar,
+                    seharusnya: seharusnya,
+                    kurang: kurang
+                });
+            }
+        });
+
+        // Urutkan: nama warga → bulan
+        hasil.sort(function(a, b) {
+            if (a.namaWarga < b.namaWarga) return -1;
+            if (a.namaWarga > b.namaWarga) return 1;
+            return BULAN_LIST.indexOf(a.bulan) - BULAN_LIST.indexOf(b.bulan);
+        });
+
+        return hasil;
+    };
+
+    window.renderKurangBayar = function() {
+        var tbody = document.getElementById('tbody-kurang-bayar');
+        var elTotal = document.getElementById('kurang-bayar-total');
+        var elStat = document.getElementById('iuran-stat-kurang');
+        if (!tbody) return;
+
+        var data = window.hitungKurangBayar();
+
+        if (elStat) elStat.innerText = data.length;
+
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#16a34a;padding:20px;font-weight:700;">' +
+                '<i class="fa-solid fa-circle-check"></i> Tidak ada kurang bayar!</td></tr>';
+            if (elTotal) elTotal.innerText = '';
+            return;
+        }
+
+        var totalKurang = data.reduce(function(s, x) { return s + x.kurang; }, 0);
+        if (elTotal) elTotal.innerText = 'Total kekurangan: Rp ' + totalKurang.toLocaleString('id-ID');
+
+        var rows = '';
+        data.forEach(function(x) {
+            rows += '<tr>' +
+                '<td style="font-weight:600;">' + x.namaWarga + '</td>' +
+                '<td>' + x.bulan + '</td>' +
+                '<td style="color:var(--text-muted);">Rp ' + x.nominalDibayar.toLocaleString('id-ID') + '</td>' +
+                '<td>Rp ' + x.seharusnya.toLocaleString('id-ID') + '</td>' +
+                '<td style="color:#d97706; font-weight:800;">Rp ' + x.kurang.toLocaleString('id-ID') + '</td>' +
+                '<td><button class="btn-table" style="background:#fef9c3;color:#92400e;border:1px solid #fde047;" ' +
+                'onclick="lunasiSatuKurangBayar(' + JSON.stringify(x.idWarga) + ','' + x.bulan + '',' + x.kurang + ','' + x.namaWarga + '')">' +
+                '<i class="fa-solid fa-coins"></i> Lunasi</button></td>' +
+                '</tr>';
+        });
+        tbody.innerHTML = rows;
+    };
+
+    window.lunasiSatuKurangBayar = function(idWarga, bulan, kurang, namaWarga) {
+        Swal.fire({
+            title: 'Lunasi Kekurangan?',
+            html: '<b>' + namaWarga + '</b> bulan <b>' + bulan + '</b><br>' +
+                  'Kekurangan: <b style="color:#d97706;">Rp ' + kurang.toLocaleString('id-ID') + '</b>',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Lunasi!',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#f59e0b'
+        }).then(function(result) {
+            if (!result.isConfirmed) return;
+
+            var dbIuran = JSON.parse(localStorage.getItem('db_iuran') || '[]');
+            var dbKas = JSON.parse(localStorage.getItem('db_kas') || '[]');
+            var tgl = new Date().toISOString().split('T')[0];
+
+            // Update nominal di db_iuran
+            dbIuran.forEach(function(x) {
+                if (String(x.idWarga) === String(idWarga) && x.bulan === bulan && x.posted) {
+                    x.nominal = (Number(x.nominal) || 0) + kurang;
+                    x.sudahLunasKurang = true;
+                }
+            });
+
+            // Catat ke kas
+            dbKas.push({
+                id: Date.now(),
+                tgl: tgl,
+                uraian: 'Pelunasan kurang bayar ' + bulan + ' - ' + namaWarga + ' (Uang Sosial)',
+                tipe: 'masuk',
+                nominal: kurang,
+                sumber: 'iuran'
+            });
+
+            localStorage.setItem('db_iuran', JSON.stringify(dbIuran));
+            localStorage.setItem('db_kas', JSON.stringify(dbKas));
+            if (typeof syncSemuaData === 'function') syncSemuaData(true);
+
+            Swal.fire('Berhasil!', 'Kekurangan ' + namaWarga + ' bulan ' + bulan + ' sudah dilunasi!', 'success');
+            window.renderKurangBayar();
+            if (typeof window.loadTabIuranKolektif === 'function') window.loadTabIuranKolektif();
+        });
+    };
+
+    window.lunasiSemuaKurangBayar = function() {
+        var data = window.hitungKurangBayar();
+        if (data.length === 0) return Swal.fire('Info', 'Tidak ada kurang bayar!', 'info');
+
+        var totalKurang = data.reduce(function(s, x) { return s + x.kurang; }, 0);
+
+        Swal.fire({
+            title: 'Lunasi Semua Kekurangan?',
+            html: '<b>' + data.length + ' item</b> dari <b>' + 
+                  [...new Set(data.map(function(x){return x.namaWarga;}))].length + ' warga</b><br>' +
+                  'Total: <b style="color:#d97706;">Rp ' + totalKurang.toLocaleString('id-ID') + '</b>',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Lunasi Semua!',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#f59e0b'
+        }).then(function(result) {
+            if (!result.isConfirmed) return;
+
+            var dbIuran = JSON.parse(localStorage.getItem('db_iuran') || '[]');
+            var dbKas = JSON.parse(localStorage.getItem('db_kas') || '[]');
+            var tgl = new Date().toISOString().split('T')[0];
+
+            data.forEach(function(x) {
+                dbIuran.forEach(function(rec) {
+                    if (String(rec.idWarga) === String(x.idWarga) && rec.bulan === x.bulan && rec.posted) {
+                        rec.nominal = (Number(rec.nominal) || 0) + x.kurang;
+                        rec.sudahLunasKurang = true;
+                    }
+                });
+                dbKas.push({
+                    id: Date.now() + Math.random(),
+                    tgl: tgl,
+                    uraian: 'Pelunasan kurang bayar ' + x.bulan + ' - ' + x.namaWarga + ' (Uang Sosial)',
+                    tipe: 'masuk',
+                    nominal: x.kurang,
+                    sumber: 'iuran'
+                });
+            });
+
+            localStorage.setItem('db_iuran', JSON.stringify(dbIuran));
+            localStorage.setItem('db_kas', JSON.stringify(dbKas));
+            if (typeof syncSemuaData === 'function') syncSemuaData(true);
+
+            Swal.fire('Berhasil!', 'Semua kekurangan (' + data.length + ' item) sudah dilunasi!', 'success');
+            window.renderKurangBayar();
+            if (typeof window.loadTabIuranKolektif === 'function') window.loadTabIuranKolektif();
+        });
+    };
 
     window.renderRiwayatIuranHariIni = function() {
         var dbIuran = window._iuranDbIuran || [];
