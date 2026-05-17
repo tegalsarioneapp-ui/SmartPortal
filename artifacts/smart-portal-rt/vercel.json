@@ -1,7 +1,7 @@
 ﻿{
   "outputDirectory": "dist",
-  "buildCommand": "cp -r public dist",
-  "installCommand": "echo skip",
+  "buildCommand": "cp index.html dist/index.html && cp -r public/. dist/",
+  "installCommand": "mkdir -p dist && echo skip",
   "routes": [
     {
       "src": "/api/(.*)",
