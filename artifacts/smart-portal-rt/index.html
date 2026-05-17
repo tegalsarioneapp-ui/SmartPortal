@@ -3561,7 +3561,7 @@ html[data-theme="dark"] select option {
                 <div class="stat-box" style="border-color:var(--accent-gold);">
                     <i class="fa-solid fa-sack-dollar bg-icon" style="color:var(--accent-gold) !important;"></i>
                     <h4>Saldo Akhir</h4>
-                    <h2 id="ben-saldo-kas-input">Rp 0</h2>
+                    <h2 id="ben-lap-saldo-akhir">Rp 0</h2>
                 </div>
             </div>
             <div class="card">
@@ -6546,7 +6546,57 @@ html[data-theme="dark"] select option {
         if (typeof syncSemuaData === "function") syncSemuaData();
     });
 };
-    window.loadKasBendahara = function() { let dbKas = JSON.parse(localStorage.getItem('db_kas')) || []; let sAwal = parseInt(localStorage.getItem('db_saldo_awal')) || 0; if(document.getElementById('ben-display-saldo-awal')) document.getElementById('ben-display-saldo-awal').innerText = fmt(sAwal); let sAkhir = sAwal; let tb = document.getElementById('tbody-laporan-kas'); if(tb) { tb.innerHTML=''; dbKas.sort((a,b)=>new Date(a.tgl)-new Date(b.tgl)).forEach(k => { if(k.tipe==='masuk') sAkhir+=k.nominal; else sAkhir-=k.nominal; tb.innerHTML+=`<tr><td>${k.tgl}</td><td><b>${k.uraian}</b></td><td>${k.tipe}</td><td>${fmt(k.nominal)} <small>(Saldo: ${fmt(sAkhir)})</small></td><td><button class="btn-table btn-tbl-del" onclick="hapusKas(${k.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`; }); } if(document.getElementById('warga-saldo-kas')) document.getElementById('warga-saldo-kas').innerText=fmt(sAkhir); if(document.getElementById('ben-saldo-kas-input')) document.getElementById('ben-saldo-kas-input').innerText=fmt(sAkhir); };
+    window.loadKasBendahara = function() {
+        var dbKas = JSON.parse(localStorage.getItem('db_kas') || '[]');
+        var sAwal = parseInt(localStorage.getItem('db_saldo_awal') || '0') || 0;
+        var sAkhir = sAwal;
+        var totalMasuk = 0;
+        var totalKeluar = 0;
+
+        // Isi saldo awal di kedua tab
+        if(document.getElementById('ben-display-saldo-awal'))
+            document.getElementById('ben-display-saldo-awal').innerText = fmt(sAwal);
+        if(document.getElementById('ben-lap-saldo-awal'))
+            document.getElementById('ben-lap-saldo-awal').innerText = fmt(sAwal);
+
+        var tb = document.getElementById('tbody-laporan-kas');
+        if(tb) {
+            tb.innerHTML = '';
+            dbKas.sort(function(a,b){ return new Date(a.tgl) - new Date(b.tgl); }).forEach(function(k) {
+                var nominal = Number(k.nominal) || 0;
+                if(k.tipe === 'masuk') { sAkhir += nominal; totalMasuk += nominal; }
+                else { sAkhir -= nominal; totalKeluar += nominal; }
+                var warnaTipe = k.tipe === 'masuk'
+                    ? 'style="color:#166534;font-weight:700;"'
+                    : 'style="color:#991b1b;font-weight:700;"';
+                var ikonTipe = k.tipe === 'masuk'
+                    ? '<i class="fa-solid fa-circle-arrow-up" style="color:#16a34a;"></i>'
+                    : '<i class="fa-solid fa-circle-arrow-down" style="color:#dc2626;"></i>';
+                tb.innerHTML += '<tr>' +
+                    '<td>' + (k.tgl || '-') + '</td>' +
+                    '<td><b>' + (k.uraian || k.keterangan || '-') + '</b></td>' +
+                    '<td>' + ikonTipe + ' <span ' + warnaTipe + '>' + (k.tipe === 'masuk' ? 'Pemasukan' : 'Pengeluaran') + '</span></td>' +
+                    '<td>' + fmt(nominal) + ' <small style="color:var(--text-muted);">(Saldo: ' + fmt(sAkhir) + ')</small></td>' +
+                    '<td><button class="btn-table btn-tbl-del" onclick="hapusKas(' + k.id + ')"><i class="fa-solid fa-trash"></i></button></td>' +
+                    '</tr>';
+            });
+            if(dbKas.length === 0) {
+                tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada transaksi kas.</td></tr>';
+            }
+        }
+
+        // Update semua stat box
+        if(document.getElementById('ben-total-masuk'))
+            document.getElementById('ben-total-masuk').innerText = fmt(totalMasuk);
+        if(document.getElementById('ben-total-keluar'))
+            document.getElementById('ben-total-keluar').innerText = fmt(totalKeluar);
+        if(document.getElementById('ben-lap-saldo-akhir'))
+            document.getElementById('ben-lap-saldo-akhir').innerText = fmt(sAkhir);
+        if(document.getElementById('ben-saldo-kas-input'))
+            document.getElementById('ben-saldo-kas-input').innerText = fmt(sAkhir);
+        if(document.getElementById('warga-saldo-kas'))
+            document.getElementById('warga-saldo-kas').innerText = fmt(sAkhir);
+    };
     window.hapusKas = function(id) { let db = JSON.parse(localStorage.getItem('db_kas')) || []; localStorage.setItem('db_kas', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); };
 
     
@@ -8093,11 +8143,18 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
         let uangTertahan = dbIuran.filter(x => !x.posted).reduce((s,i) => s + i.nominal, 0); 
         let uangMasukKas = dbIuran.filter(x => x.posted).reduce((s,i) => s + i.nominal, 0); 
 
-        let p1T = (10000 / 20000) * uangTertahan; let p2T = (5000 / 20000) * uangTertahan; let p3T = (5000 / 20000) * uangTertahan;
-        let p1M = (10000 / 20000) * uangMasukKas; let p2M = (5000 / 20000) * uangMasukKas; let p3M = (5000 / 20000) * uangMasukKas;
+        let _jiM = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+        if (!_jiM.length) _jiM = [{nama:'Kas RT',nominal:10000},{nama:'Sampah',nominal:5000},{nama:'Sosial',nominal:5000}];
+        let _totM = _jiM.reduce(function(s,x){ return s+(x.nominal||0); }, 0) || 20000;
+        let uangTertahanArr = _jiM.map(function(ji){ return Math.round((ji.nominal/_totM)*uangTertahan); });
+        let uangMasukArr = _jiM.map(function(ji){ return Math.round((ji.nominal/_totM)*uangMasukKas); });
+        let p1T = uangTertahanArr[0]||0; let p2T = uangTertahanArr[1]||0; let p3T = uangTertahanArr[2]||0;
+        let p1M = uangMasukArr[0]||0; let p2M = uangMasukArr[1]||0; let p3M = uangMasukArr[2]||0;
 
-        let detailTertahan = `<div style="font-size:0.85rem; font-weight:600; margin-top:12px; padding-top:10px; border-top:1px dashed #cbd5e1; color:var(--text-muted); line-height:1.6; width:100%;"><span style="color:var(--primary-dark)">• Pembangunan:</span> ${fmt(p1T)}<br><span style="color:var(--primary-dark)">• Uang Meja:</span> ${fmt(p2T)}<br><span style="color:var(--primary-dark)">• 17 Agustus:</span> ${fmt(p3T)}</div>`;
-        let detailMasuk = `<div style="font-size:0.85rem; font-weight:600; margin-top:12px; padding-top:10px; border-top:1px dashed #cbd5e1; color:var(--text-muted); line-height:1.6; width:100%;"><span style="color:var(--primary-dark)">• Pembangunan:</span> ${fmt(p1M)}<br><span style="color:var(--primary-dark)">• Uang Meja:</span> ${fmt(p2M)}<br><span style="color:var(--primary-dark)">• 17 Agustus:</span> ${fmt(p3M)}</div>`;
+        let detailTertahan = '<div style="font-size:0.85rem;font-weight:600;margin-top:12px;padding-top:10px;border-top:1px dashed #cbd5e1;color:var(--text-muted);line-height:1.6;width:100%;">' +
+            _jiM.map(function(ji,i){ return '<span style="color:var(--primary-dark)">• '+ji.nama+':</span> '+fmt(uangTertahanArr[i]||0); }).join('<br>') + '</div>';
+        let detailMasuk = '<div style="font-size:0.85rem;font-weight:600;margin-top:12px;padding-top:10px;border-top:1px dashed #cbd5e1;color:var(--text-muted);line-height:1.6;width:100%;">' +
+            _jiM.map(function(ji,i){ return '<span style="color:var(--primary-dark)">• '+ji.nama+':</span> '+fmt(uangMasukArr[i]||0); }).join('<br>') + '</div>';
         
         if(document.getElementById('ben-iuran-hold')) document.getElementById('ben-iuran-hold').innerHTML = fmt(uangTertahan) + (uangTertahan > 0 ? detailTertahan : ''); 
         if(document.getElementById('ben-total-iuran-terkumpul')) document.getElementById('ben-total-iuran-terkumpul').innerHTML = fmt(uangMasukKas) + (uangMasukKas > 0 ? detailMasuk : ''); 
@@ -8394,7 +8451,7 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
         var idBase = Date.now();
         bulanDipilih.forEach(function(bulan, idx) {
             dbIuran.push({ id: idBase+idx, idWarga: _iuranWargaTerpilih.id, namaWarga: _iuranWargaTerpilih.nama, bulan: bulan, nominal: nominalIuran, tanggal: tgl, posted: true });
-            dbKas.push({ id: idBase+1000+idx, tanggal: tgl, keterangan: 'Iuran '+bulan+' - '+_iuranWargaTerpilih.nama, tipe: 'masuk', nominal: nominalIuran, sumber: 'iuran' });
+            dbKas.push({ id: idBase+1000+idx, tgl: tgl, uraian: 'Iuran '+bulan+' - '+_iuranWargaTerpilih.nama, tipe: 'masuk', nominal: nominalIuran, sumber: 'iuran' });
         });
         localStorage.setItem('db_iuran', JSON.stringify(dbIuran));
         localStorage.setItem('db_kas', JSON.stringify(dbKas));
@@ -8618,24 +8675,25 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
             // Hitung total uang yang masih ditahan Bendahara
             let total = unposted.reduce((s, i) => s + (Number(i.nominal) || 0), 0); 
             
-            // Rumus pemecahan 20k -> 10k, 5k, 5k
-            let posPembangunan = (10000 / 20000) * total;
-            let posMeja = (5000 / 20000) * total;
-            let posAgustus = (5000 / 20000) * total;
+            // Baca komponen iuran dari db_jenis_iuran (dynamic)
+            let jiPosting = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+            if (!jiPosting.length) jiPosting = [{nama:'Kas RT',nominal:10000},{nama:'Sampah',nominal:5000},{nama:'Sosial',nominal:5000}];
+            let totalPerBulan = jiPosting.reduce(function(s,x){ return s+(x.nominal||0); }, 0) || 20000;
 
             // Format Rupiah yang aman
             const formatRp = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
 
-            // Munculkan Pop-up Konfirmasi
+            // Build detail HTML per komponen dynamic
+            let detailHtmlPosting = jiPosting.map(function(ji, idx) {
+                let jml = Math.round((ji.nominal / totalPerBulan) * total);
+                return '<div style="margin-bottom:8px;"><b>' + ji.nama + ':</b>' +
+                       '<span style="color:var(--primary-blue);font-weight:900;float:right;">' + formatRp(jml) + '</span></div>';
+            }).join('');
             Swal.fire({
-                title: 'Posting ' + formatRp(total) + ' ke Kas?', 
-                html: `
-                <div style="text-align:left; background:#f8fafc; padding:15px; border-radius:10px; border: 1px solid #cbd5e1; margin-top:10px;">
-                    <p style="margin-top:0; font-size:0.9rem; color:var(--text-muted); font-weight:bold;">Sistem akan memecah otomatis ke Buku Kas:</p>
-                    <div style="margin-bottom:8px;"><b>🏗️ Pembangunan:</b> <span style="color:var(--primary-blue); font-weight:900; float:right;">${formatRp(posPembangunan)}</span></div>
-                    <div style="margin-bottom:8px;"><b>🪑 Uang Meja:</b> <span style="color:var(--accent-gold); font-weight:900; float:right;">${formatRp(posMeja)}</span></div>
-                    <div><b>🇮🇩 17 Agustus:</b> <span style="color:var(--danger); font-weight:900; float:right;">${formatRp(posAgustus)}</span></div>
-                </div>`,
+                title: 'Posting ' + formatRp(total) + ' ke Kas?',
+                html: '<div style="text-align:left;background:#f8fafc;padding:15px;border-radius:10px;border:1px solid #cbd5e1;margin-top:10px;">' +
+                      '<p style="margin-top:0;font-size:0.9rem;font-weight:bold;">Sistem akan memecah otomatis ke Buku Kas:</p>' +
+                      detailHtmlPosting + '</div>',
                 showCancelButton: true, 
                 confirmButtonColor: '#10b981', 
                 cancelButtonText: 'Batal',
@@ -8645,10 +8703,11 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
                     let dbKas = JSON.parse(localStorage.getItem('db_kas')) || []; 
                     let tglSkrg = new Date().toISOString().split('T')[0]; 
                     
-                    // Suntikkan 3 Pos tersebut ke Buku Kas Umum
-                    if(posPembangunan > 0) dbKas.push({ id: Date.now(), tgl: tglSkrg, uraian: 'Setoran Iuran (Dana Pembangunan)', tipe: 'masuk', nominal: posPembangunan }); 
-                    if(posMeja > 0) dbKas.push({ id: Date.now()+1, tgl: tglSkrg, uraian: 'Setoran Iuran (Uang Meja)', tipe: 'masuk', nominal: posMeja }); 
-                    if(posAgustus > 0) dbKas.push({ id: Date.now()+2, tgl: tglSkrg, uraian: 'Setoran Iuran (Dana 17 Agustus)', tipe: 'masuk', nominal: posAgustus }); 
+                    // Suntikkan per komponen ke Buku Kas
+                    jiPosting.forEach(function(ji, idx) {
+                        let jml = Math.round((ji.nominal / totalPerBulan) * total);
+                        if (jml > 0) dbKas.push({ id: Date.now()+idx, tgl: tglSkrg, uraian: 'Setoran Iuran ('+ji.nama+')', tipe: 'masuk', nominal: jml });
+                    }); 
                     
                     localStorage.setItem('db_kas', JSON.stringify(dbKas)); 
                     
