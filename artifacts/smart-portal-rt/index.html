@@ -3599,7 +3599,43 @@ html[data-theme="dark"] select option {
             <div class="card">
                 <div class="card-title-header">
                     <h3><i class="fa-solid fa-list"></i> Riwayat Transaksi Kas</h3>
+                    <span id="kas-filter-info" style="font-size:0.8rem;color:#64748b;font-weight:600;"></span>
                 </div>
+                <!-- Filter Bar -->
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; padding:14px; background:var(--bg-light,#f8fafc); border-radius:10px;">
+                    <div style="display:flex; flex-direction:column; gap:4px; flex:1; min-width:140px;">
+                        <label style="font-size:0.78rem; font-weight:700; color:#64748b;">Dari Tanggal</label>
+                        <input type="date" id="kas-filter-dari" onchange="filterLaporanKas()"
+                            style="padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.88rem; background:#fff; color:inherit;">
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:4px; flex:1; min-width:140px;">
+                        <label style="font-size:0.78rem; font-weight:700; color:#64748b;">Sampai Tanggal</label>
+                        <input type="date" id="kas-filter-sampai" onchange="filterLaporanKas()"
+                            style="padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.88rem; background:#fff; color:inherit;">
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:4px; flex:1; min-width:120px;">
+                        <label style="font-size:0.78rem; font-weight:700; color:#64748b;">Tipe</label>
+                        <select id="kas-filter-tipe" onchange="filterLaporanKas()"
+                            style="padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.88rem; background:#fff; color:inherit;">
+                            <option value="">Semua</option>
+                            <option value="masuk">Pemasukan</option>
+                            <option value="keluar">Pengeluaran</option>
+                        </select>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:4px; flex:2; min-width:180px;">
+                        <label style="font-size:0.78rem; font-weight:700; color:#64748b;">Cari Uraian</label>
+                        <input type="search" id="kas-filter-cari" placeholder="Ketik kata kunci..." oninput="filterLaporanKas()"
+                            style="padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.88rem; background:#fff; color:inherit;">
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:4px; justify-content:flex-end;">
+                        <label style="font-size:0.78rem; font-weight:700; color:#64748b;">&nbsp;</label>
+                        <button class="btn-action" style="background:#64748b; color:#fff; padding:8px 14px;" onclick="resetFilterKas()">
+                            <i class="fa-solid fa-rotate-left"></i> Reset
+                        </button>
+                    </div>
+                </div>
+                <!-- Stat filter -->
+                <div id="kas-filter-stat" style="display:none; margin-bottom:12px; padding:10px 14px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; font-size:0.85rem; color:#1e40af; font-weight:600;"></div>
                 <div class="table-responsive">
                     <table class="data-table">
                         <thead>
@@ -6581,43 +6617,27 @@ html[data-theme="dark"] select option {
     window.loadKasBendahara = function() {
         var dbKas = JSON.parse(localStorage.getItem('db_kas') || '[]');
         var sAwal = parseInt(localStorage.getItem('db_saldo_awal') || '0') || 0;
-        var sAkhir = sAwal;
-        var totalMasuk = 0;
-        var totalKeluar = 0;
 
-        // Isi saldo awal di kedua tab
+        // Simpan ke global untuk filter
+        window._kasAllData = dbKas.slice().sort(function(a,b){ return new Date(a.tgl) - new Date(b.tgl); });
+        window._kasSaldoAwal = sAwal;
+
+        // Isi saldo awal
         if(document.getElementById('ben-display-saldo-awal'))
             document.getElementById('ben-display-saldo-awal').innerText = fmt(sAwal);
         if(document.getElementById('ben-lap-saldo-awal'))
             document.getElementById('ben-lap-saldo-awal').innerText = fmt(sAwal);
 
-        var tb = document.getElementById('tbody-laporan-kas');
-        if(tb) {
-            tb.innerHTML = '';
-            dbKas.sort(function(a,b){ return new Date(a.tgl) - new Date(b.tgl); }).forEach(function(k) {
-                var nominal = Number(k.nominal) || 0;
-                if(k.tipe === 'masuk') { sAkhir += nominal; totalMasuk += nominal; }
-                else { sAkhir -= nominal; totalKeluar += nominal; }
-                var warnaTipe = k.tipe === 'masuk'
-                    ? 'style="color:#166534;font-weight:700;"'
-                    : 'style="color:#991b1b;font-weight:700;"';
-                var ikonTipe = k.tipe === 'masuk'
-                    ? '<i class="fa-solid fa-circle-arrow-up" style="color:#16a34a;"></i>'
-                    : '<i class="fa-solid fa-circle-arrow-down" style="color:#dc2626;"></i>';
-                tb.innerHTML += '<tr>' +
-                    '<td>' + (k.tgl || '-') + '</td>' +
-                    '<td><b>' + (k.uraian || k.keterangan || '-') + '</b></td>' +
-                    '<td>' + ikonTipe + ' <span ' + warnaTipe + '>' + (k.tipe === 'masuk' ? 'Pemasukan' : 'Pengeluaran') + '</span></td>' +
-                    '<td>' + fmt(nominal) + ' <small style="color:var(--text-muted);">(Saldo: ' + fmt(sAkhir) + ')</small></td>' +
-                    '<td><button class="btn-table btn-tbl-del" onclick="hapusKas(' + k.id + ')"><i class="fa-solid fa-trash"></i></button></td>' +
-                    '</tr>';
-            });
-            if(dbKas.length === 0) {
-                tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada transaksi kas.</td></tr>';
-            }
-        }
+        // Hitung total keseluruhan untuk stat box
+        var sAkhir = sAwal;
+        var totalMasuk = 0;
+        var totalKeluar = 0;
+        window._kasAllData.forEach(function(k) {
+            var nominal = Number(k.nominal) || 0;
+            if(k.tipe === 'masuk') { sAkhir += nominal; totalMasuk += nominal; }
+            else { sAkhir -= nominal; totalKeluar += nominal; }
+        });
 
-        // Update semua stat box
         if(document.getElementById('ben-total-masuk'))
             document.getElementById('ben-total-masuk').innerText = fmt(totalMasuk);
         if(document.getElementById('ben-total-keluar'))
@@ -6628,6 +6648,112 @@ html[data-theme="dark"] select option {
             document.getElementById('ben-saldo-kas-input').innerText = fmt(sAkhir);
         if(document.getElementById('warga-saldo-kas'))
             document.getElementById('warga-saldo-kas').innerText = fmt(sAkhir);
+
+        // Render tabel dengan filter aktif
+        window.filterLaporanKas();
+    };
+
+    window.filterLaporanKas = function() {
+        var tb = document.getElementById('tbody-laporan-kas');
+        if (!tb) return;
+
+        var allData = window._kasAllData || [];
+        var sAwal   = window._kasSaldoAwal || 0;
+
+        // Ambil nilai filter
+        var dari   = (document.getElementById('kas-filter-dari')   || {}).value || '';
+        var sampai = (document.getElementById('kas-filter-sampai') || {}).value || '';
+        var tipe   = (document.getElementById('kas-filter-tipe')   || {}).value || '';
+        var cari   = ((document.getElementById('kas-filter-cari')  || {}).value || '').toLowerCase().trim();
+
+        // Hitung saldo berjalan sampai sebelum filter (agar saldo akurat)
+        // saldo berjalan dihitung dari awal berdasarkan urutan tanggal
+        var saldoMap = [];
+        var sRun = sAwal;
+        allData.forEach(function(k) {
+            var n = Number(k.nominal) || 0;
+            if (k.tipe === 'masuk') sRun += n; else sRun -= n;
+            saldoMap.push({ id: k.id, saldo: sRun });
+        });
+
+        // Filter data
+        var filtered = allData.filter(function(k) {
+            if (dari   && k.tgl < dari)   return false;
+            if (sampai && k.tgl > sampai) return false;
+            if (tipe   && k.tipe !== tipe) return false;
+            if (cari) {
+                var uraian = (k.uraian || k.keterangan || '').toLowerCase();
+                if (uraian.indexOf(cari) === -1) return false;
+            }
+            return true;
+        });
+
+        // Hitung stat filter
+        var fMasuk = 0, fKeluar = 0;
+        filtered.forEach(function(k) {
+            var n = Number(k.nominal) || 0;
+            if (k.tipe === 'masuk') fMasuk += n; else fKeluar += n;
+        });
+
+        // Update info filter
+        var elStat = document.getElementById('kas-filter-stat');
+        var elInfo = document.getElementById('kas-filter-info');
+        var adaFilter = dari || sampai || tipe || cari;
+
+        if (elInfo) elInfo.innerText = filtered.length + ' transaksi';
+
+        if (elStat) {
+            if (adaFilter) {
+                elStat.style.display = 'block';
+                elStat.innerHTML =
+                    '<i class="fa-solid fa-filter"></i> Hasil filter: ' +
+                    '<span style="color:#16a34a;margin-left:8px;"><i class="fa-solid fa-circle-arrow-up"></i> Masuk: ' + fmt(fMasuk) + '</span>' +
+                    '<span style="color:#dc2626;margin-left:12px;"><i class="fa-solid fa-circle-arrow-down"></i> Keluar: ' + fmt(fKeluar) + '</span>' +
+                    '<span style="color:#1e40af;margin-left:12px;"><i class="fa-solid fa-scale-balanced"></i> Selisih: ' + fmt(fMasuk - fKeluar) + '</span>';
+            } else {
+                elStat.style.display = 'none';
+            }
+        }
+
+        // Render tabel
+        if (filtered.length === 0) {
+            tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;">' +
+                (adaFilter ? '<i class="fa-solid fa-magnifying-glass"></i> Tidak ada transaksi sesuai filter.' : 'Belum ada transaksi kas.') +
+                '</td></tr>';
+            return;
+        }
+
+        var rows = '';
+        filtered.forEach(function(k) {
+            var nominal = Number(k.nominal) || 0;
+            var saldoEntry = saldoMap.find(function(s){ return s.id === k.id; });
+            var saldoRun = saldoEntry ? saldoEntry.saldo : 0;
+            var warnaTipe = k.tipe === 'masuk'
+                ? 'style="color:#166534;font-weight:700;"'
+                : 'style="color:#991b1b;font-weight:700;"';
+            var ikonTipe = k.tipe === 'masuk'
+                ? '<i class="fa-solid fa-circle-arrow-up" style="color:#16a34a;"></i>'
+                : '<i class="fa-solid fa-circle-arrow-down" style="color:#dc2626;"></i>';
+            rows += '<tr>' +
+                '<td>' + (k.tgl || '-') + '</td>' +
+                '<td><b>' + (k.uraian || k.keterangan || '-') + '</b></td>' +
+                '<td>' + ikonTipe + ' <span ' + warnaTipe + '>' + (k.tipe === 'masuk' ? 'Pemasukan' : 'Pengeluaran') + '</span></td>' +
+                '<td>' + fmt(nominal) + ' <small style="color:var(--text-muted);">(Saldo: ' + fmt(saldoRun) + ')</small></td>' +
+                '<td><button class="btn-table btn-tbl-del" onclick="hapusKas(' + k.id + ')"><i class="fa-solid fa-trash"></i></button></td>' +
+                '</tr>';
+        });
+        tb.innerHTML = rows;
+    };
+
+    window.resetFilterKas = function() {
+        var ids = ['kas-filter-dari','kas-filter-sampai','kas-filter-cari'];
+        ids.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        var tipe = document.getElementById('kas-filter-tipe');
+        if (tipe) tipe.value = '';
+        window.filterLaporanKas();
     };
     window.hapusKas = function(id) { let db = JSON.parse(localStorage.getItem('db_kas')) || []; localStorage.setItem('db_kas', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); };
 
