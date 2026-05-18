@@ -8714,7 +8714,7 @@ window.loadMatriksIuran = function() {
                 return String(i.idWarga)===String(w.id) &&
                     (i.bulan===bulanIniDgnTahun || i.bulan===bulanIni);
             });
-            if(b){ if(b.posted){ if(Number(b.nominal)<nominalStd)kurangCount++; else lunasIni++; } else pendingCount++; }
+            if(b){ if(b.posted){ if(b.sudahLunasKurang||Number(b.nominal)>=nominalStd){lunasIni++;}else{kurangCount++;} } else pendingCount++; }
             else belumIni++;
         });
         if(el('mtrx-stat-total'))   el('mtrx-stat-total').textContent=totalWarga;
@@ -8749,7 +8749,7 @@ window.loadMatriksIuran = function() {
                 var status='future',nominal=0;
                 if(bayar){
                     nominal=Number(bayar.nominal)||0; totalRow+=nominal;
-                    if(bayar.posted){if(nominal<nominalStd){status='kurang';kurangRow++;}else{status='lunas';lunasCount++;}}
+                    if(bayar.posted){if(bayar.sudahLunasKurang||nominal>=nominalStd){status='lunas';lunasCount++;}else{status='kurang';kurangRow++;}}
                     else{status='pending';pendingRow++;}
                 } else if(sudahTiba) status='belum';
                 bulanData.push({bln:bln,short:bulanShort[idx],status:status,nominal:nominal,sudahTiba:sudahTiba});
@@ -9443,6 +9443,7 @@ window.loadMatriksIuran = function() {
 
         dbIuran.forEach(function(x) {
             if (!x.posted) return;
+            if (x.sudahLunasKurang) return;  // sudah dilunasi — skip
             var nominalDibayar = Number(x.nominal) || 0;
 
             // Format bulan bisa "Januari" (lama) atau "Januari 2026" (baru)
