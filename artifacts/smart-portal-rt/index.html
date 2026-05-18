@@ -3552,6 +3552,16 @@ html[data-theme="dark"] select option {
                         <span id="iuran-nama-terpilih" style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">— Pilih warga dulu</span>
                     </div>
 
+                    <!-- Selector Tahun -->
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                        <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); white-space:nowrap;"><i class="fa-solid fa-calendar"></i> Tahun:</label>
+                        <select id="iuran-tahun-select" onchange="reloadBulanIuranTahun()" style="border:1px solid var(--border-color,#e2e8f0); border-radius:8px; padding:6px 12px; font-size:0.9rem; font-weight:700; background:var(--bg-light); color:var(--text-dark); cursor:pointer;">
+                            <option value="2025">2025</option>
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                        <span style="font-size:0.78rem; color:var(--text-muted);">Pilih tahun iuran yang akan dicatat</span>
+                    </div>
                     <div id="iuran-bulan-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px;">
                         <!-- diisi loadBulanIuran() -->
                         <div style="text-align:center; color:var(--text-muted); padding:20px; grid-column:1/-1;">Pilih warga untuk melihat status bulan</div>
@@ -9155,28 +9165,30 @@ window.loadMatriksIuran = function() {
         var grid = document.getElementById('iuran-bulan-grid');
         if (!grid) return;
         var dbIuran = window._iuranDbIuran || JSON.parse(localStorage.getItem('db_iuran') || '[]');
-        var dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
-        var nominalIuran = Number(dbSettings.nominalIuran) || 25000;
+        var selTahun = document.getElementById('iuran-tahun-select');
+        var tahun = selTahun ? selTahun.value : String(new Date().getFullYear());
         var BULAN = ['Januari','Februari','Maret','April','Mei','Juni',
                      'Juli','Agustus','September','Oktober','November','Desember'];
         var html = '';
-        var totalDipilih = 0;
-        var jumlahDipilih = 0;
 
         BULAN.forEach(function(bulan) {
+            var bulanTahun = bulan + ' ' + tahun;  // format: "Januari 2026"
             var sudahBayar = dbIuran.some(function(x) {
-                return String(x.idWarga) === String(w.id) && x.bulan === bulan && x.posted;
+                return String(x.idWarga) === String(w.id) && x.bulan === bulanTahun && x.posted;
             });
+            var nominal = window.getNominalByBulan(bulanTahun);
             if (sudahBayar) {
                 html += '<div style="padding:10px 6px; border-radius:10px; text-align:center; font-size:0.82rem; font-weight:700;' +
-                    'background:#dcfce7; color:#166534; border:2px solid #86efac; cursor:not-allowed;">' +
-                    '<i class="fa-solid fa-check"></i><br>' + bulan + '</div>';
+                    'background:#dcfce7; color:#166534; border:2px solid #86efac; cursor:not-allowed;" title="Sudah lunas">' +
+                    '<i class="fa-solid fa-check"></i><br>' + bulan + '<br>' +
+                    '<span style="font-size:0.7rem; font-weight:600;">'+fmt(nominal)+'</span></div>';
             } else {
-                html += '<div data-bulan="' + bulan + '" data-checked="false" onclick="toggleBulanIuran(this)" ' +
+                html += '<div data-bulan="' + bulanTahun + '" data-checked="false" onclick="toggleBulanIuran(this)" ' +
                     'style="padding:10px 6px; border-radius:10px; text-align:center; font-size:0.82rem; font-weight:700;' +
                     'background:var(--gt-surface,#f8fafc); color:var(--text-dark); border:2px solid #e2e8f0; cursor:pointer;' +
                     'transition:all 0.15s;">' +
-                    bulan + '</div>';
+                    bulan + '<br>' +
+                    '<span style="font-size:0.7rem; color:#64748b; font-weight:600;">'+fmt(nominal)+'</span></div>';
             }
         });
 
@@ -9189,10 +9201,15 @@ window.loadMatriksIuran = function() {
         if (elBreak) elBreak.innerText = '';
     };
 
+    // Reload grid saat tahun berubah
+    window.reloadBulanIuranTahun = function() {
+        if (window._iuranWargaTerpilih) {
+            window.loadBulanIuran(window._iuranWargaTerpilih);
+        }
+    };
+
     window.toggleBulanIuran = function(el) {
         var checked = el.getAttribute('data-checked') === 'true';
-        var dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
-        var nominalIuran = Number(dbSettings.nominalIuran) || 25000;
 
         if (checked) {
             el.setAttribute('data-checked', 'false');
@@ -9206,20 +9223,39 @@ window.loadMatriksIuran = function() {
             el.style.color = '#fff';
         }
 
-        // Hitung total
+        // Hitung total — nominal per bulan (historis vs terbaru)
         var allChecked = document.querySelectorAll('#iuran-bulan-grid [data-checked="true"]');
-        var total = allChecked.length * nominalIuran;
+        var total = 0;
+        allChecked.forEach(function(el2) {
+            total += window.getNominalByBulan(el2.getAttribute('data-bulan'));
+        });
         var elTotal = document.getElementById('iuran-total-display');
-        if (elTotal) elTotal.innerText = 'Rp ' + total.toLocaleString('id-ID');
+        if (elTotal) elTotal.innerText = fmt(total);
 
-        // Breakdown
-        var dbJenis = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+        // Breakdown — pisah periode lama vs terbaru
         var elBreak = document.getElementById('iuran-breakdown-display');
-        if (elBreak && dbJenis.length > 0 && allChecked.length > 0) {
-            var breakHtml = dbJenis.map(function(j) {
-                return j.nama + ': Rp ' + (Number(j.nominal) * allChecked.length).toLocaleString('id-ID');
-            }).join(' &nbsp;|&nbsp; ');
-            elBreak.innerHTML = breakHtml;
+        if (elBreak && allChecked.length > 0) {
+            var periodeLama = ['September 2025','Oktober 2025','November 2025','Desember 2025',
+                'Januari 2026','Februari 2026','Maret 2026','April 2026','Mei 2026'];
+            var jumlahLama = 0, jumlahBaru = 0;
+            allChecked.forEach(function(el2) {
+                var b = el2.getAttribute('data-bulan');
+                if (periodeLama.indexOf(b) !== -1) jumlahLama++;
+                else jumlahBaru++;
+            });
+            var parts = [];
+            if (jumlahLama > 0) {
+                parts.push('<span style="color:#f59e0b;">⚠️ ' + jumlahLama + ' bulan historis × ' + fmt(20000) + ' = ' + fmt(jumlahLama * 20000) + '</span>');
+            }
+            if (jumlahBaru > 0) {
+                var dbJenis = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
+                var nomBaru = window.getNominalByBulan('Juni 2026');
+                var breakDetail = dbJenis.length > 0
+                    ? dbJenis.map(function(j){ return j.nama+': '+fmt(j.nominal); }).join(', ')
+                    : fmt(nomBaru);
+                parts.push('<span style="color:#10b981;">✅ ' + jumlahBaru + ' bulan terbaru × ' + fmt(nomBaru) + ' = ' + fmt(jumlahBaru * nomBaru) + '</span><br><small style="color:#64748b;">' + breakDetail + '</small>');
+            }
+            elBreak.innerHTML = parts.join('<br>');
         } else if (elBreak) {
             elBreak.innerText = '';
         }
