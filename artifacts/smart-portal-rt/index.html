@@ -11286,15 +11286,19 @@ function updateSemuaWaktu() {
         if (!el) return;
         let total = ji.reduce(function(s,x){return s+(x.nominal||0);},0);
         let html2 = '<table style="width:100%;border-collapse:collapse;font-size:0.9rem;">';
-        html2 += '<tr style="background:#f1f5f9;"><th style="padding:8px;text-align:left;">Nama Jenis</th><th style="padding:8px;text-align:right;">Nominal</th><th style="padding:8px;">Aksi</th></tr>';
+        html2 += '<tr style="background:#f1f5f9;"><th style="padding:8px;text-align:left;">Nama Jenis</th><th style="padding:8px;text-align:right;">Nominal</th><th style="padding:8px;text-align:center;">Pos Kas</th><th style="padding:8px;">Aksi</th></tr>';
+        var posOptions = [{val:'kas_utama',label:'✅ Kas Utama'},{val:'kas_sementara',label:'⏳ Kas Sementara'},{val:'kas_terpisah',label:'📋 Kas Terpisah'}];
         ji.forEach(function(j, i) {
+            var posVal = j.pos || 'kas_utama';
+            var selectOpts = posOptions.map(function(o){ return '<option value="'+o.val+'"'+(posVal===o.val?' selected':'')+'>'+o.label+'</option>'; }).join('');
             html2 += '<tr style="border-bottom:1px solid #e2e8f0;">';
             html2 += '<td style="padding:8px;"><input type="text" value="'+j.nama+'" style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;width:100%;" onchange="updateJenisIuran('+i+',\'nama\',this.value)"></td>';
             html2 += '<td style="padding:8px;"><input type="number" value="'+j.nominal+'" style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;width:100%;text-align:right;" onchange="updateJenisIuran('+i+',\'nominal\',parseInt(this.value)||0)"></td>';
+            html2 += '<td style="padding:8px;"><select style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 6px;width:100%;font-size:0.82rem;" onchange="updateJenisIuran('+i+',\'pos\',this.value)">'+selectOpts+'</select></td>';
             html2 += '<td style="padding:8px;text-align:center;"><button onclick="hapusJenisIuran('+i+')" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;"><i class="fa-solid fa-trash"></i></button></td>';
             html2 += '</tr>';
         });
-        html2 += '<tr style="background:#f8fafc;font-weight:700;"><td style="padding:8px;">TOTAL</td><td style="padding:8px;text-align:right;color:#10b981;">'+fmt(total)+'</td><td></td></tr>';
+        html2 += '<tr style="background:#f8fafc;font-weight:700;"><td style="padding:8px;">TOTAL</td><td style="padding:8px;text-align:right;color:#10b981;">'+fmt(total)+'</td><td></td><td></td></tr>';
         html2 += '</table>';
         el.innerHTML = html2;
         let elNom = document.getElementById('set_nominal_iuran');
@@ -11304,7 +11308,7 @@ function updateSemuaWaktu() {
     window.tambahJenisIuran = function() {
         let ji = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
         if (!ji.length) ji = [{nama:'Kas RT',nominal:10000},{nama:'Sampah',nominal:5000},{nama:'Sosial',nominal:5000}];
-        ji.push({nama:'Jenis Baru',nominal:0});
+        ji.push({nama:'Jenis Baru',nominal:0,pos:'kas_utama'});
         localStorage.setItem('db_jenis_iuran', JSON.stringify(ji));
         let total = ji.reduce(function(s,x){return s+(x.nominal||0);},0);
         let dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
