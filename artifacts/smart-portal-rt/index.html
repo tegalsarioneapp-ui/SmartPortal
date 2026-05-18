@@ -9281,18 +9281,30 @@ window.loadMatriksIuran = function() {
         var dbIuran = JSON.parse(localStorage.getItem('db_iuran') || '[]');
         var dbWarga = JSON.parse(localStorage.getItem('db_warga') || '[]');
         var hasil = [];
+        var BULAN_ORDER = ['Januari','Februari','Maret','April','Mei','Juni',
+                           'Juli','Agustus','September','Oktober','November','Desember'];
 
         dbIuran.forEach(function(x) {
             if (!x.posted) return;
             var nominalDibayar = Number(x.nominal) || 0;
-            var tahun = 2026;
-            // Coba baca tahun dari field tanggal jika ada
-            if (x.tanggal) {
-                var t = new Date(x.tanggal);
-                if (!isNaN(t)) tahun = t.getFullYear();
+
+            // Format bulan bisa "Januari" (lama) atau "Januari 2026" (baru)
+            // Normalisasi ke format "Bulan YYYY" untuk getNominalByBulan
+            var bulanKey = x.bulan || '';
+            var parts = bulanKey.trim().split(' ');
+            if (parts.length === 1) {
+                // Format lama — ambil tahun dari tanggal
+                var tahun = 2026;
+                if (x.tanggal) {
+                    var t = new Date(x.tanggal);
+                    if (!isNaN(t)) tahun = t.getFullYear();
+                }
+                bulanKey = parts[0] + ' ' + tahun;
             }
-            var seharusnya = getNominalSeharusnya(x.bulan, tahun);
+
+            var seharusnya = window.getNominalByBulan(bulanKey);
             var kurang = seharusnya - nominalDibayar;
+
             if (kurang > 0) {
                 var warga = dbWarga.find(function(w) {
                     return String(w.id) === String(x.idWarga);
@@ -9301,7 +9313,8 @@ window.loadMatriksIuran = function() {
                     idIuran: x.id,
                     idWarga: x.idWarga,
                     namaWarga: x.namaWarga || (warga ? warga.nama : 'Unknown'),
-                    bulan: x.bulan,
+                    bulan: bulanKey,
+                    bulanAsli: x.bulan,
                     tanggal: x.tanggal || '',
                     nominalDibayar: nominalDibayar,
                     seharusnya: seharusnya,
@@ -9310,11 +9323,16 @@ window.loadMatriksIuran = function() {
             }
         });
 
-        // Urutkan: nama warga → bulan
+        // Sort: nama warga → tahun → urutan bulan
         hasil.sort(function(a, b) {
             if (a.namaWarga < b.namaWarga) return -1;
             if (a.namaWarga > b.namaWarga) return 1;
-            return BULAN_LIST.indexOf(a.bulan) - BULAN_LIST.indexOf(b.bulan);
+            var aParts = a.bulan.split(' ');
+            var bParts = b.bulan.split(' ');
+            var aTahun = parseInt(aParts[1]) || 2026;
+            var bTahun = parseInt(bParts[1]) || 2026;
+            if (aTahun !== bTahun) return aTahun - bTahun;
+            return BULAN_ORDER.indexOf(aParts[0]) - BULAN_ORDER.indexOf(bParts[0]);
         });
 
         return hasil;
@@ -9374,18 +9392,25 @@ window.loadMatriksIuran = function() {
             var tgl = new Date().toISOString().split('T')[0];
 
             // Update nominal di db_iuran
+            // bulan bisa format "Januari 2026" atau "Januari" (lama)
             dbIuran.forEach(function(x) {
-                if (String(x.idWarga) === String(idWarga) && x.bulan === bulan && x.posted) {
+                var bulanNorm = x.bulan || '';
+                var parts = bulanNorm.trim().split(' ');
+                if (parts.length === 1 && x.tanggal) {
+                    var t = new Date(x.tanggal);
+                    if (!isNaN(t)) bulanNorm = parts[0] + ' ' + t.getFullYear();
+                }
+                if (String(x.idWarga) === String(idWarga) && bulanNorm === bulan && x.posted) {
                     x.nominal = (Number(x.nominal) || 0) + kurang;
                     x.sudahLunasKurang = true;
                 }
             });
 
-            // Catat ke kas
+            // Catat ke kas — uraian dinamis
             dbKas.push({
                 id: Date.now(),
                 tgl: tgl,
-                uraian: 'Pelunasan kurang bayar ' + bulan + ' - ' + namaWarga + ' (Uang Sosial)',
+                uraian: 'Pelunasan kurang bayar ' + bulan + ' - ' + namaWarga,
                 tipe: 'masuk',
                 nominal: kurang,
                 sumber: 'iuran'
@@ -9426,7 +9451,13 @@ window.loadMatriksIuran = function() {
 
             data.forEach(function(x) {
                 dbIuran.forEach(function(rec) {
-                    if (String(rec.idWarga) === String(x.idWarga) && rec.bulan === x.bulan && rec.posted) {
+                    var bulanNorm = rec.bulan || '';
+                    var parts = bulanNorm.trim().split(' ');
+                    if (parts.length === 1 && rec.tanggal) {
+                        var t = new Date(rec.tanggal);
+                        if (!isNaN(t)) bulanNorm = parts[0] + ' ' + t.getFullYear();
+                    }
+                    if (String(rec.idWarga) === String(x.idWarga) && bulanNorm === x.bulan && rec.posted) {
                         rec.nominal = (Number(rec.nominal) || 0) + x.kurang;
                         rec.sudahLunasKurang = true;
                     }
@@ -9434,7 +9465,7 @@ window.loadMatriksIuran = function() {
                 dbKas.push({
                     id: Date.now() + Math.random(),
                     tgl: tgl,
-                    uraian: 'Pelunasan kurang bayar ' + x.bulan + ' - ' + x.namaWarga + ' (Uang Sosial)',
+                    uraian: 'Pelunasan kurang bayar ' + x.bulan + ' - ' + x.namaWarga,
                     tipe: 'masuk',
                     nominal: x.kurang,
                     sumber: 'iuran'
