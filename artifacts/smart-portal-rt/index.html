@@ -4234,6 +4234,57 @@ html[data-theme="dark"] select option {
                 </div>
             </div>
 
+            <!-- ACC 2b: PARAMETER PERTEMUAN RT -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-pertemuan-param',this)">
+                    <span><i class="fa-solid fa-people-roof" style="color:#f59e0b;margin-right:8px;"></i> Parameter Pertemuan RT</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-pertemuan-param">
+                    <div class="acc-body-inner">
+                        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;">
+                            <i class="fa-solid fa-circle-info" style="color:#3b82f6;"></i>
+                            Atur target uang meja tuan rumah dan PIN Bendahara Pembantu. Kedua nilai ini bisa diubah sewaktu-waktu sesuai kesepakatan warga.
+                        </p>
+                        <div class="form-grid" style="gap:14px;">
+                            <div class="form-group" style="margin:0;">
+                                <label style="font-weight:700;font-size:0.85rem;">
+                                    <i class="fa-solid fa-mug-hot" style="color:#f59e0b;"></i>
+                                    Target Uang Meja Tuan Rumah (Rp)
+                                </label>
+                                <input type="number" id="set_target_uang_meja" placeholder="250000"
+                                    style="padding:10px 12px;border:1.5px solid var(--border-color,#e2e8f0);border-radius:10px;font-size:0.95rem;width:100%;background:var(--bg-card,#fff);color:var(--text-dark,#1e293b);">
+                                <small style="color:var(--text-muted);font-size:0.75rem;">Jumlah yang disetor ke tuan rumah setiap pertemuan</small>
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label style="font-weight:700;font-size:0.85rem;">
+                                    <i class="fa-solid fa-lock" style="color:#6366f1;"></i>
+                                    PIN Bendahara Pembantu (4 digit)
+                                </label>
+                                <div style="position:relative;">
+                                    <input type="password" id="set_pin_ben_pembantu" placeholder="••••"
+                                        maxlength="4" pattern="[0-9]{4}" inputmode="numeric"
+                                        style="padding:10px 40px 10px 12px;border:1.5px solid var(--border-color,#e2e8f0);border-radius:10px;font-size:1.1rem;letter-spacing:6px;width:100%;background:var(--bg-card,#fff);color:var(--text-dark,#1e293b);">
+                                    <button onclick="togglePinVisibility('set_pin_ben_pembantu','icon-pin-eye')"
+                                        type="button"
+                                        style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;">
+                                        <i id="icon-pin-eye" class="fa-solid fa-eye-slash"></i>
+                                    </button>
+                                </div>
+                                <small style="color:var(--text-muted);font-size:0.75rem;">Dipakai Bendahara Pembantu untuk akses menu Pertemuan RT</small>
+                            </div>
+                        </div>
+                        <div style="background:var(--bg-light,#f8fafc);border:1px solid var(--border-color,#e2e8f0);border-radius:10px;padding:12px 14px;margin-top:14px;font-size:0.8rem;color:var(--text-muted);">
+                            <i class="fa-solid fa-shield-halved" style="color:#10b981;"></i>
+                            <strong>Catatan keamanan:</strong> PIN tidak ditampilkan setelah disimpan. Catat PIN sebelum menekan simpan.
+                        </div>
+                        <button class="btn-submit bg-blue" style="margin-top:16px;width:100%;" onclick="simpanParameterPertemuan()">
+                            <i class="fa-solid fa-floppy-disk"></i> Simpan Parameter Pertemuan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- ACC 3: GANTI PASSWORD -->
             <div class="acc-card">
                 <div class="acc-header" onclick="toggleAcc('acc-password',this)">
@@ -7462,209 +7513,294 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
     // === 1. MESIN MATRIKS & TOTAL KARTU BENDAHARA (DENGAN RINCIAN) ===
     // === MESIN HIDE & SEEK DAFTAR PENAGIHAN ===
 
-    // === MESIN ANALISA & PENAGIHAN REAL-TIME (DIBEDAH 3 POS) ===
-    window.tampilRiwayatEkspor = function() {
-        var rw = JSON.parse(localStorage.getItem('db_riwayat_ekspor')) || [];
-        rw.sort(function(a,b){ return (b.ts||0) - (a.ts||0); });
-        var rows = rw.length ? rw.map(function(r,i){
-            return '<tr>' +
-                '<td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; text-align:center;">' + (i+1) + '</td>' +
-                '<td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; white-space:nowrap;">' + (r.tgl || '-') + '</td>' +
-                '<td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; word-break:break-word;">' + (r.judul || '-') + '</td>' +
-                '<td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; text-align:center;"><button class="btn-action" style="padding:4px 8px; font-size:0.75rem;" onclick="hapusRiwayatEkspor(' + r.id + ')" title="Hapus entri"><i class="fa-solid fa-trash"></i></button></td>' +
-            '</tr>';
-        }).join('') : '<tr><td colspan="4" style="padding:20px; text-align:center; color:#64748b;"><i class="fa-solid fa-folder-open"></i> Belum ada dokumen yang diekspor.</td></tr>';
-        var html = '<div style="max-height:55vh; overflow:auto; text-align:left; border:1px solid #cbd5e1; border-radius:8px;">' +
-            '<table style="width:100%; border-collapse:collapse; font-size:0.9rem;">' +
-            '<thead><tr style="background:#f1f5f9; position:sticky; top:0;"><th style="padding:8px;">No</th><th style="padding:8px; text-align:left;">Tanggal</th><th style="padding:8px; text-align:left;">Nama Dokumen</th><th style="padding:8px; width:60px;">Aksi</th></tr></thead>' +
-            '<tbody>' + rows + '</tbody></table></div>' +
-            '<div style="margin-top:10px; font-size:0.8rem; color:#64748b;">Total: <b>' + rw.length + '</b> ekspor tercatat</div>';
-        Swal.fire({
-            title: '<i class="fa-solid fa-clock-rotate-left"></i> Riwayat Ekspor Dokumen',
-            html: html, width: 720,
-            showCancelButton: true, cancelButtonText: 'Tutup',
-            confirmButtonText: '<i class="fa-solid fa-broom"></i> Bersihkan Semua',
-            confirmButtonColor: '#ef4444',
-        }).then(function(res){
-            if (res.isConfirmed) {
-                Swal.fire({ title:'Hapus seluruh riwayat?', icon:'warning', showCancelButton:true, confirmButtonColor:'#ef4444' }).then(function(r){
-                    if (r.isConfirmed) {
-                        localStorage.setItem('db_riwayat_ekspor', '[]');
-                        localStorage.setItem('ts_riwayat_ekspor', new Date().toISOString());
-                        if (typeof syncSemuaData === 'function') { try { syncSemuaData(true); } catch(e){} }
-                        Toast.fire({ icon:'success', title:'Riwayat dibersihkan' });
-                    }
-                });
-            }
-        });
-    };
-    window.hapusRiwayatEkspor = function(id) {
-        var rw = JSON.parse(localStorage.getItem('db_riwayat_ekspor')) || [];
-        rw = rw.filter(function(x){ return String(x.id) !== String(id); });
-        localStorage.setItem('db_riwayat_ekspor', JSON.stringify(rw));
-        localStorage.setItem('ts_riwayat_ekspor', new Date().toISOString());
-        if (typeof syncSemuaData === 'function') { try { syncSemuaData(true); } catch(e){} }
-        window.tampilRiwayatEkspor();
-    };
-    window.cetakAnalisaIuran = function() {
-        try {
-            var dbIuran = JSON.parse(localStorage.getItem('db_iuran')) || [];
-            var dbWarga = JSON.parse(localStorage.getItem('db_warga')) || [];
-            var validWarga = dbWarga.filter(function(w){ return w && w.nama && String(w.nama).trim() !== ''; });
-            var bulanSkg = new Intl.DateTimeFormat('id-ID', { month: 'long' }).format(new Date());
-            var tahunSkg = new Date().getFullYear();
-            var jmlBayar = dbIuran.length;
-            var totalWarga = validWarga.length;
-            var mejaTerkumpul = jmlBayar * 5000, targetMeja = 250000, mejaKurang = Math.max(0, targetMeja - mejaTerkumpul);
-            var bangunTerkumpul = jmlBayar * 10000, bangunTarget = totalWarga * 10000, bangunKurang = Math.max(0, bangunTarget - bangunTerkumpul);
-            var agustusTerkumpul = jmlBayar * 5000, agustusTarget = totalWarga * 5000, agustusKurang = Math.max(0, agustusTarget - agustusTerkumpul);
-            var rowsHtml = '';
-            var sorted = validWarga.slice().sort(function(a,b){ return String(a.nama).localeCompare(String(b.nama)); });
-            sorted.forEach(function(w, i){
-                var bayar = dbIuran.find(function(it){ return String(it.idWarga) === String(w.id) && it.bulan === bulanSkg; });
-                rowsHtml += '<tr>' +
-                    '<td style="text-align:center; border:1px solid #333; padding:5px;">' + (i+1) + '</td>' +
-                    '<td style="border:1px solid #333; padding:5px;">' + w.nama + '</td>' +
-                    '<td style="text-align:right; border:1px solid #333; padding:5px;">' + (bayar ? fmt(bayar.nominal) : 'Rp 0') + '</td>' +
-                    '<td style="text-align:center; border:1px solid #333; padding:5px;">' + (bayar ? 'LUNAS' : 'BELUM') + '</td>' +
-                '</tr>';
-            });
-            if (!rowsHtml) rowsHtml = '<tr><td colspan="4" style="text-align:center; border:1px solid #333; padding:8px;"><i>Belum ada data warga.</i></td></tr>';
-            var tgl = new Date().toLocaleDateString('id-ID', { day:'2-digit', month:'long', year:'numeric' });
-            var html = '' +
-                '<div class="kop-surat-resmi" style="display:flex; align-items:center; gap:15px; border-bottom:3px double #000; padding-bottom:10px; margin-bottom:15px;">' +
-                  '<img src="/Lambang_Kota_Semarang.png" alt="Logo Semarang" style="width:80px; height:auto;">' +
-                  '<div style="text-align:center; flex:1;">' +
-                    '<div style="font-size:13pt; font-weight:bold;">PENGURUS RT 005 / RW 012</div>' +
-                    '<div style="font-size:12pt; font-weight:bold;">KELURAHAN TEGALSARI - KOTA SEMARANG</div>' +
-                    '<div style="font-style:italic; font-size:10pt;">Sekretariat: Jl. Tegalsari Raya, Kota Semarang, Jawa Tengah</div>' +
-                  '</div>' +
-                '</div>' +
-                '<h3 style="text-align:center; margin:10px 0 4px 0;">RINGKASAN ANALISA & PEMECAHAN IURAN</h3>' +
-                '<p style="text-align:center; margin:0 0 15px 0;">Periode: <b>' + bulanSkg + ' ' + tahunSkg + '</b> &mdash; Dicetak: ' + tgl + '</p>' +
-                '<table style="width:100%; border-collapse:collapse; margin-bottom:15px;">' +
-                  '<thead><tr style="background:#f0f0f0;">' +
-                    '<th style="border:1px solid #333; padding:6px;">Pos Iuran</th>' +
-                    '<th style="border:1px solid #333; padding:6px;">Terkumpul</th>' +
-                    '<th style="border:1px solid #333; padding:6px;">Target</th>' +
-                    '<th style="border:1px solid #333; padding:6px;">Kekurangan</th>' +
-                  '</tr></thead><tbody>' +
-                    '<tr><td style="border:1px solid #333; padding:6px;">Pos Uang Meja</td>' +
-                        '<td style="border:1px solid #333; padding:6px; text-align:right;">' + fmt(mejaTerkumpul) + '</td>' +
-                        '<td style="border:1px solid #333; padding:6px; text-align:right;">' + fmt(targetMeja) + '</td>' +
-                        '<td style="border:1px solid #333; padding:6px; text-align:right;">' + (mejaKurang>0?fmt(mejaKurang):'LUNAS') + '</td></tr>' +
-                    '<tr><td style="border:1px solid #333; padding:6px;">Pembangunan</td>' +
-                        '<td style="border:1px solid #333; padding:6px; text-align:right;">' + fmt(bangunTerkumpul) + '</td>' +
-                        '<td style="border:1px solid #333; padding:6px; text-align:right;">' + fmt(bangunTarget) + '</td>' +
-                        '<td style="border:1px solid #333; padding:6px; text-align:right;">' + (bangunKurang>0?fmt(bangunKurang):'LUNAS') + '</td></tr>' +
-                    '<tr><td style="border:1px solid #333; padding:6px;">17 Agustus</td>' +
-                        '<td style="border:1px solid #333; padding:6px; text-align:right;">' + fmt(agustusTerkumpul) + '</td>' +
-                        '<td style="border:1px solid #333; padding:6px; text-align:right;">' + fmt(agustusTarget) + '</td>' +
-                        '<td style="border:1px solid #333; padding:6px; text-align:right;">' + (agustusKurang>0?fmt(agustusKurang):'LUNAS') + '</td></tr>' +
-                    '<tr style="background:#fff7e6; font-weight:bold;"><td style="border:1px solid #333; padding:6px;">TOTAL SETORAN MASUK</td>' +
-                        '<td colspan="3" style="border:1px solid #333; padding:6px; text-align:right;">' + jmlBayar + ' setoran &times; Rp 20.000 = ' + fmt(jmlBayar*20000) + '</td></tr>' +
-                  '</tbody></table>' +
-                '<h4 style="margin:15px 0 6px 0;">Daftar Penagihan Bulan Berjalan (' + bulanSkg + ')</h4>' +
-                '<table style="width:100%; border-collapse:collapse; font-size:10pt;">' +
-                  '<thead><tr style="background:#f0f0f0;">' +
-                    '<th style="border:1px solid #333; padding:5px; width:40px;">No</th>' +
-                    '<th style="border:1px solid #333; padding:5px; text-align:left;">Nama Warga</th>' +
-                    '<th style="border:1px solid #333; padding:5px; width:130px;">Nominal</th>' +
-                    '<th style="border:1px solid #333; padding:5px; width:90px;">Status</th>' +
-                  '</tr></thead><tbody>' + rowsHtml + '</tbody></table>' +
-                '<div style="display:flex; justify-content:flex-end; margin-top:35px;">' +
-                  '<div style="text-align:center;">' +
-                    '<div>Semarang, ' + tgl + '</div>' +
-                    '<div style="margin-bottom:55px;">Bendahara RT 005 / RW 012</div>' +
-                    '<div style="border-top:1px solid #000; padding-top:4px; min-width:180px;"><b>(.................................)</b></div>' +
-                  '</div>' +
-                '</div>';
-            window.printViaIframe(html, 'Ringkasan Analisa Iuran - ' + bulanSkg + ' ' + tahunSkg);
-        } catch(err) {
-            console.error(err);
-            Swal.fire('Gagal', 'Tidak dapat menyiapkan dokumen: ' + err.message, 'error');
-        }
-    };
+ // === MESIN ANALISA & PENAGIHAN (VERSI BARU) ===
+
+    function getJenisIuranMap() {
+        var def = [{nama:'Pembangunan',nominal:10000},{nama:'Uang Meja',nominal:5000},{nama:'17 Agustus',nominal:5000},{nama:'Sosial',nominal:5000}];
+        var ji = JSON.parse(localStorage.getItem('db_jenis_iuran')||'null');
+        return (ji && ji.length) ? ji : def;
+    }
+
+    function getSaldoKas() {
+        var db = JSON.parse(localStorage.getItem('db_kas')||'[]');
+        var sAwal = parseInt(localStorage.getItem('db_saldo_awal')||'0')||0;
+        var m = db.filter(function(x){return x.tipe==='masuk';}).reduce(function(s,x){return s+x.nominal;},0);
+        var k = db.filter(function(x){return x.tipe==='keluar';}).reduce(function(s,x){return s+x.nominal;},0);
+        return sAwal+m-k;
+    }
+
+    function mkBadge(teks,warna,ikon) {
+        return '<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;background:'+warna+'20;color:'+warna+';border:1px solid '+warna+'40;"><i class="fa-solid fa-'+ikon+'"></i>'+teks+'</span>';
+    }
+
     window.loadAnalisaUangMeja = function() {
-        let dbIuran = JSON.parse(localStorage.getItem('db_iuran')) || [];
-        let dbWarga = JSON.parse(localStorage.getItem('db_warga')) || [];
-        let validWarga = dbWarga.filter(w => w && w.nama && String(w.nama).trim() !== '');
-        
-        let bulanSkg = new Intl.DateTimeFormat('id-ID', { month: 'long' }).format(new Date());
-        if(document.getElementById('bulan-tagihan-info')) document.getElementById('bulan-tagihan-info').innerText = "Periode: " + bulanSkg;
+        var settings    = JSON.parse(localStorage.getItem('db_settings')||'{}');
+        var dbIuran     = JSON.parse(localStorage.getItem('db_iuran')||'[]');
+        var dbWarga     = JSON.parse(localStorage.getItem('db_warga')||'[]');
+        var dbPertemuan = JSON.parse(localStorage.getItem('db_pertemuan')||'[]');
+        var ji          = getJenisIuranMap();
+        var now         = new Date();
+        var bulanNama   = new Intl.DateTimeFormat('id-ID',{month:'long'}).format(now);
+        var tahunSkg    = now.getFullYear();
+        var periode     = bulanNama+' '+tahunSkg;
+        var el = document.getElementById('bulan-tagihan-info');
+        if(el) el.innerHTML = '<i class="fa-solid fa-calendar-days"></i> '+periode;
+        var iuranBln = dbIuran.filter(function(x){
+            return (x.bulan||'').toLowerCase()===bulanNama.toLowerCase() && String(x.tahun||tahunSkg)===String(tahunSkg);
+        });
+        var sudahMap = {};
+        iuranBln.forEach(function(x){ sudahMap[x.idWarga]=x; });
+        var jmlBayar   = Object.keys(sudahMap).length;
+        var wargaAktif = dbWarga.filter(function(w){return w.status!=='nonaktif';});
+        var jmlWarga   = wargaAktif.length;
+        var nomMeja=0,nomBangun=0,nomAgustus=0,nomSosial=0;
+        ji.forEach(function(j){
+            var n=j.nama.toLowerCase();
+            if(n.includes('meja'))         nomMeja=j.nominal;
+            else if(n.includes('bangun'))  nomBangun=j.nominal;
+            else if(n.includes('agustus')) nomAgustus=j.nominal;
+            else if(n.includes('sosial'))  nomSosial=j.nominal;
+        });
+        var targetMeja      = settings.targetUangMeja||250000;
+        var mejaTerkumpul   = jmlBayar*nomMeja;
+        var mejaKurang      = Math.max(0,targetMeja-mejaTerkumpul);
+        var bangunTerkumpul = jmlBayar*nomBangun;
+        var sosialTerkumpul = jmlBayar*nomSosial;
+        var agusTerkumpul   = jmlBayar*nomAgustus;
+        var agusKumulatif   = dbPertemuan.reduce(function(s,p){return s+(p.agustusTerkumpul||0);},0)+agusTerkumpul;
+        var tKey     = 'talangan_meja_'+periode.replace(/ /g,'_');
+        var talangan = JSON.parse(localStorage.getItem(tKey)||'null');
+        window.currentDefisitMeja = mejaKurang;
+        window.currentPeriodeKey  = periode;
+        window.currentTalaganKey  = tKey;
+        var belumBayar = wargaAktif.filter(function(w){return !sudahMap[w.id];});
+        var btnNalangi = document.getElementById('btn-nalangi');
+        if(btnNalangi) btnNalangi.style.display='none';
 
-        let bayarBulanIni = dbIuran;
-        // Hitung total bulan-orang setoran (mis. 1 warga bayar 2 bulan = 2 setoran).
-        let jmlBayar = dbIuran.length;
-        let totalWarga = validWarga.length;
+        var sisaTalangan = talangan ? (talangan.nominal-(talangan.dikembalikan||0)) : 0;
+        var saldoKas     = getSaldoKas();
 
-        let st = JSON.parse(localStorage.getItem('status_setor_' + bulanSkg)) || { meja:0, bangun:0, agustus:0 };
-        const getBadgeHTML = (val) => {
-            if(val === 2) return `<span class="badge badge-masuk" style="background:#dcfce7; color:#166534;"><i class="fa-solid fa-check-double"></i> Diterima Valid</span>`;
-            if(val === 1) return `<span class="badge badge-menunggu" style="background:#fef08a; color:#854d0e;"><i class="fa-solid fa-clock"></i> Proses Setor</span>`;
-            return `<span class="badge" style="background:#f1f5f9; color:#64748b; border:1px solid #cbd5e1;"><i class="fa-solid fa-xmark"></i> Belum Setor</span>`;
-        };
-
-        // 1. UANG MEJA
-        let mejaTerkumpul = jmlBayar * 5000; let targetMeja = 250000; let mejaKurang = targetMeja - mejaTerkumpul;
-        if(document.getElementById('tagih-meja-terkumpul')) document.getElementById('tagih-meja-terkumpul').innerText = fmt(mejaTerkumpul);
-        if(document.getElementById('tagih-meja-peserta')) document.getElementById('tagih-meja-peserta').innerText = `${jmlBayar} Setoran`;
-        if(document.getElementById('tagih-meja-kurang')) {
-            document.getElementById('tagih-meja-kurang').innerText = mejaKurang > 0 ? fmt(mejaKurang) : "LUNAS";
-            document.getElementById('btn-nalangi').style.display = (mejaKurang > 0 && mejaTerkumpul > 0) ? 'inline-flex' : 'none';
-            window.currentDefisitMeja = mejaKurang > 0 ? mejaKurang : 0;
-            window.currentTerkumpulMeja = mejaTerkumpul;
+        // ── KARTU MEJA ──
+        var btnMeja = '';
+        if(!talangan && mejaKurang>0) {
+            btnMeja = '<button onclick="eksekusiDanaTalangan()" style="width:100%;margin-top:12px;padding:11px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-weight:700;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="fa-solid fa-shield-heart"></i> Talangi '+fmt(mejaKurang)+'</button>';
+        } else if(talangan && sisaTalangan>0) {
+            btnMeja = '<button onclick="catatPengembalianTalangan()" style="width:100%;margin-top:12px;padding:11px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="fa-solid fa-rotate-left"></i> Catat Pengembalian (Sisa '+fmt(sisaTalangan)+')</button>';
+        } else if(talangan && sisaTalangan<=0) {
+            btnMeja = '<div style="margin-top:12px;padding:10px;border-radius:10px;background:#dcfce7;color:#166534;font-weight:700;font-size:0.85rem;text-align:center;"><i class="fa-solid fa-circle-check"></i> Talangan Lunas</div>';
         }
-        if(document.getElementById('badge-status-meja')) document.getElementById('badge-status-meja').innerHTML = getBadgeHTML(st.meja);
 
-        // 2. PEMBANGUNAN
-        let bangunTerkumpul = jmlBayar * 10000; let bangunTarget = totalWarga * 10000; let bangunKurang = bangunTarget - bangunTerkumpul;
-        if(document.getElementById('tagih-bangun-terkumpul')) document.getElementById('tagih-bangun-terkumpul').innerText = fmt(bangunTerkumpul);
-        if(document.getElementById('tagih-bangun-kurang')) document.getElementById('tagih-bangun-kurang').innerText = fmt(bangunKurang > 0 ? bangunKurang : 0);
-        if(document.getElementById('badge-status-bangun')) document.getElementById('badge-status-bangun').innerHTML = getBadgeHTML(st.bangun);
+        // ── KARTU PEMBANGUNAN ──
+        var stSetor = JSON.parse(localStorage.getItem('setor_bangun_'+periode.replace(/ /g,'_'))||'null');
+        var btnBangun = !stSetor
+            ? '<button onclick="setorPembangunanKeKas()" style="width:100%;margin-top:12px;padding:11px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:700;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="fa-solid fa-arrow-right-to-bracket"></i> Setor ke Kas ('+fmt(bangunTerkumpul)+')</button>'
+            : '<div style="margin-top:12px;padding:10px;border-radius:10px;background:#dbeafe;color:#1d4ed8;font-weight:700;font-size:0.85rem;text-align:center;"><i class="fa-solid fa-circle-check"></i> Sudah Disetor '+new Date(stSetor.tgl).toLocaleDateString('id-ID')+'</div>';
 
-        // 3. 17 AGUSTUS
-        let agustusTerkumpul = jmlBayar * 5000; let agustusTarget = totalWarga * 5000; let agustusKurang = agustusTarget - agustusTerkumpul;
-        if(document.getElementById('tagih-agustus-terkumpul')) document.getElementById('tagih-agustus-terkumpul').innerText = fmt(agustusTerkumpul);
-        if(document.getElementById('tagih-agustus-kurang')) document.getElementById('tagih-agustus-kurang').innerText = fmt(agustusKurang > 0 ? agustusKurang : 0);
-        if(document.getElementById('badge-status-agustus')) document.getElementById('badge-status-agustus').innerHTML = getBadgeHTML(st.agustus);
+        // ── KARTU SOSIAL ──
+        var stSosial = JSON.parse(localStorage.getItem('setor_sosial_'+periode.replace(/ /g,'_'))||'null');
+        var btnSosial = !stSosial
+            ? '<button onclick="catatSosialBA()" style="width:100%;margin-top:12px;padding:11px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;font-weight:700;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="fa-solid fa-book-open"></i> Catat ke BA Arisan</button>'
+            : '<div style="margin-top:12px;padding:10px;border-radius:10px;background:#ede9fe;color:#6d28d9;font-weight:700;font-size:0.85rem;text-align:center;"><i class="fa-solid fa-circle-check"></i> Sudah Dicatat BA</div>';
 
-        // MENGGAMBAR DAFTAR KE ID BARU YANG UNIK
-        let tb = document.getElementById('tbody-daftar-warga-final'); 
-        if(!tb) return; 
-        tb.innerHTML = '';
+        // ── KARTU 17 AGUSTUS ──
+        var btnAgustus = '<div style="margin-top:12px;padding:10px;border-radius:10px;background:var(--bg-light,#f8fafc);border:1px solid var(--border-color,#e2e8f0);font-size:0.82rem;color:var(--text-muted);text-align:center;"><i class="fa-solid fa-piggy-bank" style="color:#f59e0b;"></i> Dipegang Bendahara Pembantu</div>';
 
-        if(validWarga.length === 0) {
-            tb.innerHTML = '<tr><td colspan="4" style="text-align:center;">Data warga kosong.</td></tr>';
-            return;
-        }
+        // ── RENDER UTAMA ──
+        var wrap = document.getElementById('analisa-wrap');
+        if(!wrap) return;
 
-        validWarga.sort((a,b) => String(a.nama).localeCompare(String(b.nama))).forEach(w => {
-            let dataBayar = dbIuran.find(i => String(i.idWarga) === String(w.id) && i.bulan === bulanSkg);
-            let statusBadge = dataBayar ? `<span class="badge badge-masuk"><i class="fa-solid fa-check-circle"></i> LUNAS</span>` : `<span class="badge badge-menunggu"><i class="fa-solid fa-clock"></i> BELUM BAYAR</span>`;
-            
-            let rincianHTML = dataBayar 
-                ? `<div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;"><i class="fa-solid fa-check" style="color:var(--success)"></i> Pembangunan: 10k | Meja: 5k | 17 Agt: 5k</div>` 
-                : `<div style="font-size:0.85rem; color:var(--danger); margin-top:6px;">Belum ada setoran bulan ini</div>`;
-            
-            let tombolAksi = dataBayar 
-                ? `<button class="btn-action bg-blue" onclick="lihatKartuWarga(${w.id})" style="font-size:0.8rem; padding:6px 12px;"><i class="fa-solid fa-id-card"></i> Lihat Kartu</button>` 
-                : `<button class="btn-action bg-gold" onclick="bayarCepatTagihan(${w.id}, '${w.nama.replace(/'/g,"\\'")}')" style="font-size:0.85rem; padding:8px 12px; font-weight:900;"><i class="fa-solid fa-hand-holding-dollar"></i> Bayar 20k</button>`;
-            
-            tb.innerHTML += `<tr class="row-tagihan-unik">
-                <td><b class="nama-warga-pencarian" style="font-size:1.05rem;">${w.nama}</b></td>
-                <td><b style="color:var(--primary-dark); font-size:1.1rem;">${dataBayar ? fmt(dataBayar.nominal) : 'Rp 0'}</b>${rincianHTML}</td>
-                <td>${statusBadge}</td>
-                <td style="text-align:center;">${tombolAksi}</td>
-            </tr>`;
+        wrap.innerHTML =
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:24px;">'
+
+        // Kartu Meja
+        +'<div style="background:var(--bg-card,#fff);border-radius:16px;padding:20px;border:1px solid var(--border-color,#e2e8f0);border-top:4px solid #f59e0b;box-shadow:0 2px 8px rgba(0,0,0,0.06);">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">'
+        +'<span style="font-weight:800;font-size:1rem;color:var(--text-dark,#1e293b);"><i class="fa-solid fa-mug-hot" style="color:#f59e0b;margin-right:6px;"></i>Uang Meja</span>'
+        +(mejaKurang>0 ? mkBadge('Kurang','#ef4444','triangle-exclamation') : mkBadge('Cukup','#10b981','circle-check'))
+        +'</div>'
+        +'<div style="display:flex;flex-direction:column;gap:8px;">'
+        +'<div style="display:flex;justify-content:space-between;padding:10px 12px;background:#fef9c3;border-radius:10px;"><span style="font-size:0.8rem;font-weight:700;color:#78350f;">TARGET TUAN RUMAH</span><span style="font-weight:900;color:#78350f;">'+fmt(targetMeja)+'</span></div>'
+        +'<div style="display:flex;justify-content:space-between;padding:10px 12px;background:#f0fdf4;border-radius:10px;"><span style="font-size:0.8rem;font-weight:700;color:#166534;">TERKUMPUL ('+jmlBayar+' warga)</span><span style="font-weight:900;color:#166534;">'+fmt(mejaTerkumpul)+'</span></div>'
+        +(mejaKurang>0 ? '<div style="display:flex;justify-content:space-between;padding:10px 12px;background:#fef2f2;border-radius:10px;"><span style="font-size:0.8rem;font-weight:700;color:#991b1b;">KEKURANGAN</span><span style="font-weight:900;color:#b91c1c;">'+fmt(mejaKurang)+'</span></div>' : '')
+        +(talangan ? '<div style="padding:8px 12px;background:#fef2f2;border-radius:10px;font-size:0.78rem;color:#991b1b;"><i class="fa-solid fa-info-circle"></i> Ditalangi '+fmt(talangan.nominal)+' | Kembali '+fmt(talangan.dikembalikan||0)+'</div>' : '')
+        +'</div>'
+        +btnMeja
+        +'</div>'
+
+        // Kartu Pembangunan
+        +'<div style="background:var(--bg-card,#fff);border-radius:16px;padding:20px;border:1px solid var(--border-color,#e2e8f0);border-top:4px solid #3b82f6;box-shadow:0 2px 8px rgba(0,0,0,0.06);">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">'
+        +'<span style="font-weight:800;font-size:1rem;color:var(--text-dark,#1e293b);"><i class="fa-solid fa-person-digging" style="color:#3b82f6;margin-right:6px;"></i>Pembangunan</span>'
+        +(stSetor ? mkBadge('Disetor','#3b82f6','circle-check') : mkBadge('Belum Setor','#94a3b8','clock'))
+        +'</div>'
+        +'<div style="display:flex;flex-direction:column;gap:8px;">'
+        +'<div style="display:flex;justify-content:space-between;padding:10px 12px;background:#f0f9ff;border-radius:10px;"><span style="font-size:0.8rem;font-weight:700;color:#1d4ed8;">TERKUMPUL ('+jmlBayar+' warga)</span><span style="font-weight:900;color:#1d4ed8;">'+fmt(bangunTerkumpul)+'</span></div>'
+        +'<div style="padding:8px 12px;background:var(--bg-light,#f8fafc);border-radius:10px;font-size:0.78rem;color:var(--text-muted);"><i class="fa-solid fa-circle-info" style="color:#3b82f6;"></i> Disetor ke Bendahara → Masuk Kas Utama</div>'
+        +'</div>'
+        +btnBangun
+        +'</div>'
+
+        // Kartu Sosial
+        +'<div style="background:var(--bg-card,#fff);border-radius:16px;padding:20px;border:1px solid var(--border-color,#e2e8f0);border-top:4px solid #8b5cf6;box-shadow:0 2px 8px rgba(0,0,0,0.06);">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">'
+        +'<span style="font-weight:800;font-size:1rem;color:var(--text-dark,#1e293b);"><i class="fa-solid fa-handshake" style="color:#8b5cf6;margin-right:6px;"></i>Sosial</span>'
+        +(stSosial ? mkBadge('Dicatat BA','#8b5cf6','circle-check') : mkBadge('Belum Dicatat','#94a3b8','clock'))
+        +'</div>'
+        +'<div style="display:flex;flex-direction:column;gap:8px;">'
+        +'<div style="display:flex;justify-content:space-between;padding:10px 12px;background:#f5f3ff;border-radius:10px;"><span style="font-size:0.8rem;font-weight:700;color:#6d28d9;">TERKUMPUL ('+jmlBayar+' warga)</span><span style="font-weight:900;color:#6d28d9;">'+fmt(sosialTerkumpul)+'</span></div>'
+        +'<div style="padding:8px 12px;background:var(--bg-light,#f8fafc);border-radius:10px;font-size:0.78rem;color:var(--text-muted);"><i class="fa-solid fa-circle-info" style="color:#8b5cf6;"></i> Tidak masuk Kas Utama → Langsung ke Arisan Ibu-Ibu</div>'
+        +'</div>'
+        +btnSosial
+        +'</div>'
+
+        // Kartu 17 Agustus
+        +'<div style="background:var(--bg-card,#fff);border-radius:16px;padding:20px;border:1px solid var(--border-color,#e2e8f0);border-top:4px solid #f97316;box-shadow:0 2px 8px rgba(0,0,0,0.06);">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">'
+        +'<span style="font-weight:800;font-size:1rem;color:var(--text-dark,#1e293b);"><i class="fa-solid fa-flag" style="color:#f97316;margin-right:6px;"></i>17 Agustus</span>'
+        +mkBadge('Ben. Pembantu','#f97316','user-shield')
+        +'</div>'
+        +'<div style="display:flex;flex-direction:column;gap:8px;">'
+        +'<div style="display:flex;justify-content:space-between;padding:10px 12px;background:#fff7ed;border-radius:10px;"><span style="font-size:0.8rem;font-weight:700;color:#c2410c;">BULAN INI</span><span style="font-weight:900;color:#c2410c;">'+fmt(agusTerkumpul)+'</span></div>'
+        +'<div style="display:flex;justify-content:space-between;padding:10px 12px;background:#fef3c7;border-radius:10px;"><span style="font-size:0.8rem;font-weight:700;color:#92400e;">SALDO KUMULATIF</span><span style="font-weight:900;color:#92400e;">'+fmt(agusKumulatif)+'</span></div>'
+        +'<div style="padding:8px 12px;background:var(--bg-light,#f8fafc);border-radius:10px;font-size:0.78rem;color:var(--text-muted);"><i class="fa-solid fa-circle-info" style="color:#f97316;"></i> Dipegang Bendahara Pembantu — tidak masuk Kas Utama</div>'
+        +'</div>'
+        +btnAgustus
+        +'</div>'
+
+        +'</div>'
+
+        // ── SECTION BELUM BAYAR ──
+        +'<div style="background:var(--bg-card,#fff);border-radius:16px;padding:20px;border:1px solid var(--border-color,#e2e8f0);margin-bottom:16px;">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">'
+        +'<span style="font-weight:800;font-size:1rem;color:var(--text-dark,#1e293b);"><i class="fa-solid fa-users-viewfinder" style="color:#ef4444;margin-right:6px;"></i>Belum Bayar Bulan Ini</span>'
+        +'<span style="background:#fef2f2;color:#991b1b;padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:700;border:1px solid #fecaca;">'+belumBayar.length+' warga</span>'
+        +'</div>'
+        +(belumBayar.length===0
+            ? '<div style="text-align:center;padding:24px;color:#10b981;font-weight:700;"><i class="fa-solid fa-circle-check" style="font-size:2rem;margin-bottom:8px;display:block;"></i>Semua warga sudah membayar!</div>'
+            : '<div style="display:flex;flex-direction:column;gap:8px;" id="list-belum-bayar">'
+              + belumBayar.map(function(w){
+                  return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-light,#f8fafc);border-radius:10px;border:1px solid var(--border-color,#e2e8f0);">'
+                    +'<span style="font-weight:600;color:var(--text-dark,#1e293b);font-size:0.9rem;"><i class="fa-solid fa-user" style="color:#94a3b8;margin-right:6px;"></i>'+esc(w.nama)+'</span>'
+                    +'<button onclick="bayarCepatTagihan('+w.id+',\''+w.nama.replace(/'/g,"\\'")+'\')" '
+                    +'style="padding:6px 14px;border:none;border-radius:8px;cursor:pointer;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;font-size:0.8rem;">'
+                    +'<i class="fa-solid fa-bolt"></i> Bayar Cepat</button>'
+                    +'</div>';
+              }).join('')
+              +'</div>'
+        )
+        +'</div>';
+    };
+
+    window.eksekusiDanaTalangan = function() {
+        var kurang  = window.currentDefisitMeja||0;
+        var periode = window.currentPeriodeKey||'';
+        var tKey    = window.currentTalaganKey||'';
+        if(!kurang||!periode) return Swal.fire('Info','Tidak ada kekurangan.','info');
+        if(localStorage.getItem(tKey)) return Swal.fire('Info','Talangan bulan ini sudah pernah dilakukan.','info');
+        var saldo = getSaldoKas();
+        if(saldo<kurang) return Swal.fire('Gagal','Saldo kas tidak cukup ('+fmt(saldo)+')','error');
+        Swal.fire({
+            title:'Talangi Uang Meja?',
+            html:'Kas Utama akan dipotong <b>'+fmt(kurang)+'</b><br>untuk mencukupi target tuan rumah <b>'+fmt((JSON.parse(localStorage.getItem('db_settings')||'{}').targetUangMeja||250000))+'</b>',
+            icon:'warning',showCancelButton:true,
+            confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Talangi!'
+        }).then(function(r){
+            if(!r.isConfirmed) return;
+            var tgl = new Date().toISOString().split('T')[0];
+            var dbKas = JSON.parse(localStorage.getItem('db_kas')||'[]');
+            var kasId = Date.now();
+            dbKas.push({id:kasId,tgl:tgl,uraian:'Dana Talangan Uang Meja ('+periode+')',tipe:'keluar',nominal:kurang});
+            localStorage.setItem('db_kas',JSON.stringify(dbKas));
+            localStorage.setItem(tKey,JSON.stringify({nominal:kurang,kasId:kasId,tgl:tgl,dikembalikan:0}));
+            if(typeof syncSemuaData==='function') syncSemuaData(true);
+            Swal.fire('Berhasil','Dana talangan '+fmt(kurang)+' tercatat di Kas.','success').then(function(){ loadAnalisaUangMeja(); });
         });
     };
 
-    // FUNGSI PENCARIAN (ANTI MACET)
-    // === FUNGSI PENCARIAN CERDAS (ANTI MACET / ID KEMBAR) ===
+    window.catatPengembalianTalangan = function() {
+        var tKey    = window.currentTalaganKey||'';
+        var periode = window.currentPeriodeKey||'';
+        var talangan = JSON.parse(localStorage.getItem(tKey)||'null');
+        if(!talangan) return Swal.fire('Info','Tidak ada talangan aktif.','info');
+        var sisa = talangan.nominal-(talangan.dikembalikan||0);
+        if(sisa<=0) return Swal.fire('Info','Talangan sudah lunas.','info');
+        Swal.fire({
+            title:'Catat Pengembalian Talangan',
+            html:'Sisa talangan: <b>'+fmt(sisa)+'</b><br>Masukkan nominal yang dikembalikan:',
+            input:'number',inputValue:sisa,inputAttributes:{min:1,max:sisa},
+            showCancelButton:true,confirmButtonColor:'#10b981',confirmButtonText:'Simpan'
+        }).then(function(r){
+            if(!r.isConfirmed||!r.value) return;
+            var nominal = Math.min(parseInt(r.value)||0, sisa);
+            if(nominal<=0) return;
+            var tgl = new Date().toISOString().split('T')[0];
+            var dbKas = JSON.parse(localStorage.getItem('db_kas')||'[]');
+            dbKas.push({id:Date.now(),tgl:tgl,uraian:'Pengembalian Talangan Uang Meja ('+periode+')',tipe:'masuk',nominal:nominal});
+            localStorage.setItem('db_kas',JSON.stringify(dbKas));
+            talangan.dikembalikan = (talangan.dikembalikan||0)+nominal;
+            localStorage.setItem(tKey,JSON.stringify(talangan));
+            if(typeof syncSemuaData==='function') syncSemuaData(true);
+            Swal.fire('Berhasil','Pengembalian '+fmt(nominal)+' tercatat.','success').then(function(){ loadAnalisaUangMeja(); });
+        });
+    };
 
-    // FUNGSI BUKA TUTUP
-    window.togglePenagihanList = function() {
+    window.setorPembangunanKeKas = function() {
+        var periode = window.currentPeriodeKey||'';
+        var sKey    = 'setor_bangun_'+periode.replace(/ /g,'_');
+        if(localStorage.getItem(sKey)) return Swal.fire('Info','Sudah disetor bulan ini.','info');
+        var settings    = JSON.parse(localStorage.getItem('db_settings')||'{}');
+        var dbIuran     = JSON.parse(localStorage.getItem('db_iuran')||'[]');
+        var dbWarga     = JSON.parse(localStorage.getItem('db_warga')||'[]');
+        var ji          = getJenisIuranMap();
+        var now         = new Date();
+        var bulanNama   = new Intl.DateTimeFormat('id-ID',{month:'long'}).format(now);
+        var tahunSkg    = now.getFullYear();
+        var iuranBln    = dbIuran.filter(function(x){ return (x.bulan||'').toLowerCase()===bulanNama.toLowerCase()&&String(x.tahun||tahunSkg)===String(tahunSkg); });
+        var sudahMap    = {}; iuranBln.forEach(function(x){ sudahMap[x.idWarga]=x; });
+        var jmlBayar    = Object.keys(sudahMap).length;
+        var nomBangun   = 0; ji.forEach(function(j){ if(j.nama.toLowerCase().includes('bangun')) nomBangun=j.nominal; });
+        var total       = jmlBayar*nomBangun;
+        if(!total) return Swal.fire('Info','Belum ada data iuran bulan ini.','info');
+        Swal.fire({
+            title:'Setor Pembangunan ke Kas?',
+            html:'Total <b>'+fmt(total)+'</b> dari <b>'+jmlBayar+' warga</b> akan masuk Kas Utama.',
+            icon:'question',showCancelButton:true,
+            confirmButtonColor:'#3b82f6',confirmButtonText:'Ya, Setor!'
+        }).then(function(r){
+            if(!r.isConfirmed) return;
+            var tgl = new Date().toISOString().split('T')[0];
+            var dbKas = JSON.parse(localStorage.getItem('db_kas')||'[]');
+            dbKas.push({id:Date.now(),tgl:tgl,uraian:'Setoran Iuran Pembangunan ('+periode+')',tipe:'masuk',nominal:total});
+            localStorage.setItem('db_kas',JSON.stringify(dbKas));
+            localStorage.setItem(sKey,JSON.stringify({tgl:tgl,nominal:total}));
+            if(typeof syncSemuaData==='function') syncSemuaData(true);
+            Swal.fire('Berhasil','Setoran '+fmt(total)+' masuk Kas Utama.','success').then(function(){ loadAnalisaUangMeja(); });
+        });
+    };
+
+    window.catatSosialBA = function() {
+        var periode = window.currentPeriodeKey||'';
+        var sKey    = 'setor_sosial_'+periode.replace(/ /g,'_');
+        if(localStorage.getItem(sKey)) return Swal.fire('Info','Sudah dicatat BA bulan ini.','info');
+        var dbIuran  = JSON.parse(localStorage.getItem('db_iuran')||'[]');
+        var dbWarga  = JSON.parse(localStorage.getItem('db_warga')||'[]');
+        var ji       = getJenisIuranMap();
+        var now      = new Date();
+        var bulanNama= new Intl.DateTimeFormat('id-ID',{month:'long'}).format(now);
+        var tahunSkg = now.getFullYear();
+        var iuranBln = dbIuran.filter(function(x){ return (x.bulan||'').toLowerCase()===bulanNama.toLowerCase()&&String(x.idWarga); });
+        var totalSosial = iuranBln.reduce(function(s,x){ var ji2=getJenisIuranMap(); return s+(ji2.sosial||0); },0);
+        var sKey2 = 'setor_sosial_'+periode.replace(/ /g,'_');
+        localStorage.setItem(sKey2, JSON.stringify({tgl:new Date().toISOString(),nominal:totalSosial}));
+        var dbKas = JSON.parse(localStorage.getItem('db_kas')||'[]');
+        dbKas.push({id:Date.now(),tgl:new Date().toISOString().split('T')[0],uraian:'Dana Sosial Arisan '+bulanNama+' '+tahunSkg,tipe:'masuk',nominal:totalSosial});
+        localStorage.setItem('db_kas',JSON.stringify(dbKas));
+        localStorage.setItem('ts_kas',new Date().toISOString());
+        if(typeof syncSemuaData==='function') syncSemuaData(true);
+        Toast.fire({icon:'success',title:'Dana Sosial dicatat ke BA & Kas'});
+        if(typeof loadAnalisaUangMeja==='function') loadAnalisaUangMeja();
+    };
+        window.togglePenagihanList = function() {
         let el = document.getElementById('container-penagihan-list');
         let icon = document.getElementById('icon-toggle-penagihan');
         if(el.style.display === 'none') {
@@ -7917,7 +8053,54 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
             nomIuran: parseInt(document.getElementById('set_nominal_iuran').value) || 20000,
             bungaKop: parseInt(document.getElementById('set_bunga_kop').value) || 10
         };
-        localStorage.setItem('db_settings', JSON.stringify(settings)); if (typeof syncSemuaData === 'function') syncSemuaData(true); Swal.fire('Berhasil', 'Parameter sistem diperbarui.', 'success');
+        localStorage.setItem('db_settings', JSON.stringify(settings));
+        if (typeof syncSemuaData === 'function') syncSemuaData(true);
+        Swal.fire('Berhasil', 'Parameter sistem diperbarui.', 'success');
+    };
+
+    // ── Parameter Pertemuan RT (target meja + PIN ben pembantu) ──
+    window.simpanParameterPertemuan = function() {
+        let targetMeja = parseInt(document.getElementById('set_target_uang_meja').value);
+        let pin        = (document.getElementById('set_pin_ben_pembantu').value || '').trim();
+
+        if (!targetMeja || targetMeja < 1000) {
+            return Swal.fire('Periksa Input', 'Target uang meja harus diisi dan minimal Rp 1.000.', 'warning');
+        }
+        if (pin && (!/^[0-9]{4}$/.test(pin))) {
+            return Swal.fire('PIN Tidak Valid', 'PIN harus 4 digit angka.', 'warning');
+        }
+
+        let param = JSON.parse(localStorage.getItem('db_param_pertemuan') || '{}');
+        param.targetUangMeja = targetMeja;
+        if (pin) param.pinBenPembantu = pin;
+
+        localStorage.setItem('db_param_pertemuan', JSON.stringify(param));
+        if (typeof syncSemuaData === 'function') syncSemuaData(true);
+
+        // Reset field PIN setelah simpan (keamanan)
+        document.getElementById('set_pin_ben_pembantu').value = '';
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Parameter Disimpan!',
+            html: `Target Uang Meja: <b>Rp ${targetMeja.toLocaleString('id-ID')}</b><br>` +
+                  (pin ? '<span style="color:#10b981;"><i class="fa-solid fa-check"></i> PIN Bendahara Pembantu diperbarui</span>' : 'PIN tidak diubah'),
+            confirmButtonColor: '#6366f1'
+        });
+    };
+
+    // ── Toggle visibility PIN input ──
+    window.togglePinVisibility = function(inputId, iconId) {
+        let inp  = document.getElementById(inputId);
+        let icon = document.getElementById(iconId);
+        if (!inp) return;
+        if (inp.type === 'password') {
+            inp.type = 'text';
+            if (icon) { icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+        } else {
+            inp.type = 'password';
+            if (icon) { icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); }
+        }
     };
     window.simpanPasswordSistem = async function() {
         let pwDb = JSON.parse(localStorage.getItem('db_passwords')) || {};
@@ -7958,6 +8141,13 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
         if(document.getElementById('set_nominal_iuran')) document.getElementById('set_nominal_iuran').value = s.nomIuran;
         if(typeof renderJenisIuran === 'function') renderJenisIuran();
         if(document.getElementById('set_bunga_kop')) document.getElementById('set_bunga_kop').value = s.bungaKop;
+
+        // Load parameter pertemuan
+        let _param = JSON.parse(localStorage.getItem('db_param_pertemuan') || '{}');
+        let _elMeja = document.getElementById('set_target_uang_meja');
+        let _elPin  = document.getElementById('set_pin_ben_pembantu');
+        if (_elMeja) _elMeja.value = _param.targetUangMeja || 250000;
+        if (_elPin)  { _elPin.value = ''; _elPin.placeholder = _param.pinBenPembantu ? '••••  (sudah diset)' : 'Belum diset'; }
         
         // Perbarui placeholder field password sesuai status tersimpan
         let _savedPw = JSON.parse(localStorage.getItem('db_passwords')) || {};
@@ -8612,30 +8802,7 @@ window.loadMatriksIuran = function() {
         });
     };
 
-    window.bayarCepatTagihan = function(idWarga, namaWarga) {
-        let bulanSkg = new Intl.DateTimeFormat('id-ID', { month: 'long' }).format(new Date());
-        let nominalDefault = JSON.parse(localStorage.getItem('db_settings'))?.nomIuran || 20000;
-        Swal.fire({ title: 'Input Pembayaran', html: `Mencatat iuran untuk <b>${namaWarga}</b><br>Bulan: ${bulanSkg}`, input: 'number', inputValue: nominalDefault, inputLabel: 'Masukkan Nominal (Rp)', showCancelButton: true, confirmButtonText: 'Simpan Pembayaran', confirmButtonColor: '#10b981' }).then(res => {
-            if(res.isConfirmed && res.value) {
-                let db = JSON.parse(localStorage.getItem('db_iuran')) || [];
-                db.push({ id: Date.now(), idWarga: idWarga, namaWarga: namaWarga, bulan: bulanSkg, nominal: parseInt(res.value), tglBayar: new Date().toLocaleDateString('id-ID'), posted: false });
-                localStorage.setItem('db_iuran', JSON.stringify(db)); syncSemuaData(); Toast.fire({icon: 'success', title: 'Pembayaran Lunas!'});
-            }
-        });
-    };
 
-    window.eksekusiDanaTalangan = function() {
-        let kurang = window.currentDefisitMeja || 0; let dbKas = JSON.parse(localStorage.getItem('db_kas')) || [];
-        let sAwal = parseInt(localStorage.getItem('db_saldo_awal')) || 0; let tMasuk = dbKas.filter(x => x.tipe === 'masuk').reduce((s,i) => s + i.nominal, 0); let tKeluar = dbKas.filter(x => x.tipe === 'keluar').reduce((s,i) => s + i.nominal, 0); let saldoSkrg = sAwal + tMasuk - tKeluar;
-        if(saldoSkrg < kurang) return Swal.fire('Gagal', 'Saldo Kas Utama tidak cukup untuk menalangi kekurangan ini!', 'error');
-        Swal.fire({ title: 'Nalangi Uang Meja?', text: `Kas Utama akan dipotong sebesar ${fmt(kurang)} untuk mencukupi target Rp 250.000.`, icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Ya, Talangi Sekarang' }).then(r => {
-            if(r.isConfirmed) {
-                let tgl = new Date().toISOString().split('T')[0]; let periode = new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' }).format(new Date());
-                dbKas.push({ id: Date.now(), tgl: tgl, uraian: `Dana Talangan Uang Meja (${periode})`, tipe: 'keluar', nominal: kurang });
-                localStorage.setItem('db_kas', JSON.stringify(dbKas)); syncSemuaData(); Swal.fire('Berhasil', 'Dana talangan tercatat di Buku Kas.', 'success');
-            }
-        });
-    };
 
     // === 3. MESIN ARSIP BA KAS (DENGAN LOGO SEMARANG) ===
     window.buatTemplateSuratBA = function(ba, settings) {
@@ -10637,7 +10804,7 @@ function updateSemuaWaktu() {
         window.open('https://wa.me/' + ADMIN_WA + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
         Toast.fire({ icon:'info', title:'WhatsApp ke sekretaris dibuka' });
       };
-})();
+    })();
 </script>
 <script>
 
