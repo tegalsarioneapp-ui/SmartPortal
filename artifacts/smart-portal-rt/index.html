@@ -7529,6 +7529,8 @@ ${dataAgustus ? `
 
     function getJenisIuranMap() {
         var def = [{nama:'Pembangunan',nominal:10000},{nama:'Uang Meja',nominal:5000},{nama:'17 Agustus',nominal:5000},{nama:'Sosial',nominal:5000}];
+        var param   = JSON.parse(localStorage.getItem('db_param_pertemuan')||'{}');
+        var iuranMejaPerWarga = param.iuranMeja || 5000;
         var ji = JSON.parse(localStorage.getItem('db_jenis_iuran')||'null');
         return (ji && ji.length) ? ji : def;
     }
@@ -8239,6 +8241,8 @@ ${dataAgustus ? `
         let _elMeja = document.getElementById('set_target_uang_meja');
         let _elPin  = document.getElementById('set_pin_ben_pembantu');
         if (_elMeja) _elMeja.value = _param.targetUangMeja || 250000;
+        let _elIuranMeja = document.getElementById('set_iuran_meja');
+        if (_elIuranMeja) _elIuranMeja.value = _param.iuranMeja || 5000;
         if (_elPin)  { _elPin.value = ''; _elPin.placeholder = _param.pinBenPembantu ? '••••  (sudah diset)' : 'Belum diset'; }
         
         // Perbarui placeholder field password sesuai status tersimpan
