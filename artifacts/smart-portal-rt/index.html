@@ -7603,7 +7603,16 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
             : '<div style="margin-top:12px;padding:10px;border-radius:10px;background:#ede9fe;color:#6d28d9;font-weight:700;font-size:0.85rem;text-align:center;"><i class="fa-solid fa-circle-check"></i> Sudah Dicatat BA</div>';
 
         // ── KARTU 17 AGUSTUS ──
-        var btnAgustus = '<div style="margin-top:12px;padding:10px;border-radius:10px;background:var(--bg-light,#f8fafc);border:1px solid var(--border-color,#e2e8f0);font-size:0.82rem;color:var(--text-muted);text-align:center;"><i class="fa-solid fa-piggy-bank" style="color:#f59e0b;"></i> Dipegang Bendahara Pembantu</div>';
+        var stAgustus   = localStorage.getItem('setor_agustus_'+periode.replace(/ /g,'_'));
+        var btnAgustus  = stAgustus
+            ? '<div style="margin-top:12px;padding:10px 14px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;display:flex;align-items:center;gap:8px;">'
+              +'<i class="fa-solid fa-circle-check" style="color:#f97316;"></i>'
+              +'<span style="font-size:0.82rem;font-weight:700;color:#c2410c;">Dicatat BA — '
+              +new Date(JSON.parse(stAgustus).tgl).toLocaleDateString('id-ID')+'</span>'
+              +'</div>'
+            : '<button onclick="catatAgustusBA()" style="margin-top:12px;width:100%;padding:10px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-weight:700;font-size:0.85rem;">'
+              +'<i class="fa-solid fa-lock"></i> Catat BA (PIN Bendahara Pembantu)'
+              +'</button>';
 
         // ── RENDER UTAMA ──
         var wrap = document.getElementById('analisa-wrap');
@@ -7788,17 +7797,88 @@ table.trx tfoot td{background:#f0f0f0;font-weight:700;border:1px solid #000;}
         var now      = new Date();
         var bulanNama= new Intl.DateTimeFormat('id-ID',{month:'long'}).format(now);
         var tahunSkg = now.getFullYear();
-        var iuranBln = dbIuran.filter(function(x){ return (x.bulan||'').toLowerCase()===bulanNama.toLowerCase()&&String(x.idWarga); });
-        var totalSosial = iuranBln.reduce(function(s,x){ var ji2=getJenisIuranMap(); return s+(ji2.sosial||0); },0);
+        var iuranBln = dbIuran.filter(function(x){
+            return (x.bulan||'').toLowerCase()===bulanNama.toLowerCase()
+                && String(x.tahun||tahunSkg)===String(tahunSkg);
+        });
+        var nomSosial = 0;
+        ji.forEach(function(j){
+            if((j.nama||'').toLowerCase().indexOf('sosial')!==-1) nomSosial = j.nominal||0;
+        });
+        var totalSosial = iuranBln.length * nomSosial;
         var sKey2 = 'setor_sosial_'+periode.replace(/ /g,'_');
-        localStorage.setItem(sKey2, JSON.stringify({tgl:new Date().toISOString(),nominal:totalSosial}));
-        var dbKas = JSON.parse(localStorage.getItem('db_kas')||'[]');
-        dbKas.push({id:Date.now(),tgl:new Date().toISOString().split('T')[0],uraian:'Dana Sosial Arisan '+bulanNama+' '+tahunSkg,tipe:'masuk',nominal:totalSosial});
-        localStorage.setItem('db_kas',JSON.stringify(dbKas));
-        localStorage.setItem('ts_kas',new Date().toISOString());
+        localStorage.setItem(sKey2, JSON.stringify({
+            tgl     : new Date().toISOString(),
+            nominal : totalSosial,
+            jumlah  : iuranBln.length
+        }));
         if(typeof syncSemuaData==='function') syncSemuaData(true);
-        Toast.fire({icon:'success',title:'Dana Sosial dicatat ke BA & Kas'});
+        Toast.fire({icon:'success',title:'Dana Sosial dicatat di BA (tidak masuk Kas Utama)'});
         if(typeof loadAnalisaUangMeja==='function') loadAnalisaUangMeja();
+    };
+
+    window.catatAgustusBA = function() {
+        var param   = JSON.parse(localStorage.getItem('db_param_pertemuan')||'{}');
+        var pinSave = param.pinBenPembantu || '1234';
+        var periode = window.currentPeriodeKey || '';
+        var sKey    = 'setor_agustus_'+periode.replace(/ /g,'_');
+        if(localStorage.getItem(sKey)) return Swal.fire('Info','Sudah dicatat BA bulan ini.','info');
+
+        Swal.fire({
+            title: '<i class="fa-solid fa-lock" style="color:#f97316;"></i> PIN Bendahara Pembantu',
+            html: '<p style="font-size:0.85rem;color:#64748b;margin-bottom:12px;">Masukkan PIN untuk mencatat saldo 17 Agustus</p>'
+                + '<input id="swal-pin-agustus" type="password" maxlength="4" inputmode="numeric" '
+                + 'style="width:100%;padding:12px;border:2px solid #f97316;border-radius:10px;font-size:1.4rem;letter-spacing:8px;text-align:center;" '
+                + 'placeholder="••••">',
+            confirmButtonText: '<i class="fa-solid fa-check"></i> Konfirmasi',
+            confirmButtonColor: '#f97316',
+            showCancelButton: true,
+            cancelButtonText: 'Batal',
+            focusConfirm: false,
+            didOpen: function() {
+                document.getElementById('swal-pin-agustus').focus();
+            },
+            preConfirm: function() {
+                var pin = (document.getElementById('swal-pin-agustus').value||'').trim();
+                if(!pin) { Swal.showValidationMessage('PIN tidak boleh kosong'); return false; }
+                if(pin !== pinSave) { Swal.showValidationMessage('PIN salah!'); return false; }
+                return true;
+            }
+        }).then(function(result) {
+            if(!result.isConfirmed) return;
+            var dbIuran   = JSON.parse(localStorage.getItem('db_iuran')||'[]');
+            var now       = new Date();
+            var bulanNama = new Intl.DateTimeFormat('id-ID',{month:'long'}).format(now);
+            var tahunSkg  = now.getFullYear();
+            var ji        = getJenisIuranMap();
+            var iuranBln  = dbIuran.filter(function(x){
+                return (x.bulan||'').toLowerCase()===bulanNama.toLowerCase()
+                    && String(x.tahun||tahunSkg)===String(tahunSkg);
+            });
+            var nomAgustus = 0;
+            ji.forEach(function(j){
+                if((j.nama||'').toLowerCase().indexOf('agustus')!==-1) nomAgustus = j.nominal||0;
+            });
+            var totalAgustus = iuranBln.length * nomAgustus;
+            // Hitung saldo kumulatif
+            var dbPertemuan  = JSON.parse(localStorage.getItem('db_pertemuan')||'[]');
+            var kumulatif    = dbPertemuan.reduce(function(s,p){ return s+(p.agustusTerkumpul||0); },0) + totalAgustus;
+            localStorage.setItem(sKey, JSON.stringify({
+                tgl      : new Date().toISOString(),
+                nominal  : totalAgustus,
+                kumulatif: kumulatif,
+                jumlah   : iuranBln.length
+            }));
+            // ✅ TIDAK masuk KAS Utama — hanya catat BA
+            if(typeof syncSemuaData==='function') syncSemuaData(true);
+            Swal.fire({
+                icon : 'success',
+                title: 'Berhasil Dicatat!',
+                html : '<b>Bulan ini:</b> '+fmt(totalAgustus)+'<br><b>Saldo Kumulatif:</b> '+fmt(kumulatif),
+                confirmButtonColor: '#f97316'
+            });
+            if(typeof loadAnalisaUangMeja==='function') loadAnalisaUangMeja();
+        });
     };
         window.togglePenagihanList = function() {
         let el = document.getElementById('container-penagihan-list');
