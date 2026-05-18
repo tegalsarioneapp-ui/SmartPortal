@@ -10952,6 +10952,10 @@ function updateSemuaWaktu() {
         if (!ji.length) ji = [{nama:'Kas RT',nominal:10000},{nama:'Sampah',nominal:5000},{nama:'Sosial',nominal:5000}];
         ji.push({nama:'Jenis Baru',nominal:0});
         localStorage.setItem('db_jenis_iuran', JSON.stringify(ji));
+        let total = ji.reduce(function(s,x){return s+(x.nominal||0);},0);
+        let dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
+        dbSettings.nominalIuran = total;
+        localStorage.setItem('db_settings', JSON.stringify(dbSettings));
         renderJenisIuran();
     };
 
@@ -10959,16 +10963,27 @@ function updateSemuaWaktu() {
         let ji = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
         ji.splice(idx, 1);
         localStorage.setItem('db_jenis_iuran', JSON.stringify(ji));
+        // Sync ke db_settings.nominalIuran otomatis
+        let total = ji.reduce(function(s,x){return s+(x.nominal||0);},0);
+        let dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
+        dbSettings.nominalIuran = total;
+        localStorage.setItem('db_settings', JSON.stringify(dbSettings));
         renderJenisIuran();
+        Swal.fire({toast:true, position:'top-end', icon:'success', title:'Komponen dihapus. Total iuran: '+fmt(total), showConfirmButton:false, timer:2000});
     };
 
     window.updateJenisIuran = function(idx, field, val) {
         let ji = JSON.parse(localStorage.getItem('db_jenis_iuran') || '[]');
         ji[idx][field] = val;
         localStorage.setItem('db_jenis_iuran', JSON.stringify(ji));
-        let elNom = document.getElementById('set_nominal_iuran');
         let total = ji.reduce(function(s,x){return s+(x.nominal||0);},0);
+        // Sync ke db_settings.nominalIuran otomatis
+        let dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
+        dbSettings.nominalIuran = total;
+        localStorage.setItem('db_settings', JSON.stringify(dbSettings));
+        let elNom = document.getElementById('set_nominal_iuran');
         if (elNom) elNom.value = total;
+        renderJenisIuran();
     };
 </script>
 
