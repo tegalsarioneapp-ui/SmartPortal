@@ -7630,7 +7630,7 @@ ${dataAgustus ? `
               + belumBayar.map(function(w){
                   return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-light,#f8fafc);border-radius:10px;border:1px solid var(--border-color,#e2e8f0);">'
                     +'<span style="font-weight:600;color:var(--text-dark,#1e293b);font-size:0.9rem;"><i class="fa-solid fa-user" style="color:#94a3b8;margin-right:6px;"></i>'+esc(w.nama)+'</span>'
-                    +'<button onclick="bayarCepatTagihan('+w.id+',\''+w.nama.replace(/'/g,"\\'")+'\')" '
+                    +'<button onclick="inputIuranCepat('+w.id+',\''+bulanNama+'\')" '
                     +'style="padding:6px 14px;border:none;border-radius:8px;cursor:pointer;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;font-size:0.8rem;">'
                     +'<i class="fa-solid fa-bolt"></i> Bayar Cepat</button>'
                     +'<a href="https://wa.me/62"+((w.noHp||'').replace(/[^0-9]/g,'').replace(/^0/,'')) '
