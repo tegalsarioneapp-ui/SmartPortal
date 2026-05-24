@@ -10557,8 +10557,14 @@ window.gtNewsRefresh = function(force) {
         _state.page = 0;
         _state.loaded = true;
         _state.loading = false;
+        // Expose articles globally so hero slider can access them
+        window.__gtNewsAllArticles = all;
         loadBookmarks();
         if (all.length > 0) {
+            // Build hero slider (replaces single-hero)
+            if (typeof window.gtBuildHeroSlider === 'function') {
+                window.gtBuildHeroSlider(all);
+            }
             buildHero(all[0]);
             buildTrending(all);
             buildBreaking(all);
@@ -11627,65 +11633,110 @@ html[data-theme="dark"] .warga-fb-main { background: var(--gt-bg,#0b1220) !impor
   }
 
   /* ── FIX 4: News hero auto-slider ── */
+  var _sliderTimer = null;
+
   function buildHeroSlider(articles) {
     var wrap = document.getElementById('gt-news-hero-wrap');
-    if (!wrap || wrap.dataset.gtV13Slider) return;
+    if (!wrap) return;
     if (!articles || articles.length < 2) return;
+
+    // Remove old slider if exists (rebuild on refresh)
+    var old = document.getElementById('gt-hero-slider-wrap');
+    if (old) { clearInterval(_sliderTimer); old.remove(); }
+    delete wrap.dataset.gtV13Slider;
     wrap.dataset.gtV13Slider = '1';
-    wrap.classList.add('gt-hero-slider-active');
+
+    // Hide original single-hero element
+    var singleHero = document.getElementById('gt-news-hero');
+    if (singleHero) singleHero.style.display = 'none';
 
     var sliderWrap = document.createElement('div'); sliderWrap.id = 'gt-hero-slider-wrap';
     var track = document.createElement('div'); track.id = 'gt-hero-slider-track';
     var dotsEl = document.createElement('div'); dotsEl.id = 'gt-hero-slider-dots';
-    var prevBtn = document.createElement('button'); prevBtn.id = 'gt-hero-prev'; prevBtn.className = 'gt-hero-arrow'; prevBtn.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
-    var nextBtn = document.createElement('button'); nextBtn.id = 'gt-hero-next'; nextBtn.className = 'gt-hero-arrow'; nextBtn.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
 
-    var top = articles.slice(0, Math.min(articles.length, 6));
+    var prevBtn = document.createElement('button');
+    prevBtn.id = 'gt-hero-prev'; prevBtn.className = 'gt-hero-arrow';
+    prevBtn.setAttribute('aria-label','Sebelumnya');
+    prevBtn.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+
+    var nextBtn = document.createElement('button');
+    nextBtn.id = 'gt-hero-next'; nextBtn.className = 'gt-hero-arrow';
+    nextBtn.setAttribute('aria-label','Berikutnya');
+    nextBtn.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+
+    // Use top 7 articles that have images
+    var top = articles.filter(function(a){ return a.thumbnail; }).slice(0,7);
+    if (top.length < 2) top = articles.slice(0, Math.min(7, articles.length));
+    if (top.length < 2) return;
+
     var dots = [];
     top.forEach(function(a, i) {
-      var slide = document.createElement('div'); slide.className = 'gt-hero-slide';
-      var img = a.urlToImage || a.imageUrl || '';
-      var cat = a.source || a.sourceName || a.category || 'Berita';
-      var title = a.title || a.judul || '';
-      var ago = a.publishedAt ? timeAgo(a.publishedAt) : (a.tgl || '');
-      slide.innerHTML =
-        (img ? '<img class="gt-hero-slide-img" src="'+esc(img)+'" alt="" onerror="this.remove()">' : '') +
-        '<div class="gt-hero-slide-overlay">'+
-        '<div class="gt-hero-slide-badge">'+esc(cat)+'</div>'+
-        '<h3 class="gt-hero-slide-title">'+esc(title)+'</h3>'+
-        '<div class="gt-hero-slide-meta"><i class="fa-regular fa-clock"></i> '+ago+'</div>'+
-        '<div class="gt-hero-slide-actions">'+
-        (a.url ? '<a href="'+esc(a.url)+'" target="_blank" rel="noopener" class="gt-hero-slide-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Baca Selengkapnya</a>' : '')+
-        '<button class="gt-hero-slide-btn gt-hero-simpan-btn"><i class="fa-regular fa-bookmark"></i> Simpan</button>'+
-        '</div></div>';
+      var slide = document.createElement('div');
+      slide.className = 'gt-hero-slide';
+      if (a.link) { slide.style.cursor = 'pointer'; slide.addEventListener('click', function(){ window.open(a.link,'_blank','noopener'); }); }
+
+      var cat  = a._cat  || a._source || 'Berita';
+      var src  = a._source || '';
+      var title = a.title || '';
+      var pub  = a.pubDate ? timeAgo(a.pubDate) : '';
+
+      if (a.thumbnail) {
+        var img = document.createElement('img');
+        img.className = 'gt-hero-slide-img';
+        img.src = a.thumbnail; img.alt = ''; img.loading = 'lazy';
+        img.onerror = function(){ this.remove(); };
+        slide.appendChild(img);
+      }
+
+      var overlay = document.createElement('div'); overlay.className = 'gt-hero-slide-overlay';
+      overlay.innerHTML =
+        '<div class="gt-hero-slide-badge">' + esc(cat) + (src ? ' &middot; ' + esc(src) : '') + '</div>' +
+        '<h3 class="gt-hero-slide-title">' + esc(title) + '</h3>' +
+        '<div class="gt-hero-slide-meta"><i class="fa-regular fa-clock"></i> ' + esc(pub) + '</div>' +
+        (a.link ? '<div class="gt-hero-slide-actions"><a href="' + esc(a.link) + '" target="_blank" rel="noopener" class="gt-hero-slide-btn" onclick="event.stopPropagation()"><i class="fa-solid fa-arrow-up-right-from-square"></i> Baca</a></div>' : '');
+      slide.appendChild(overlay);
       track.appendChild(slide);
-      var d = document.createElement('button'); d.className = 'gt-hero-dot' + (i===0?' active':'');
-      d.addEventListener('click',function(){ goTo(i); resetAuto(); });
+
+      var d = document.createElement('button');
+      d.className = 'gt-hero-dot' + (i===0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Slide ' + (i+1));
+      (function(idx){ d.addEventListener('click', function(e){ e.stopPropagation(); goTo(idx); resetAuto(); }); })(i);
       dotsEl.appendChild(d); dots.push(d);
     });
 
-    var cur = 0, timer;
+    var cur = 0;
     function goTo(idx){
-      cur = (idx + top.length) % top.length;
-      track.style.transform = 'translateX(-'+(cur*100)+'%)';
-      dots.forEach(function(d,i){ d.classList.toggle('active',i===cur); });
+      cur = ((idx % top.length) + top.length) % top.length;
+      track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+      dots.forEach(function(d, i){ d.classList.toggle('active', i === cur); });
     }
     function resetAuto(){
-      clearInterval(timer);
-      timer = setInterval(function(){ goTo(cur+1); }, 4000);
+      clearInterval(_sliderTimer);
+      _sliderTimer = setInterval(function(){ goTo(cur + 1); }, 4500);
     }
-    prevBtn.addEventListener('click',function(){ goTo(cur-1); resetAuto(); });
-    nextBtn.addEventListener('click',function(){ goTo(cur+1); resetAuto(); });
-    sliderWrap.addEventListener('mouseenter',function(){ clearInterval(timer); });
+    prevBtn.addEventListener('click', function(e){ e.stopPropagation(); goTo(cur - 1); resetAuto(); });
+    nextBtn.addEventListener('click', function(e){ e.stopPropagation(); goTo(cur + 1); resetAuto(); });
+    sliderWrap.addEventListener('mouseenter', function(){ clearInterval(_sliderTimer); });
     sliderWrap.addEventListener('mouseleave', resetAuto);
-    goTo(0); resetAuto();
+
+    // Touch/swipe support
+    var touchX = 0;
+    sliderWrap.addEventListener('touchstart', function(e){ touchX = e.touches[0].clientX; }, {passive:true});
+    sliderWrap.addEventListener('touchend', function(e){
+      var dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) { goTo(dx < 0 ? cur+1 : cur-1); resetAuto(); }
+    }, {passive:true});
 
     sliderWrap.appendChild(track);
     sliderWrap.appendChild(prevBtn);
     sliderWrap.appendChild(nextBtn);
     sliderWrap.appendChild(dotsEl);
     wrap.insertBefore(sliderWrap, wrap.firstChild);
+    goTo(0); resetAuto();
   }
+
+  // Expose as global so gtNewsRefresh can call it directly
+  window.gtBuildHeroSlider = buildHeroSlider;
 
   function esc(s){ return (s==null?'':String(s)).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
   function timeAgo(ts){
