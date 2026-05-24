@@ -3669,41 +3669,63 @@ html[data-theme="dark"] select option {
 .src-default { background: #475569; color: #fff; }
 
 /* ===================================================================
-   GT-v11: 9 Perbaikan User (24 Mei 2026)
+   GT-v12: 9 Perbaikan User (24 Mei 2026) — VERSI FINAL
    =================================================================== */
 
-/* ---- (1) FAB TANYA BENNY - label permanen ---- */
+/* ── (1) FAB TANYA BENNY ── */
 #gt-benny-fab {
   width: 68px !important; height: 68px !important;
-  border-radius: 50% !important; overflow: visible !important;
+  border-radius: 50% !important; overflow: hidden !important;
   bottom: 100px !important; right: 20px !important;
+  background: transparent !important;
+  box-shadow: 0 4px 18px rgba(124,58,237,0.55) !important;
 }
 #gt-benny-fab img {
   width: 100% !important; height: 100% !important;
   border-radius: 50% !important; object-fit: cover !important;
+  object-position: center 10% !important;
   pointer-events: none !important;
+}
+#gt-chat-fab {
+  overflow: hidden !important;
+  padding: 0 !important;
 }
 #gt-benny-label {
   position: fixed; bottom: 82px; right: 14px;
   background: #1d4ed8; color: #fff;
-  font-size: 8px; font-weight: 900; white-space: nowrap;
+  font-size: 9px; font-weight: 900; white-space: nowrap;
   padding: 3px 10px; border-radius: 8px;
   z-index: 1999; pointer-events: none;
   box-shadow: 0 2px 8px rgba(0,0,0,.4); letter-spacing: .05em;
 }
 
-/* ---- (2)+(7) HEADING + DARK/LIGHT SYNC MENYELURUH ---- */
+/* ── (2)+(7) FONT & DARK/LIGHT SYNC MENYELURUH ── */
+/* Light mode base */
 h1,h2,h3,h4,h5,h6 { color: var(--gt-text,#0f172a); }
-.card-title,.section-title,.info-title,.content-title,.list-title,.tab-title,.panel-title,
-label,.form-label { color: var(--gt-text,#0f172a); }
+p { color: var(--gt-text-2,#334155); }
+label, .form-label { color: var(--gt-text,#0f172a); }
+.card-title,.section-title,.info-title,.content-title,.list-title,.tab-title,.panel-title { color: var(--gt-text,#0f172a); }
+.text-muted, .stats-label { color: var(--gt-text-muted,#64748b); }
+.stats-value { color: var(--gt-text,#0f172a); }
+.card, .form-input-section, .info-card, .stat-card, .dashboard-card, .contact-card {
+  background: var(--gt-surface,#ffffff);
+  border-color: var(--gt-border,#e2e8f0);
+  color: var(--gt-text,#0f172a);
+}
+/* light inputs */
+input:not([type=checkbox]):not([type=radio]), select, textarea {
+  background: #fff; color: #0f172a; border-color: #e2e8f0;
+}
+/* Dark mode overrides — all in one block */
 html[data-theme="dark"] h1,html[data-theme="dark"] h2,
 html[data-theme="dark"] h3,html[data-theme="dark"] h4,
 html[data-theme="dark"] h5,html[data-theme="dark"] h6 { color: #f1f5f9 !important; }
+html[data-theme="dark"] p { color: #cbd5e1 !important; }
+html[data-theme="dark"] label,html[data-theme="dark"] .form-label { color: #e2e8f0 !important; }
 html[data-theme="dark"] .card-title,html[data-theme="dark"] .section-title,
 html[data-theme="dark"] .info-title,html[data-theme="dark"] .content-title,
-html[data-theme="dark"] .list-title,html[data-theme="dark"] label,
-html[data-theme="dark"] .form-label { color: #e2e8f0 !important; }
-html[data-theme="dark"] p { color: #cbd5e1 !important; }
+html[data-theme="dark"] .list-title,html[data-theme="dark"] .tab-title,
+html[data-theme="dark"] .panel-title { color: #e2e8f0 !important; }
 html[data-theme="dark"] span.text-muted,html[data-theme="dark"] .text-muted,
 html[data-theme="dark"] .stats-label { color: #94a3b8 !important; }
 html[data-theme="dark"] .stats-value { color: #93c5fd !important; }
@@ -3721,50 +3743,83 @@ html[data-theme="dark"] td,html[data-theme="dark"] th {
   background: #1e293b !important; color: #e2e8f0 !important; border-color: #334155 !important;
 }
 html[data-theme="dark"] tbody tr:nth-child(even) td { background: #0f172a !important; }
-.gt-hero h1 { color: #fff !important; }
-.gt-hero p  { color: #f1f5f9 !important; }
-.gt-hero .gt-hero-chip { color: #fff !important; }
-
-/* ---- (3) DARURAT WARGA - font jelas + phone button ---- */
-.darurat-item h3 {
-  color: var(--gt-text,#0f172a) !important;
-  font-size:.9rem !important; font-weight:700 !important; margin:2px 0 !important;
+/* Dashboard dark */
+html[data-theme="dark"] .dsh-greeting { background: #1e293b !important; color: #e2e8f0 !important; }
+html[data-theme="dark"] .dsh-greeting-date { color: #94a3b8 !important; }
+html[data-theme="dark"] .dsh-greeting-name { color: #f1f5f9 !important; }
+html[data-theme="dark"] .dsh-ring-card { background: #1e293b !important; border-color: #334155 !important; }
+html[data-theme="dark"] .dsh-ring-lbl { color: #94a3b8 !important; }
+html[data-theme="dark"] .dsh-ring-val { color: #f1f5f9 !important; }
+html[data-theme="dark"] .dsh-ring-upd { color: #64748b !important; }
+html[data-theme="dark"] .dsh-section-hd { color: #e2e8f0 !important; }
+/* Hero always white text */
+.gt-hero h1, .gt-hero p, .gt-hero .gt-hero-chip { color: #fff !important; }
+/* Warga FB aside dark */
+html[data-theme="dark"] .warga-fb-aside,html[data-theme="dark"] .admin-nav-tabs,html[data-theme="dark"] .nav-tabs {
+  background: #111a2e !important;
 }
-html[data-theme="dark"] .darurat-item h3 { color: #f1f5f9 !important; }
-.darurat-item h4.darurat-nama { color: var(--gt-text,#0f172a) !important; font-weight:700 !important; }
+html[data-theme="dark"] .nav-btn,html[data-theme="dark"] .wfb-nav-item {
+  color: #e2e8f0 !important;
+}
+html[data-theme="dark"] .nav-btn:hover,html[data-theme="dark"] .wfb-nav-item:hover {
+  background: rgba(96,165,250,0.12) !important;
+}
+html[data-theme="dark"] .nav-btn.active,html[data-theme="dark"] .wfb-nav-item.active {
+  background: rgba(96,165,250,0.18) !important; color: #93c5fd !important;
+}
+html[data-theme="dark"] .main-header { background: #111a2e !important; border-color: #233152 !important; }
+html[data-theme="dark"] .warga-fb-main { background: var(--gt-bg,#0b1220) !important; }
+html[data-theme="dark"] .search-box { background: #0f172a !important; color: #e2e8f0 !important; border-color: #334155 !important; }
+html[data-theme="dark"] .news-badge { background: rgba(96,165,250,0.2) !important; color: #93c5fd !important; }
+/* Quick access dark */
+html[data-theme="dark"] .gt-qa-card { background: #1e293b !important; border-color: #334155 !important; }
+html[data-theme="dark"] .gt-qa-card h4 { color: #e2e8f0 !important; }
+html[data-theme="dark"] .gt-qa-card p  { color: #94a3b8 !important; }
+
+/* ── (3) DARURAT WARGA — font jelas + call button ── */
+.darurat-item { text-align: center; }
+.darurat-item h4.darurat-nama {
+  color: var(--gt-text,#0f172a) !important; font-weight: 700 !important;
+  font-size: .88rem !important; margin: 8px 0 6px !important;
+  line-height: 1.3 !important;
+}
 html[data-theme="dark"] .darurat-item h4.darurat-nama { color: #e2e8f0 !important; }
 .darurat-item .call-btn {
   display: inline-flex !important; align-items: center !important; gap: 6px !important;
   background: #16a34a !important; color: #fff !important;
   padding: 7px 14px !important; border-radius: 10px !important;
-  font-size:.82rem !important; font-weight:700 !important;
-  text-decoration: none !important; width: auto !important; margin-top: 4px !important;
+  font-size: .82rem !important; font-weight: 700 !important;
+  text-decoration: none !important; margin-top: 4px !important;
+  box-shadow: 0 2px 8px rgba(22,163,74,.3) !important;
 }
 .darurat-item .call-btn i { color: #fff !important; }
+.darurat-item .call-btn:hover { background: #15803d !important; }
 
-/* ---- (5) SIDEBAR TOGGLE - tampil di desktop ---- */
-@media (min-width:769px) {
+/* ── (5) SIDEBAR TOGGLE — tampil di desktop ── */
+@media (min-width: 769px) {
   .btn-toggle-sidebar {
     display: inline-flex !important; align-items: center !important;
     gap: 6px !important; visibility: visible !important; opacity: 1 !important;
   }
 }
 
-/* ---- (6) HERO DASHBOARD - foto & nama RT ---- */
+/* ── (6) HERO DASHBOARD — foto & nama RT ── */
 .gt-v11-hero-ring { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
 .gt-v11-hero-ring img {
   width: 60px; height: 60px; border-radius: 50%;
-  object-fit: cover; border: 3px solid #fbbf24; flex-shrink: 0;
+  object-fit: cover; object-position: center 10%;
+  border: 3px solid #fbbf24; flex-shrink: 0;
   box-shadow: 0 4px 14px rgba(0,0,0,.3);
 }
-.gt-v11-hero-ring .gt-v11-info h2 { color: #fff !important; margin: 0 0 2px; font-size:1rem; font-weight:900; }
-.gt-v11-hero-ring .gt-v11-info p  { color: #bfdbfe !important; margin: 0; font-size:.78rem; }
+.gt-v11-hero-ring .gt-v11-info h2 { color: #fff !important; margin: 0 0 2px; font-size: 1rem; font-weight: 900; }
+.gt-v11-hero-ring .gt-v11-info p  { color: #bfdbfe !important; margin: 0; font-size: .78rem; }
 
-/* ---- (8) BERITA SLIDER ---- */
+/* ── (8) BERITA SLIDER ── */
 #warga-berita-list { overflow: visible !important; max-height: none !important; }
-.gt-berita-slider-wrap { position: relative !important; overflow: hidden !important; border-radius: 12px !important; }
+.gt-berita-slider-wrap { position: relative !important; overflow: hidden !important; border-radius: 12px !important; background: var(--gt-surface,#fff); }
+html[data-theme="dark"] .gt-berita-slider-wrap { background: #1e293b !important; }
 .gt-berita-track { display: flex !important; transition: transform .4s ease !important; will-change: transform !important; }
-.gt-berita-track .gt-berita-slide { min-width:100% !important; box-sizing:border-box !important; padding:16px !important; }
+.gt-berita-track .gt-berita-slide { min-width: 100% !important; box-sizing: border-box !important; padding: 16px !important; }
 html[data-theme="dark"] .gt-berita-track .gt-berita-slide h3 { color: #f1f5f9 !important; }
 html[data-theme="dark"] .gt-berita-track .gt-berita-slide p  { color: #94a3b8 !important; }
 .gt-berita-controls {
@@ -3775,8 +3830,25 @@ html[data-theme="dark"] .gt-berita-track .gt-berita-slide p  { color: #94a3b8 !i
   border-radius: 0 0 12px 12px !important;
 }
 html[data-theme="dark"] .gt-berita-controls { background: #1e293b !important; border-color: #334155 !important; }
+.gt-berita-arrow {
+  background: var(--gt-surface-2,#f1f5f9); border: 1px solid var(--gt-border,#e2e8f0);
+  color: var(--gt-text,#0f172a); border-radius: 8px; width: 32px; height: 32px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: .85rem;
+  transition: background .15s;
+}
+html[data-theme="dark"] .gt-berita-arrow { background: #334155 !important; border-color: #475569 !important; color: #e2e8f0 !important; }
+.gt-berita-arrow:hover { background: var(--gt-primary-100,#dbeafe) !important; }
+.gt-berita-dots { display: flex; gap: 6px; align-items: center; }
+.gt-berita-dot {
+  width: 8px; height: 8px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--gt-border,#cbd5e1); transition: background .2s, transform .2s;
+}
+.gt-berita-dot.active { background: #1d4ed8 !important; transform: scale(1.3); }
+.gt-berita-counter { font-size: .75rem; color: var(--gt-text-muted,#64748b); }
+html[data-theme="dark"] .gt-berita-dot { background: #475569 !important; }
+html[data-theme="dark"] .gt-berita-dot.active { background: #60a5fa !important; }
 
-/* ---- (9) KONTAK DARURAT SIDEBAR KANAN ---- */
+/* ── (9) KONTAK DARURAT SIDEBAR KANAN ── */
 #gt-sos-panel {
   position: fixed !important; right: 0 !important; top: 50% !important;
   transform: translateY(-50%) !important; z-index: 890 !important;
@@ -3785,11 +3857,11 @@ html[data-theme="dark"] .gt-berita-controls { background: #1e293b !important; bo
 #gt-sos-inner {
   position: relative !important;
   background: var(--gt-surface,#fff);
-  border: 1.5px solid #ef4444; border-right: none;
+  border: 2px solid #ef4444; border-right: none;
   border-radius: 16px 0 0 16px;
-  box-shadow: -8px 0 28px rgba(239,68,68,.2);
-  padding: 16px 18px 16px 22px;
-  min-width: 230px; max-width: 280px;
+  box-shadow: -8px 0 28px rgba(239,68,68,.22);
+  padding: 16px 14px 16px 18px;
+  min-width: 255px; max-width: 295px;
   max-height: 75vh; overflow-y: auto;
   transform: translateX(100%);
   transition: transform .35s cubic-bezier(.4,0,.2,1);
@@ -3801,43 +3873,55 @@ html[data-theme="dark"] #gt-sos-inner { background: #1e293b !important; border-c
   position: absolute !important; left: -46px !important; top: 50% !important;
   transform: translateY(-50%) !important;
   background: #ef4444; color: #fff; width: 46px; padding: 18px 6px;
-  border-radius: 12px 0 0 12px; font-size:.65rem; font-weight:900;
+  border-radius: 12px 0 0 12px; font-size: .65rem; font-weight: 900;
   text-align: center; cursor: pointer;
-  writing-mode: vertical-rl; text-orientation: mixed; letter-spacing:.08em;
+  writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: .08em;
   box-shadow: -5px 0 16px rgba(239,68,68,.45); pointer-events: auto;
   display: flex !important; align-items: center !important; justify-content: center !important;
 }
 .gt-sos-h4 {
-  font-size:.8rem; font-weight:900; color: #ef4444 !important;
-  margin: 0 0 12px; text-transform: uppercase; letter-spacing:.06em;
+  font-size: .82rem; font-weight: 900; color: #ef4444 !important;
+  margin: 0 0 10px; text-transform: uppercase; letter-spacing: .06em;
   display: flex; align-items: center; gap: 6px;
+  border-bottom: 1.5px solid #fecaca; padding-bottom: 8px;
 }
-html[data-theme="dark"] .gt-sos-h4 { color: #fca5a5 !important; }
-.gt-sos-row {
-  display: flex !important; align-items: center !important;
-  justify-content: space-between !important;
-  gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--gt-border,#e2e8f0);
+html[data-theme="dark"] .gt-sos-h4 { color: #fca5a5 !important; border-color: #7f1d1d !important; }
+/* SOS table layout — neat columns */
+.gt-sos-table { width: 100%; border-collapse: collapse; }
+.gt-sos-table tr { border-bottom: 1px solid var(--gt-border,#e2e8f0); }
+html[data-theme="dark"] .gt-sos-table tr { border-color: #334155 !important; }
+.gt-sos-table tr:last-child { border-bottom: none; }
+.gt-sos-table td { padding: 7px 4px; vertical-align: middle; }
+.gt-sos-td-icon { width: 22px; text-align: center; }
+.gt-sos-td-name {
+  font-size: .76rem; font-weight: 600; color: var(--gt-text,#0f172a);
+  padding-left: 4px !important; padding-right: 8px !important;
 }
-html[data-theme="dark"] .gt-sos-row { border-color: #334155 !important; }
-.gt-sos-row:last-child { border-bottom: none !important; }
-.gt-sos-name { color: var(--gt-text,#0f172a); font-weight:600; flex:1; min-width:0; font-size:.77rem; }
-html[data-theme="dark"] .gt-sos-name { color: #e2e8f0 !important; }
+html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
+.gt-sos-td-call { text-align: right; white-space: nowrap; }
 .gt-sos-call {
   background: #16a34a !important; color: #fff !important;
-  border: none; border-radius: 8px;
-  padding: 5px 10px; font-size:.72rem; font-weight:700; cursor: pointer;
-  display: inline-flex !important; align-items: center !important; gap: 4px !important;
-  text-decoration: none !important; flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(22,163,74,.3);
+  border: none; border-radius: 7px;
+  padding: 4px 9px; font-size: .7rem; font-weight: 700; cursor: pointer;
+  display: inline-flex !important; align-items: center !important; gap: 3px !important;
+  text-decoration: none !important;
+  box-shadow: 0 2px 6px rgba(22,163,74,.3);
 }
-.gt-sos-call:hover { background: #15803d !important; color: #fff !important; }
-@media (max-width:768px) {
+.gt-sos-call:hover { background: #15803d !important; }
+.gt-sos-btn-all {
+  display: block; width: 100%; margin-top: 10px; padding: 9px;
+  background: #ef4444; color: #fff; border: none; border-radius: 10px;
+  font-size: .78rem; font-weight: 800; cursor: pointer; text-align: center;
+  text-decoration: none; letter-spacing: .03em;
+}
+.gt-sos-btn-all:hover { background: #dc2626 !important; }
+@media (max-width: 768px) {
   #gt-sos-panel { top: auto !important; bottom: 100px !important; transform: none !important; }
-  #gt-sos-inner { min-width: 195px !important; max-width: 240px !important; }
+  #gt-sos-inner { min-width: 210px !important; max-width: 255px !important; }
   #gt-sos-tab { left: -40px !important; width: 40px !important; padding: 14px 5px !important; }
   #gt-benny-label { bottom: 84px; right: 14px; }
 }
-/* === END GT-v11 CSS === */
+/* === END GT-v12 CSS === */
 
 </style>
     
@@ -4043,8 +4127,8 @@ html[data-theme="dark"] .gt-sos-name { color: #e2e8f0 !important; }
 
             <!-- AI Chat shortcut -->
             <button class="wfb-nav-item" onclick="window.openGtChat()">
-                <div class="wfb-nav-icon wfb-icon-indigo"><i class="fa-solid fa-robot" style="color:#6366f1;"></i></div>
-                <span style="color:#6366f1;font-weight:600;">Tanya AI</span>
+                <div class="wfb-nav-icon wfb-icon-indigo" style="overflow:hidden;padding:0;border-radius:50%;"><img src="/benny-avatar.png" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;border-radius:50%;"></div>
+                <span style="color:#6366f1;font-weight:600;">TANYA BENNY</span>
             </button>
 
             <div class="wfb-divider"></div>
@@ -4068,7 +4152,7 @@ html[data-theme="dark"] .gt-sos-name { color: #e2e8f0 !important; }
                     <div class="dsh-greeting-name">Halo, <span id="warga-welcome-name">Warga</span> 👋</div>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <button onclick="window.openGtChat()" class="dsh-ai-btn"><i class="fa-solid fa-robot"></i> Tanya AI</button>
+                    <button onclick="window.openGtChat()" class="dsh-ai-btn" style="display:inline-flex;align-items:center;gap:6px;"><img src="/benny-avatar.png" style="width:22px;height:22px;border-radius:50%;object-fit:cover;object-position:center 10%;" onerror="this.style.display='none'"> TANYA BENNY</button>
                     <img src="/Lambang_Kota_Semarang.png" class="dsh-logo" onerror="this.style.display='none'">
                 </div>
             </div>
@@ -10573,16 +10657,16 @@ window.loadArsipBA = window.loadArsipBA || function() {
 </script>
 
 <!-- ═══════════════════ GT CHAT AI ═══════════════════ -->
-<button id="gt-chat-fab" onclick="window.openGtChat()" title="Tanya AI Asisten RT">
-    <i class="fa-solid fa-robot"></i>
+<button id="gt-chat-fab" onclick="window.openGtChat()" title="TANYA BENNY Asisten RT" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);overflow:hidden;padding:0 !important;">
+    <img src="/benny-avatar.png" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;border-radius:50%;" onerror="this.style.display='none'">
     <span class="gt-chat-badge" id="gt-chat-fab-badge"></span>
 </button>
 
 <div id="gt-chat-panel">
     <div id="gt-chat-header">
-        <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;"><i class="fa-solid fa-robot"></i></div>
+        <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,0.3);"><img src="/benny-avatar.png" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;" onerror="this.outerHTML='<i class=\"fa-solid fa-robot\">'"></div>
         <div style="flex:1;">
-            <div style="font-weight:800;color:#fff;font-size:0.95rem;">AI Asisten RT 005</div>
+            <div style="font-weight:800;color:#fff;font-size:0.95rem;">BENNY — Asisten RT 005</div>
             <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);">Siap membantu 24 jam</div>
         </div>
         <button onclick="window.closeGtChat()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;"><i class="fa-solid fa-xmark"></i></button>
@@ -11062,95 +11146,107 @@ window.dshTab = function(tab) {
 
 })();
 
-/* === GT-v11 JS: 9 Perbaikan === */
+/* === GT-v12 JS: 9 Perbaikan FINAL === */
 (function() {
   'use strict';
 
   function safeJ(k,fb){try{var v=JSON.parse(localStorage.getItem(k)||"null");return v==null?fb:v;}catch(_){return fb;}}
+  function el(id){return document.getElementById(id);}
 
-  /* ---- (1) FAB label permanen ---- */
+  /* ── (1) FAB label permanen ── */
   function addBennyLabel() {
-    if (document.getElementById('gt-benny-label')) return;
-    var fab = document.getElementById('gt-benny-fab');
+    if (el('gt-benny-label')) return;
+    var fab = el('gt-benny-fab');
     if (!fab) return;
     var lbl = document.createElement('div');
     lbl.id = 'gt-benny-label';
     lbl.textContent = 'TANYA BENNY';
     document.body.appendChild(lbl);
+    // Also fix FAB image if still robot
+    var img = fab.querySelector('img');
+    if (!img) {
+      fab.innerHTML = '<img src="/benny-avatar.png" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;border-radius:50%;" onerror="this.style.display='none'">';
+    }
   }
 
-  /* ---- (3) Override loadDaruratWarga: phone link + nomor ---- */
+  /* ── (3) loadDaruratWarga: grid cards + phone links ── */
   function patchDarurat() {
-    if (window.__gtV11DaruratPatched) return;
-    window.__gtV11DaruratPatched = true;
-    var orig = window.loadDaruratWarga;
-    window.loadDaruratWarga = function() {
+    if (window.__gtV12DaruratPatched) return;
+    window.__gtV12DaruratPatched = true;
+    function renderDarurat() {
       var db = safeJ('db_darurat', []);
-      var cg = document.getElementById('container-darurat-warga');
-      if (!cg) { if (typeof orig === 'function') orig(); return; }
+      var cg = el('container-darurat-warga');
+      if (!cg) return;
       cg.innerHTML = '';
+      if (!db.length) {
+        cg.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;padding:24px;">Belum ada kontak darurat.</div>';
+        return;
+      }
       db.forEach(function(d) {
-        var telClean = String(d.telp || '').replace(/\s/g, '');
+        var telClean = String(d.telp||'').replace(/\s/g,'');
         var color = d.color || '#ef4444';
-        cg.innerHTML +=
-          '<div class="contact-card darurat-item">' +
-          '<i class="fa-solid ' + (d.icon||'fa-phone') + '" style="font-size:2rem;color:' + color + ';"></i>' +
-          '<h4 class="darurat-nama">' + (d.nama||'')+'</h4>' +
-          '<a href="tel:' + telClean + '" class="call-btn" style="text-decoration:none;">' +
-          '<i class="fa-solid fa-phone"></i> ' + (d.telp||'')+'</a>' +
-          '</div>';
+        var icon  = d.icon  || 'fa-phone';
+        var card = document.createElement('div');
+        card.className = 'contact-card darurat-item';
+        card.style.cssText = 'text-align:center;padding:14px 10px;border-radius:14px;';
+        card.innerHTML =
+          '<div style="width:52px;height:52px;border-radius:50%;background:'+color+'22;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">' +
+          '<i class="fa-solid '+icon+'" style="font-size:1.5rem;color:'+color+'"></i></div>' +
+          '<h4 class="darurat-nama" style="color:var(--gt-text,#0f172a);font-size:.82rem;font-weight:700;margin:4px 0 6px;line-height:1.3;">' + (d.nama||'') + '</h4>' +
+          '<a href="tel:'+telClean+'" class="call-btn" style="text-decoration:none;">' +
+          '<i class="fa-solid fa-phone"></i> ' + (d.telp||'') + '</a>';
+        cg.appendChild(card);
       });
-    };
-    var cg2 = document.getElementById('container-darurat-warga');
-    if (cg2 && cg2.children.length > 0) window.loadDaruratWarga();
+    }
+    window.loadDaruratWarga = renderDarurat;
   }
 
-  /* ---- (4) Arisan datalist dari db_warga ---- */
+  /* ── (4) Arisan datalist dari db_warga ── */
   function rebuildArisanDL() {
     var dbW = safeJ('db_warga', []);
     if (!dbW.length) return false;
-    var names = dbW.map(function(w){return w.nama||''}).filter(Boolean);
+    var names = dbW.map(function(w){return w.nama||'';}).filter(Boolean);
     ['inp_arisan_nama','inp_host_nama'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (!el) return;
-      var dlId = 'gtv11-dl-'+id;
-      var dl = document.getElementById(dlId);
-      if (!dl) { dl = document.createElement('datalist'); dl.id = dlId; el.parentNode.appendChild(dl); }
+      var inp = el(id);
+      if (!inp) return;
+      var dlId = 'gtv12-dl-'+id;
+      var dl = el(dlId) || (function(){ var d=document.createElement('datalist'); d.id=dlId; inp.parentNode.appendChild(d); return d; })();
       dl.innerHTML = '';
-      names.forEach(function(n){var o=document.createElement('option');o.value=n;dl.appendChild(o);});
-      el.setAttribute('list',dlId);
-      el.setAttribute('autocomplete','off');
+      names.forEach(function(n){ var o=document.createElement('option'); o.value=n; dl.appendChild(o); });
+      inp.setAttribute('list', dlId);
+      inp.setAttribute('autocomplete', 'off');
     });
     return true;
   }
-  var _dlTimer = setInterval(function(){if(rebuildArisanDL())clearInterval(_dlTimer);},800);
-  setTimeout(function(){clearInterval(_dlTimer);},25000);
+  var _dlTimer = setInterval(function(){ if(rebuildArisanDL()) clearInterval(_dlTimer); }, 800);
+  setTimeout(function(){ clearInterval(_dlTimer); }, 25000);
 
-  /* ---- (5) Sidebar toggle fix ---- */
+  /* ── (5) Sidebar toggle fix ── */
   function fixSidebarToggle() {
     window.toggleSidebar = function() {
       document.body.classList.toggle('sidebar-collapsed');
       var ic = document.body.classList.contains('sidebar-collapsed');
-      try{localStorage.setItem('sidebar_state',ic?'hidden':'visible');}catch(_){}
+      try{ localStorage.setItem('sidebar_state', ic ? 'hidden' : 'visible'); }catch(_){}
     };
     try{
-      if(localStorage.getItem('sidebar_state')=='hidden'){
+      if (localStorage.getItem('sidebar_state') === 'hidden') {
         document.body.classList.add('sidebar-collapsed');
       }
     }catch(_){}
-    // Ensure button is visible
     document.querySelectorAll('.btn-toggle-sidebar').forEach(function(b){
       b.style.setProperty('display','inline-flex','important');
       b.style.setProperty('align-items','center','important');
       b.style.setProperty('gap','6px','important');
+      b.style.setProperty('visibility','visible','important');
+      b.style.setProperty('opacity','1','important');
     });
   }
 
-  /* ---- (6) Dashboard hero: foto + namaRT ---- */
+  /* ── (6) Dashboard: hero foto & nama RT ── */
   function injectHeroRingkasan() {
     var hero = document.querySelector('.gt-hero');
-    if (!hero || hero.dataset.gtV11) return;
-    hero.dataset.gtV11 = '1';
+    if (!hero || hero.dataset.gtV12) return;
+    hero.dataset.gtV12 = '1';
     var s = safeJ('db_pengaturan',null) || safeJ('db_settings',null);
     var namaRT = (s&&s.namaRT)||'RT 005 Tegalsari';
     var kel = (s&&s.namaKelurahan)||'Tegalsari';
@@ -11158,152 +11254,201 @@ window.dshTab = function(tab) {
     var ring = document.createElement('div');
     ring.className = 'gt-v11-hero-ring';
     var img = document.createElement('img');
-    img.src = '/smart-portal-rt/benny.png';
-    img.onerror = function(){this.style.display='none';};
+    img.src = '/benny-avatar.png';
+    img.onerror = function(){ this.style.display='none'; };
     var info = document.createElement('div');
     info.className = 'gt-v11-info';
     info.innerHTML = '<h2>Ketua: '+namaRT+'</h2><p>Kel. '+kel+' &mdash; RT 005 / RW 012</p>';
-    ring.appendChild(img);
-    ring.appendChild(info);
+    ring.appendChild(img); ring.appendChild(info);
     hero.insertBefore(ring, hero.firstChild);
   }
 
-  /* ---- (8) Berita slider ensure & auto-slide ---- */
+  /* ── (6) Rekap RT 005 — pastikan arisan & tuan rumah tampil ── */
+  function patchRekapArisan() {
+    var infoArisan = safeJ('db_info_arisan', null);
+    if (!infoArisan) return;
+    // warga dashboard ringkasan
+    if (el('warga-arisan-nama') && el('warga-arisan-nama').textContent === '—') {
+      el('warga-arisan-nama').textContent = infoArisan.arisanNama || '-';
+    }
+    if (el('warga-arisan-tgl') && !el('warga-arisan-tgl').textContent) {
+      el('warga-arisan-tgl').textContent = infoArisan.arisanTgl || '';
+    }
+    if (el('warga-host-nama') && el('warga-host-nama').textContent === '—') {
+      el('warga-host-nama').textContent = infoArisan.hostNama || '-';
+    }
+    if (el('warga-host-tgl') && !el('warga-host-tgl').textContent) {
+      el('warga-host-tgl').textContent = infoArisan.hostTgl || '';
+    }
+  }
+
+  /* ── (8) Berita slider ── */
   function ensureBeritaSlider() {
-    var container = document.getElementById('warga-berita-list');
+    var container = el('warga-berita-list');
     if (!container) return;
-    if (container.dataset.gtSliderV11) return;
-    var db = safeJ('db_berita',null);
-    if (!db||!Array.isArray(db)||!db.length) return;
-    // Remove old slider guard so it rebuilds
+    if (container.dataset.gtSliderV12) return;
+    var db = safeJ('db_berita', null);
+    if (!db || !Array.isArray(db) || !db.length) return;
     delete container.dataset.gtSlider;
-    container.dataset.gtSliderV11 = '1';
+    delete container.dataset.gtSliderV11;
+    container.dataset.gtSliderV12 = '1';
     var items = db.slice().reverse();
-    var wrap = document.createElement('div'); wrap.className='gt-berita-slider-wrap';
-    var track = document.createElement('div'); track.className='gt-berita-track';
-    items.forEach(function(b){
-      var isi = String(b.isi||'').substring(0,120)+(String(b.isi||'').length>120?'...':'')+'';
-      var imgH = b.foto?'<img src="'+b.foto+'" style="width:100%;height:120px;object-fit:cover;border-radius:10px;margin-bottom:10px;">':''
+    var wrap = document.createElement('div'); wrap.className = 'gt-berita-slider-wrap';
+    var track = document.createElement('div'); track.className = 'gt-berita-track';
+    items.forEach(function(b) {
+      var isi = String(b.isi||'').substring(0,130) + (String(b.isi||'').length>130?'…':'');
+      var imgH = b.foto ? '<img src="'+b.foto+'" style="width:100%;height:130px;object-fit:cover;border-radius:10px;margin-bottom:10px;">' : '';
       var slide = document.createElement('div');
-      slide.className='gt-berita-slide';
-      slide.style.cssText='padding:16px;box-sizing:border-box;min-width:100%;';
-      slide.innerHTML=imgH+
-        '<span class="news-badge">'+( b.kategori||'Berita')+'</span>'+
-        '<h3 style="margin:8px 0 4px;font-size:1rem;">'+( b.judul||'')+'</h3>'+
-        '<p style="font-size:.78rem;color:var(--gt-text-muted,#64748b);margin:0 0 4px;"><i class="fa-regular fa-clock"></i> '+(b.tgl||'')+'</p>'+
-        '<p style="font-size:.85rem;margin:0;">'+ isi+'</p>';
-      slide.addEventListener('click',function(){if(typeof bukaDetailBerita==='function')bukaDetailBerita(b.id);});
+      slide.className = 'gt-berita-slide';
+      slide.style.cssText = 'padding:16px;box-sizing:border-box;min-width:100%;';
+      slide.innerHTML = imgH +
+        '<span class="news-badge">' + (b.kategori||'Berita') + '</span>' +
+        '<h3 style="margin:8px 0 4px;font-size:1rem;">' + (b.judul||'') + '</h3>' +
+        '<p style="font-size:.78rem;color:var(--gt-text-muted,#64748b);margin:0 0 4px;"><i class="fa-regular fa-clock"></i> ' + (b.tgl||'') + '</p>' +
+        '<p style="font-size:.85rem;margin:0;">' + isi + '</p>';
+      slide.addEventListener('click', function(){ if(typeof bukaDetailBerita==='function') bukaDetailBerita(b.id); });
       track.appendChild(slide);
     });
     wrap.appendChild(track);
-    var ctrl=document.createElement('div'); ctrl.className='gt-berita-controls';
-    var prev=document.createElement('button'); prev.className='gt-berita-arrow'; prev.innerHTML='<i class="fa-solid fa-chevron-left"></i>';
-    var dotsW=document.createElement('div'); dotsW.className='gt-berita-dots';
-    var counter=document.createElement('span'); counter.className='gt-berita-counter';
-    var next=document.createElement('button'); next.className='gt-berita-arrow'; next.innerHTML='<i class="fa-solid fa-chevron-right"></i>';
-    var dots=[];
+    var ctrl = document.createElement('div'); ctrl.className = 'gt-berita-controls';
+    var prev = document.createElement('button'); prev.className = 'gt-berita-arrow'; prev.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+    var dotsW = document.createElement('div'); dotsW.className = 'gt-berita-dots';
+    var counter = document.createElement('span'); counter.className = 'gt-berita-counter';
+    var next = document.createElement('button'); next.className = 'gt-berita-arrow'; next.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+    var dots = [];
     items.forEach(function(_,i){
-      var d=document.createElement('button');
-      d.className='gt-berita-dot'+(i===0?' active':'');
-      d.addEventListener('click',function(){goTo(i);resetAuto();});
-      dotsW.appendChild(d);dots.push(d);
+      var d = document.createElement('button');
+      d.className = 'gt-berita-dot' + (i===0?' active':'');
+      d.addEventListener('click', function(){ goTo(i); resetAuto(); });
+      dotsW.appendChild(d); dots.push(d);
     });
-    ctrl.appendChild(prev);ctrl.appendChild(dotsW);ctrl.appendChild(counter);ctrl.appendChild(next);
-    var cur=0,autoTimer;
+    ctrl.appendChild(prev); ctrl.appendChild(dotsW); ctrl.appendChild(counter); ctrl.appendChild(next);
+    var cur = 0, autoTimer;
     function goTo(idx){
-      cur=(idx+items.length)%items.length;
-      track.style.transform='translateX(-'+(cur*100)+'%)';
-      dots.forEach(function(d,i){d.classList.toggle('active',i===cur);});
-      counter.textContent=(cur+1)+'/'+items.length;
+      cur = (idx + items.length) % items.length;
+      track.style.transform = 'translateX(-'+(cur*100)+'%)';
+      dots.forEach(function(d,i){ d.classList.toggle('active', i===cur); });
+      counter.textContent = (cur+1) + '/' + items.length;
     }
     function resetAuto(){
       clearInterval(autoTimer);
-      autoTimer=setInterval(function(){goTo(cur+1);},4500);
+      autoTimer = setInterval(function(){ goTo(cur+1); }, 4500);
     }
-    prev.addEventListener('click',function(){goTo(cur-1);resetAuto();});
-    next.addEventListener('click',function(){goTo(cur+1);resetAuto();});
-    wrap.addEventListener('mouseenter',function(){clearInterval(autoTimer);});
-    wrap.addEventListener('mouseleave',resetAuto);
+    prev.addEventListener('click', function(){ goTo(cur-1); resetAuto(); });
+    next.addEventListener('click', function(){ goTo(cur+1); resetAuto(); });
+    wrap.addEventListener('mouseenter', function(){ clearInterval(autoTimer); });
+    wrap.addEventListener('mouseleave', resetAuto);
     goTo(0); resetAuto();
-    container.innerHTML='';
-    container.style.cssText='max-height:none;overflow:visible;';
+    container.innerHTML = '';
+    container.style.cssText = 'max-height:none;overflow:visible;';
     container.appendChild(wrap);
     container.appendChild(ctrl);
   }
 
-  /* ---- (9) SOS sidebar rebuild ---- */
+  /* ── (9) SOS Sidebar Kanan — tabel rapi ── */
   function rebuildSosSidebar() {
-    var old = document.getElementById('gt-sos-panel');
+    var old = el('gt-sos-panel');
     if (old) old.remove();
-    var db = safeJ('db_darurat',[]);
-    if (!db||!db.length) return;
-    var panel = document.createElement('div'); panel.id='gt-sos-panel';
-    var inner = document.createElement('div'); inner.id='gt-sos-inner';
-    var tab = document.createElement('div'); tab.id='gt-sos-tab';
-    tab.innerHTML='<i class="fa-solid fa-phone" style="writing-mode:horizontal-tb;font-size:.9rem;"></i><span>SOS</span>';
-    var h4=document.createElement('div'); h4.className='gt-sos-h4';
-    h4.innerHTML='<i class="fa-solid fa-siren-on"></i> Kontak Darurat';
+    var db = safeJ('db_darurat', []);
+    if (!db || !db.length) return;
+    var panel = document.createElement('div'); panel.id = 'gt-sos-panel';
+    var inner = document.createElement('div'); inner.id = 'gt-sos-inner';
+    var tab = document.createElement('div'); tab.id = 'gt-sos-tab';
+    tab.innerHTML = '<i class="fa-solid fa-phone" style="writing-mode:horizontal-tb;font-size:.85rem;margin-bottom:3px;"></i><span>SOS</span>';
+    var h4 = document.createElement('div'); h4.className = 'gt-sos-h4';
+    h4.innerHTML = '<i class="fa-solid fa-siren-on"></i> Kontak Darurat';
     inner.appendChild(h4);
-    db.forEach(function(d){
-      var row=document.createElement('div'); row.className='gt-sos-row';
-      var telClean=String(d.telp||'').replace(/\s/g,'');
-      row.innerHTML=
-        '<span class="gt-sos-name"><i class="fa-solid '+(d.icon||'fa-phone')+'" style="color:'+(d.color||'#ef4444')+';margin-right:5px;font-size:.75rem;"></i>'+(d.nama||'')+'</span>'+
-        '<a href="tel:'+telClean+'" class="gt-sos-call"><i class="fa-solid fa-phone"></i> '+(d.telp||'')+'</a>';
-      inner.appendChild(row);
+    var tbl = document.createElement('table'); tbl.className = 'gt-sos-table';
+    db.forEach(function(d) {
+      var telClean = String(d.telp||'').replace(/\s/g,'');
+      var color = d.color || '#ef4444';
+      var icon  = d.icon  || 'fa-phone';
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="gt-sos-td-icon"><i class="fa-solid '+icon+'" style="color:'+color+';font-size:.78rem;"></i></td>' +
+        '<td class="gt-sos-td-name">' + (d.nama||'') + '</td>' +
+        '<td class="gt-sos-td-call"><a href="tel:'+telClean+'" class="gt-sos-call"><i class="fa-solid fa-phone"></i> '+(d.telp||'')+'</a></td>';
+      tbl.appendChild(tr);
     });
+    inner.appendChild(tbl);
+    var btnAll = document.createElement('a');
+    btnAll.className = 'gt-sos-btn-all';
+    btnAll.href = '#';
+    btnAll.innerHTML = '<i class="fa-solid fa-phone-volume"></i> Semua Kontak Darurat';
+    btnAll.onclick = function(e){ e.preventDefault(); if(typeof openWargaTab==='function') openWargaTab('warga-darurat'); inner.classList.remove('open'); };
+    inner.appendChild(btnAll);
     inner.appendChild(tab);
     panel.appendChild(inner);
     document.body.appendChild(panel);
-    var open=false;
-    tab.addEventListener('click',function(){open=!open;inner.classList.toggle('open',open);});
+    var open = false;
+    tab.addEventListener('click', function(){ open = !open; inner.classList.toggle('open', open); });
   }
 
-  /* ---- BOOT v11 ---- */
-  function bootV11() {
-    try{addBennyLabel();}catch(e){}
-    try{patchDarurat();}catch(e){}
-    try{fixSidebarToggle();}catch(e){}
-    try{injectHeroRingkasan();}catch(e){}
-    try{ensureBeritaSlider();}catch(e){}
-    try{if(!document.getElementById('gt-sos-panel')||!document.querySelector('#gt-sos-panel .gt-sos-row')){rebuildSosSidebar();}}catch(e){}
+  /* ── BOOT v12 ── */
+  function bootV12() {
+    try{ addBennyLabel(); }catch(e){}
+    try{ patchDarurat(); }catch(e){}
+    try{ fixSidebarToggle(); }catch(e){}
+    try{ injectHeroRingkasan(); }catch(e){}
+    try{ ensureBeritaSlider(); }catch(e){}
+    try{ patchRekapArisan(); }catch(e){}
+    var sosOk = el('gt-sos-panel') && el('gt-sos-panel').querySelector('.gt-sos-table');
+    try{ if(!sosOk) rebuildSosSidebar(); }catch(e){}
   }
 
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',bootV11);}else{bootV11();}
-  setTimeout(bootV11,600);
-  setTimeout(bootV11,1800);
-  setTimeout(bootV11,3500);
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', bootV12); }
+  else { bootV12(); }
+  setTimeout(bootV12, 600);
+  setTimeout(bootV12, 1800);
+  setTimeout(bootV12, 3500);
 
-  /* Wrap navigation hooks */
-  var _wt=0,_wi=setInterval(function(){
+  /* Wrap openWargaTab to re-trigger fixes on tab switch */
+  var _wt=0, _wi=setInterval(function(){
     _wt++;
-    var fn=window.openWargaTab||window.bukaTabWarga;
-    if(fn&&!fn.__gtV11){
-      var orig2=fn;
-      var wrapped=function(t){
-        var r=orig2.apply(this,arguments);
-        if(t==='warga-dashboard'||t==='warga-beranda'){
+    var fn = window.openWargaTab || window.bukaTabWarga;
+    if (fn && !fn.__gtV12) {
+      var orig2 = fn;
+      var wrapped = function(t){
+        var r = orig2.apply(this, arguments);
+        if (t==='warga-dashboard'||t==='warga-beranda') {
           setTimeout(function(){
-            var c=document.getElementById('warga-berita-list');
-            if(c)delete c.dataset.gtSliderV11;
-            try{ensureBeritaSlider();}catch(e){}
-            try{injectHeroRingkasan();}catch(e){}
-          },120);
+            var c = el('warga-berita-list');
+            if (c) delete c.dataset.gtSliderV12;
+            try{ ensureBeritaSlider(); }catch(e){}
+            try{ injectHeroRingkasan(); }catch(e){}
+            try{ patchRekapArisan(); }catch(e){}
+          }, 120);
         }
-        if(t==='warga-darurat')setTimeout(function(){try{window.loadDaruratWarga();}catch(e){}},80);
-        if(t==='sub-arisan'||t==='admin-arisan')setTimeout(rebuildArisanDL,80);
+        if (t==='warga-darurat') setTimeout(function(){ try{ window.loadDaruratWarga(); }catch(e){} }, 80);
+        if (t==='sub-arisan'||t==='admin-arisan') setTimeout(rebuildArisanDL, 80);
         return r;
       };
-      wrapped.__gtV11=true;
-      if(window.openWargaTab===fn)window.openWargaTab=wrapped;
-      if(window.bukaTabWarga===fn)window.bukaTabWarga=wrapped;
+      wrapped.__gtV12 = true;
+      if (window.openWargaTab === fn) window.openWargaTab = wrapped;
+      if (window.bukaTabWarga === fn) window.bukaTabWarga = wrapped;
       clearInterval(_wi);
     }
-    if(_wt>80)clearInterval(_wi);
-  },300);
+    if (_wt > 80) clearInterval(_wi);
+  }, 300);
+
+  /* Also patch loadDashboardWarga to ensure arisan names ─ */
+  var _dw = 0, _dwi = setInterval(function(){
+    _dw++;
+    if (typeof window.loadDashboardWarga === 'function' && !window.loadDashboardWarga.__gtV12) {
+      var origDw = window.loadDashboardWarga;
+      window.loadDashboardWarga = function(){
+        var r = origDw.apply(this, arguments);
+        try{ patchRekapArisan(); }catch(e){}
+        return r;
+      };
+      window.loadDashboardWarga.__gtV12 = true;
+      clearInterval(_dwi);
+    }
+    if (_dw > 80) clearInterval(_dwi);
+  }, 300);
 
 })();
-/* === END GT-v11 JS === */
+/* === END GT-v12 JS === */
 </script>
 
 </body>
