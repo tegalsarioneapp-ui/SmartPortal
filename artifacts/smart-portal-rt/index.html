@@ -11627,24 +11627,73 @@ window.dshTab = function(tab) {
 
 <!-- ═══ GT-v13 Extra Fixes ═══ -->
 <style>
-/* Dark mode for right sidebar panel */
-html[data-theme="dark"] .warga-fb-right { background: var(--gt-bg,#0b1220) !important; }
-html[data-theme="dark"] .wfb-card { background: #1e293b !important; border-color: #334155 !important; }
-html[data-theme="dark"] .wfb-card-title { color: #e2e8f0 !important; border-color: #334155 !important; }
+/* ════════════════════════════════════════════════════════
+   DARK MODE — PANEL KIRI & KANAN (fix scroll area putih)
+   ════════════════════════════════════════════════════════ */
+
+/* 1. Layout container utama warga — hardcoded #f0f2f5 harus di-override */
+html[data-theme="dark"] #view-warga.warga-fb-layout {
+  background: #0b1220 !important;
+}
+
+/* 2. Panel kiri — full coverage termasuk area kosong saat scroll */
+html[data-theme="dark"] .warga-fb-left {
+  background: #111a2e !important;
+  border-right-color: #1e3154 !important;
+  scrollbar-color: #233152 transparent !important;
+}
+
+/* 3. Panel kanan — full coverage */
+html[data-theme="dark"] .warga-fb-right {
+  background: #111a2e !important;
+  scrollbar-color: #233152 transparent !important;
+}
+
+/* 4. Area konten tengah */
+html[data-theme="dark"] .warga-fb-main { background: #0b1220 !important; }
+
+/* 5. Cards di panel kanan */
+html[data-theme="dark"] .wfb-card { background: #16213a !important; border-color: #233152 !important; box-shadow: 0 1px 4px rgba(0,0,0,0.4) !important; }
+html[data-theme="dark"] .wfb-card-title { color: #e2e8f0 !important; border-color: #233152 !important; }
+html[data-theme="dark"] .wfb-card-danger { border-top-color: #f87171 !important; }
+
+/* 6. Stat grid */
 html[data-theme="dark"] .wfb-stat { background: #0f172a !important; }
 html[data-theme="dark"] .wfb-stat:hover { background: #1e293b !important; }
 html[data-theme="dark"] .wfb-stat-val { color: #f1f5f9 !important; }
 html[data-theme="dark"] .wfb-stat-lbl { color: #64748b !important; }
+
+/* 7. Nav items panel kiri */
 html[data-theme="dark"] .wfb-nav-item { color: #e2e8f0 !important; }
 html[data-theme="dark"] .wfb-nav-item:hover { background: rgba(96,165,250,0.12) !important; }
 html[data-theme="dark"] .wfb-nav-item.active { background: rgba(96,165,250,0.18) !important; color:#93c5fd !important; }
+
+/* 8. Info teks panel */
 html[data-theme="dark"] .wfb-pengurus-nama { color: #e2e8f0 !important; }
 html[data-theme="dark"] .wfb-darurat-row { color: #e2e8f0 !important; }
 html[data-theme="dark"] #wfb-iuran-status { color: #94a3b8 !important; }
-html[data-theme="dark"] .wfb-divider { border-color: #334155 !important; }
+html[data-theme="dark"] .wfb-divider { border-color: #1e3154 !important; background: #1e3154 !important; }
 html[data-theme="dark"] .warga-fb-aside { background: #111a2e !important; }
-/* sidebar left */
-html[data-theme="dark"] .warga-fb-main { background: var(--gt-bg,#0b1220) !important; }
+
+/* 9. Tombol close di panel kanan */
+html[data-theme="dark"] .wfb-right-close-btn button {
+  background: rgba(255,255,255,0.06) !important;
+  color: #94a3b8 !important;
+}
+html[data-theme="dark"] .wfb-right-close-btn button:hover {
+  background: rgba(255,255,255,0.12) !important;
+  color: #e2e8f0 !important;
+}
+
+/* 10. Tombol-tombol di panel kanan */
+html[data-theme="dark"] .wfb-btn-full {
+  border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+/* 11. Iuran progress bar track */
+html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
+  background: #0f172a !important;
+}
 
 /* FIX 3 Sidebar toggle — make btn visible always on desktop */
 @media (min-width: 769px) {
