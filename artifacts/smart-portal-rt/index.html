@@ -3216,9 +3216,10 @@ html[data-theme="dark"] select option {
 ═══════════════════════════════════════════════════════════════ */
 
 /* Override tab-view defaults for warga FB layout */
+/* NOTE: display is intentionally NOT set here — JS controls show/hide via inline style.
+   When active, .tab-view.active-grid { display: flex !important } handles it. */
 #view-warga.warga-fb-layout {
     padding: 0 !important;
-    display: flex !important;
     flex-direction: row !important;
     max-width: 100% !important;
     background: #f0f2f5 !important;
