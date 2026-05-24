@@ -6,19 +6,18 @@ import { eq } from "drizzle-orm";
 const router: IRouter = Router();
 
 // ─── VAPID Keys ────────────────────────────────────────────────────────────
-const VAPID_PUBLIC_KEY  = process.env["VAPID_PUBLIC_KEY"]  ?? "";
-const VAPID_PRIVATE_KEY = process.env["VAPID_PRIVATE"]     ?? "";
-const VAPID_SUBJECT     = process.env["VAPID_SUBJECT"]     ?? "mailto:admin@rt005.local";
+const VAPID_PRIVATE_KEY = process.env["VAPID_PRIVATE"];
+const VAPID_PUBLIC_KEY  = process.env["VAPID_PUBLIC_KEY"];
+const VAPID_SUBJECT     = process.env["VAPID_SUBJECT"] ?? "mailto:admin@rt005.local";
 
-try {
-  if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
-    webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
-  } else {
-    console.warn("[Push] VAPID_PUBLIC_KEY / VAPID_PRIVATE not set — push notifications disabled.");
-  }
-} catch (err) {
-  console.error("[Push] Failed to set VAPID details — push notifications disabled:", (err as Error).message);
+if (!VAPID_PRIVATE_KEY || !VAPID_PUBLIC_KEY) {
+  throw new Error(
+    "[push.ts] VAPID_PRIVATE and VAPID_PUBLIC_KEY env vars are required. " +
+    "Generate new keys with: npx web-push generate-vapid-keys"
+  );
 }
+
+webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 const SUBS_KEY = "push_subscriptions";

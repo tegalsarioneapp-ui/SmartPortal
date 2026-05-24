@@ -87,6 +87,9 @@ externalPort = 3000
 [userenv.shared]
 PORT = "3000"
 API_URL = "http://localhost:8080"
+VAPID_PUBLIC_KEY = "BMy6TLwScBeen3sWFrMj1GvJLhzNrjbBtJNC1Crkfrr-o0AZlQbD_OmKq-hlMCFNmuu3tGiKJHngv8pRN65BMh0"
+VAPID_PRIVATE = "puolj5dpEY5HaaeD7hSCg-7HeaUluqDLWXNoBUeEHgg"
+VAPID_SUBJECT = "mailto:admin@rt005.local"
 
 [nix]
 channel = "stable-25_05"
