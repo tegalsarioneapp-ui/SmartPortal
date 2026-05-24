@@ -218,10 +218,29 @@
 
 .sidebar-collapsed .admin-nav-tabs, 
 .sidebar-collapsed .nav-tabs { 
-    width: 80px !important; 
-    min-width: 80px !important; 
-    padding: 25px 10px !important; 
-    overflow: hidden; 
+    width: 0 !important; 
+    min-width: 0 !important; 
+    padding: 0 !important; 
+    overflow: hidden;
+    border: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+/* Sidebar warga kiri: sembunyikan penuh */
+.sidebar-collapsed .warga-fb-left {
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    border: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+/* Konten melebar penuh saat sidebar disembunyikan */
+.sidebar-collapsed .warga-tab-content.active,
+.sidebar-collapsed .warga-fb-main {
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 /* Mengatur Teks agar Menghilang dengan Animasi */
@@ -260,8 +279,8 @@
 
 .sidebar-collapsed .admin-tab-content.active, 
 .sidebar-collapsed .warga-tab-content.active { 
-    width: calc(100% - 80px) !important; 
-    max-width: calc(100% - 80px) !important; 
+    width: 100% !important; 
+    max-width: 100% !important; 
 }
 
         /* ======================================================= */
@@ -3212,8 +3231,8 @@ html[data-theme="dark"] select option {
 .warga-fb-left {
     width: 260px;
     min-width: 260px;
-    background: #fff;
-    border-right: 1px solid #e4e6eb;
+    background: var(--gt-surface, #fff);
+    border-right: 1px solid var(--gt-border, #e4e6eb);
     padding: 12px 8px 20px 8px;
     box-sizing: border-box;
     position: sticky;
@@ -3223,7 +3242,8 @@ html[data-theme="dark"] select option {
     overflow-x: hidden;
     flex-shrink: 0;
     scrollbar-width: thin;
-    scrollbar-color: #e2e8f0 transparent;
+    scrollbar-color: var(--gt-border, #e2e8f0) transparent;
+    transition: width 0.3s cubic-bezier(0.4,0,0.2,1), min-width 0.3s, padding 0.3s, opacity 0.3s;
 }
 
 /* CENTER MAIN */
@@ -3755,19 +3775,44 @@ html[data-theme="dark"] .dsh-ring-upd { color: #64748b !important; }
 html[data-theme="dark"] .dsh-section-hd { color: #e2e8f0 !important; }
 /* Hero always white text */
 .gt-hero h1, .gt-hero p, .gt-hero .gt-hero-chip { color: #fff !important; }
-/* Warga FB aside dark */
-html[data-theme="dark"] .warga-fb-aside,html[data-theme="dark"] .admin-nav-tabs,html[data-theme="dark"] .nav-tabs {
+/* Warga FB aside dark — LEFT PANEL */
+html[data-theme="dark"] .warga-fb-aside,
+html[data-theme="dark"] .warga-fb-left,
+html[data-theme="dark"] .admin-nav-tabs,
+html[data-theme="dark"] .nav-tabs {
   background: #111a2e !important;
+  border-color: #1e3154 !important;
 }
-html[data-theme="dark"] .nav-btn,html[data-theme="dark"] .wfb-nav-item {
+/* Nav buttons text */
+html[data-theme="dark"] .nav-btn,
+html[data-theme="dark"] .wfb-nav-item {
   color: #e2e8f0 !important;
 }
-html[data-theme="dark"] .nav-btn:hover,html[data-theme="dark"] .wfb-nav-item:hover {
+html[data-theme="dark"] .nav-btn:hover,
+html[data-theme="dark"] .wfb-nav-item:hover {
   background: rgba(96,165,250,0.12) !important;
 }
-html[data-theme="dark"] .nav-btn.active,html[data-theme="dark"] .wfb-nav-item.active {
+html[data-theme="dark"] .nav-btn.active,
+html[data-theme="dark"] .wfb-nav-item.active {
   background: rgba(96,165,250,0.18) !important; color: #93c5fd !important;
 }
+/* User card in left sidebar */
+html[data-theme="dark"] .wfb-user-card { background: transparent !important; }
+html[data-theme="dark"] .wfb-user-card:hover { background: rgba(96,165,250,0.1) !important; }
+html[data-theme="dark"] .wfb-user-name { color: #e2e8f0 !important; }
+html[data-theme="dark"] .wfb-user-sub { color: #94a3b8 !important; }
+/* Nav icons background */
+html[data-theme="dark"] .wfb-nav-icon { background: #1e293b !important; }
+html[data-theme="dark"] .wfb-icon-blue  { background: rgba(29,78,216,0.25) !important; }
+html[data-theme="dark"] .wfb-icon-green { background: rgba(5,150,105,0.25) !important; }
+html[data-theme="dark"] .wfb-icon-purple { background: rgba(124,58,237,0.25) !important; }
+html[data-theme="dark"] .wfb-icon-amber { background: rgba(217,119,6,0.25) !important; }
+html[data-theme="dark"] .wfb-icon-red   { background: rgba(239,68,68,0.25) !important; }
+html[data-theme="dark"] .wfb-icon-indigo { background: rgba(99,102,241,0.25) !important; }
+/* Divider */
+html[data-theme="dark"] .wfb-divider { border-color: #1e3154 !important; }
+/* Footer text in sidebar */
+html[data-theme="dark"] .warga-fb-left > div:last-child { color: #475569 !important; }
 html[data-theme="dark"] .main-header { background: #111a2e !important; border-color: #233152 !important; }
 html[data-theme="dark"] .warga-fb-main { background: var(--gt-bg,#0b1220) !important; }
 html[data-theme="dark"] .search-box { background: #0f172a !important; color: #e2e8f0 !important; border-color: #334155 !important; }
