@@ -243,6 +243,61 @@
     max-width: 100% !important;
 }
 
+/* === PANEL KANAN: hide/show toggle === */
+.right-panel-collapsed .warga-fb-right {
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: width 0.4s ease, opacity 0.3s ease, padding 0.3s ease !important;
+}
+.warga-fb-right {
+    transition: width 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+/* Tombol toggle panel kanan di header */
+.btn-toggle-right-panel {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+    padding: 6px 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+}
+.btn-toggle-right-panel:hover {
+    transform: scale(1.1);
+    color: var(--gold-luxury, #f59e0b) !important;
+}
+/* Tombol close kecil di dalam panel kanan */
+.wfb-right-close-btn {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 6px;
+}
+.wfb-right-close-btn button {
+    background: rgba(0,0,0,0.06);
+    border: none;
+    color: var(--gt-text-muted, #64748b);
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+.wfb-right-close-btn button:hover { background: rgba(0,0,0,0.12); }
+@media (max-width: 1100px) {
+    .btn-toggle-right-panel { display: none !important; }
+}
+
 /* Mengatur Teks agar Menghilang dengan Animasi */
 .admin-tab-btn span, .nav-btn span {
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -3535,12 +3590,24 @@ html[data-theme="dark"] select option {
 /* Breaking bar */
 .gt-breaking-bar {
   display: flex; align-items: center; gap: 0; background: #0f172a;
-  border-bottom: 1px solid rgba(255,255,255,0.06); padding: 8px 16px; overflow: hidden;
+  border-bottom: 2px solid #e11d48; padding: 9px 16px; overflow: hidden;
+  position: sticky; top: 0; z-index: 25;
 }
 .gt-breaking-label {
   flex-shrink: 0; background: #e11d48; color: #fff; font-size: 0.7rem;
-  font-weight: 800; letter-spacing: 1px; padding: 3px 10px; border-radius: 4px;
+  font-weight: 800; letter-spacing: 1px; padding: 4px 10px; border-radius: 4px;
   margin-right: 14px; text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+/* Titik LIVE berkedip */
+.gt-live-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #fff;
+  display: inline-block; flex-shrink: 0;
+  animation: gtLivePulse 1.1s ease-in-out infinite;
+}
+@keyframes gtLivePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
 }
 .gt-breaking-scroll { flex: 1; overflow: hidden; position: relative; height: 22px; }
 .gt-breaking-inner {
@@ -3548,6 +3615,8 @@ html[data-theme="dark"] select option {
   animation: gtBrkScroll 60s linear infinite;
   font-size: 0.78rem; color: #cbd5e1; align-items: center; top: 2px;
 }
+/* Pause saat hover */
+.gt-breaking-scroll:hover .gt-breaking-inner { animation-play-state: paused; }
 @keyframes gtBrkScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 /* Nav bar */
 .gt-news-nav {
@@ -4108,6 +4177,9 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
         </div>
             </button>
             <div id="realtime-clock" class="hide-on-mobile"><i class="fa-regular fa-clock"></i> <span></span></div>
+            <button class="btn-toggle-right-panel hide-on-mobile" id="btn-toggle-right-panel" onclick="toggleRightPanel()" title="Sembunyikan/Munculkan Panel Info Kanan">
+                <i class="fa-solid fa-table-columns"></i>
+            </button>
             <button class="btn-logout btn-header-icon" onclick="logout()" title="Keluar">
                 <i class="fa-solid fa-right-from-bracket" style="color:var(--danger) !important;"></i> <span class="hide-on-mobile">Keluar</span>
             </button>
@@ -4516,7 +4588,7 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
             </div>
             <!-- Breaking news bar -->
             <div class="gt-breaking-bar">
-              <span class="gt-breaking-label"><i class="fa-solid fa-bolt"></i> Breaking</span>
+              <span class="gt-breaking-label"><span class="gt-live-dot"></span><i class="fa-solid fa-bolt"></i> LIVE</span>
               <div class="gt-breaking-scroll"><div class="gt-breaking-inner" id="gt-brk-inner"><span style="color:#64748b;">Memuat berita terkini…</span></div></div>
               <button onclick="window.gtNewsRefresh(true)" title="Refresh berita" style="background:none;border:none;color:#64748b;cursor:pointer;margin-left:12px;font-size:0.9rem;"><i class="fa-solid fa-rotate"></i></button>
             </div>
@@ -4577,6 +4649,13 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
              RIGHT SIDEBAR — Statistik & Info RT
         ══════════════════════════════════════════════ -->
         <aside class="warga-fb-right no-print" id="warga-fb-right">
+
+            <!-- Tombol tutup panel kanan -->
+            <div class="wfb-right-close-btn">
+                <button onclick="toggleRightPanel()" title="Sembunyikan panel info">
+                    <i class="fa-solid fa-chevron-right"></i> Sembunyikan
+                </button>
+            </div>
 
             <!-- Rekap RT -->
             <div class="wfb-card">
@@ -8467,6 +8546,42 @@ window.cetakPDFSurat = function(id, isSalinan) {
         let isCollapsed = document.body.classList.contains('sidebar-collapsed');
         localStorage.setItem('sidebar_state', isCollapsed ? 'hidden' : 'visible');
     };
+
+    // === FUNGSI HIDE & SHOW PANEL KANAN (widget info warga) ===
+    window.toggleRightPanel = function() {
+        var view = document.getElementById('view-warga');
+        if (!view) return;
+        var isCollapsed = view.classList.toggle('right-panel-collapsed');
+        // Simpan preferensi
+        try { localStorage.setItem('right_panel_state', isCollapsed ? 'hidden' : 'visible'); } catch(_){}
+        // Update ikon tombol di header
+        var btn = document.getElementById('btn-toggle-right-panel');
+        if (btn) {
+            var ic = btn.querySelector('i');
+            if (ic) {
+                ic.className = isCollapsed ? 'fa-solid fa-sidebar-flip' : 'fa-solid fa-table-columns';
+                // fallback jika icon tidak ada
+                ic.className = isCollapsed ? 'fa-solid fa-chevron-left' : 'fa-solid fa-table-columns';
+            }
+            btn.title = isCollapsed ? 'Tampilkan Panel Info Kanan' : 'Sembunyikan Panel Info Kanan';
+        }
+    };
+
+    // Restore preferensi panel kanan saat load
+    window.addEventListener('DOMContentLoaded', function() {
+        try {
+            if (localStorage.getItem('right_panel_state') === 'hidden') {
+                var view = document.getElementById('view-warga');
+                if (view) view.classList.add('right-panel-collapsed');
+                var btn = document.getElementById('btn-toggle-right-panel');
+                if (btn) {
+                    var ic = btn.querySelector('i');
+                    if (ic) ic.className = 'fa-solid fa-chevron-left';
+                    btn.title = 'Tampilkan Panel Info Kanan';
+                }
+            }
+        } catch(_) {}
+    });
 
     // Jalankan pengecekan status saat aplikasi dimuat
     window.addEventListener('DOMContentLoaded', () => {
