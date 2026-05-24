@@ -8348,7 +8348,10 @@ window.cetakPDFSurat = function(id, isSalinan) {
                 if (window.__GT_SYNC_BOOTED__ || tries > 50) {
                     setTimeout(function(){
                         try {
-                            if (typeof gtRestoreSession === 'function') gtRestoreSession();
+                            // Hanya restore jika portal belum aktif (user belum login manual)
+                            if (!window.__GT_PORTAL_ACTIVE__ && typeof gtRestoreSession === 'function') {
+                                gtRestoreSession();
+                            }
                             if (typeof renderPengurusPdfAdmin === 'function') renderPengurusPdfAdmin();
                             if (typeof renderPengurusPdfWarga === 'function') renderPengurusPdfWarga();
                         } catch(_){}
@@ -8668,6 +8671,11 @@ window.cetakPDFSurat = function(id, isSalinan) {
     window.gtSaveLastView = function(role, tab){
         try {
             var cur = JSON.parse(localStorage.getItem('gt_local_lastView') || '{}');
+            // Jika role berbeda dari yang tersimpan, hapus tab lama
+            // agar tab dari sesi warga tidak merembes ke sesi admin (dan sebaliknya).
+            if (role && cur.role && cur.role !== role) {
+                cur.tab = null;
+            }
             cur.role = role || cur.role;
             if (tab) cur.tab = tab;
             cur.at = Date.now();
@@ -8697,19 +8705,9 @@ window.cetakPDFSurat = function(id, isSalinan) {
                 localStorage.setItem('gt_local_session', JSON.stringify(sess));
                 window.gtSaveLastView(role, null);
             } catch(_){}
+            // Tandai portal sudah aktif agar gtRestoreSession tidak menimpa sesi ini
+            window.__GT_PORTAL_ACTIVE__ = true;
             var r = orig.apply(this, arguments);
-            // Setelah portal terbuka & lastView ada → restore tab terakhir untuk role ini
-            try {
-                var lv = JSON.parse(localStorage.getItem('gt_local_lastView')||'{}');
-                if (lv && lv.role === role && lv.tab) {
-                    setTimeout(function(){
-                        if (role==='warga' && typeof window.openWargaTab==='function') window.openWargaTab(lv.tab);
-                        else if (role==='admin' && typeof window.openAdminTab==='function') window.openAdminTab(lv.tab);
-                        else if (role==='koperasi' && typeof window.openKopTab==='function') window.openKopTab(lv.tab);
-                        else if (role==='bendahara' && typeof window.openBenTab==='function') window.openBenTab(lv.tab);
-                    }, 60);
-                }
-            } catch(_){}
             return r;
         };
         window.BukaPortal.__gtSessionWrapped = true;
@@ -8721,6 +8719,7 @@ window.cetakPDFSurat = function(id, isSalinan) {
         window.logout = function(){
             try { localStorage.removeItem('gt_local_session'); } catch(_){}
             try { localStorage.removeItem('gt_local_lastView'); } catch(_){}
+            window.__GT_PORTAL_ACTIVE__ = false; // reset agar gtRestoreSession bisa jalan lagi setelah login baru
             return orig.apply(this, arguments);
         };
         window.logout.__gtSessionWrapped = true;
@@ -8728,6 +8727,20 @@ window.cetakPDFSurat = function(id, isSalinan) {
     // Auto-restore saat halaman dimuat
     window.gtRestoreSession = function(){
         try {
+            // GUARD: jika user sudah login manual (BukaPortal sudah dipanggil
+            // sebelum fungsi ini, mis. user klik splash lebih cepat dari sync boot),
+            // hentikan restore agar sesi manual tidak ditimpa sesi lama.
+            if (window.__GT_PORTAL_ACTIVE__) {
+                console.info('[gtRestoreSession] portal sudah aktif — skip restore');
+                return false;
+            }
+            // GUARD: cek DOM — jika main-app terlihat, seseorang sudah login
+            var mainApp = document.getElementById('main-app');
+            if (mainApp && mainApp.style.display !== 'none') {
+                console.info('[gtRestoreSession] main-app sudah terlihat — skip restore');
+                return false;
+            }
+
             var raw = localStorage.getItem('gt_local_session');
             if (!raw) return false;
             var sess = JSON.parse(raw);
@@ -8735,6 +8748,7 @@ window.cetakPDFSurat = function(id, isSalinan) {
             // Sesi kadaluwarsa setelah 12 jam tanpa aktivitas
             if (sess.at && (Date.now() - sess.at) > 12*60*60*1000) {
                 localStorage.removeItem('gt_local_session');
+                localStorage.removeItem('gt_local_lastView');
                 return false;
             }
             // Sembunyikan splash + login form
@@ -8745,7 +8759,23 @@ window.cetakPDFSurat = function(id, isSalinan) {
             if (sess.role === 'warga' && sess.warga) {
                 window.loggedInWarga = sess.warga;
             }
-            if (typeof window.BukaPortal === 'function') window.BukaPortal(sess.role);
+            if (typeof window.BukaPortal !== 'function') return false;
+            window.BukaPortal(sess.role);
+            // Restore tab terakhir — dilakukan di SINI (page-restore only),
+            // bukan di dalam BukaPortal wrapper (yang berjalan setiap login manual).
+            try {
+                var lv = JSON.parse(localStorage.getItem('gt_local_lastView') || '{}');
+                if (lv && lv.role === sess.role && lv.tab) {
+                    setTimeout(function(){
+                        try {
+                            if (sess.role === 'warga' && typeof window.openWargaTab === 'function') window.openWargaTab(lv.tab);
+                            else if (sess.role === 'admin' && typeof window.openAdminTab === 'function') window.openAdminTab(lv.tab);
+                            else if (sess.role === 'koperasi' && typeof window.openKopTab === 'function') window.openKopTab(lv.tab);
+                            else if (sess.role === 'bendahara' && typeof window.openBenTab === 'function') window.openBenTab(lv.tab);
+                        } catch(_){}
+                    }, 80);
+                }
+            } catch(_){}
             return true;
         } catch(err){ console.warn('gtRestoreSession failed', err); return false; }
     };
