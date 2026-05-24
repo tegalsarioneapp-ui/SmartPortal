@@ -1,0 +1,276 @@
+Laporan Rekap Tunggakan Iuran — PDF & Excel
+* di mode potrait terpotong (solusi font di perkecil atau di buat mode landscape) atur secara presisi
+
+Berita Acara Rekap Iuran Warga — Download PDF
+* Download BA Iuran Semua Warga PDF tidak berfungsi / atau tidak mendownload 
+
+Surat Tagihan Iuran — Download PDF
+* Tagihan Semua Belum Lunas Pdf tidak berfungsi / atau tidak mendownload 
+
+BA lengkap Pdf
+*"Tolong buatkan template HTML & CSS statis untuk Laporan Keuangan (Riwayat Transaksi). Pastikan struktur HTML semantik, tanpa menggunakan Flexbox/Grid (gunakan display: table), dan styling menggunakan CSS internal agar mudah di-render menjadi PDF (misal dengan Puppeteer / wkhtmltopdf) TANPA ada teks atau baris tabel yang terpotong di antara dua halaman (hindari page break issue).
+PAGE SETUP & TYPOGRAPHY:
+Ukuran: A4 (210mm x 297mm), orientasi Portrait, box-sizing: border-box.
+Margin halaman: 2cm (@page { margin: 2cm; size: A4 portrait; }).
+Font utama: Arial, sans-serif. Warna teks: #000000. Line-height: 1.15.
+Ukuran font body: 12px.
+Ukuran judul dokumen: 14px (Bold, Uppercase, rata tengah).
+KOP SURAT (HEADER):
+Layout menggunakan display: table. Kolom kiri (15%) untuk Logo, Kolom kanan (85%) rata tengah untuk Teks.
+Baris 1 & 2 (Pemerintah & Kecamatan): font 16px bold.
+Baris 3 (Nama RT/RW): font 14px bold.
+Baris 4 (Alamat): font 12px normal.
+Garis bawah ganda (border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px).
+TABEL DATA:
+Lebar 100%, border-collapse: collapse, border sel 1px solid #000, padding sel 8px.
+Background table header (th): #f2f2f2, teks bold, rata tengah.
+[PENTING - ANTI TERPOTONG]: Gunakan thead { display: table-header-group; } agar header berulang di halaman 2. Gunakan tr { page-break-inside: avoid; break-inside: avoid; } pada CSS agar baris data tidak terpotong setengah jika kena pindah halaman.
+AREA TANDA TANGAN:
+Layout menggunakan display: table dengan lebar 100%. Dua kolom sejajar (display: table-cell; width: 50%; text-align: center; vertical-align: top;), tanpa border.
+Berikan ruang vertikal tinggi 80px di bawah jabatan untuk ruang tanda tangan basah.
+Nama terang dibold dan digarisbawahi.
+[PENTING - ANTI TERPOTONG]: Bungkus area tanda tangan ini dan berikan CSS page-break-inside: avoid; agar satu blok tanda tangan tidak terpisah di halaman yang berbeda.
+FOOTER:
+Teks ukuran 10px, italic, #666666, letakkan rata tengah (fixed position) di bagian paling bawah halaman."
+
+💻 Kode HTML & CSS Lengkap
+Anda bisa langsung menyalin dan mem-paste (Tempel) kode ini di file Replit Anda (misal template.html). Kode ini sudah diuji dan secara spesifik menggunakan display: table alih-alih flexbox untuk jaminan 100% kompatibel dengan generator PDF manapun.
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Laporan Keuangan Kas Utama</title>
+    <style>
+        /* SETUP HALAMAN */
+        @page {
+            size: A4 portrait;
+            margin: 2cm;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #000000;
+            line-height: 1.15;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* HEADER (KOP SURAT) - Menggunakan Table Layout agar stabil di PDF renderer */
+        .kop-surat {
+            display: table;
+            width: 100%;
+            border-bottom: 3px double #000000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .kop-logo {
+            display: table-cell;
+            vertical-align: middle;
+            width: 15%;
+            text-align: left;
+        }
+
+        .kop-logo img {
+            width: 70px;
+            height: auto;
+        }
+
+        .kop-teks {
+            display: table-cell;
+            vertical-align: middle;
+            width: 85%;
+            text-align: center;
+            padding-right: 15%; /* Mengimbangi ruang logo agar teks tetap di tengah */
+        }
+
+        .kop-line-1, .kop-line-2 {
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .kop-line-3 {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 5px 0 0 0;
+        }
+
+        .kop-line-4 {
+            font-size: 12px;
+            font-weight: normal;
+            margin: 5px 0 0 0;
+        }
+
+        /* JUDUL DOKUMEN */
+        .judul-dokumen {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 20px;
+            /* Mencegah judul sendirian di halaman bawah terpisah dari tabelnya */
+            page-break-after: avoid; 
+            break-after: avoid;
+        }
+
+        .periode-teks {
+            font-size: 12px;
+            font-weight: normal;
+            margin-bottom: 10px;
+        }
+
+        /* TABEL TRANSAKSI */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 20px;
+        }
+
+        /* [KUNCI 1] Agar Header Tabel (NO, TANGGAL, dll) Berulang di Setiap Halaman Baru */
+        thead {
+            display: table-header-group;
+        }
+
+        tfoot {
+            display: table-footer-group;
+        }
+
+        th, td {
+            border: 1px solid #000000;
+            padding: 8px;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* [KUNCI 2] Mencegah Baris Tabel Terpotong di Tengah (Page Break Issue) */
+        tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        /* AREA TANDA TANGAN */
+        .signature-container {
+            display: table;
+            width: 100%;
+            border: none;
+            margin-top: 30px;
+            /* [KUNCI 3] Mencegah area tanda tangan terpisah ke halaman selanjutnya */
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .signature-col {
+            display: table-cell;
+            width: 50%;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .signature-space {
+            height: 80px; /* Ruang 80px untuk tempat tanda tangan basah */
+        }
+
+        .signature-name {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* FOOTER */
+        .footer {
+            font-size: 10px;
+            font-style: italic;
+            color: #666666;
+            text-align: center;
+            /* Mengikat tulisan terus di area bawah halaman cetak */
+            position: fixed; 
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: #ffffff;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="kop-surat">
+        <div class="kop-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Coat_of_arms_of_Semarang.svg" alt="Logo Pemkot Semarang">
+        </div>
+        <div class="kop-teks">
+            <div class="kop-line-1">PEMERINTAH KOTA SEMARANG</div>
+            <div class="kop-line-2">KECAMATAN PEDURUNGAN</div>
+            <div class="kop-line-3">RUKUN TETANGGA 02 / RUKUN WARGA 11</div>
+            <div class="kop-line-4">Jl. Majapahit No. 123, Semarang, Kode Pos 50192</div>
+        </div>
+    </div>
+
+    <div class="judul-dokumen">
+        LAMPIRAN: RIWAYAT TRANSAKSI DEBET KREDIT KAS UTAMA
+        <div class="periode-teks">Periode: Mei 2026</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 5%;">NO</th>
+                <th style="width: 15%;">TANGGAL</th>
+                <th style="width: 40%;">KETERANGAN</th>
+                <th style="width: 13%;">DEBET</th>
+                <th style="width: 13%;">KREDIT</th>
+                <th style="width: 14%;">SALDO</th>
+                <th style="width: 10%;">BUKTI</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center">1</td>
+                <td class="text-center">18 Mei 2026</td>
+                <td>Pembangunan Januari-Desember 2026 - THOMSON PRANGGONO</td>
+                <td class="text-right">Rp 120.000</td>
+                <td class="text-center">-</td>
+                <td class="text-right">Rp 120.000</td>
+                <td class="text-center">-</td>
+            </tr>
+            </tbody>
+    </table>
+
+    <div class="signature-container">
+        <div class="signature-col">
+            Mengetahui,<br>
+            Ketua RT 02
+            <div class="signature-space"></div>
+            <div class="signature-name">NAMA KETUA RT</div>
+        </div>
+        <div class="signature-col">
+            Semarang, 23 Mei 2026<br>
+            Bendahara RT 02
+            <div class="signature-space"></div>
+            <div class="signature-name">THOMSON PRANGGONO</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Laporan Kas Keuangan RT 02 / RW 11 - Dicetak secara otomatis melalui sistem keuangan digital.
+    </div>
+
+</body>
+</html>

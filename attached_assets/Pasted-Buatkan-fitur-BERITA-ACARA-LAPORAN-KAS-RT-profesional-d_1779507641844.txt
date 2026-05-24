@@ -1,0 +1,168 @@
+Buatkan fitur “BERITA ACARA LAPORAN KAS RT” profesional dan siap cetak PDF untuk aplikasi bendahara berbasis web dengan desain resmi instansi Pemerintah Kota Semarang.
+
+SPESIFIKASI UTAMA:
+- Tema resmi pemerintahan.
+- Tampilan clean, modern, rapi, formal.
+- Background putih.
+- Gunakan border tipis hitam.
+- Font formal seperti Arial / Times New Roman.
+- Margin dokumen standar A4.
+- Support print dan export PDF.
+- Responsive desktop dan mobile.
+- Gunakan layout seperti surat resmi Indonesia.
+
+HEADER / KOP SURAT:
+- Logo Pemerintah Kota Semarang di pojok kiri atas dengan ukuran proporsional dan presisi.
+- Sebelah kanan logo terdapat:
+  PEMERINTAH KOTA SEMARANG
+  KELURAHAN [DINAMIS]
+  KECAMATAN [DINAMIS]
+  Alamat instansi
+- Tambahkan garis horizontal tebal hitam di bawah kop surat.
+- Header harus simetris dan profesional.
+
+JUDUL:
+Tampilkan tengah:
+BERITA ACARA LAPORAN KAS
+PADA RT 005 : [NAMA KAS]
+BULAN : [NAMA BULAN & TAHUN]
+
+ISI BERITA ACARA:
+Tampilkan paragraf otomatis:
+
+“Pada hari ini, [Nama Hari] tanggal [Tanggal Digital] bulan [Nama Bulan] tahun [Tahun], kami yang bertanda tangan di bawah ini:”
+
+PIHAK PEMERIKSA:
+Nama : [Nama Ketua RT]
+NIK : [NIK Ketua RT]
+Jabatan : Ketua RT 005
+
+Tambahkan teks:
+“Selanjutnya disebut sebagai Pemeriksa.”
+
+PIHAK YANG DIPERIKSA:
+Nama : [Nama Bendahara]
+NIK : [NIK Bendahara]
+Jabatan : Bendahara RT 005
+
+Tambahkan teks:
+“Selanjutnya disebut sebagai yang diperiksa.”
+
+========================================
+BAGIAN 1 — KAS UTAMA
+========================================
+
+Judul:
+1. KAS UTAMA TERDIRI DARI
+
+Gunakan tabel profesional dengan kolom:
+NO | URAIAN | DEBET (Rp) | KREDIT (Rp) | SALDO (Rp)
+
+Isi otomatis:
+1. Saldo Awal
+2. Debit Kredit Transaksi Perbulan
+3. Iuran Pembangunan
+4. Iuran Uang Meja
+
+Tambahkan:
+TOTAL SALDO AKHIR
+
+Semua nominal otomatis format Rupiah Indonesia:
+contoh:
+Rp 1.250.000
+
+========================================
+BAGIAN 2 — KAS TERPISAH
+========================================
+
+Sub Bagian A:
+Iuran Uang 17 Agustus
+
+Tabel:
+URAIAN | SALDO BULAN LALU | SALDO AKHIR
+
+Isi:
+Saldo bulan lalu > Saldo akhir
+
+Sub Bagian B:
+Iuran Sosial
+
+Tabel:
+URAIAN | SALDO BULAN LALU | SALDO BULAN SEKARANG
+
+Isi:
+Saldo bulan lalu (langsung setor ke Arisan Ibu-Ibu) > Saldo bulan sekarang
+
+========================================
+LAMPIRAN TRANSAKSI
+========================================
+
+Judul:
+LAMPIRAN: RIWAYAT TRANSAKSI DEBET KREDIT KAS UTAMA
+
+Gunakan tabel:
+TANGGAL | KETERANGAN | DEBET | KREDIT | SALDO | BUKTI
+
+Data transaksi diambil otomatis dari database transaksi kas utama.
+
+FITUR:
+- Filter berdasarkan bulan dan tahun.
+- Auto hitung saldo akhir.
+- Auto hitung total debit kredit.
+- Auto generate nomor berita acara.
+- Auto generate tanggal Indonesia.
+- Support print window.
+- Export PDF ukuran A4.
+- Tombol:
+  - Cetak
+  - Download PDF
+  - Preview
+
+========================================
+TANDA TANGAN
+========================================
+
+Buat area tanda tangan kanan kiri:
+
+Kiri:
+Pemeriksa
+Ketua RT 005
+
+(__________________)
+
+Kanan:
+Yang diperiksa
+Bendahara RT 005
+
+(__________________)
+
+Tambahkan jarak tanda tangan realistis seperti dokumen resmi.
+
+========================================
+TEKNIS IMPLEMENTASI
+========================================
+
+Gunakan:
+- React + Tailwind CSS
+- jsPDF atau html2pdf
+- Komponen modular
+- Data dinamis dari database
+- Siap integrasi PostgreSQL / Supabase
+- Optimasi print CSS:
+  @media print
+
+Buat tampilan sangat mirip dokumen pemerintahan resmi Indonesia.
+Fokus pada:
+- Presisi alignment
+- Kerapihan tabel
+- Konsistensi margin
+- Profesionalitas visual
+- Layout A4 siap cetak
+
+Tambahkan:
+- watermark transparan “RT 005”
+- nomor dokumen otomatis
+- footer kecil:
+  “Dokumen dibuat otomatis oleh Sistem Bendahara RT”
+
+Pastikan seluruh halaman tidak berantakan saat dicetak PDF maupun printer biasa.

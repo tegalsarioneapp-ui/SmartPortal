@@ -1,0 +1,69 @@
+Act as an Expert Full-Stack Web Developer. Please build a modern, responsive web application called "PORTAL BENDAHARA" (RT Treasurer Dashboard). 
+Use HTML, CSS, JavaScript, and TailwindCSS for a clean, professional, and user-friendly UI. You must use a framework like React.js (with Context API / Zustand / Redux) or vanilla JS with a robust centralized state manager + LocalStorage to ensure data persistence.
+
+### CRITICAL RULE: DATA INTERCONNECTIVITY (SINGLE SOURCE OF TRUTH)
+All data across the portal MUST be strictly interconnected, continuous, and synchronized in real-time. 
+- If a user inputs data in "ben-input" or "ben-iuran", the total balances in "ben-laporan", the visual indicators in "ben-matriks", and the charts in "ben-Alisa" MUST automatically and instantly update.
+- If a setting (like nominal fee) is changed in "Setting", all calculations across the entire portal must reflect this new value immediately.
+- Use a mock initial JSON database, but allow the state to be updated and read globally across all components/menus.
+
+Here is the exact architecture and feature specification you must implement:
+
+### 1. LAYOUT & NAVIGATION
+Create a Sidebar navigation containing the following menus: Input, Iuran, Laporan, Matriks, Analisa, Arsip, and Setting. The main content area should change based on the selected menu dynamically without reloading the page.
+
+### 2. PAGE SPECIFICATIONS
+
+#### A. ben-input (Kas Manual)
+- A form to input manual cash transactions.
+- A "Riwayat Transaksi Perbulan" (Monthly Transaction History) data table.
+- Include filters for the table: Filter by Nama (Name), Bulan (Month), Jenis Transaksi (Transaction Type), and Tanggal (Date).
+
+#### B. ben-iuran (Iuran Kolektif)
+- A form for collective dues per resident with a month override feature.
+- Dropdown 1: Select "Nama Warga Terdaftar" (Registered Resident Name).
+- Dropdown 2: Select "Tahun" and "Bulan".
+- Checkboxes/Input fields for the payment categories: Uang Pembangunan, Uang Meja, Uang 17 Agustus, and Uang Sosial.
+- SUBMITTING this form must globally update the resident's payment status in "ben-matriks" and the balances in "ben-laporan".
+
+#### C. ben-laporan (Laporan Kas RT)
+Create a tabbed view or two sections for reports (Data must be calculated automatically from the global state):
+1. Laporan Kas Utama:
+   - Includes data for Uang Pembangunan, Uang Meja, and Arus Transaksi Input Kas Manual.
+   - Display logic: Saldo Awal (Initial Balance) -> Total Pemasukan/Pengeluaran -> Saldo Akhir (Final Balance).
+   - Action buttons: Cetak (Print), Preview Cetak (Print Preview), Download PDF (use jsPDF or window.print).
+2. Laporan Kas Terpisah:
+   - Sub-section for Uang 17 Agustus: Saldo Awal -> Pemasukan Iuran 17 Agustus -> Saldo Akhir.
+   - Sub-section for Uang Sosial: Saldo Awal -> Pemasukan Iuran Sosial -> Saldo Akhir.
+
+#### D. ben-matriks (Matriks Iuran)
+- Top section: 4 Summary Cards dynamically calculated from the global state:
+  1. Uang Pembangunan: "Uang Terkumpul Bulan Berkenaan" - (Nominal iuran x jumlah warga).
+  2. Uang Meja: (Jumlah iuran bulanan x Jumlah Warga Hadir) = Total to be given to Tuan Rumah.
+  3. Uang 17 Agustus: (Jumlah iuran bulanan x Jumlah Warga Hadir) = Jumlah Terkumpul.
+  4. Uang Sosial: (Jumlah iuran bulanan x Jumlah Warga Hadir) = Jumlah Terkumpul.
+- Bottom section (Rekap Warga):
+  - A dropdown to select a resident's name.
+  - When selected, display a monthly matrix showing their payment status mapped from the global state (Green Checkmark for Paid, Red Cross for Unpaid).
+  - Action Button 1: "Bayar Otomatis Kekurangan" -> calculates missing payments, updates state, auto-generates a receipt, and opens WhatsApp Web.
+  - Action Button 2: "WhatsApp Info Rekap" -> generates a polite auto-formatted message (prologue) containing the resident's specific payment recap and opens the WhatsApp API (`https://wa.me/`) to send it.
+
+#### E. ben-Alisa (Analisa)
+- A dashboard showing the percentage of economic growth/analytics for each POS: Kas Utama, Iuran Pembangunan, Uang Meja, Uang 17 Agustus, Uang Sosial, and Defisit Kas.
+- Use simple charts (Chart.js/Recharts) or visual progress bars mapped to the global state.
+
+#### F. ben-arsip (Arsip BA)
+- A table listing Official Reports (Arsip Berita Acara).
+- Each row must have 3 Action Buttons: Preview, Download, and Delete.
+
+#### G. Setting (Pengaturan)
+- Form to set "Nama Bendahara" (Treasurer Name) and "Bendahara Pembantu" (Assistant Treasurer Name).
+- Dynamic Settings section to add new "Iuran Kolektif" (Collective Dues), set the "Nominal Iuran", and set the "Tanggal Penetapan Iuran" (Effective Date).
+- Ensure these settings act as global variables that update the logic, required nominals, and options in all other portal menus (especially ben-iuran and ben-matriks).
+
+### 3. TECHNICAL REQUIREMENTS
+- Focus heavily on State Management. Use a dummy data array for residents, but ensure any new transaction or setting modification alters the global state accurately.
+- Ensure the design is modern (use cards, soft shadows, clear typography).
+- Make the app responsive (mobile-friendly).
+
+Please generate the complete, working code for this application structure.

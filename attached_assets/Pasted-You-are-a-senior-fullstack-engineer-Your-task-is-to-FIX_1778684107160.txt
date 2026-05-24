@@ -1,0 +1,166 @@
+You are a senior fullstack engineer. Your task is to FIX and STABILIZE my project so that frontend (Vercel) and backend (Railway) are fully connected and working in production without errors.
+
+Project structure:
+
+* Monorepo
+* Frontend: Vite + React → artifacts/smart-portal-rt
+* Backend: Express API → artifacts/api-server
+* Repo: GitHub (connected to Vercel & Railway auto deploy)
+
+Production URLs:
+
+* Backend (Railway): https://smartportal-production.up.railway.app
+* Frontend (Vercel): already deployed
+
+CURRENT PROBLEM:
+Frontend shows:
+" Tidak bisa menghubungi server "
+This happens because frontend is not correctly calling backend API.
+
+GOAL:
+
+* Frontend must successfully fetch data from backend
+* Remove all connection errors
+* Make system production-ready
+* Ensure every push to GitHub auto-deploys correctly to Vercel & Railway
+
+━━━━━━━━━━━━━━━━━━━━━━━
+TASKS (DO ALL, NO EXPLANATION)
+━━━━━━━━━━━━━━━━━━━━━━━
+
+1. FIX FRONTEND API CONNECTION
+
+File:
+artifacts/smart-portal-rt/_sync.js
+
+Replace ANY dynamic or env-based API URL with HARD FIX:
+
+const API_BASE_URL = "https://smartportal-production.up.railway.app";
+
+Ensure ALL API endpoints use this base:
+
+API_BASE = `${API_BASE_URL}/api/kv`
+KEYS_URL = `${API_BASE_URL}/api/kv/keys`
+SSE_URL = `${API_BASE_URL}/api/kv/stream`
+AUDIT_URL = `${API_BASE_URL}/api/audit`
+
+REMOVE:
+
+* window.**VITE_API_URL**
+* import.meta.env usage for API
+
+Ensure NO relative "/api" calls remain anywhere.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+2. FIX SERVICE WORKER
+
+File:
+artifacts/smart-portal-rt/public/sw.js
+
+Ensure:
+
+const BACKEND_URL = "https://smartportal-production.up.railway.app";
+
+Verify ALL API calls use:
+`${BACKEND_URL}/api/...`
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+3. VERIFY BACKEND API
+
+Backend MUST respond correctly:
+
+GET https://smartportal-production.up.railway.app/api/kv
+
+Response format MUST be:
+
+{
+"entries": [],
+"serverTime": "ISO_STRING"
+}
+
+If missing → implement route in:
+
+artifacts/api-server/src/routes/
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+4. FIX BACKEND CONFIG
+
+File:
+artifacts/api-server/src/app.ts
+
+Ensure:
+
+import cors from "cors";
+app.use(cors({ origin: "*" }));
+
+Ensure server listens on:
+
+const port = process.env.PORT || 8080;
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+5. REMOVE MONOREPO BREAKERS (IMPORTANT)
+
+Backend must NOT depend on:
+"workspace:*"
+
+If found in package.json:
+→ replace with actual local code OR remove
+
+Ensure Railway can build using npm (not pnpm workspace)
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+6. ENSURE DEPLOY COMPATIBILITY
+
+Frontend:
+
+* Vercel Root: artifacts/smart-portal-rt
+* Build: pnpm build
+* Output: dist
+
+Backend:
+
+* Railway Root: artifacts/api-server
+* Must auto-detect start command
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+7. VALIDATE CONNECTION
+
+Ensure frontend requests go to:
+
+https://smartportal-production.up.railway.app/api/...
+
+NOT:
+"/api/..."
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+8. OUTPUT RESULT (MANDATORY)
+
+Provide:
+
+* List of ALL modified files
+* Final versions of:
+  _sync.js
+  sw.js
+  backend route /api/kv
+* Confirmation:
+  ✔ Frontend can fetch backend
+  ✔ No more "Tidak bisa menghubungi server"
+  ✔ Ready for GitHub push → auto deploy
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+RULES:
+
+* DO NOT explain theory
+* DO NOT give suggestions
+* DO NOT ask questions
+* JUST FIX EVERYTHING COMPLETELY
+
+And make this app can use better 

@@ -1,0 +1,135 @@
+You are a senior backend engineer.
+
+Fix the production API so it works correctly with a Vercel frontend and Railway backend. The current issues are:
+
+* CORS errors from browser
+* 500 errors on /api/kv
+* SSE (/api/kv/stream) failing
+* Frontend cannot load data
+
+━━━━━━━━━━━━━━━━━━━━━━━
+GOAL
+━━━━━━━━━━━━━━━━━━━━━━━
+
+Make the backend fully production-ready so:
+
+✔ No CORS errors
+✔ /api/kv returns 200
+✔ SSE works
+✔ Frontend can fetch data from Vercel
+
+━━━━━━━━━━━━━━━━━━━━━━━
+TASKS (DO ALL, NO EXPLANATION)
+━━━━━━━━━━━━━━━━━━━━━━━
+
+1. FIX CORS (CRITICAL)
+
+In Express app setup:
+
+* Allow all origins safely
+* Support credentials
+* Handle preflight requests
+
+Implement:
+
+* app.use(cors({ origin: true, credentials: true }))
+* app.options("*", cors())
+
+Ensure ALL responses include correct headers:
+
+* Access-Control-Allow-Origin
+* Access-Control-Allow-Headers
+* Access-Control-Allow-Methods
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+2. FIX /api/kv 500 ERROR
+
+Wrap ALL route handlers with try/catch.
+
+For /api/kv:
+
+* Log full error using console.error
+* Return structured error JSON
+
+Example behavior:
+
+* On success → 200 JSON
+* On error → 500 { error: "message" }
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+3. VERIFY DATABASE CONNECTION
+
+* Ensure DATABASE_URL is used from process.env
+
+* Add defensive check:
+
+  * If DB fails → return degraded state instead of crash
+
+* Ensure ensureSchema() runs correctly and does not silently fail
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+4. FIX SSE ENDPOINT (/api/kv/stream)
+
+* Add correct headers:
+
+  Content-Type: text/event-stream
+  Cache-Control: no-cache
+  Connection: keep-alive
+
+* Add CORS headers to SSE response
+
+* Ensure EventSource works from browser (no CORS block)
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+5. ADD GLOBAL ERROR HANDLER
+
+At the end of Express app:
+
+app.use((err, req, res, next) => {
+console.error(err);
+res.status(500).json({ error: "Internal Server Error" });
+});
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+6. ADD DEBUG LOGGING
+
+Log:
+
+* incoming requests (method + path)
+* database connection status
+* errors in /api/kv
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+7. ENSURE SERVER BINDS CORRECTLY
+
+Server must use:
+
+const port = process.env.PORT || 8080;
+
+app.listen(port, "0.0.0.0");
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+8. VERIFY OUTPUT
+
+After fix, the system must:
+
+✔ /api/health → 200 healthy
+✔ /api/kv → 200 JSON
+✔ /api/kv/stream → connected (no CORS error)
+✔ No red errors in browser Network tab
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+RULES
+
+* DO NOT explain
+* DO NOT skip steps
+* FIX everything completely
+* Output working production-ready code

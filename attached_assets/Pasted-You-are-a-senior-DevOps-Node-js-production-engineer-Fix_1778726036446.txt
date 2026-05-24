@@ -1,0 +1,127 @@
+You are a senior DevOps + Node.js production engineer.
+
+Fix this project so it deploys and runs correctly on Railway using Nixpacks with pnpm.
+
+## CONTEXT
+
+* Backend is located in: artifacts/api-server
+* Build currently succeeds locally but fails in Railway
+* Error: pnpm not found during build
+* Cause: pnpm installed incorrectly (global install not available in PATH)
+* Goal: Make Railway build + start work reliably
+
+---
+
+## YOUR TASK
+
+### 1. FIX NIXPACKS CONFIG (CRITICAL)
+
+Create or update `nixpacks.toml` in project root with EXACT content:
+
+[phases.setup]
+nixPkgs = ["nodejs_24"]
+
+[phases.install]
+cmds = [
+"corepack enable",
+"corepack prepare pnpm@latest --activate",
+"pnpm install --frozen-lockfile"
+]
+
+[phases.build]
+cmds = ["pnpm build"]
+
+[start]
+cmd = "node artifacts/api-server/dist/index.mjs"
+
+---
+
+### 2. REMOVE WRONG INSTALL METHODS
+
+Search entire project and REMOVE any usage of:
+
+* npm install -g pnpm
+* direct pnpm usage without corepack
+
+---
+
+### 3. VERIFY BUILD OUTPUT
+
+Ensure that:
+
+* artifacts/api-server builds into:
+  artifacts/api-server/dist/index.mjs
+
+If not:
+
+* Fix build script in package.json
+
+---
+
+### 4. FIX PACKAGE.JSON (API SERVER)
+
+Ensure scripts exist:
+
+"scripts": {
+"build": "...",
+"start": "node dist/index.mjs"
+}
+
+---
+
+### 5. ENSURE SERVER BINDS CORRECTLY
+
+Inside API server:
+
+* Must use:
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, "0.0.0.0", () => {
+console.log("Server running");
+});
+
+---
+
+### 6. ENSURE NON-BLOCKING DB INIT
+
+* Any DB init must NOT block server start
+* Do NOT await DB before listen()
+
+---
+
+### 7. ADD HEALTH ENDPOINT
+
+app.get("/api/health", (req, res) => {
+res.json({ status: "ok" });
+});
+
+---
+
+### 8. ADD BASIC CORS
+
+app.use(cors({ origin: "*" }));
+
+---
+
+### 9. DO NOT BREAK FRONTEND BUILD
+
+* Do not modify frontend config
+* Only fix backend + deployment
+
+---
+
+## OUTPUT
+
+After fixing:
+
+1. Show final nixpacks.toml
+2. Show API package.json scripts
+3. Show server entry file
+4. Confirm:
+
+   * Build works
+   * Server starts
+   * /api/health returns 200
+
+DO NOT ASK QUESTIONS.
+JUST FIX EVERYTHING REQUIRED FOR PRODUCTION.

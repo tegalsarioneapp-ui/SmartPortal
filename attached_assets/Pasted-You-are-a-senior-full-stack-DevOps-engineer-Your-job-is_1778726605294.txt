@@ -1,0 +1,246 @@
+You are a senior full-stack + DevOps engineer.
+
+Your job is to FIX and STABILIZE this entire project so it works correctly in BOTH:
+
+1. Railway production (backend)
+2. Replit preview (full app)
+
+DO NOT BREAK anything that is already working in production.
+
+---
+
+# 🎯 GOALS (MANDATORY)
+
+1. App must CONNECT to backend correctly (no HTTP 500)
+2. App must be usable (data loads, no blank UI)
+3. Login must work normally (no reload loop / no lost session)
+4. Replit must be able to PREVIEW the app
+5. Railway deployment must remain WORKING (do not break it)
+
+---
+
+# ⚠️ HARD RULES
+
+* DO NOT remove pnpm workspace
+* DO NOT remove nixpacks.toml
+* DO NOT change Railway start command
+* DO NOT break production API URL logic
+* ONLY ADD safe fallback logic for development
+
+---
+
+# 🔧 PART 1 — BACKEND STABILITY (CRITICAL)
+
+## Fix server startup
+
+Ensure:
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+console.log("[Server] Listening on", PORT);
+});
+
+---
+
+## Prevent crash on DB
+
+* NEVER throw if DATABASE_URL missing
+* Replace any top-level throw with:
+
+if (!process.env.DATABASE_URL) {
+console.error("[DB] DATABASE_URL missing");
+}
+
+---
+
+## Non-blocking DB init
+
+DO NOT block server start:
+
+// ❌ WRONG
+await ensureSchema();
+
+// ✅ CORRECT
+ensureSchema().catch(err => console.error("[DB]", err));
+
+---
+
+## Health endpoint
+
+app.get("/api/health", (req, res) => {
+res.json({ status: "ok" });
+});
+
+---
+
+## CORS
+
+app.use(cors({
+origin: "*"
+}));
+
+---
+
+# 🔧 PART 2 — FRONTEND API DETECTION (VERY IMPORTANT)
+
+Fix ALL frontend API calls to support BOTH environments:
+
+const API_BASE =
+location.hostname.includes("replit") ||
+location.hostname === "localhost"
+? ""
+: "https://smartportal-production.up.railway.app";
+
+Use ONLY relative path in dev:
+fetch(API_BASE + "/api/kv")
+
+---
+
+# 🔧 PART 3 — FIX _sync.js (DATA LOADING ISSUE)
+
+Ensure:
+
+* NEVER block UI forever
+* Handle these states:
+
+1. loading → show overlay
+2. offline → show retry button
+3. degraded → show warning
+4. healthy → remove overlay
+
+IMPORTANT:
+
+* If fetch fails → DO NOT freeze app
+* Always allow retry
+
+---
+
+# 🔧 PART 4 — LOGIN FIX (CRITICAL)
+
+Ensure login works:
+
+* DO NOT use full page reload for login
+* DO NOT clear localStorage before sync completes
+
+Before logout:
+
+await window.GT_FLUSH_NOW();
+
+Fix session persistence:
+
+localStorage must NOT be wiped unintentionally
+
+---
+
+# 🔧 PART 5 — REPLIT PREVIEW (SAFE MODE)
+
+DO NOT touch production config.
+
+ADD dev-only support:
+
+## Root package.json
+
+"scripts": {
+"dev": "concurrently "npm:dev:api" "npm:dev:web"",
+"dev:api": "cd artifacts/api-server && npm install && npm run dev",
+"dev:web": "vite"
+}
+
+---
+
+## API dev mode
+
+artifacts/api-server/package.json:
+
+"scripts": {
+"dev": "tsx src/index.ts"
+}
+
+---
+
+## Vite proxy
+
+vite.config.ts:
+
+server: {
+port: 3000,
+host: true,
+proxy: {
+"/api": {
+target: "http://localhost:3001",
+changeOrigin: true
+}
+}
+}
+
+---
+
+## API dev port
+
+const PORT = process.env.PORT || 3001;
+
+---
+
+## .replit
+
+run = "npm run dev"
+
+---
+
+# 🔧 PART 6 — SERVICE WORKER (IMPORTANT)
+
+Fix sw.js:
+
+* NEVER cache /api
+* ALWAYS fetch network for API
+
+if (url.pathname.startsWith('/api')) {
+return fetch(event.request);
+}
+
+---
+
+# 🔧 PART 7 — FINAL VALIDATION
+
+You MUST confirm:
+
+✔ Railway:
+
+* /api/health → 200
+* No 500 errors
+* Server starts without crash
+
+✔ Frontend:
+
+* Data loads correctly
+* No infinite loading
+* No console errors
+
+✔ Login:
+
+* Works without reload loop
+* Session persists
+
+✔ Replit:
+
+* Clicking "Run" shows working app
+* API works via proxy
+
+---
+
+# 📦 OUTPUT REQUIRED
+
+Show:
+
+1. Updated backend entry file
+2. Updated _sync.js key parts
+3. Updated vite.config.ts
+4. Updated package.json (root + api)
+5. Confirmation ALL goals achieved
+
+---
+
+DO NOT ASK QUESTIONS.
+DO NOT PARTIALLY FIX.
+FIX EVERYTHING END-TO-END.

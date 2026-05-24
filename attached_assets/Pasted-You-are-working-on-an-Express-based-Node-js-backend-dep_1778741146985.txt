@@ -1,0 +1,104 @@
+You are working on an Express-based Node.js backend deployed on Railway.
+
+## 🧠 Context & Problem Timeline
+
+This project was originally running on Replit using a PostgreSQL database with an internal hostname (`helium`). That worked locally inside Replit.
+
+Then we deployed the backend to Railway, but encountered persistent **502 errors**. After investigation, we found the root cause:
+
+1. The app was using a Replit internal DB (`helium`) → not accessible from Railway.
+2. This caused all DB calls to hang → Railway returned 502.
+3. We migrated the database successfully to Railway PostgreSQL.
+4. Updated `DATABASE_URL` to Railway public URL.
+5. Verified database connection manually using `psql` → works.
+6. Verified data exists (`kv_store` table is present).
+
+Now:
+
+* The server **starts successfully** (logs confirm it)
+* Database **connects successfully**
+* BUT hitting `/api/debug/db` returns:
+  → "Application failed to respond"
+
+## 💥 Current Root Issue
+
+The endpoint `/api/debug/db` is either:
+
+* not defined
+* defined in the wrong file (not registered in Express)
+* or not sending a response (missing `res.json()`)
+
+## 🎯 Your Task
+
+Fix the backend so `/api/debug/db` works correctly.
+
+### ✅ Requirements
+
+1. Locate the main Express server file (likely one of):
+
+   * `server/index.ts`
+   * `server/server.ts`
+   * or wherever `const app = express()` is defined
+
+2. Add this endpoint **before `app.listen()`**:
+
+```ts
+app.get("/api/debug/db", async (req, res) => {
+  try {
+    const result = await db.query("SELECT 1");
+    res.json({
+      connected: true,
+      db: "ok",
+      time: new Date(),
+      result: result.rows
+    });
+  } catch (err: any) {
+    console.error("DB ERROR:", err);
+    res.status(500).json({
+      connected: false,
+      error: err.message
+    });
+  }
+});
+```
+
+3. Ensure:
+
+   * `db` is correctly imported
+   * No middleware blocks the request
+   * The route is actually registered in the running server
+
+4. Confirm the server uses:
+
+```ts
+const port = process.env.PORT || 3000;
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on port ${port}`);
+});
+```
+
+## 🧪 Expected Result
+
+After deployment, visiting:
+
+```
+/api/debug/db
+```
+
+should return:
+
+```json
+{
+  "connected": true
+}
+```
+
+## 🚫 Important
+
+* Do NOT modify database config (already correct)
+* Do NOT change DATABASE_URL
+* Focus ONLY on fixing the Express route and response handling
+
+## 🎯 Goal
+
+Ensure the backend responds properly and eliminate the "Application failed to respond" error.

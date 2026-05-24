@@ -1,0 +1,104 @@
+You are working on an Express-based Node.js backend deployed on Railway.
+
+## 🧠 Full Context (IMPORTANT – read carefully)
+
+This project originally ran on Replit with a PostgreSQL database using an internal hostname (`helium`). That worked locally.
+
+When deployed to Railway:
+
+* The database was unreachable → caused 502 errors
+* We migrated the database to Railway PostgreSQL
+* Updated `DATABASE_URL` to the public Railway URL
+* Verified DB connection works (psql success)
+* Verified tables exist (`kv_store`)
+
+Now:
+
+* Server starts successfully (logs confirm listening on port 8080)
+* Database connects successfully
+* BUT calling `/api/debug/db` returns:
+  → "Application failed to respond"
+
+## 🔍 Investigation Result
+
+The endpoint `/api/debug/db` is already implemented correctly in:
+
+```
+server/routes/health.ts
+```
+
+However, it is NOT accessible in production.
+
+## 💥 Root Cause
+
+The routes defined in `server/routes/health.ts` are NOT mounted into the main Express app.
+
+So even though the endpoint exists, Express never registers it.
+
+## 🎯 Your Task
+
+Fix the routing so the endpoint becomes accessible.
+
+---
+
+## ✅ REQUIRED FIX
+
+1. Locate the main Express app file (likely one of):
+
+   * `server/app.ts`
+   * `server/index.ts`
+
+2. Import the health routes:
+
+```ts
+import healthRoutes from "./routes/health";
+```
+
+3. Mount the routes:
+
+```ts
+app.use("/api", healthRoutes);
+```
+
+4. Ensure:
+
+* This is placed AFTER middleware (like `express.json()`)
+* BEFORE `app.listen(...)`
+
+---
+
+## ⚠️ DO NOT DO THESE
+
+* Do NOT modify database logic
+* Do NOT change DATABASE_URL
+* Do NOT rewrite the debug endpoint (it already works)
+* Do NOT move files unnecessarily
+
+---
+
+## 🧪 Expected Result
+
+After deployment:
+
+```
+/api/debug/db
+```
+
+should return a valid JSON response like:
+
+```json
+{
+  "ok": true,
+  "database": {
+    "connection": {
+      "ok": true
+    }
+  }
+}
+```
+
+---
+
+## 🎯 Goal
+
+Fix Express routing so existing endpoints become reachable in Railway production.
