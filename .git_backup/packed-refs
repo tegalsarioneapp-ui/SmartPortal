@@ -1,8 +1,0 @@
-# pack-refs with: peeled fully-peeled sorted 
-323577035205d3f476e0d18f6cb1ff8c0730d1ed refs/heads/backup-before-force-push
-323577035205d3f476e0d18f6cb1ff8c0730d1ed refs/heads/main
-88998be6bb96672ba261de71e229cd5cf1461578 refs/heads/replit-agent
-a53042defcf94aea662138fdbf5861ebdd0c4384 refs/notes/commits
-323577035205d3f476e0d18f6cb1ff8c0730d1ed refs/remotes/gitsafe-backup/main
-dc270a352ac6cce7743accf7d6d419560527195e refs/remotes/origin/main
-88998be6bb96672ba261de71e229cd5cf1461578 refs/replit/agent-ledger

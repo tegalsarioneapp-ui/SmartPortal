@@ -47,3 +47,7 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+.git_backup/
+node_modules/
+.env
+.DS_Store
