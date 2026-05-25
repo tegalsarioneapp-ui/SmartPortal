@@ -1,0 +1,335 @@
+PROJECT REPOSITORY:
+https://github.com/tegalsarioneapp-ui/SmartPortal.git
+
+MISSION:
+Redesign the ENTIRE homepage and dashboard into a PREMIUM MODERN FINTECH MOBILE APP UI.
+
+The current application still feels like a responsive website.
+Transform it into a real fintech-style mobile application experience similar to:
+- Jago
+- SeaBank
+- Livin Mandiri
+- Revolut
+- Dana Premium
+- NeoBank
+
+==================================================
+MAIN OBJECTIVE
+==================================================
+
+The app MUST feel:
+- like a native mobile banking app
+- premium
+- modern
+- smooth
+- mobile-first
+- elegant
+- clean fintech dashboard
+
+This is NOT a normal website redesign.
+This is a FULL fintech mobile UI transformation.
+
+==================================================
+GLOBAL DESIGN SYSTEM
+==================================================
+
+Use:
+- TailwindCSS
+- shadcn/ui
+- Framer Motion
+- Lucide Icons
+- Mobile-first responsive design
+
+Design language:
+- minimalist fintech
+- glassmorphism light
+- soft shadows
+- rounded corners
+- gradient highlights
+- floating components
+- smooth transitions
+- elegant spacing
+
+==================================================
+COLOR SYSTEM
+==================================================
+
+Primary:
+- deep blue
+- indigo
+- emerald
+- white
+- soft gray
+
+Use gradients:
+- blue → indigo
+- emerald → teal
+
+Background:
+- soft light gray
+- premium fintech feel
+
+Dark mode compatible.
+
+==================================================
+APP STRUCTURE
+==================================================
+
+Transform the application into:
+- mobile banking style app
+- app-shell architecture
+- sticky mobile header
+- floating bottom navigation
+- mobile dashboard cards
+- touch-friendly interaction
+
+NO desktop feeling.
+
+==================================================
+HOMEPAGE REDESIGN
+==================================================
+
+Create a PREMIUM FINTECH HOMEPAGE.
+
+Sections:
+1. Greeting Header
+2. User Profile Area
+3. Main Balance Card
+4. Quick Action Buttons
+5. Statistics Summary
+6. Recent Activity
+7. Smart Features Section
+8. Notification Preview
+9. Shortcut Menu
+10. Bottom Navigation
+
+==================================================
+HEADER DESIGN
+==================================================
+
+Top header should contain:
+- user avatar
+- greeting text
+- notification icon
+- modern compact layout
+
+Style:
+- sticky top
+- blur background
+- premium fintech spacing
+
+==================================================
+MAIN BALANCE CARD
+==================================================
+
+Create large premium balance card.
+
+Features:
+- gradient background
+- rounded-3xl
+- glow shadow
+- masked account number
+- animated appearance
+- clean typography
+- modern financial feel
+
+Card must look similar to:
+- Jago balance card
+- Revolut card UI
+- modern banking dashboard
+
+==================================================
+QUICK ACTION BUTTONS
+==================================================
+
+Create floating quick actions:
+- Transfer
+- Payment
+- Reports
+- Activity
+- Users
+- Settings
+
+Style:
+- rounded-xl
+- icon top
+- label bottom
+- soft shadow
+- touch animation
+- mobile banking style
+
+==================================================
+STATISTICS SECTION
+==================================================
+
+Create modern statistics cards:
+- total income
+- total expense
+- active users
+- monthly reports
+
+Design:
+- mini floating cards
+- responsive grid
+- animated counters
+- clean icons
+
+==================================================
+RECENT ACTIVITY
+==================================================
+
+Create transaction/activity list like banking apps.
+
+Each item:
+- rounded card
+- icon/avatar
+- title
+- subtitle
+- timestamp
+- amount/status
+
+Modern mobile spacing.
+
+==================================================
+BOTTOM NAVIGATION
+==================================================
+
+Create PREMIUM floating bottom navigation.
+
+Menu:
+- Home
+- Dashboard
+- Activity
+- Reports
+- Profile
+
+Requirements:
+- fixed bottom
+- glassmorphism
+- rounded top
+- active animation
+- touch feedback
+- safe area support
+
+Must feel like:
+- Android banking app
+- iPhone fintech app
+
+==================================================
+RESPONSIVE SYSTEM
+==================================================
+
+Optimize for:
+- 320px
+- 360px
+- 390px
+- 412px
+- tablet
+
+Fix:
+- overflow-x
+- desktop scaling issues
+- oversized elements
+- broken widths
+- poor spacing
+
+Use:
+- flex-col md:flex-row
+- responsive grid
+- w-full
+- max-w-full
+- overflow-hidden
+
+==================================================
+TABLE REDESIGN
+==================================================
+
+Convert desktop tables into:
+- mobile cards
+OR
+- horizontal snap list
+
+Avoid ugly desktop tables on mobile.
+
+==================================================
+ANIMATIONS
+==================================================
+
+Add smooth fintech animations:
+- page transitions
+- floating cards
+- fade in
+- button tap effect
+- smooth hover
+- navbar animation
+- shimmer loading
+- skeleton loading
+
+Use Framer Motion.
+
+==================================================
+PWA / NATIVE APP FEEL
+==================================================
+
+Improve app feel:
+- standalone appearance
+- smooth scrolling
+- hidden browser feel
+- mobile safe-area
+- app-like transitions
+
+Add:
+- manifest.json
+- splash screen
+- theme-color
+- apple mobile support
+
+==================================================
+TYPOGRAPHY
+==================================================
+
+Use:
+- Inter
+OR
+- Geist
+
+Typography must feel:
+- modern
+- premium
+- fintech startup quality
+
+==================================================
+FINAL RESULT
+==================================================
+
+The final result MUST:
+- look like a modern banking application
+- feel like a native mobile app
+- be production-quality
+- fully mobile-first
+- elegant and smooth
+
+The app should no longer feel like a website.
+
+==================================================
+IMPORTANT
+==================================================
+
+Scan and refactor ALL frontend pages automatically.
+
+Do NOT break:
+- backend
+- APIs
+- database connection
+- authentication
+- existing business logic
+
+Only improve:
+- UI
+- UX
+- mobile responsiveness
+- design system
+- app feel
+- layout structure
+
+Maintain all current features while redesigning the frontend completely.

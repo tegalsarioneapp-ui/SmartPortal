@@ -12307,5 +12307,521 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
 }
 </style>
 
+<!-- ═══════════════════════════════════════════════════════════
+     GT FINTECH REDESIGN v1 — Premium Mobile Banking UI
+     Smart Portal RT 005 Tegalsari
+     Scope: #view-warga + mobile nav. NO feature/JS changes.
+     ═══════════════════════════════════════════════════════════ -->
+<style>
+/* ── Design tokens (light + dark) ─────────────────────────── */
+:root {
+  --ft-grad:         linear-gradient(135deg,#1e3a8a 0%,#2d3282 55%,#4338ca 100%);
+  --ft-grad-em:      linear-gradient(135deg,#059669 0%,#0d9488 100%);
+  --ft-shadow-card:  0 2px 14px rgba(15,23,42,.08), 0 1px 4px rgba(15,23,42,.04);
+  --ft-shadow-float: 0 8px 32px rgba(30,58,138,.18), 0 2px 8px rgba(0,0,0,.06);
+  --ft-shadow-hero:  0 12px 40px rgba(30,58,138,.35), 0 4px 12px rgba(0,0,0,.12);
+  --ft-r:  18px;
+  --ft-rl: 22px;
+  --ft-rs: 12px;
+}
+html[data-theme="dark"] {
+  --ft-shadow-card:  0 2px 14px rgba(0,0,0,.32), 0 1px 4px rgba(0,0,0,.2);
+  --ft-shadow-float: 0 8px 32px rgba(0,0,0,.45), 0 2px 8px rgba(0,0,0,.25);
+  --ft-shadow-hero:  0 12px 40px rgba(0,0,0,.5), 0 4px 12px rgba(0,0,0,.3);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GLOBAL WARGA LAYOUT
+══════════════════════════════════════════════════════════════ */
+#view-warga.warga-fb-layout {
+  background: var(--gt-bg, #f0f4f8) !important;
+}
+html[data-theme="dark"] #view-warga.warga-fb-layout {
+  background: #0b1220 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LEFT SIDEBAR — FINTECH NAV
+══════════════════════════════════════════════════════════════ */
+#view-warga .warga-fb-left {
+  background: var(--gt-surface, #fff) !important;
+  border-right: 1px solid var(--gt-border, #e8edf3) !important;
+  padding: 14px 10px 24px !important;
+  box-shadow: 2px 0 12px rgba(15,23,42,.05) !important;
+}
+
+/* User card → gradient fintech card */
+#view-warga .wfb-user-card {
+  background: var(--ft-grad) !important;
+  border-radius: 16px !important;
+  padding: 13px 14px !important;
+  margin-bottom: 10px !important;
+  gap: 10px !important;
+  transition: opacity .2s !important;
+  box-shadow: 0 4px 16px rgba(30,58,138,.3) !important;
+}
+#view-warga .wfb-user-card:hover { opacity: .92 !important; transform: none !important; }
+#view-warga .wfb-user-name { color: #fff !important; font-size: .85rem !important; font-weight: 700 !important; }
+#view-warga .wfb-user-sub  { color: rgba(255,255,255,.65) !important; font-size: .68rem !important; }
+#view-warga .wfb-avatar-sm {
+  background: rgba(255,255,255,.22) !important;
+  color: #fff !important;
+  border: 2px solid rgba(255,255,255,.3) !important;
+  border-radius: 50% !important;
+  width: 34px !important; height: 34px !important;
+  font-size: .95rem !important; font-weight: 700 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* Nav divider */
+#view-warga .wfb-divider { background: var(--gt-border, #e8edf3) !important; }
+
+/* Nav items */
+#view-warga .wfb-nav-item {
+  border-radius: var(--ft-rs) !important;
+  padding: 9px 12px !important;
+  margin-bottom: 2px !important;
+  font-size: .81rem !important;
+  font-weight: 600 !important;
+  color: var(--gt-text-2, #334155) !important;
+  transition: all .18s cubic-bezier(.4,0,.2,1) !important;
+}
+#view-warga .wfb-nav-item:hover {
+  background: rgba(37,99,235,.07) !important;
+  transform: translateX(3px) !important;
+  color: #1e40af !important;
+}
+html[data-theme="dark"] #view-warga .wfb-nav-item:hover {
+  background: rgba(96,165,250,.1) !important;
+  color: #93c5fd !important;
+}
+#view-warga .wfb-nav-item.active {
+  background: linear-gradient(135deg,rgba(30,58,138,.1),rgba(79,70,229,.13)) !important;
+  border-left: 3px solid #3b82f6 !important;
+  color: #1e40af !important;
+  font-weight: 700 !important;
+}
+html[data-theme="dark"] #view-warga .wfb-nav-item.active {
+  background: rgba(59,130,246,.18) !important;
+  border-left-color: #60a5fa !important;
+  color: #93c5fd !important;
+}
+/* Nav icon */
+#view-warga .wfb-nav-icon {
+  width: 30px !important; height: 30px !important;
+  border-radius: 9px !important;
+  background: #f1f5f9 !important;
+  font-size: .8rem !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+html[data-theme="dark"] #view-warga .wfb-nav-icon { background: #1e293b !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE BOTTOM NAV — GLASS PREMIUM
+══════════════════════════════════════════════════════════════ */
+.wfb-mobile-nav {
+  background: rgba(255,255,255,.9) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border-top: 1px solid rgba(226,232,240,.7) !important;
+  box-shadow: 0 -4px 24px rgba(30,58,138,.1), 0 -1px 0 rgba(226,232,240,.5) !important;
+  height: 68px !important;
+  padding: 0 6px env(safe-area-inset-bottom,0px) !important;
+}
+html[data-theme="dark"] .wfb-mobile-nav {
+  background: rgba(15,22,42,.92) !important;
+  border-top-color: rgba(35,49,82,.6) !important;
+  box-shadow: 0 -4px 28px rgba(0,0,0,.4) !important;
+}
+
+/* Mobile nav buttons */
+.wfb-mob-btn {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  padding: 6px 4px !important;
+  border-radius: 14px !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  color: #94a3b8 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .3px !important;
+  transition: all .2s cubic-bezier(.4,0,.2,1) !important;
+  position: relative !important;
+  min-width: 0 !important;
+}
+.wfb-mob-btn i { font-size: 20px !important; transition: transform .2s ease !important; }
+.wfb-mob-btn.active { color: #1e40af !important; }
+html[data-theme="dark"] .wfb-mob-btn.active { color: #60a5fa !important; }
+.wfb-mob-btn.active i { transform: translateY(-2px) scale(1.08) !important; }
+/* Active glow dot */
+.wfb-mob-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #1e40af;
+  left: 50%; transform: translateX(-50%);
+}
+html[data-theme="dark"] .wfb-mob-btn.active::after { background: #60a5fa; }
+
+/* ══════════════════════════════════════════════════════════════
+   DASHBOARD — GREETING HERO CARD (fintech balance-card feel)
+══════════════════════════════════════════════════════════════ */
+#view-warga .dsh-greeting {
+  background: var(--ft-grad) !important;
+  border-radius: var(--ft-rl) !important;
+  padding: 22px 20px !important;
+  margin-bottom: 20px !important;
+  box-shadow: var(--ft-shadow-hero) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+/* Decorative blobs */
+#view-warga .dsh-greeting::before {
+  content: '';
+  position: absolute; width: 220px; height: 220px; border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  top: -70px; right: -50px; pointer-events: none;
+}
+#view-warga .dsh-greeting::after {
+  content: '';
+  position: absolute; width: 110px; height: 110px; border-radius: 50%;
+  background: rgba(255,255,255,.05);
+  bottom: -30px; left: 24px; pointer-events: none;
+}
+#view-warga .dsh-greeting-date { font-size: .7rem !important; color: rgba(255,255,255,.6) !important; }
+#view-warga .dsh-greeting-name { font-size: 1.25rem !important; font-weight: 800 !important; }
+#view-warga .dsh-ai-btn {
+  background: rgba(255,255,255,.18) !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  border-radius: 24px !important;
+  padding: 7px 14px !important;
+  font-size: .78rem !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  backdrop-filter: blur(6px) !important;
+  transition: background .2s !important;
+  white-space: nowrap !important;
+}
+#view-warga .dsh-ai-btn:hover { background: rgba(255,255,255,.28) !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   STATS RING CARDS — Premium floating fintech cards
+══════════════════════════════════════════════════════════════ */
+#view-warga .dsh-ring-grid {
+  gap: 12px !important;
+  margin-bottom: 22px !important;
+}
+#view-warga .dsh-ring-card {
+  background: var(--gt-surface, #fff) !important;
+  border-radius: var(--ft-r) !important;
+  padding: 16px 14px !important;
+  border: none !important;
+  border-left: none !important;
+  box-shadow: var(--ft-shadow-card) !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  transition: transform .2s ease, box-shadow .2s ease !important;
+}
+#view-warga .dsh-ring-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--ft-shadow-float) !important;
+}
+html[data-theme="dark"] #view-warga .dsh-ring-card {
+  background: #16213a !important;
+  box-shadow: 0 2px 16px rgba(0,0,0,.28) !important;
+}
+html[data-theme="dark"] #view-warga .dsh-ring-card:hover {
+  box-shadow: 0 8px 28px rgba(0,0,0,.45) !important;
+}
+#view-warga .dsh-ring-icon {
+  width: 44px !important; height: 44px !important;
+  border-radius: 14px !important;
+  font-size: 1.1rem !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,.22) !important;
+  flex-shrink: 0 !important;
+}
+#view-warga .dsh-ring-lbl {
+  font-size: .65rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .7px !important;
+  color: var(--gt-text-muted, #94a3b8) !important;
+  margin-bottom: 2px !important;
+}
+#view-warga .dsh-ring-val {
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: var(--gt-text, #0f172a) !important;
+  letter-spacing: -.3px !important;
+}
+#view-warga .dsh-ring-upd { font-size: .62rem !important; color: #94a3b8 !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   QUICK ACTIONS — 4-column icon-top fintech buttons
+══════════════════════════════════════════════════════════════ */
+#view-warga .dsh-quick-grid {
+  grid-template-columns: repeat(4,1fr) !important;
+  gap: 10px !important;
+  margin-bottom: 22px !important;
+}
+#view-warga .gt-qa-card {
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  gap: 8px !important;
+  padding: 16px 8px 14px !important;
+  background: var(--gt-surface, #fff) !important;
+  border: none !important;
+  border-radius: var(--ft-r) !important;
+  box-shadow: var(--ft-shadow-card) !important;
+  transition: transform .2s ease, box-shadow .2s ease !important;
+}
+#view-warga .gt-qa-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--ft-shadow-float) !important;
+}
+html[data-theme="dark"] #view-warga .gt-qa-card {
+  background: #16213a !important;
+  box-shadow: 0 2px 14px rgba(0,0,0,.3) !important;
+}
+html[data-theme="dark"] #view-warga .gt-qa-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,.45) !important;
+}
+#view-warga .gt-qa-icon {
+  width: 50px !important; height: 50px !important;
+  border-radius: 16px !important;
+  font-size: 1.2rem !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,.22) !important;
+  flex-shrink: 0 !important;
+}
+#view-warga .gt-qa-label {
+  font-size: .68rem !important;
+  font-weight: 700 !important;
+  color: var(--gt-text-2, #334155) !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+}
+#view-warga .gt-qa-val {
+  font-size: .72rem !important;
+  font-weight: 700 !important;
+  color: var(--gt-text-3, #64748b) !important;
+}
+#view-warga .gt-qa-sub { font-size: .62rem !important; color: #94a3b8 !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION HEADERS — clean fintech label style
+══════════════════════════════════════════════════════════════ */
+#view-warga .dsh-section-hd {
+  font-size: .7rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .9px !important;
+  color: var(--gt-text-3, #64748b) !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin: 4px 2px 12px !important;
+  gap: 6px !important;
+}
+#view-warga .dsh-section-hd i {
+  font-size: .78rem !important;
+  color: #3b82f6 !important;
+  opacity: .8 !important;
+}
+#view-warga .dsh-refresh-btn {
+  background: rgba(59,130,246,.08) !important;
+  border-radius: 20px !important;
+  color: #3b82f6 !important;
+  padding: 4px 10px !important;
+  font-size: .68rem !important;
+  font-weight: 700 !important;
+  transition: background .15s !important;
+}
+#view-warga .dsh-refresh-btn:hover { background: rgba(59,130,246,.16) !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   STATUS CARDS — modern fintech style
+══════════════════════════════════════════════════════════════ */
+#view-warga .gt-status-grid {
+  gap: 12px !important;
+}
+#view-warga .gt-status-card {
+  border-radius: var(--ft-r) !important;
+  border: none !important;
+  box-shadow: var(--ft-shadow-card) !important;
+  overflow: hidden !important;
+  background: var(--gt-surface, #fff) !important;
+}
+html[data-theme="dark"] #view-warga .gt-status-card {
+  background: #16213a !important;
+  box-shadow: 0 2px 14px rgba(0,0,0,.3) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INFO / AGENDA SECTION CARD
+══════════════════════════════════════════════════════════════ */
+#view-warga #warga-dashboard > div:last-child {
+  border-radius: var(--ft-r) !important;
+  border: none !important;
+  box-shadow: var(--ft-shadow-card) !important;
+  overflow: hidden !important;
+  background: var(--gt-surface, #fff) !important;
+  margin-bottom: 100px !important;
+}
+html[data-theme="dark"] #view-warga #warga-dashboard > div:last-child {
+  background: #16213a !important;
+  box-shadow: 0 2px 14px rgba(0,0,0,.3) !important;
+}
+#view-warga #dsh-tab-btn-info,
+#view-warga #dsh-tab-btn-agenda {
+  font-size: .8rem !important;
+  font-weight: 700 !important;
+  padding: 13px 8px !important;
+  transition: all .2s !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TAB CONTENT PAGES — unified fintech card container
+══════════════════════════════════════════════════════════════ */
+#view-warga .warga-tab-content.active {
+  padding: 18px 18px 110px !important;
+}
+/* Card-title headers in sub-pages */
+#view-warga .card-title-header {
+  border-radius: var(--ft-r) !important;
+  background: var(--gt-surface, #fff) !important;
+  box-shadow: var(--ft-shadow-card) !important;
+  border: none !important;
+  padding: 16px 18px !important;
+  margin-bottom: 16px !important;
+}
+html[data-theme="dark"] #view-warga .card-title-header {
+  background: #16213a !important;
+  box-shadow: 0 2px 14px rgba(0,0,0,.3) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RIGHT PANEL — premium fintech info cards
+══════════════════════════════════════════════════════════════ */
+#view-warga .wfb-card {
+  border-radius: var(--ft-r) !important;
+  border: none !important;
+  box-shadow: var(--ft-shadow-card) !important;
+  overflow: hidden !important;
+  transition: box-shadow .2s ease !important;
+}
+#view-warga .wfb-card:hover {
+  box-shadow: 0 4px 22px rgba(15,23,42,.13) !important;
+}
+html[data-theme="dark"] #view-warga .wfb-card {
+  box-shadow: 0 2px 14px rgba(0,0,0,.28) !important;
+}
+html[data-theme="dark"] #view-warga .wfb-card:hover {
+  box-shadow: 0 4px 22px rgba(0,0,0,.45) !important;
+}
+#view-warga .wfb-stat {
+  border-radius: 10px !important;
+  transition: all .18s ease !important;
+}
+#view-warga .wfb-card-title {
+  font-size: .78rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .5px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BUTTONS — fintech rounded premium style
+══════════════════════════════════════════════════════════════ */
+#view-warga .btn-action,
+#view-warga .btn-submit {
+  border-radius: 20px !important;
+  font-weight: 700 !important;
+  letter-spacing: .2px !important;
+  transition: all .2s cubic-bezier(.4,0,.2,1) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12) !important;
+}
+#view-warga .btn-action:hover,
+#view-warga .btn-submit:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,.18) !important;
+}
+#view-warga .btn-action:active,
+#view-warga .btn-submit:active {
+  transform: translateY(0) scale(.97) !important;
+}
+
+/* Full-width action buttons in right panel */
+#view-warga .wfb-btn-full {
+  border-radius: 22px !important;
+  font-weight: 700 !important;
+  padding: 10px 14px !important;
+  font-size: .8rem !important;
+  transition: all .2s !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12) !important;
+}
+#view-warga .wfb-btn-full:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,.2) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ANIMATIONS — smooth entrance on tab switch
+══════════════════════════════════════════════════════════════ */
+@keyframes ftFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+#view-warga .warga-tab-content.active {
+  animation: ftFadeUp .28s cubic-bezier(.4,0,.2,1) both !important;
+}
+/* Stagger stats cards */
+#view-warga .dsh-ring-card:nth-child(1) { animation-delay: .04s; }
+#view-warga .dsh-ring-card:nth-child(2) { animation-delay: .08s; }
+#view-warga .dsh-ring-card:nth-child(3) { animation-delay: .12s; }
+#view-warga .dsh-ring-card:nth-child(4) { animation-delay: .16s; }
+/* Stagger quick-action cards */
+#view-warga .gt-qa-card:nth-child(1) { animation-delay: .06s; }
+#view-warga .gt-qa-card:nth-child(2) { animation-delay: .1s; }
+#view-warga .gt-qa-card:nth-child(3) { animation-delay: .14s; }
+#view-warga .gt-qa-card:nth-child(4) { animation-delay: .18s; }
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — Mobile-first fintech
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  #view-warga .warga-tab-content.active { padding: 14px 14px 100px !important; }
+  #view-warga .dsh-greeting { padding: 18px 16px !important; border-radius: 18px !important; }
+  #view-warga .dsh-quick-grid { grid-template-columns: repeat(4,1fr) !important; gap: 8px !important; }
+  #view-warga .gt-qa-card { padding: 12px 6px 10px !important; border-radius: 14px !important; gap: 6px !important; }
+  #view-warga .gt-qa-icon { width: 40px !important; height: 40px !important; border-radius: 13px !important; font-size: 1rem !important; }
+  #view-warga .gt-qa-label { font-size: .62rem !important; }
+  #view-warga .dsh-ring-grid { gap: 10px !important; }
+  #view-warga .dsh-ring-card { padding: 13px 11px !important; border-radius: 14px !important; }
+}
+@media (max-width: 360px) {
+  #view-warga .dsh-quick-grid { gap: 6px !important; }
+  #view-warga .gt-qa-icon { width: 36px !important; height: 36px !important; }
+  #view-warga .gt-qa-label { font-size: .58rem !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DARK MODE OVERRIDES — ensure fintech dark feel everywhere
+══════════════════════════════════════════════════════════════ */
+html[data-theme="dark"] #view-warga .dsh-section-hd { color: #64748b !important; }
+html[data-theme="dark"] #view-warga .gt-qa-label { color: #cbd5e1 !important; }
+html[data-theme="dark"] #view-warga .gt-qa-val   { color: #94a3b8 !important; }
+html[data-theme="dark"] #view-warga .dsh-ring-val { color: #f1f5f9 !important; }
+html[data-theme="dark"] #view-warga .dsh-ring-lbl { color: #64748b !important; }
+</style>
 </body>
 </html>
