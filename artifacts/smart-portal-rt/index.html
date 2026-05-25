@@ -12823,5 +12823,542 @@ html[data-theme="dark"] #view-warga .gt-qa-val   { color: #94a3b8 !important; }
 html[data-theme="dark"] #view-warga .dsh-ring-val { color: #f1f5f9 !important; }
 html[data-theme="dark"] #view-warga .dsh-ring-lbl { color: #64748b !important; }
 </style>
+
+<!-- ═══════════════════════════════════════════════════════════
+     GT FINTECH MICRO-INTERACTIONS v1
+     Spring physics · Shimmer · Ripple · Animated counters
+     · Touch feedback · Page transitions · Premium shadows
+     ═══════════════════════════════════════════════════════════ -->
+<style>
+/* ─── Spring & easing tokens ──────────────────────────────── */
+:root {
+  --spring:  cubic-bezier(.34,1.56,.64,1);
+  --snap:    cubic-bezier(.4,0,.2,1);
+  --snap-in: cubic-bezier(0,0,.2,1);
+
+  /* Layered mobile-quality shadows */
+  --sh-xs:  0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+  --sh-sm:  0 2px 8px rgba(15,23,42,.09), 0 1px 3px rgba(0,0,0,.06);
+  --sh-md:  0 4px 20px rgba(15,23,42,.11), 0 2px 8px rgba(0,0,0,.06);
+  --sh-lg:  0 12px 40px rgba(30,58,138,.18), 0 4px 16px rgba(0,0,0,.08);
+  --sh-xl:  0 20px 60px rgba(30,58,138,.22), 0 8px 24px rgba(0,0,0,.09),
+            0 2px 6px rgba(0,0,0,.06);
+  --sh-hero:0 16px 48px rgba(30,58,138,.38), 0 6px 18px rgba(0,0,0,.14);
+
+  /* Colored tinted shadows per accent */
+  --sh-blue:  0 8px 28px rgba(37,99,235,.28), 0 2px 8px rgba(37,99,235,.12);
+  --sh-green: 0 8px 28px rgba(5,150,105,.28), 0 2px 8px rgba(5,150,105,.12);
+}
+html[data-theme="dark"] {
+  --sh-sm:  0 2px 8px rgba(0,0,0,.3),  0 1px 3px rgba(0,0,0,.2);
+  --sh-md:  0 4px 20px rgba(0,0,0,.36), 0 2px 8px rgba(0,0,0,.22);
+  --sh-lg:  0 12px 40px rgba(0,0,0,.5), 0 4px 16px rgba(0,0,0,.28);
+  --sh-xl:  0 20px 60px rgba(0,0,0,.55), 0 8px 24px rgba(0,0,0,.3);
+  --sh-hero:0 16px 48px rgba(0,0,0,.6),  0 6px 18px rgba(0,0,0,.35);
+}
+
+/* ─── Remove all tap highlights (native feel) ────────────── */
+* { -webkit-tap-highlight-color: transparent; user-select: none; }
+input, textarea, select { user-select: text; }
+
+/* ─── Shimmer keyframe ───────────────────────────────────── */
+@keyframes ftShimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+@keyframes ftPulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: .5; }
+}
+@keyframes ftBounceIn {
+  0%   { transform: scale(.8);   opacity: 0; }
+  60%  { transform: scale(1.05); opacity: 1; }
+  80%  { transform: scale(.97); }
+  100% { transform: scale(1); }
+}
+@keyframes ftSlideUp {
+  from { transform: translateY(24px) scale(.97); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);   opacity: 1; }
+}
+@keyframes ftFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ftRipple {
+  to { transform: scale(4.5); opacity: 0; }
+}
+@keyframes ftDotPulse {
+  0%,100% { transform: translateX(-50%) scale(1); }
+  50%      { transform: translateX(-50%) scale(1.4); }
+}
+
+/* ─── Skeleton / shimmer classes ────────────────────────── */
+.ft-skel {
+  background: linear-gradient(90deg,
+    #eef1f6 25%, #e4e8f0 50%, #eef1f6 75%);
+  background-size: 600px 100%;
+  animation: ftShimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+  color: transparent !important;
+  pointer-events: none;
+}
+html[data-theme="dark"] .ft-skel {
+  background: linear-gradient(90deg,
+    #1a2744 25%, #233152 50%, #1a2744 75%);
+  background-size: 600px 100%;
+}
+/* Shimmer on stat value slots */
+.ft-skel-inline {
+  display: inline-block;
+  width: 70%;
+  min-height: 1em;
+  vertical-align: middle;
+  border-radius: 6px;
+}
+
+/* ─── Page transition (spring enter) ───────────────────── */
+#view-warga .warga-tab-content.active {
+  animation: ftSlideUp .38s var(--spring) both !important;
+}
+/* Stagger children of dashboard */
+#view-warga #warga-dashboard > * {
+  animation: ftSlideUp .38s var(--spring) both;
+}
+#view-warga #warga-dashboard > *:nth-child(1) { animation-delay: .04s; }
+#view-warga #warga-dashboard > *:nth-child(2) { animation-delay: .08s; }
+#view-warga #warga-dashboard > *:nth-child(3) { animation-delay: .13s; }
+#view-warga #warga-dashboard > *:nth-child(4) { animation-delay: .18s; }
+#view-warga #warga-dashboard > *:nth-child(5) { animation-delay: .23s; }
+#view-warga #warga-dashboard > *:nth-child(6) { animation-delay: .28s; }
+
+/* ─── Spring card hover / press ─────────────────────────── */
+#view-warga .dsh-ring-card {
+  transition: transform .38s var(--spring),
+              box-shadow .28s var(--snap) !important;
+  will-change: transform !important;
+}
+#view-warga .dsh-ring-card:hover {
+  transform: translateY(-7px) scale(1.018) !important;
+  box-shadow: var(--sh-xl) !important;
+}
+#view-warga .dsh-ring-card:active {
+  transform: scale(.93) !important;
+  transition: transform .1s var(--snap-in) !important;
+  box-shadow: var(--sh-sm) !important;
+}
+
+#view-warga .gt-qa-card {
+  transition: transform .38s var(--spring),
+              box-shadow .28s var(--snap) !important;
+  will-change: transform !important;
+}
+#view-warga .gt-qa-card:hover {
+  transform: translateY(-7px) scale(1.04) !important;
+  box-shadow: var(--sh-xl) !important;
+}
+#view-warga .gt-qa-card:active {
+  transform: scale(.88) !important;
+  transition: transform .09s var(--snap-in) !important;
+  box-shadow: var(--sh-xs) !important;
+}
+
+/* Right panel cards */
+#view-warga .wfb-card {
+  transition: transform .32s var(--spring),
+              box-shadow .25s var(--snap) !important;
+}
+#view-warga .wfb-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--sh-lg) !important;
+}
+#view-warga .wfb-card:active {
+  transform: scale(.97) !important;
+  transition: transform .1s !important;
+}
+
+/* ─── Nav item spring ───────────────────────────────────── */
+#view-warga .wfb-nav-item {
+  transition: all .25s var(--spring) !important;
+}
+#view-warga .wfb-nav-item:active {
+  transform: scale(.94) !important;
+  transition: transform .08s !important;
+}
+
+/* ─── Mobile bottom nav spring ──────────────────────────── */
+.wfb-mob-btn {
+  transition: all .3s var(--spring) !important;
+}
+.wfb-mob-btn.active {
+  background: rgba(30,64,175,.08) !important;
+  border-radius: 14px !important;
+}
+html[data-theme="dark"] .wfb-mob-btn.active {
+  background: rgba(96,165,250,.12) !important;
+}
+.wfb-mob-btn:active {
+  transform: scale(.8) !important;
+  transition: transform .09s var(--snap-in) !important;
+}
+/* Active dot — animated pulse */
+.wfb-mob-btn.active::after {
+  animation: ftDotPulse 1.8s ease-in-out infinite !important;
+}
+
+/* ─── Ripple ink ────────────────────────────────────────── */
+.ft-ripple-ink {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.32);
+  transform: scale(0);
+  animation: ftRipple .55s ease-out forwards;
+  pointer-events: none;
+  z-index: 10;
+}
+/* Dark ripple on light surfaces */
+.ft-ripple-dark .ft-ripple-ink {
+  background: rgba(30,58,138,.12);
+}
+
+/* ─── Greeting hero — premium upgrade ───────────────────── */
+#view-warga .dsh-greeting {
+  box-shadow: var(--sh-hero) !important;
+  transition: box-shadow .3s var(--snap) !important;
+}
+#view-warga .dsh-greeting:hover {
+  box-shadow: 0 20px 60px rgba(30,58,138,.42), 0 8px 24px rgba(0,0,0,.16) !important;
+}
+
+/* Greeting AI button spring */
+#view-warga .dsh-ai-btn {
+  transition: all .3s var(--spring) !important;
+}
+#view-warga .dsh-ai-btn:active {
+  transform: scale(.91) !important;
+  transition: transform .09s !important;
+}
+
+/* ─── Buttons — iPhone-quality press ───────────────────── */
+#view-warga .btn-action,
+#view-warga .wfb-btn-full {
+  transition: all .3s var(--spring) !important;
+}
+#view-warga .btn-action:hover  { transform: translateY(-2px) !important; box-shadow: var(--sh-md) !important; }
+#view-warga .btn-action:active { transform: scale(.92) !important; transition: transform .08s !important; }
+#view-warga .wfb-btn-full:active { transform: scale(.94) !important; transition: transform .08s !important; }
+
+/* ─── Premium input focus ring (iOS style) ──────────────── */
+#view-warga input:focus,
+#view-warga select:focus,
+#view-warga textarea:focus {
+  outline: none !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3.5px rgba(59,130,246,.18) !important;
+  transition: box-shadow .2s var(--snap), border-color .2s var(--snap) !important;
+}
+
+/* ─── Smooth momentum scroll (iOS rubber-band feel) ─────── */
+#view-warga .warga-fb-main,
+#view-warga .warga-tab-content.active {
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: smooth !important;
+}
+
+/* ─── Section headers — micro spring on load ────────────── */
+#view-warga .dsh-section-hd {
+  transition: opacity .2s var(--snap) !important;
+}
+
+/* ─── Status card press ─────────────────────────────────── */
+#view-warga .gt-status-card {
+  transition: transform .32s var(--spring),
+              box-shadow .25s var(--snap) !important;
+}
+#view-warga .gt-status-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--sh-md) !important;
+}
+
+/* ─── Animated counter font ─────────────────────────────── */
+.ft-counter {
+  font-variant-numeric: tabular-nums !important;
+  font-feature-settings: "tnum" !important;
+}
+
+/* ─── Card shadow upgrade (replace previous) ────────────── */
+#view-warga .dsh-ring-card { box-shadow: var(--sh-sm) !important; }
+#view-warga .gt-qa-card    { box-shadow: var(--sh-sm) !important; }
+#view-warga .gt-status-card{ box-shadow: var(--sh-sm) !important; }
+#view-warga .wfb-card      { box-shadow: var(--sh-sm) !important; }
+html[data-theme="dark"] #view-warga .dsh-ring-card { box-shadow: var(--sh-md) !important; }
+html[data-theme="dark"] #view-warga .gt-qa-card    { box-shadow: var(--sh-md) !important; }
+
+/* ─── Warga layout background — premium gradient ────────── */
+#view-warga.warga-fb-layout {
+  background: linear-gradient(180deg, #eef2ff 0%, #f0f4f8 40%) !important;
+}
+html[data-theme="dark"] #view-warga.warga-fb-layout {
+  background: linear-gradient(180deg, #0e1830 0%, #0b1220 40%) !important;
+}
+
+/* ─── Responsive iPhone spacing ─────────────────────────── */
+@media (max-width: 480px) {
+  #view-warga .warga-tab-content.active { padding: 16px 14px 110px !important; }
+  .wfb-mobile-nav { height: 72px !important; }
+  .wfb-mob-btn { padding: 8px 4px 6px !important; }
+}
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .wfb-mobile-nav {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 6px) !important;
+    height: calc(68px + env(safe-area-inset-bottom)) !important;
+  }
+}
+</style>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   GT FINTECH MICRO-INTERACTIONS v1
+   Ripple · AnimatedCounter · SkeletonLoading · SpringFeedback
+   ═══════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  /* ── Util ── */
+  function qs(sel, root) { return (root || document).querySelector(sel); }
+  function qsa(sel, root) { return Array.from((root || document).querySelectorAll(sel)); }
+  function clamp(v, lo, hi) { return Math.min(Math.max(v, lo), hi); }
+  function easeOutExpo(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function easeOutSpring(t) {
+    var c4 = (2 * Math.PI) / 3;
+    return t === 0 ? 0 : t === 1 ? 1 :
+      Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     1. RIPPLE EFFECT — touch-accurate, spring-fade out
+  ══════════════════════════════════════════════════════════ */
+  function createRipple(el, clientX, clientY, dark) {
+    var rect = el.getBoundingClientRect();
+    var x = clientX - rect.left;
+    var y = clientY - rect.top;
+    var size = Math.max(rect.width, rect.height) * 2.2;
+    var ink = document.createElement('span');
+    ink.className = 'ft-ripple-ink' + (dark ? ' ft-ripple-dark' : '');
+    ink.style.cssText = [
+      'width:' + size + 'px', 'height:' + size + 'px',
+      'top:' + (y - size / 2) + 'px', 'left:' + (x - size / 2) + 'px',
+      'position:absolute'
+    ].join(';');
+    el.style.position = 'relative';
+    el.style.overflow = 'hidden';
+    el.appendChild(ink);
+    setTimeout(function () { if (ink.parentNode) ink.parentNode.removeChild(ink); }, 650);
+  }
+
+  function bindRipple(el) {
+    if (el.__ftR) return;
+    el.__ftR = true;
+    var isLight = el.classList.contains('gt-qa-card') ||
+                  el.classList.contains('dsh-ring-card') ||
+                  el.classList.contains('wfb-card');
+    el.addEventListener('pointerdown', function (e) {
+      createRipple(el, e.clientX, e.clientY, isLight);
+    });
+  }
+
+  function initRipples() {
+    var sels = [
+      '#view-warga .gt-qa-card',
+      '#view-warga .dsh-ring-card',
+      '#view-warga .wfb-card',
+      '#view-warga .wfb-btn-full',
+      '#view-warga .btn-action',
+      '.wfb-mob-btn',
+      '#view-warga .dsh-ai-btn'
+    ];
+    qsa(sels.join(',')).forEach(function (el) { bindRipple(el); });
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     2. ANIMATED COUNTER — spring ease-out, locale-aware
+  ══════════════════════════════════════════════════════════ */
+  function animateValue(el, finalStr, duration) {
+    duration = duration || 1100;
+    var txt = (finalStr || '').trim();
+    // Parse "Rp 1.234.567" or "128 KK" or "42"
+    var m = txt.match(/^(Rp\s*)?([0-9]+(?:[.,][0-9]+)*)(.*)$/);
+    if (!m) return;
+    var prefix   = m[1] || '';
+    var numRaw   = m[2].replace(/[.,]/g, '');
+    var suffix   = m[3] || '';
+    var target   = parseInt(numRaw, 10);
+    if (isNaN(target) || target === 0) return;
+
+    el.classList.add('ft-counter');
+    var start = null;
+    var isCur = prefix.indexOf('Rp') !== -1;
+
+    function fmt(n) {
+      if (isCur) return 'Rp\u00A0' + n.toLocaleString('id-ID');
+      return n.toLocaleString('id-ID') + (suffix ? '\u00A0' + suffix.trim() : '');
+    }
+    function tick(ts) {
+      if (!start) start = ts;
+      var pct = clamp((ts - start) / duration, 0, 1);
+      el.textContent = fmt(Math.round(easeOutSpring(pct) * target));
+      if (pct < 1) requestAnimationFrame(tick);
+      else el.textContent = finalStr; // ensure exact final text
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     3. SKELETON SHIMMER on stat cards while data loads
+  ══════════════════════════════════════════════════════════ */
+  var SKEL_DARK = 'background:linear-gradient(90deg,#1a2744 25%,#233152 50%,#1a2744 75%);background-size:600px 100%;animation:ftShimmer 1.5s ease-in-out infinite;border-radius:6px;color:transparent!important;min-height:1em;display:inline-block;width:75%;';
+  var SKEL_LIGHT= 'background:linear-gradient(90deg,#eef1f6 25%,#e4e8f0 50%,#eef1f6 75%);background-size:600px 100%;animation:ftShimmer 1.5s ease-in-out infinite;border-radius:6px;color:transparent!important;min-height:1em;display:inline-block;width:75%;';
+
+  function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
+
+  function skelOn(el)  { el.__skelOrig = el.textContent; el.style.cssText = isDark() ? SKEL_DARK : SKEL_LIGHT; }
+  function skelOff(el) { el.style.cssText = ''; }
+
+  var COUNTER_IDS = ['warga-saldo-kas', 'warga-total-kk', 'warga-arisan-nama', 'warga-host-nama'];
+
+  function setupSkeleton() {
+    COUNTER_IDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el || el.__ftSkel) return;
+      el.__ftSkel = true;
+
+      var empty = ['—', '', 'Rp 0', '0'];
+      if (empty.indexOf((el.textContent || '').trim()) !== -1) {
+        skelOn(el);
+      }
+
+      var obs = new MutationObserver(function () {
+        var txt = (el.textContent || '').trim();
+        if (empty.indexOf(txt) === -1 && txt !== '') {
+          skelOff(el);
+          obs.disconnect();
+          // Animate numeric counters
+          if (/^(Rp\s*)?[0-9]/.test(txt)) {
+            setTimeout(function () { animateValue(el, txt); }, 80);
+          }
+        }
+      });
+      obs.observe(el, { childList: true, subtree: true, characterData: true });
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     4. TOUCH FEEDBACK — haptic-like visual spring on nav
+  ══════════════════════════════════════════════════════════ */
+  function initTouchFeedback() {
+    qsa('#view-warga .wfb-nav-item').forEach(function (btn) {
+      if (btn.__ftTF) return;
+      btn.__ftTF = true;
+      btn.addEventListener('pointerdown', function () {
+        btn.style.transition = 'transform .09s';
+        btn.style.transform  = 'scale(.93)';
+      });
+      btn.addEventListener('pointerup pointercancel', function () {
+        btn.style.transition = 'transform .35s cubic-bezier(.34,1.56,.64,1)';
+        btn.style.transform  = '';
+      });
+    });
+
+    qsa('.wfb-mob-btn').forEach(function (btn) {
+      if (btn.__ftTF) return;
+      btn.__ftTF = true;
+      btn.addEventListener('pointerdown', function () {
+        btn.style.transition = 'transform .08s';
+        btn.style.transform  = 'scale(.78)';
+      });
+      ['pointerup','pointerleave','pointercancel'].forEach(function (ev) {
+        btn.addEventListener(ev, function () {
+          btn.style.transition = 'transform .38s cubic-bezier(.34,1.56,.64,1)';
+          btn.style.transform  = btn.classList.contains('active') ? 'scale(1)' : '';
+        });
+      });
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     5. SMOOTH PAGE TRANSITION — re-trigger on tab switch
+  ══════════════════════════════════════════════════════════ */
+  function triggerTransition(tabId) {
+    var el = document.getElementById(tabId);
+    if (!el) return;
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.style.animation = '';
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     6. PATCH openWargaTab — inject all enhancements on switch
+  ══════════════════════════════════════════════════════════ */
+  function patchOpenWargaTab() {
+    if (!window.openWargaTab || window.openWargaTab.__ftMicro) return;
+    var orig = window.openWargaTab;
+    window.openWargaTab = function (tabId) {
+      var r = orig.apply(this, arguments);
+      triggerTransition(tabId);
+      setTimeout(function () {
+        initRipples();
+        initTouchFeedback();
+        if (tabId === 'warga-dashboard') setupSkeleton();
+      }, 60);
+      return r;
+    };
+    window.openWargaTab.__ftMicro = true;
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     7. COUNTER for QA status values (animate on dashboard load)
+  ══════════════════════════════════════════════════════════ */
+  function setupQACounters() {
+    ['qa-iuran-status','qa-surat-status','qa-berita-status','qa-aduan-status'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el || el.__ftQA) return;
+      el.__ftQA = true;
+      var obs = new MutationObserver(function() {
+        var txt = (el.textContent||'').trim();
+        if (txt && txt !== '—') {
+          obs.disconnect();
+          if (/[0-9]/.test(txt)) {
+            setTimeout(function(){ animateValue(el, txt, 900); }, 150);
+          }
+        }
+      });
+      obs.observe(el, { childList: true, subtree: true, characterData: true });
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     8. INIT
+  ══════════════════════════════════════════════════════════ */
+  function init() {
+    initRipples();
+    initTouchFeedback();
+    setupSkeleton();
+    setupQACounters();
+    patchOpenWargaTab();
+
+    // Re-patch if openWargaTab loads late
+    var attempts = 0;
+    var pid = setInterval(function () {
+      patchOpenWargaTab();
+      if (++attempts > 20) clearInterval(pid);
+    }, 300);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(init, 200); });
+  } else {
+    setTimeout(init, 200);
+  }
+})();
+</script>
 </body>
 </html>
