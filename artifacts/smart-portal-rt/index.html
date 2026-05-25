@@ -3631,15 +3631,55 @@ html[data-theme="dark"] select option {
   transition: all 0.18s; white-space: nowrap;
 }
 .gt-cat-btn.active, .gt-cat-btn:hover { background: #3b82f6; border-color: #3b82f6; color: #fff; }
-.gt-news-search-wrap { margin-left: auto; flex-shrink: 0; position: relative; }
-.gt-news-search {
-  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 999px; padding: 6px 14px 6px 36px; color: #e2e8f0; font-size: 0.8rem;
-  width: 180px; outline: none; transition: width 0.2s;
+/* Search bar — baris terpisah di bawah nav kategori */
+.gt-news-search-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: #0f172a;
+  padding: 10px 16px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
 }
-.gt-news-search:focus { width: 260px; border-color: #3b82f6; }
-.gt-news-search::placeholder { color: #64748b; }
-.gt-news-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 0.8rem; pointer-events: none; }
+.gt-news-search-wrap {
+  position: relative; flex: 1;
+  display: flex; align-items: center;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+.gt-news-search-wrap:focus-within {
+  border-color: #3b82f6;
+  background: rgba(59,130,246,0.08);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+.gt-news-search-icon-wrap {
+  display: flex; align-items: center; justify-content: center;
+  width: 42px; flex-shrink: 0;
+  color: #475569; font-size: 0.95rem;
+  transition: color 0.2s;
+}
+.gt-news-search-wrap:focus-within .gt-news-search-icon-wrap { color: #3b82f6; }
+.gt-news-search {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: #e2e8f0; font-size: 0.88rem; padding: 10px 6px 10px 0;
+  font-family: inherit; min-width: 0;
+}
+.gt-news-search::placeholder { color: #475569; }
+.gt-news-search-clear {
+  display: none; align-items: center; justify-content: center;
+  width: 32px; height: 32px; margin-right: 6px; flex-shrink: 0;
+  background: rgba(255,255,255,0.08); border: none; border-radius: 8px;
+  color: #94a3b8; cursor: pointer; font-size: 0.8rem;
+  transition: background 0.15s, color 0.15s;
+}
+.gt-news-search-clear:hover { background: rgba(239,68,68,0.18); color: #f87171; }
+.gt-news-search-wrap.has-text .gt-news-search-clear { display: flex; }
+.gt-news-search-count {
+  flex-shrink: 0; font-size: 0.72rem; font-weight: 700;
+  color: #475569; white-space: nowrap; padding-right: 2px;
+  display: none;
+}
+.gt-news-search-wrap.has-text ~ .gt-news-search-count { display: block; }
 /* Hero */
 .gt-news-hero {
   position: relative; width: 100%; height: 380px; overflow: hidden;
@@ -4590,7 +4630,7 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
               <div class="gt-breaking-scroll"><div class="gt-breaking-inner" id="gt-brk-inner"><span style="color:#64748b;">Memuat berita terkini…</span></div></div>
               <button onclick="window.gtNewsRefresh(true)" title="Refresh berita" style="background:none;border:none;color:#64748b;cursor:pointer;margin-left:12px;font-size:0.9rem;"><i class="fa-solid fa-rotate"></i></button>
             </div>
-            <!-- Navbar kategori + search -->
+            <!-- Navbar kategori -->
             <div class="gt-news-nav" id="gt-news-nav">
               <button class="gt-cat-btn active" data-cat="Semua" onclick="window.gtNewsSetCat(this,'Semua')">Semua</button>
               <button class="gt-cat-btn" data-cat="Nasional" onclick="window.gtNewsSetCat(this,'Nasional')">Nasional</button>
@@ -4599,10 +4639,23 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
               <button class="gt-cat-btn" data-cat="Olahraga" onclick="window.gtNewsSetCat(this,'Olahraga')">Olahraga</button>
               <button class="gt-cat-btn" data-cat="Gaya Hidup" onclick="window.gtNewsSetCat(this,'Gaya Hidup')">Gaya Hidup</button>
               <button class="gt-cat-btn" data-cat="Bookmark" onclick="window.gtNewsSetCat(this,'Bookmark')" style="margin-left:4px;border-color:#f59e0b;color:#f59e0b;"><i class="fa-solid fa-bookmark"></i> Tersimpan</button>
-              <div class="gt-news-search-wrap">
-                <i class="fa-solid fa-magnifying-glass gt-news-search-icon"></i>
-                <input type="search" class="gt-news-search" id="gt-news-search" placeholder="Cari berita…" oninput="window.gtNewsSearch(this.value)">
+            </div>
+            <!-- Search bar — baris terpisah, rapi dan menarik -->
+            <div class="gt-news-search-bar">
+              <div class="gt-news-search-wrap" id="gt-news-search-wrap">
+                <span class="gt-news-search-icon-wrap">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="search" class="gt-news-search" id="gt-news-search"
+                  placeholder="Cari judul berita, topik, atau sumber…"
+                  oninput="window.gtNewsSearch(this.value); var w=document.getElementById('gt-news-search-wrap'); w&&w.classList.toggle('has-text', this.value.length>0);"
+                  autocomplete="off" spellcheck="false">
+                <button class="gt-news-search-clear" id="gt-news-search-clear" title="Hapus pencarian"
+                  onclick="var el=document.getElementById('gt-news-search'); el.value=''; el.dispatchEvent(new Event('input')); el.focus(); var w=document.getElementById('gt-news-search-wrap'); w&&w.classList.remove('has-text');">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
               </div>
+              <span class="gt-news-search-count" id="gt-news-search-count"></span>
             </div>
             <!-- Hero section -->
             <div id="gt-news-hero-wrap">
@@ -10578,6 +10631,16 @@ window.gtNewsSearch = function(q) {
     _state.query = (q||'').trim();
     _state.page = 0;
     renderAll();
+    // Update jumlah hasil
+    setTimeout(function() {
+        var cnt = document.getElementById('gt-news-search-count');
+        if (!cnt) return;
+        if (!_state.query) { cnt.style.display = 'none'; cnt.textContent = ''; return; }
+        var cards = document.querySelectorAll('#gt-news-grid .gt-news-card');
+        cnt.style.display = cards.length > 0 ? 'block' : 'block';
+        cnt.textContent = cards.length + ' hasil';
+        cnt.style.color = cards.length === 0 ? '#ef4444' : '#64748b';
+    }, 120);
 };
 
 function parseRssXml(xmlText, src) {
