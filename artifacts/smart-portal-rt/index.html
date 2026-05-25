@@ -16,11 +16,17 @@
     <meta name="theme-color" content="#1d4ed8" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Portal RT 005">
     <meta name="application-name" content="Portal RT 005">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="description" content="Sistem Manajemen Warga RT 005 RW 012 Tegalsari, Candisari, Semarang">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-TileColor" content="#1e3a8a">
+    <meta name="msapplication-tap-highlight" content="no">
     <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="Lambang_Kota_Semarang.png">
+    <link rel="apple-touch-startup-image" href="Lambang_Kota_Semarang.png">
     <link rel="apple-touch-icon" href="Lambang_Kota_Semarang.png">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <title>Smart Portal RT 005 Tegalsari</title>
@@ -12823,6 +12829,547 @@ html[data-theme="dark"] #view-warga .gt-qa-val   { color: #94a3b8 !important; }
 html[data-theme="dark"] #view-warga .dsh-ring-val { color: #f1f5f9 !important; }
 html[data-theme="dark"] #view-warga .dsh-ring-lbl { color: #64748b !important; }
 </style>
+
+<!-- ═══════════════════════════════════════════════════════════
+     GT PWA NATIVE v1 — Android-quality app experience
+     Safe-area · Splash screen · Install prompt · SW reg
+     ═══════════════════════════════════════════════════════════ -->
+<style>
+/* ─── Full native viewport (no browser chrome bleed) ─────── */
+html {
+  height: 100%;
+  height: -webkit-fill-available;
+  overflow: hidden;
+  background: #1e3a8a;
+}
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  background: #f0f4f8;
+}
+html[data-theme="dark"] body { background: #0b1220; }
+
+/* ─── Safe area insets (Android notch / nav bar) ─────────── */
+.main-header {
+  padding-top: max(env(safe-area-inset-top, 0px), 0px) !important;
+}
+.wfb-mobile-nav,
+.gt-bottom-nav,
+.warga-fb-layout > .wfb-mobile-nav {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 4px) !important;
+  height: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* ─── PWA Splash Screen ───────────────────────────────────── */
+#ft-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: linear-gradient(160deg, #1e3a8a 0%, #2d3282 50%, #4338ca 100%);
+  transition: opacity .4s ease, transform .4s ease;
+}
+#ft-splash.ft-splash-out {
+  opacity: 0;
+  transform: scale(1.06);
+  pointer-events: none;
+}
+#ft-splash-logo {
+  width: 88px;
+  height: 88px;
+  border-radius: 24px;
+  background: rgba(255,255,255,.12);
+  border: 2px solid rgba(255,255,255,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ftSplashPop .5s cubic-bezier(.34,1.56,.64,1) both;
+  box-shadow: 0 12px 40px rgba(0,0,0,.3), 0 0 0 12px rgba(255,255,255,.04);
+}
+#ft-splash-logo img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,.25));
+}
+#ft-splash-name {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -.2px;
+  animation: ftSplashPop .5s .12s cubic-bezier(.34,1.56,.64,1) both;
+}
+#ft-splash-sub {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: .8rem;
+  color: rgba(255,255,255,.6);
+  font-weight: 500;
+  margin-top: -14px;
+  animation: ftSplashPop .5s .2s cubic-bezier(.34,1.56,.64,1) both;
+}
+#ft-splash-bar {
+  width: 140px;
+  height: 3px;
+  background: rgba(255,255,255,.18);
+  border-radius: 99px;
+  overflow: hidden;
+  animation: ftSplashPop .5s .28s cubic-bezier(.34,1.56,.64,1) both;
+}
+#ft-splash-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,.5), #fff);
+  border-radius: 99px;
+  width: 0%;
+  transition: width .7s cubic-bezier(.4,0,.2,1);
+}
+@keyframes ftSplashPop {
+  from { opacity: 0; transform: translateY(12px) scale(.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─── Install Banner (Android-quality) ───────────────────── */
+#ft-install-banner {
+  position: fixed;
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px) + 10px);
+  left: 12px;
+  right: 12px;
+  z-index: 9800;
+  background: #fff;
+  border-radius: 20px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 32px rgba(30,58,138,.22), 0 2px 12px rgba(0,0,0,.1);
+  transform: translateY(120%);
+  transition: transform .38s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  border: 1px solid rgba(30,58,138,.08);
+}
+html[data-theme="dark"] #ft-install-banner {
+  background: #1a2744;
+  border-color: rgba(96,165,250,.15);
+  box-shadow: 0 8px 32px rgba(0,0,0,.45);
+}
+#ft-install-banner.ft-banner-show {
+  transform: translateY(0);
+  pointer-events: all;
+}
+#ft-install-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#1e3a8a,#4338ca);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(30,58,138,.35);
+}
+#ft-install-icon img { width: 32px; height: 32px; object-fit: contain; }
+#ft-install-text { flex: 1; min-width: 0; }
+#ft-install-title {
+  font-size: .88rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
+#ft-install-sub {
+  font-size: .72rem;
+  color: #64748b;
+  font-weight: 500;
+}
+#ft-install-btn {
+  background: linear-gradient(135deg,#1e40af,#4338ca);
+  color: #fff;
+  border: none;
+  border-radius: 22px;
+  padding: 9px 18px;
+  font-size: .8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(30,58,138,.35);
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  flex-shrink: 0;
+}
+#ft-install-btn:active { transform: scale(.92); }
+#ft-install-close {
+  position: absolute;
+  top: 10px; right: 12px;
+  background: none; border: none; cursor: pointer;
+  color: #94a3b8; font-size: .85rem; padding: 4px;
+}
+
+/* ─── Offline indicator ───────────────────────────────────── */
+#ft-offline-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 99998;
+  background: linear-gradient(90deg,#ef4444,#dc2626);
+  color: #fff;
+  text-align: center;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: 7px 12px calc(env(safe-area-inset-top,0px) + 7px);
+  transform: translateY(-100%);
+  transition: transform .3s ease;
+  letter-spacing: .3px;
+}
+#ft-offline-bar.ft-offline-show { transform: translateY(0); }
+
+/* ─── Theme-color slot (overridden by JS) ────────────────── */
+#ft-theme-meta { }
+
+/* ─── Network status ring on avatar ─────────────────────── */
+.ft-online  .wfb-avatar-sm::after,
+.ft-online  #wfb-avatar-side::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: #10b981;
+  border: 2px solid #fff;
+}
+
+/* ─── Prevent overscroll rubber-band showing white ───────── */
+#view-warga.warga-fb-layout {
+  overscroll-behavior: none;
+}
+#view-warga .warga-fb-main {
+  overscroll-behavior: none;
+}
+
+/* ─── Android-optimized smooth scroll containers ─────────── */
+#view-warga .warga-fb-main,
+#view-warga .warga-tab-content.active,
+#view-warga .warga-fb-right {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
+  will-change: scroll-position;
+}
+
+/* ─── Touch action tuning for swipe performance ──────────── */
+#view-warga .gt-qa-card,
+#view-warga .dsh-ring-card,
+.wfb-mob-btn,
+#view-warga .wfb-nav-item,
+#view-warga .btn-action {
+  touch-action: manipulation;
+}
+
+/* ─── Update available toast ─────────────────────────────── */
+#ft-update-toast {
+  position: fixed;
+  bottom: calc(80px + env(safe-area-inset-bottom,0px));
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 9900;
+  background: #1e293b;
+  color: #e2e8f0;
+  border-radius: 24px;
+  padding: 10px 20px;
+  font-size: .8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+#ft-update-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: all;
+}
+#ft-update-reload {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 5px 12px;
+  font-size: .75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+</style>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   GT PWA NATIVE v1
+   SW registration · Splash · Install prompt · Offline · Theme
+   ═══════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  /* ── 1. SPLASH SCREEN ─────────────────────────────────── */
+  function injectSplash() {
+    if (document.getElementById('ft-splash')) return;
+    var sp = document.createElement('div');
+    sp.id = 'ft-splash';
+    sp.innerHTML = [
+      '<div id="ft-splash-logo">',
+        '<img src="/Lambang_Kota_Semarang.png" alt="RT 005" onerror="this.style.display=\'none\'">',
+      '</div>',
+      '<div id="ft-splash-name">Smart Portal RT 005</div>',
+      '<div id="ft-splash-sub">Tegalsari · Candisari · Semarang</div>',
+      '<div id="ft-splash-bar"><div id="ft-splash-bar-fill"></div></div>'
+    ].join('');
+    document.body.insertBefore(sp, document.body.firstChild);
+
+    // Animate loading bar
+    setTimeout(function () {
+      var fill = document.getElementById('ft-splash-bar-fill');
+      if (fill) fill.style.width = '100%';
+    }, 50);
+
+    // Dismiss after load
+    function dismiss() {
+      var el = document.getElementById('ft-splash');
+      if (!el || el.classList.contains('ft-splash-out')) return;
+      el.classList.add('ft-splash-out');
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 450);
+    }
+
+    if (document.readyState === 'complete') {
+      setTimeout(dismiss, 800);
+    } else {
+      window.addEventListener('load', function () { setTimeout(dismiss, 600); });
+      setTimeout(dismiss, 2500); // hard cap
+    }
+  }
+
+  // Only show splash in standalone/installed PWA mode
+  var isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+
+  if (isStandalone) {
+    if (document.body) injectSplash();
+    else document.addEventListener('DOMContentLoaded', injectSplash);
+  }
+
+  /* ── 2. SERVICE WORKER REGISTRATION ──────────────────── */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        .then(function (reg) {
+          // Check for SW update
+          reg.addEventListener('updatefound', function () {
+            var newSW = reg.installing;
+            if (!newSW) return;
+            newSW.addEventListener('statechange', function () {
+              if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+                showUpdateToast(newSW);
+              }
+            });
+          });
+
+          // Notify SW of version request
+          if (reg.active) reg.active.postMessage({ type: 'GET_VERSION' });
+        })
+        .catch(function (err) { console.warn('[SW] Registration failed:', err); });
+
+      // Listen for SW messages
+      navigator.serviceWorker.addEventListener('message', function (e) {
+        if (e.data?.type === 'SYNC_TRIGGERED') {
+          if (window.gtRefreshDashboard) window.gtRefreshDashboard();
+        }
+      });
+    });
+  }
+
+  /* ── 3. UPDATE TOAST ─────────────────────────────────── */
+  function showUpdateToast(newSW) {
+    var t = document.getElementById('ft-update-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'ft-update-toast';
+      t.innerHTML = '<span>✨ Versi baru tersedia</span><button id="ft-update-reload">Perbarui</button>';
+      document.body.appendChild(t);
+    }
+    t.classList.add('show');
+    document.getElementById('ft-update-reload').onclick = function () {
+      newSW.postMessage({ type: 'SKIP_WAITING' });
+      t.classList.remove('show');
+      setTimeout(function () { window.location.reload(); }, 300);
+    };
+    setTimeout(function () { t.classList.remove('show'); }, 8000);
+  }
+
+  /* ── 4. INSTALL PROMPT (Android A2HS) ────────────────── */
+  var deferredPrompt = null;
+  var bannerDismissed = false;
+
+  try { bannerDismissed = !!localStorage.getItem('ft-install-dismissed'); } catch {}
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (!bannerDismissed) setTimeout(showInstallBanner, 3000);
+  });
+
+  function showInstallBanner() {
+    if (document.getElementById('ft-install-banner')) return;
+    var banner = document.createElement('div');
+    banner.id = 'ft-install-banner';
+    banner.innerHTML = [
+      '<button id="ft-install-close" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>',
+      '<div id="ft-install-icon">',
+        '<img src="/Lambang_Kota_Semarang.png" alt="" onerror="this.style.display=\'none\'">',
+      '</div>',
+      '<div id="ft-install-text">',
+        '<div id="ft-install-title">Pasang di HP Anda</div>',
+        '<div id="ft-install-sub">Smart Portal RT 005 — akses offline, lebih cepat</div>',
+      '</div>',
+      '<button id="ft-install-btn">Pasang</button>'
+    ].join('');
+    document.body.appendChild(banner);
+    setTimeout(function () { banner.classList.add('ft-banner-show'); }, 50);
+
+    document.getElementById('ft-install-btn').onclick = function () {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function (res) {
+        deferredPrompt = null;
+        hideBanner();
+      });
+    };
+
+    document.getElementById('ft-install-close').onclick = function () {
+      hideBanner();
+      try { localStorage.setItem('ft-install-dismissed', '1'); } catch {}
+    };
+  }
+
+  function hideBanner() {
+    var b = document.getElementById('ft-install-banner');
+    if (!b) return;
+    b.classList.remove('ft-banner-show');
+    setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 400);
+  }
+
+  window.addEventListener('appinstalled', function () {
+    hideBanner();
+    deferredPrompt = null;
+  });
+
+  /* ── 5. OFFLINE INDICATOR ────────────────────────────── */
+  function updateOnlineStatus() {
+    var bar = document.getElementById('ft-offline-bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'ft-offline-bar';
+      bar.textContent = '⚡ Tidak ada koneksi — mode offline';
+      document.body.appendChild(bar);
+    }
+    if (!navigator.onLine) {
+      bar.classList.add('ft-offline-show');
+    } else {
+      bar.classList.remove('ft-offline-show');
+    }
+  }
+
+  window.addEventListener('online',  updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+  setTimeout(updateOnlineStatus, 1000);
+
+  /* ── 6. DYNAMIC THEME-COLOR (matches dark mode toggle) ─ */
+  function syncThemeColor() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    var color  = isDark ? '#0b1220' : '#1e3a8a';
+    var metas  = document.querySelectorAll('meta[name="theme-color"]');
+    metas.forEach(function (m) {
+      var media = m.getAttribute('media') || '';
+      if (media.includes('dark') && isDark)  m.setAttribute('content', color);
+      if (!media.includes('dark') && !isDark) m.setAttribute('content', color);
+      if (!media) m.setAttribute('content', color);
+    });
+  }
+
+  // Patch gtToggleTheme to also sync theme-color
+  var _themeCheckInterval = setInterval(function () {
+    if (window.gtToggleTheme && !window.gtToggleTheme.__ftTheme) {
+      var orig = window.gtToggleTheme;
+      window.gtToggleTheme = function () {
+        var r = orig.apply(this, arguments);
+        setTimeout(syncThemeColor, 50);
+        return r;
+      };
+      window.gtToggleTheme.__ftTheme = true;
+      clearInterval(_themeCheckInterval);
+    }
+  }, 200);
+
+  setTimeout(syncThemeColor, 300);
+
+  /* ── 7. ANDROID HARDWARE BACK BUTTON (PWA) ───────────── */
+  window.addEventListener('popstate', function () {
+    // If inside warga view, go back to dashboard on back button
+    var activeTab = document.querySelector('#view-warga .warga-tab-content.active');
+    if (activeTab && activeTab.id !== 'warga-dashboard') {
+      if (window.openWargaTab) window.openWargaTab('warga-dashboard');
+      history.pushState(null, '', location.href);
+    }
+  });
+
+  // Push initial state for back button support
+  if (isStandalone) {
+    history.pushState(null, '', location.href);
+    // On every tab switch, push a history state
+    var _tabPatchInterval = setInterval(function () {
+      if (window.openWargaTab && !window.openWargaTab.__ftBack) {
+        var origTab = window.openWargaTab;
+        window.openWargaTab = function (tabId) {
+          if (tabId !== 'warga-dashboard') {
+            history.pushState({ tab: tabId }, '', location.href);
+          }
+          return origTab.apply(this, arguments);
+        };
+        window.openWargaTab.__ftBack = true;
+        clearInterval(_tabPatchInterval);
+      }
+    }, 400);
+  }
+
+  /* ── 8. PREVENT DOUBLE-TAP ZOOM (Android) ────────────── */
+  var lastTouch = 0;
+  document.addEventListener('touchend', function (e) {
+    var now = Date.now();
+    if (now - lastTouch < 320) e.preventDefault();
+    lastTouch = now;
+  }, { passive: false });
+
+  /* ── 9. MOMENTUM SCROLL OPTIMIZATION ────────────────── */
+  document.addEventListener('DOMContentLoaded', function () {
+    var scrollEls = document.querySelectorAll(
+      '#view-warga .warga-tab-content, #view-warga .warga-fb-main, #view-warga .warga-fb-right'
+    );
+    scrollEls.forEach(function (el) {
+      el.style.webkitOverflowScrolling = 'touch';
+      el.style.overscrollBehavior = 'contain';
+    });
+  });
+
+})();
+</script>
 
 <!-- ═══════════════════════════════════════════════════════════
      GT FINTECH MICRO-INTERACTIONS v1

@@ -1,147 +1,209 @@
-// Smart Portal RT 005 — Service Worker v2
-// Cache static assets, push notifications, offline support
+// Smart Portal RT 005 — Service Worker v3
+// Stale-while-revalidate · App shell · Push · Background sync · Native Android PWA
 
-const CACHE_NAME = 'smart-portal-rt-v2';
-const BACKEND_URL = (self.location.hostname === 'localhost' || self.location.hostname.includes('replit') || self.location.hostname.includes('127.0.0.1'))
-  ? ''
-  : 'https://smartportal-production.up.railway.app';
+const CACHE_VER  = 'v3';
+const SHELL_CACHE = `rt005-shell-${CACHE_VER}`;
+const DATA_CACHE  = `rt005-data-${CACHE_VER}`;
+const IMG_CACHE   = `rt005-img-${CACHE_VER}`;
 
-const STATIC_ASSETS = [
+const SHELL_ASSETS = [
   '/',
   '/index.html',
-  '/_sync.js',
   '/manifest.json',
+  '/favicon.svg',
   '/Lambang_Kota_Semarang.png',
-  '/favicon.svg'
+  '/benny-avatar.png',
+  '/_sync.js'
 ];
 
-// ─── Install ────────────────────────────────────────────────────────────────
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS).catch(() => {});
-    }).then(() => self.skipWaiting())
+// ─── Install — pre-cache app shell ─────────────────────────────────────────────
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(SHELL_CACHE)
+      .then((c) => c.addAll(SHELL_ASSETS).catch(() => {}))
+      .then(() => self.skipWaiting())
   );
 });
 
-// ─── Activate ────────────────────────────────────────────────────────────────
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
+// ─── Activate — clean stale caches ────────────────────────────────────────────
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
-        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+        keys
+          .filter((k) => ![SHELL_CACHE, DATA_CACHE, IMG_CACHE].includes(k))
+          .map((k) => caches.delete(k))
       )
     ).then(() => self.clients.claim())
   );
 });
 
-// ─── Fetch ───────────────────────────────────────────────────────────────────
-self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+// ─── Navigation Preload (Android speed) ──────────────────────────────────────
+self.addEventListener('activate', (e) => {
+  if (self.registration.navigationPreload) {
+    e.waitUntil(self.registration.navigationPreload.enable());
+  }
+});
 
-  // API calls to backend: always network (never cache)
+// ─── Fetch — tiered strategy ──────────────────────────────────────────────────
+self.addEventListener('fetch', (e) => {
+  const url  = new URL(e.request.url);
+  const req  = e.request;
+
+  // 1. API — network only, never cache
   if (url.pathname.startsWith('/api')) {
-    event.respondWith(fetch(event.request));
+    e.respondWith(fetch(req).catch(() =>
+      new Response(JSON.stringify({ error: 'offline' }), {
+        status: 503,
+        headers: { 'Content-Type': 'application/json' }
+      })
+    ));
     return;
   }
 
-  // External CDN: network-first, fallback to cache
+  // 2. External CDN fonts/icons — network-first, cache fallback
   if (url.origin !== self.location.origin) {
-    event.respondWith(
-      fetch(event.request).catch(() => caches.match(event.request))
+    e.respondWith(
+      caches.open(IMG_CACHE).then((c) =>
+        fetch(req).then((res) => {
+          if (res.ok) c.put(req, res.clone());
+          return res;
+        }).catch(() => c.match(req))
+      )
     );
     return;
   }
 
-  // Local assets: cache-first + background update
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const fetchPromise = fetch(event.request).then((response) => {
-        if (response && response.status === 200 && response.type === 'basic') {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
+  // 3. Images — cache-first, background refresh
+  if (/\.(png|jpg|jpeg|svg|webp|gif|ico)$/i.test(url.pathname)) {
+    e.respondWith(
+      caches.open(IMG_CACHE).then((c) =>
+        c.match(req).then((cached) => {
+          const fresh = fetch(req).then((res) => {
+            if (res.ok) c.put(req, res.clone());
+            return res;
+          });
+          return cached || fresh;
+        })
+      )
+    );
+    return;
+  }
+
+  // 4. HTML navigation — network-first with preload, offline shell fallback
+  if (req.mode === 'navigate') {
+    e.respondWith(
+      (async () => {
+        try {
+          const preload = await e.preloadResponse;
+          if (preload) return preload;
+          const res = await fetch(req);
+          const cache = await caches.open(SHELL_CACHE);
+          cache.put(req, res.clone());
+          return res;
+        } catch {
+          const cached = await caches.match('/index.html');
+          return cached || new Response('<h1>Offline</h1>', {
+            headers: { 'Content-Type': 'text/html' }
           });
         }
-        return response;
-      }).catch(() => cached);
-      return cached || fetchPromise;
-    })
+      })()
+    );
+    return;
+  }
+
+  // 5. App shell assets — stale-while-revalidate
+  e.respondWith(
+    caches.open(SHELL_CACHE).then((c) =>
+      c.match(req).then((cached) => {
+        const fresh = fetch(req).then((res) => {
+          if (res && res.status === 200) c.put(req, res.clone());
+          return res;
+        }).catch(() => cached);
+        return cached || fresh;
+      })
+    )
   );
 });
 
 // ─── Push Notifications ──────────────────────────────────────────────────────
-self.addEventListener('push', (event) => {
-  let data = { title: 'Portal RT 005', body: 'Ada update baru!', icon: '/Lambang_Kota_Semarang.png', badge: '/Lambang_Kota_Semarang.png', url: '/' };
-
-  if (event.data) {
-    try { data = { ...data, ...JSON.parse(event.data.text()) }; } catch {}
+self.addEventListener('push', (e) => {
+  const defaults = {
+    title: 'Smart Portal RT 005',
+    body: 'Ada update terbaru dari RT 005 Tegalsari!',
+    icon: '/Lambang_Kota_Semarang.png',
+    badge: '/favicon.svg',
+    url: '/'
+  };
+  let data = defaults;
+  if (e.data) {
+    try { data = { ...defaults, ...JSON.parse(e.data.text()) }; } catch {}
   }
 
-  const options = {
-    body: data.body,
-    icon: data.icon,
-    badge: data.badge,
-    vibrate: [200, 100, 200],
-    tag: 'rt005-notif',
-    renotify: true,
-    requireInteraction: false,
-    data: { url: data.url },
-    actions: [
-      { action: 'open', title: 'Buka Portal' },
-      { action: 'close', title: 'Tutup' }
-    ]
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
-  );
-});
-
-// ─── Notification Click ───────────────────────────────────────────────────────
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-
-  if (event.action === 'close') return;
-
-  const targetUrl = event.notification.data?.url ?? '/';
-
-  event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
-      // Focus existing tab if open
-      for (const client of clients) {
-        if ('focus' in client) {
-          client.focus();
-          if ('navigate' in client) client.navigate(targetUrl);
-          return;
-        }
-      }
-      // Open new tab
-      if (self.clients.openWindow) {
-        return self.clients.openWindow(targetUrl);
-      }
+  e.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: data.icon,
+      badge: data.badge,
+      vibrate: [100, 50, 100, 50, 200],
+      tag: 'rt005',
+      renotify: true,
+      requireInteraction: false,
+      silent: false,
+      data: { url: data.url, timestamp: Date.now() },
+      actions: [
+        { action: 'open',  title: '📱 Buka Portal' },
+        { action: 'close', title: 'Tutup' }
+      ]
     })
   );
 });
 
-// ─── Push Subscription Change ────────────────────────────────────────────────
-self.addEventListener('pushsubscriptionchange', (event) => {
-  // Re-subscribe automatically when subscription expires
-  event.waitUntil(
-    self.registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: event.oldSubscription?.options?.applicationServerKey
-    }).then((sub) => {
-      return fetch(BACKEND_URL + '/api/push/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sub)
-      });
-    }).catch(() => {})
+// ─── Notification Click ───────────────────────────────────────────────────────
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  if (e.action === 'close') return;
+
+  const target = e.notification.data?.url ?? '/';
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      for (const c of clients) {
+        if ('focus' in c) { c.focus(); if ('navigate' in c) c.navigate(target); return; }
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(target);
+    })
   );
 });
 
-// ─── Message ──────────────────────────────────────────────────────────────────
-self.addEventListener('message', (event) => {
-  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
+// ─── Push Subscription Change ─────────────────────────────────────────────────
+self.addEventListener('pushsubscriptionchange', (e) => {
+  e.waitUntil(
+    self.registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: e.oldSubscription?.options?.applicationServerKey
+    }).then((sub) =>
+      fetch('/api/push/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sub)
+      }).catch(() => {})
+    ).catch(() => {})
+  );
+});
+
+// ─── Background Sync ──────────────────────────────────────────────────────────
+self.addEventListener('sync', (e) => {
+  if (e.tag === 'sync-data') {
+    e.waitUntil(
+      self.clients.matchAll().then((clients) => {
+        clients.forEach((c) => c.postMessage({ type: 'SYNC_TRIGGERED' }));
+      })
+    );
+  }
+});
+
+// ─── Message from page ────────────────────────────────────────────────────────
+self.addEventListener('message', (e) => {
+  if (e.data?.type === 'SKIP_WAITING') self.skipWaiting();
+  if (e.data?.type === 'GET_VERSION')  e.source?.postMessage({ type: 'VERSION', version: CACHE_VER });
 });
