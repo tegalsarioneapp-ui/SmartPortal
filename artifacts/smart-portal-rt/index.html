@@ -4151,7 +4151,7 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
 <div class="app-container app-view" id="main-app">
     <div class="main-header no-print">
         <div style="display: flex; align-items: center; gap: 15px;">
-            <button class="btn-toggle-sidebar hide-on-mobile" onclick="toggleSidebar()" title="Sembunyikan/Munculkan Menu">
+            <button class="btn-toggle-sidebar" onclick="toggleSidebar()" id="gt-sidebar-toggle-btn" title="Menu Navigasi">
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="user-info">
@@ -11778,21 +11778,156 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
 
   /* ── FIX 7 already done in HTML ── */
 
-  /* ── FIX 3: Sidebar toggle ── */
+  /* ── FIX 3: Sidebar toggle (v10 — mobile-aware) ── */
   function fixSidebar() {
     if (window.__gtV13Sidebar) return; window.__gtV13Sidebar = true;
-    window.toggleSidebar = function(){
-      document.body.classList.toggle('sidebar-collapsed');
-      var ic = document.body.classList.contains('sidebar-collapsed');
-      try{ localStorage.setItem('sidebar_state', ic?'hidden':'visible'); }catch(_){}
+
+    // Inject pull-handle ke setiap nav tabs
+    function injectPullHandles() {
+      document.querySelectorAll('.admin-nav-tabs, .nav-tabs').forEach(function(nav) {
+        if (nav.querySelector('.gt-nav-pull-handle')) return;
+        var handle = document.createElement('div');
+        handle.className = 'gt-nav-pull-handle pull-tab-bca';
+        handle.title = 'Sembunyikan/Tampilkan Menu';
+        handle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          window.toggleSidebar();
+        });
+        nav.appendChild(handle);
+      });
+    }
+
+    // Fungsi utama toggle — mobile vs desktop
+    window.toggleSidebar = function() {
+      var isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        // Mobile: toggle bottom nav hide/show
+        var navs = document.querySelectorAll('.admin-nav-tabs, .nav-tabs');
+        var anyHidden = false;
+        navs.forEach(function(n){ if(n.classList.contains('gt-nav-hidden')) anyHidden = true; });
+        navs.forEach(function(n){
+          n.classList.toggle('gt-nav-hidden', !anyHidden);
+          n.classList.toggle('hidden-footer', !anyHidden);
+        });
+        document.body.classList.toggle('gt-nav-is-hidden', !anyHidden);
+        // Update ikon hamburger
+        var btn = document.getElementById('gt-sidebar-toggle-btn');
+        if (btn) {
+          var ic = btn.querySelector('i');
+          if (ic) ic.className = anyHidden ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+        }
+        try{ localStorage.setItem('sidebar_state_mobile', anyHidden ? 'visible' : 'hidden'); }catch(_){}
+      } else {
+        // Desktop: toggle sidebar collapse
+        document.body.classList.toggle('sidebar-collapsed');
+        var ic = document.body.classList.contains('sidebar-collapsed');
+        try{ localStorage.setItem('sidebar_state', ic?'hidden':'visible'); }catch(_){}
+      }
     };
-    try{ if(localStorage.getItem('sidebar_state')==='hidden') document.body.classList.add('sidebar-collapsed'); }catch(_){}
-    document.querySelectorAll('.btn-toggle-sidebar').forEach(function(b){
-      b.style.setProperty('display','inline-flex','important');
-      b.style.setProperty('align-items','center','important');
-      b.style.setProperty('visibility','visible','important');
-      b.style.setProperty('opacity','1','important');
-    });
+
+    // Restore state
+    try {
+      if (window.innerWidth > 768 && localStorage.getItem('sidebar_state') === 'hidden') {
+        document.body.classList.add('sidebar-collapsed');
+      }
+    } catch(_) {}
+
+    // Inject pull handles setelah DOM siap
+    injectPullHandles();
+
+    // Re-inject saat portal switch (BukaPortal dipanggil ulang)
+    var _origBuka = window.BukaPortal;
+    if (typeof _origBuka === 'function') {
+      window.BukaPortal = function() {
+        _origBuka.apply(this, arguments);
+        setTimeout(injectPullHandles, 200);
+      };
+    }
+
+    // === Scroll auto-hide: sembunyikan nav saat scroll ke bawah ===
+    (function() {
+      var lastY = 0;
+      var ticking = false;
+      var THRESHOLD = 40; // px minimum scroll sebelum trigger
+
+      function onScroll() {
+        if (!ticking) {
+          requestAnimationFrame(function() {
+            var isMobile = window.innerWidth <= 768;
+            if (!isMobile) { ticking = false; return; }
+
+            // Cari scrollable tab content yang aktif
+            var activeContent = document.querySelector(
+              '.warga-tab-content.active, .admin-tab-content.active, .ben-tab-content.active, .kop-tab-content.active'
+            );
+            var scrollEl = activeContent || document.documentElement;
+            var currentY = scrollEl.scrollTop || window.pageYOffset || 0;
+            var delta = currentY - lastY;
+
+            if (Math.abs(delta) > THRESHOLD) {
+              var navs = document.querySelectorAll('.admin-nav-tabs, .nav-tabs');
+              if (delta > 0) {
+                // Scroll ke bawah → sembunyikan
+                navs.forEach(function(n){
+                  n.classList.add('gt-nav-hidden');
+                  n.classList.add('hidden-footer');
+                });
+                document.body.classList.add('gt-nav-is-hidden');
+                var btn = document.getElementById('gt-sidebar-toggle-btn');
+                if (btn) { var ic = btn.querySelector('i'); if(ic) ic.className = 'fa-solid fa-xmark'; }
+              } else {
+                // Scroll ke atas → tampilkan
+                navs.forEach(function(n){
+                  n.classList.remove('gt-nav-hidden');
+                  n.classList.remove('hidden-footer');
+                });
+                document.body.classList.remove('gt-nav-is-hidden');
+                var btn2 = document.getElementById('gt-sidebar-toggle-btn');
+                if (btn2) { var ic2 = btn2.querySelector('i'); if(ic2) ic2.className = 'fa-solid fa-bars'; }
+              }
+              lastY = currentY;
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      // Pasang listener di window + tab content aktif
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      // Juga pasang di tab content (mereka bisa scroll sendiri)
+      function attachTabScrollListeners() {
+        document.querySelectorAll(
+          '.warga-tab-content, .admin-tab-content, .ben-tab-content, .kop-tab-content'
+        ).forEach(function(el) {
+          if (!el._gtScrollBound) {
+            el.addEventListener('scroll', onScroll, { passive: true });
+            el._gtScrollBound = true;
+          }
+        });
+      }
+      attachTabScrollListeners();
+      setTimeout(attachTabScrollListeners, 1500);
+
+      // Tap pada konten → tampilkan nav lagi
+      document.addEventListener('touchend', function(e) {
+        if (!e.target.closest('.admin-nav-tabs') && !e.target.closest('.nav-tabs')) {
+          // Jika tap di konten, tampilkan nav setelah 300ms
+          clearTimeout(window._gtNavShowTimer);
+          window._gtNavShowTimer = setTimeout(function() {
+            if (window.innerWidth > 768) return;
+            document.querySelectorAll('.admin-nav-tabs, .nav-tabs').forEach(function(n){
+              n.classList.remove('gt-nav-hidden');
+              n.classList.remove('hidden-footer');
+            });
+            document.body.classList.remove('gt-nav-is-hidden');
+            var btn3 = document.getElementById('gt-sidebar-toggle-btn');
+            if (btn3) { var ic3 = btn3.querySelector('i'); if(ic3) ic3.className = 'fa-solid fa-bars'; }
+          }, 1200);
+        }
+      }, { passive: true });
+    })();
   }
 
   /* ── FIX 4: News hero auto-slider ── */
@@ -11998,5 +12133,116 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
 /* ─── END GT-v13 ─── */
 </script>
 <!-- ═══ END GT-v13 ═══ -->
+
+<style id="gt-mobile-nav-v10">
+/* ============================================================
+   MOBILE NAV v10 — Hamburger visible + Hide & Seek bottom nav
+   ============================================================ */
+
+/* Hamburger button: tampil di semua ukuran layar */
+.btn-toggle-sidebar {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,0.10);
+  color: inherit;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background 0.2s;
+}
+.btn-toggle-sidebar:hover { background: rgba(255,255,255,0.20); }
+
+@media (max-width: 768px) {
+  /* Pastikan hamburger selalu muncul di mobile */
+  .btn-toggle-sidebar,
+  #gt-sidebar-toggle-btn {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.1rem !important;
+    background: rgba(255,255,255,0.12) !important;
+    border-radius: 10px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: inherit !important;
+    border: none !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Sembunyikan teks "Keluar" di header, sisakan ikon saja */
+  .btn-logout span { display: none !important; }
+
+  /* Bottom nav: transisi halus */
+  .admin-nav-tabs,
+  .nav-tabs {
+    transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.42s ease !important;
+    overflow: visible !important;
+  }
+
+  /* State hidden — slide ke bawah */
+  .admin-nav-tabs.gt-nav-hidden,
+  .nav-tabs.gt-nav-hidden {
+    transform: translateY(calc(100% - 22px)) !important;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.18) !important;
+  }
+  /* State visible */
+  .admin-nav-tabs:not(.gt-nav-hidden),
+  .nav-tabs:not(.gt-nav-hidden) {
+    transform: translateY(0) !important;
+  }
+
+  /* Pull handle di atas nav */
+  .gt-nav-pull-handle {
+    position: absolute !important;
+    top: -22px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 68px !important;
+    height: 22px !important;
+    background: var(--navy-dark, #001f5b) !important;
+    border: 2px solid var(--gold-luxury, #f59e0b) !important;
+    border-bottom: none !important;
+    border-radius: 14px 14px 0 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 1002 !important;
+    pointer-events: auto !important;
+  }
+  .gt-nav-pull-handle::before {
+    content: "";
+    display: block;
+    width: 28px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--gold-luxury, #f59e0b);
+    transition: transform 0.3s;
+  }
+  .gt-nav-hidden .gt-nav-pull-handle::before {
+    transform: rotate(180deg);
+  }
+
+  /* Body padding bottom agar konten tidak tertutup nav */
+  body {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* Saat nav hidden, kurangi padding */
+  body.gt-nav-is-hidden {
+    padding-bottom: 28px !important;
+  }
+}
+</style>
+
 </body>
 </html>
