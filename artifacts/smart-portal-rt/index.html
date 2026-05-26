@@ -3289,7 +3289,7 @@ html[data-theme="dark"] select option {
 .acc-chevron { transition:transform 0.3s; color:#94a3b8; }
 .acc-header.open .acc-chevron { transform:rotate(180deg); }
 .acc-body { max-height:0; overflow:hidden; transition:max-height 0.35s ease; }
-.acc-body.open { max-height:2000px; }
+.acc-body.open { max-height:9999px; }
 .acc-body-inner { padding:16px; }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -4149,6 +4149,26 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
         if (typeof Toast !== 'undefined') Toast.fire({icon:'success', title:'Aplikasi berhasil diinstall!'});
     });
     </script>
+<style>
+  /* ===== LAYOUT FIX: Prevent bottom-nav overlap ===== */
+  .admin-tab-content, .warga-tab-content,
+  .ben-tab-content, .kop-tab-content {
+    padding-bottom: 80px !important;   /* Clear fixed bottom nav */
+    overflow-x: auto !important;       /* Allow horizontal scroll, not clip */
+    box-sizing: border-box !important;
+  }
+  /* Remove body margin-bottom */
+  html, body { margin-bottom: 0 !important; }
+
+  /* Responsive: card & form tidak meluber ke kanan */
+  @media (max-width: 768px) {
+    .card, .form-grid, .stat-grid {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+  }
+  /* ===== END LAYOUT FIX ===== */
+    </style>
 </head>
 <body>
 <div id="gt-progress-bar"></div>
