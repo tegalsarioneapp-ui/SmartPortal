@@ -15,9 +15,9 @@ function patch(label, oldStr, newStr) {
 }
 
 // PATCH 1: Tambah CSS accordion
-patch("CSS Accordion",
-`</head>`,
-`<style>
+// Use lastIndexOf so we always target the one-and-only </head> closing tag,
+// even if the string happens to appear elsewhere in the document (e.g. in a comment).
+const cssBlock = `<style>
   .acc-header {
     display:flex; align-items:center; justify-content:space-between;
     cursor:pointer; user-select:none; padding:4px 0;
@@ -37,12 +37,20 @@ patch("CSS Accordion",
   }
   .acc-body.closed { max-height:0 !important; opacity:0; }
 </style>
-</head>`
-);
+`;
+const headCloseAnchor = "</head>";
+const headCloseIdx = html.lastIndexOf(headCloseAnchor);
+if (headCloseIdx === -1) {
+  console.error("GAGAL: CSS Accordion — </head> tidak ditemukan");
+  process.exit(1);
+}
+html = html.slice(0, headCloseIdx) + cssBlock + html.slice(headCloseIdx);
+patchCount++;
+console.log("OK: CSS Accordion");
 
 // PATCH 2: Wrap card Identitas+Parameter dalam accordion
 patch("Accordion Identitas+Parameter",
-`            <div class="form-grid">
+
                 <div class="card" style="border-top: 4px solid var(--accent-gold);">
                     <h3>Identitas Lingkungan</h3>`,
 `            <div class="card" style="border-top:4px solid var(--accent-gold);padding-bottom:8px;">
