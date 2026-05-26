@@ -4170,67 +4170,44 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
   /* ===== END LAYOUT FIX ===== */
     </style>
 
-  <style>
-  @media (min-width: 769px) {
-    /* Paksa semua elemen tidak memiliki padding bawah berlebihan di desktop */
-    main, .main-content, #app, .app-container {
-      padding-bottom: 20px !important;
-      margin-bottom: 0 !important;
-    }
-  }
-  </style>
-    
-
 <script>
 window.addEventListener('load', () => {
-    // 1. SINKRONISASI PANEL KANAN (Tetap dipertahankan karena sudah sukses)
-    const syncPanel = () => {
+    // 1. Kembalikan fungsi panel kanan yang sudah berhasil sebelumnya
+    const syncPanelKanan = () => {
         try {
             const saldoAwal = parseFloat(localStorage.getItem('ben_saldo_awal')) || parseFloat(localStorage.getItem('db_saldo_awal')) || 0;
             const dataKas = JSON.parse(localStorage.getItem('db_kas')) || [];
-            const total = dataKas.reduce((s, i) => s + (i.jenis === 'masuk' ? (parseFloat(i.nominal)||0) : -(parseFloat(i.nominal)||0)), 0);
+            const totalTransaksi = dataKas.reduce((sum, item) => {
+                return sum + (item.jenis === 'masuk' ? (parseFloat(item.nominal) || 0) : -(parseFloat(item.nominal) || 0));
+            }, 0);
+            const saldoAkhir = saldoAwal + totalTransaksi;
+
             const elSaldo = document.getElementById('wfb-saldo-kas');
-            if(elSaldo) elSaldo.innerText = 'Rp ' + (saldoAwal + total).toLocaleString('id-ID');
-            
-            const info = JSON.parse(localStorage.getItem('db_info_arisan')) || {};
+            if(elSaldo) elSaldo.innerText = 'Rp ' + saldoAkhir.toLocaleString('id-ID');
+
+            const infoArisan = JSON.parse(localStorage.getItem('db_info_arisan')) || {};
             const elArisan = document.getElementById('wfb-arisan');
-            if(elArisan) elArisan.innerText = info.arisanNama || '—';
-            
+            if(elArisan) elArisan.innerText = infoArisan.arisanNama || '—';
+
             const elHost = document.getElementById('wfb-host');
-            if(elHost) elHost.innerText = info.hostNama || '—';
+            if(elHost) elHost.innerText = infoArisan.hostNama || '—';
         } catch(e) {}
     };
-    window.loadWargaFbRight = syncPanel;
-    syncPanel();
+    
+    window.loadWargaFbRight = syncPanelKanan;
+    syncPanelKanan();
 
-    // 2. PEMBUNUH NAVIGASI & RUANG KOSONG (Tanpa tebak-tebakan class)
-    if(window.innerWidth > 768) {
-        setTimeout(() => {
-            const allElements = document.querySelectorAll('div, nav, footer');
-            allElements.forEach(el => {
-                const style = window.getComputedStyle(el);
-                // Matikan elemen yang melayang/menempel di posisi bawah
-                if(style.position === 'fixed' && style.bottom === '0px') {
-                    el.style.setProperty('display', 'none', 'important');
-                }
-                // Pangkas padding bawah raksasa pembentuk ruang kosong
-                if(parseInt(style.paddingBottom) > 60) {
-                    el.style.setProperty('padding-bottom', '20px', 'important');
-                }
-            });
-        }, 500); // Eksekusi setelah DOM selesai memuat rendering
-    }
-
-    // 3. PEMBERSIH BUG "undefined" PADA TABEL IURAN
+    // 2. Bersihkan teks 'undefined' secara spesifik pada sel tabel
     setTimeout(() => {
-        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
-        let node;
-        while (node = walker.nextNode()) {
-            if (node.nodeValue.includes('undefined')) {
-                node.nodeValue = node.nodeValue.replace(/undefined/g, '—');
+        const cells = document.querySelectorAll('td, span, div, p');
+        cells.forEach(cell => {
+            if (cell.childNodes.length === 1 && cell.childNodes[0].nodeType === Node.TEXT_NODE) {
+                if (cell.innerText.trim() === 'undefined') {
+                    cell.innerText = '—';
+                }
             }
-        }
-    }, 800);
+        });
+    }, 1000);
 });
 </script>
 
