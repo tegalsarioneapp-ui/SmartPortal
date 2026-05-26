@@ -171,7 +171,7 @@
         .admin-tab-btn i, .nav-btn i { font-size: 1.4rem; margin-right: 15px; width: 30px; text-align: center; color: var(--primary-blue); }
         .admin-tab-btn.active i, .nav-btn.active i { color: white !important; }
 
-        .admin-tab-content, .warga-tab-content, .ben-tab-content, .kop-tab-content { display: none; padding: 40px; box-sizing: border-box; overflow-x: hidden; }
+        .admin-tab-content, .warga-tab-content, .ben-tab-content, .kop-tab-content { display: none; padding: 40px; padding-bottom: 20px; box-sizing: border-box; overflow-x: hidden; }
         .admin-tab-content.active, .warga-tab-content.active, .ben-tab-content.active, .kop-tab-content.active { flex: 1 !important; width: calc(100% - 260px) !important; max-width: calc(100% - 260px) !important; display: block !important; animation: slideUp 0.4s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -2699,6 +2699,7 @@ nav.nav-tabs.hidden-footer {
   .ben-tab-content,
   .kop-tab-content {
     padding: 14px 10px !important;     /* was 40px */
+    padding-bottom: 85px !important;
     overflow-x: visible !important;    /* don't clip child scrollers */
     box-sizing: border-box !important;
     width: 100% !important;
@@ -11241,8 +11242,9 @@ window.dshTab = function(tab) {
 
             // ── Saldo Kas ──
             var kas = JSON.parse(localStorage.getItem('db_kas') || '[]');
-            var _benSaldoAwal = parseFloat(localStorage.getItem('ben_saldo_awal') || '0');
-            var saldoAwal = _benSaldoAwal > 0 ? _benSaldoAwal : parseFloat(localStorage.getItem('db_saldo_awal') || '0');
+            var benSaldoAwalStr = localStorage.getItem('ben_saldo_awal');
+            var _benSaldoAwal = parseFloat(benSaldoAwalStr || '0');
+            var saldoAwal = (benSaldoAwalStr !== null && !isNaN(_benSaldoAwal)) ? _benSaldoAwal : parseFloat(localStorage.getItem('db_saldo_awal') || '0');
             var masuk = 0, keluar = 0;
             kas.forEach(function(x){ if(x.tipe==='masuk') masuk += (x.nominal||0); else keluar += (x.nominal||0); });
             var saldo = saldoAwal + masuk - keluar;
@@ -11261,9 +11263,10 @@ window.dshTab = function(tab) {
             var elHost = document.getElementById('wfb-host');
             var infoArisan = null;
             try { infoArisan = JSON.parse(localStorage.getItem('db_info_arisan') || 'null'); } catch(_){}
+
+            // Set arisan name independently
             if (infoArisan && infoArisan.arisanNama) {
                 if (elArisan) elArisan.textContent = infoArisan.arisanNama;
-                if (elHost) elHost.textContent = infoArisan.hostNama || '—';
             } else {
                 // Fallback: turunkan dari array db_arisan
                 var arisanDb = JSON.parse(localStorage.getItem('db_arisan') || '[]');
@@ -11273,12 +11276,24 @@ window.dshTab = function(tab) {
                         var namaPemenang = last.pemenang || last.nama || '—';
                         elArisan.textContent = namaPemenang.split(/\s+/).slice(0,2).join(' ');
                     }
+                } else {
+                    if (elArisan) elArisan.textContent = '—';
+                }
+            }
+
+            // Set host name independently
+            if (infoArisan && infoArisan.hostNama) {
+                if (elHost) elHost.textContent = infoArisan.hostNama;
+            } else {
+                // Fallback: turunkan dari array db_arisan
+                var arisanDb = JSON.parse(localStorage.getItem('db_arisan') || '[]');
+                if (arisanDb.length > 0) {
+                    var last = arisanDb[arisanDb.length - 1];
                     var sudahMenang = arisanDb.map(function(a){ return a.pemenang || a.nama || ''; });
                     var allWarga = wargaDb.map(function(w){ return w.namaKK || w.nama || ''; });
                     var belumMenang = allWarga.filter(function(n){ return n && sudahMenang.indexOf(n) === -1; });
                     if (elHost) elHost.textContent = belumMenang.length > 0 ? belumMenang[0].split(/\s+/).slice(0,2).join(' ') : (last.host || '—');
                 } else {
-                    if (elArisan) elArisan.textContent = '—';
                     if (elHost) elHost.textContent = '—';
                 }
             }

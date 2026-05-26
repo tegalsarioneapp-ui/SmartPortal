@@ -19,17 +19,18 @@ function patch(label, oldStr, newStr) {
 }
 
 // PATCH 1: Saldo Kas — samakan dengan loadDashboardWarga()
-// Gunakan ben_saldo_awal jika ada (> 0), baru fallback ke db_saldo_awal.
+// Gunakan ben_saldo_awal jika ada (valid number), baru fallback ke db_saldo_awal.
 patch(
   "Saldo Kas: gunakan ben_saldo_awal seperti loadDashboardWarga",
   `            var saldoAwal = parseFloat(localStorage.getItem('db_saldo_awal') || '0');`,
-  `            var _benSaldoAwal = parseFloat(localStorage.getItem('ben_saldo_awal') || '0');
-            var saldoAwal = _benSaldoAwal > 0 ? _benSaldoAwal : parseFloat(localStorage.getItem('db_saldo_awal') || '0');`
+  `            var benSaldoAwalStr = localStorage.getItem('ben_saldo_awal');
+            var _benSaldoAwal = parseFloat(benSaldoAwalStr || '0');
+            var saldoAwal = (benSaldoAwalStr !== null && !isNaN(_benSaldoAwal)) ? _benSaldoAwal : parseFloat(localStorage.getItem('db_saldo_awal') || '0');`
 );
 
 // PATCH 2 & 3: Arisan & Tuan Rumah — baca db_info_arisan terlebih dahulu
 // (sumber resmi yang diisi melalui form "Atur Penerima Arisan & Tuan Rumah"),
-// baru fallback ke perhitungan dari array db_arisan.
+// baru fallback ke perhitungan dari array db_arisan. Set each field independently.
 patch(
   "Arisan & Tuan Rumah: utamakan db_info_arisan",
   `            // ── Arisan & Tuan Rumah ──
@@ -58,9 +59,10 @@ patch(
             var elHost = document.getElementById('wfb-host');
             var infoArisan = null;
             try { infoArisan = JSON.parse(localStorage.getItem('db_info_arisan') || 'null'); } catch(_){}
+
+            // Set arisan name independently
             if (infoArisan && infoArisan.arisanNama) {
                 if (elArisan) elArisan.textContent = infoArisan.arisanNama;
-                if (elHost) elHost.textContent = infoArisan.hostNama || '—';
             } else {
                 // Fallback: turunkan dari array db_arisan
                 var arisanDb = JSON.parse(localStorage.getItem('db_arisan') || '[]');
@@ -70,12 +72,24 @@ patch(
                         var namaPemenang = last.pemenang || last.nama || '—';
                         elArisan.textContent = namaPemenang.split(/\\s+/).slice(0,2).join(' ');
                     }
+                } else {
+                    if (elArisan) elArisan.textContent = '—';
+                }
+            }
+
+            // Set host name independently
+            if (infoArisan && infoArisan.hostNama) {
+                if (elHost) elHost.textContent = infoArisan.hostNama;
+            } else {
+                // Fallback: turunkan dari array db_arisan
+                var arisanDb = JSON.parse(localStorage.getItem('db_arisan') || '[]');
+                if (arisanDb.length > 0) {
+                    var last = arisanDb[arisanDb.length - 1];
                     var sudahMenang = arisanDb.map(function(a){ return a.pemenang || a.nama || ''; });
                     var allWarga = wargaDb.map(function(w){ return w.namaKK || w.nama || ''; });
                     var belumMenang = allWarga.filter(function(n){ return n && sudahMenang.indexOf(n) === -1; });
                     if (elHost) elHost.textContent = belumMenang.length > 0 ? belumMenang[0].split(/\\s+/).slice(0,2).join(' ') : (last.host || '—');
                 } else {
-                    if (elArisan) elArisan.textContent = '—';
                     if (elHost) elHost.textContent = '—';
                 }
             }`
