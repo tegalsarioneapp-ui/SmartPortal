@@ -4,6 +4,17 @@ const file = "artifacts/smart-portal-rt/index.html";
 let html = readFileSync(file, "utf8");
 let patchCount = 0;
 
+/**
+ * Replace a target substring in the in-memory HTML and record the patch.
+ *
+ * If the target substring is not found, logs an error and exits the process with code 1.
+ * On success, replaces the first occurrence of `oldStr` in the surrounding `html` variable,
+ * increments the surrounding `patchCount`, and logs success.
+ *
+ * @param {string} label - Human-readable patch label used in logs.
+ * @param {string} oldStr - The exact substring to locate in `html`.
+ * @param {string} newStr - The replacement string to insert for the first match of `oldStr`.
+ */
 function patch(label, oldStr, newStr) {
   if (!html.includes(oldStr)) {
     console.error("GAGAL:", label);

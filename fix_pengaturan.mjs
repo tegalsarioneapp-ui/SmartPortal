@@ -4,6 +4,16 @@ const file = "artifacts/smart-portal-rt/index.html";
 let html = readFileSync(file, "utf8");
 let patchCount = 0;
 
+/**
+ * Apply a single in-memory string replacement to the HTML buffer, aborting the process if the target substring is not found.
+ *
+ * @param {string} label - Human-readable identifier for the patch used in log messages.
+ * @param {string} oldStr - The substring to locate in the HTML buffer; only the first occurrence is replaced.
+ * @param {string} newStr - The string that replaces the first occurrence of `oldStr`.
+ *
+ * Side effects: updates the module-level `html` variable, increments `patchCount`, and logs success.
+ * On failure (when `oldStr` is not found) logs an error with `label` and exits the process with code 1.
+ */
 function patch(label, oldStr, newStr) {
   if (!html.includes(oldStr)) {
     console.error("GAGAL:", label);
