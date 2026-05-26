@@ -4171,21 +4171,58 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
     </style>
 
 <style>
-  /* ===== RESPONSIVE LAYOUT FIX ===== */
-  .admin-tab-content, .warga-tab-content, .ben-tab-content, .kop-tab-content {
-    padding-bottom: 20px !important;
-    box-sizing: border-box !important;
+  /* ===================================================
+     FIX LAYOUT DESKTOP: RAMPING & FULL LAYOUT (BY IDT)
+     =================================================== */
+  
+  /* 1. KONDISI MODE DESKTOP (Layar Lebar / Monitor) */
+  @media (min-width: 769px) {
+    /* Paksa semua kontainer utama menggunakan padding desktop ramping dan buang margin menggantung */
+    .admin-tab-content, 
+    .warga-tab-content, 
+    .ben-tab-content, 
+    .kop-tab-content,
+    .main-content,
+    .content-wrapper,
+    main,
+    #app,
+    .app-container {
+      padding-bottom: 20px !important;
+      margin-bottom: 0 !important;
+      box-sizing: border-box !important;
+      height: auto !important;
+    }
+
+    /* Lenyapkan total elemen atau space navigasi mobile yang bocor / memakan tempat di desktop */
+    .mobile-nav, 
+    .bottom-nav, 
+    .mobile-navigation,
+    .nav-mobile,
+    .bottom-bar,
+    [class*="mobile-nav"], 
+    [class*="bottom-nav"],
+    [class*="bottom-bar"] {
+      display: none !important;
+      height: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      visibility: hidden !important;
+    }
   }
+
+  /* 2. KONDISI MODE MOBILE (HP) - Tetap Berikan Jarak Aman agar tidak tertutup */
   @media (max-width: 768px) {
-    .admin-tab-content, .warga-tab-content, .ben-tab-content, .kop-tab-content {
-      padding-bottom: 85px !important;
+    .admin-tab-content, 
+    .warga-tab-content, 
+    .ben-tab-content, 
+    .kop-tab-content {
+      padding-bottom: 90px !important;
     }
   }
     </style>
 <script>
 window.addEventListener('load', () => {
-    // Fungsi ini akan menimpa fungsi lama di memori browser secara otomatis
-    window.loadWargaFbRight = function() {
+    const syncPanelKanan = () => {
         try {
             const saldoAwal = parseFloat(localStorage.getItem('ben_saldo_awal')) || parseFloat(localStorage.getItem('db_saldo_awal')) || 0;
             const dataKas = JSON.parse(localStorage.getItem('db_kas')) || [];
@@ -4203,13 +4240,11 @@ window.addEventListener('load', () => {
 
             const elHost = document.getElementById('wfb-host');
             if(elHost) elHost.innerText = infoArisan.hostNama || '—';
-        } catch(e) { console.error('Error loadWargaFbRight:', e); }
+        } catch(e) { console.error('Error panel kanan:', e); }
     };
     
-    // Eksekusi paksa agar panel kanan langsung update
-    if (typeof window.loadWargaFbRight === 'function') {
-        window.loadWargaFbRight();
-    }
+    window.loadWargaFbRight = syncPanelKanan;
+    syncPanelKanan();
 });
 </script>
 
