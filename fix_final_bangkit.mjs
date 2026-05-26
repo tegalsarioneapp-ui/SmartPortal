@@ -6,7 +6,6 @@ const htmlPath = path.join(process.cwd(), 'artifacts', 'smart-portal-rt', 'index
 try {
     let htmlContent = fs.readFileSync(htmlPath, 'utf8');
 
-    // KODE AMAN 1: Menyisipkan CSS Responsive (Desktop Full, HP Ganjal 85px)
     const responsiveCSS = `
   /* ===== SMART PORTAL RESPONSIVE LAYOUT ===== */
   .admin-tab-content, .warga-tab-content, .ben-tab-content, .kop-tab-content {
@@ -18,17 +17,13 @@ try {
       padding-bottom: 85px !important;
     }
   }
-  /* ========================================= */
     `;
 
-    // KODE AMAN 2: Memaksa fungsi loadWargaFbRight menimpa fungsi lama di memori browser secara mandiri
     const injectionScript = `
 <style>${responsiveCSS}</style>
 <script>
 (function() {
-    // Kita tunggu sampai seluruh halaman web selesai dimuat di browser
     window.addEventListener('DOMContentLoaded', () => {
-        // Timpa fungsi bawaan dengan logika sinkronisasi database lokal kita
         window.loadWargaFbRight = function() {
             try {
                 const saldoAwal = parseFloat(localStorage.getItem('ben_saldo_awal')) || parseFloat(localStorage.getItem('db_saldo_awal')) || 0;
@@ -50,16 +45,13 @@ try {
                 console.log('✏️ Panel Kanan Berhasil Disinkronkan!');
             } catch(e) { console.error('Gagal sinkron panel kanan:', e); }
         };
-        // Jalankan fungsinya secara instan saat pertama kali dibuka
         if(typeof window.loadWargaFbRight === 'function') window.loadWargaFbRight();
     });
 })();
 </script>
 `;
 
-    // Kita suntikkan tepat sebelum tag penutup </head> (Metode paling aman sedunia, tidak akan merusak sintaks asli)
     htmlContent = htmlContent.replace('</head>', `${injectionScript}\n</head>`);
-    
     fs.writeFileSync(htmlPath, htmlContent, 'utf8');
     console.log('🚀 JOSS! File index.html berhasil ditambal secara aman tanpa merusak kode asli!');
 
