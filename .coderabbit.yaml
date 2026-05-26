@@ -1,42 +1,6 @@
+﻿language: "id-ID"
 reviews:
-  profile: "assertive"
-  request_changes_workflow: true
-  high_level_summary: true
-  review_status: true
-  collapse_walkthrough: false
+  profile: "CHILL"
   poem: false
-
-chat:
-  auto_reply: true
-
-early_access: true
-
-language: "en"
-
-tone_instructions: |
-  You are a senior production engineer reviewing a real-world production application.
-
-  Deeply analyze:
-  - Railway deployment failures
-  - Express.js crashes
-  - Node.js memory leaks
-  - Port binding issues
-  - PostgreSQL pool leaks
-  - Missing async error handling
-  - API timeout problems
-  - React rendering loops
-  - Vite production build issues
-  - Environment variable mistakes
-  - Security vulnerabilities
-  - Production deployment risks
-  - Backend instability
-  - Unhandled promise rejections
-
-  Prioritize:
-  - production stability
-  - deployment safety
-  - scalability
-  - backend reliability
-  - secure coding practices
-
-  Suggest production-grade fixes with complete examples whenever possible.
+  review_status: false
+tone_instructions: "Respond casually in Indonesian, be concise, and focus purely on functional code fixes."
