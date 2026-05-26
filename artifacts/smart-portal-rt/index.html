@@ -1566,6 +1566,26 @@ html[data-theme="dark"] .gt-search-info mark { background: rgba(245,158,11,0.30)
   --gt-s-5: 20px; --gt-s-6: 24px; --gt-s-7: 32px; --gt-s-8: 40px;
 }
 
+/* ===== SCROLL FIX: Dashboard warga & admin ===== */
+.admin-tab-content.active,
+.warga-tab-content.active,
+.ben-tab-content.active,
+.kop-tab-content.active {
+  overflow-y: auto !important;
+  max-height: calc(100vh - 80px) !important;
+}
+
+/* Wrapper utama harus bisa scroll */
+#main-app, .app-view, .admin-view, .warga-view {
+  overflow-y: auto !important;
+  height: calc(100vh - 80px) !important;
+}
+
+/* Pastikan body tidak memblokir scroll */
+html, body {
+  overflow-y: auto !important;
+  height: 100% !important;
+}
 /* ===== 0. Global resets to kill horizontal scroll ===== */
 html, body { max-width: 100%; overflow-x: hidden; }
 body { min-width: 0; }
@@ -13909,3 +13929,4 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 </script>
 </body>
 </html>
+
