@@ -11241,7 +11241,8 @@ window.dshTab = function(tab) {
 
             // ── Saldo Kas ──
             var kas = JSON.parse(localStorage.getItem('db_kas') || '[]');
-            var saldoAwal = parseFloat(localStorage.getItem('db_saldo_awal') || '0');
+            var _benSaldoAwal = parseFloat(localStorage.getItem('ben_saldo_awal') || '0');
+            var saldoAwal = _benSaldoAwal > 0 ? _benSaldoAwal : parseFloat(localStorage.getItem('db_saldo_awal') || '0');
             var masuk = 0, keluar = 0;
             kas.forEach(function(x){ if(x.tipe==='masuk') masuk += (x.nominal||0); else keluar += (x.nominal||0); });
             var saldo = saldoAwal + masuk - keluar;
@@ -11254,23 +11255,32 @@ window.dshTab = function(tab) {
             if (elKK) elKK.textContent = wargaDb.length + ' KK';
 
             // ── Arisan & Tuan Rumah ──
-            var arisanDb = JSON.parse(localStorage.getItem('db_arisan') || '[]');
+            // Utamakan db_info_arisan (diisi via form admin "Atur Penerima Arisan & Tuan Rumah"),
+            // sehingga sinkron dengan tampilan di "Ringkasan Lingkungan".
             var elArisan = document.getElementById('wfb-arisan');
             var elHost = document.getElementById('wfb-host');
-            if (arisanDb.length > 0) {
-                var last = arisanDb[arisanDb.length - 1];
-                if (elArisan) {
-                    var namaPemenang = last.pemenang || last.nama || '—';
-                    elArisan.textContent = namaPemenang.split(/\s+/).slice(0,2).join(' ');
-                }
-                // Host berikutnya: cari yang belum menang
-                var sudahMenang = arisanDb.map(function(a){ return a.pemenang || a.nama || ''; });
-                var allWarga = wargaDb.map(function(w){ return w.namaKK || w.nama || ''; });
-                var belumMenang = allWarga.filter(function(n){ return n && sudahMenang.indexOf(n) === -1; });
-                if (elHost) elHost.textContent = belumMenang.length > 0 ? belumMenang[0].split(/\s+/).slice(0,2).join(' ') : (last.host || '—');
+            var infoArisan = null;
+            try { infoArisan = JSON.parse(localStorage.getItem('db_info_arisan') || 'null'); } catch(_){}
+            if (infoArisan && infoArisan.arisanNama) {
+                if (elArisan) elArisan.textContent = infoArisan.arisanNama;
+                if (elHost) elHost.textContent = infoArisan.hostNama || '—';
             } else {
-                if (elArisan) elArisan.textContent = '—';
-                if (elHost) elHost.textContent = '—';
+                // Fallback: turunkan dari array db_arisan
+                var arisanDb = JSON.parse(localStorage.getItem('db_arisan') || '[]');
+                if (arisanDb.length > 0) {
+                    var last = arisanDb[arisanDb.length - 1];
+                    if (elArisan) {
+                        var namaPemenang = last.pemenang || last.nama || '—';
+                        elArisan.textContent = namaPemenang.split(/\s+/).slice(0,2).join(' ');
+                    }
+                    var sudahMenang = arisanDb.map(function(a){ return a.pemenang || a.nama || ''; });
+                    var allWarga = wargaDb.map(function(w){ return w.namaKK || w.nama || ''; });
+                    var belumMenang = allWarga.filter(function(n){ return n && sudahMenang.indexOf(n) === -1; });
+                    if (elHost) elHost.textContent = belumMenang.length > 0 ? belumMenang[0].split(/\s+/).slice(0,2).join(' ') : (last.host || '—');
+                } else {
+                    if (elArisan) elArisan.textContent = '—';
+                    if (elHost) elHost.textContent = '—';
+                }
             }
 
             // ── Iuran Status ──
