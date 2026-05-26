@@ -1,4 +1,4 @@
-﻿import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 const file = "artifacts/smart-portal-rt/index.html";
 let html = readFileSync(file, "utf8");
@@ -16,8 +16,9 @@ function patch(label, oldStr, newStr) {
 
 // PATCH 1: Tambah CSS accordion
 patch("CSS Accordion",
-`</style>`,
-`  .acc-header {
+`</head>`,
+`<style>
+  .acc-header {
     display:flex; align-items:center; justify-content:space-between;
     cursor:pointer; user-select:none; padding:4px 0;
     background:none; border:none; width:100%; text-align:left; font:inherit;
@@ -35,7 +36,8 @@ patch("CSS Accordion",
     max-height:2000px; opacity:1;
   }
   .acc-body.closed { max-height:0 !important; opacity:0; }
-</style>`
+</style>
+</head>`
 );
 
 // PATCH 2: Wrap card Identitas+Parameter dalam accordion

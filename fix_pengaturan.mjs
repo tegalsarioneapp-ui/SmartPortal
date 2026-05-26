@@ -1,4 +1,4 @@
-﻿import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 const file = "artifacts/smart-portal-rt/index.html";
 let html = readFileSync(file, "utf8");
