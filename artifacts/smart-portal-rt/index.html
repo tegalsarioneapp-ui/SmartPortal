@@ -84,6 +84,47 @@
   /* ===== END SMART LAYOUT FIX ===== */
     </style>
 <script>
+
+            
+            const elArisan = document.getElementById('wfb-arisan');
+            if(elArisan) {
+                elArisan.innerText = infoArisan.arisanNama || '—';
+            }
+            
+            const elHost = document.getElementById('wfb-host');
+            if(elHost) {
+                elHost.innerText = infoArisan.hostNama || '—';
+            }
+            console.log('Fungsi panel kanan dipanggil & disinkronkan.');
+        } catch(e) {
+            console.error('Gagal memuat data panel kanan:', e);
+        }
+    };
+</script>
+<style>
+  /* ===== SMART LAYOUT FIX: Desktop vs Mobile ===== */
+  .admin-tab-content, .warga-tab-content,
+  .ben-tab-content, .kop-tab-content {
+    padding-bottom: 24px !important;   /* Default Desktop: Full & rapat ke bawah */
+    overflow-x: auto !important;
+    box-sizing: border-box !important;
+  }
+  html, body { margin-bottom: 0 !important; }
+
+  /* Ganjalan 85px HANYA aktif di Layar HP (Mobile) agar tidak tertutup menu navigation */
+  @media (max-width: 768px) {
+    .admin-tab-content, .warga-tab-content,
+    .ben-tab-content, .kop-tab-content {
+      padding-bottom: 85px !important;
+    }
+    .card, .form-grid, .stat-grid {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+  }
+  /* ===== END SMART LAYOUT FIX ===== */
+    </style>
+<script>
 window.loadWargaFbRight = function() {
         try {
             // A. Sinkronisasi Saldo Kas Utama dengan Panel Kanan
