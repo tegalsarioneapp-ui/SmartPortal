@@ -9604,28 +9604,39 @@ window.updateNavBadges = function() {
         if (elSurat) { elSurat.textContent = suratPending; elSurat.style.display = suratPending > 0 ? 'inline-block' : 'none'; }
     } catch(e) { console.warn('[updateNavBadges]', e); }
 };
-// ── 2. loadDashboardWarga ────────────────────────────────────
-window.loadDashboardWarga = function() {
+loadDashboardWarga = function() {
     try {
         var kasArr     = JSON.parse(localStorage.getItem('db_kas')        || '[]');
         var wargaArr   = JSON.parse(localStorage.getItem('db_warga')      || '[]');
         var infoArisan = JSON.parse(localStorage.getItem('db_info_arisan')|| 'null');
-        var saldoAwal  = parseFloat(localStorage.getItem('db_saldo_awal') || '0');
+        var benSaldoAwal = parseFloat(localStorage.getItem('ben_saldo_awal') || '0');
+        var saldoAwal    = benSaldoAwal > 0 
+                           ? benSaldoAwal 
+                           : parseFloat(localStorage.getItem('db_saldo_awal') || '0');
         var saldo = saldoAwal;
         kasArr.forEach(function(k){
             if ((k.tipe||'').toLowerCase() === 'masuk') saldo += Number(k.nominal||0);
             else saldo -= Number(k.nominal||0);
         });
+        if (kasArr.length === 0) {
+            var benIuran = JSON.parse(localStorage.getItem('ben_iuran') || '[]');
+            var benKomp  = JSON.parse(localStorage.getItem('ben_komponen') || '[]');
+            benIuran.forEach(function(b){
+                var total = 0;
+                benKomp.forEach(function(k){
+                    if (b[k.id] === true) total += Number(k.nominal || 0);
+                });
+                saldo += total;
+            });
+        }
         var fmt = window.fmt || function(v){ return 'Rp '+Number(v||0).toLocaleString('id-ID'); };
         var el = function(id){ return document.getElementById(id); };
 
-        // ── Isi nama warga di greeting ────────────────────────────────────
         var wNameEl = el('warga-welcome-name');
         if (wNameEl && window.loggedInWarga && window.loggedInWarga.nama) {
             var nm = window.loggedInWarga.nama.trim().split(/\s+/).slice(0,2).join(' ');
             wNameEl.textContent = nm;
         }
-        // ── Update greeting time/date ─────────────────────────────────────
         var gEl = el('warga-greeting-time');
         if (gEl) {
             var h = new Date().getHours();
@@ -9633,7 +9644,7 @@ window.loadDashboardWarga = function() {
             gEl.textContent = salam + ' · ' + new Date().toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
         }
 
-        if (el('warga-saldo-kas'))  el('warga-saldo-kas').textContent  = fmt(saldo);
+        if (el('warga-saldo-kas')) { el('warga-saldo-kas').textContent = fmt(saldo); el('warga-saldo-kas').style.cssText = ''; }
         if (el('warga-total-kk'))   el('warga-total-kk').textContent   = wargaArr.length + ' KK';
         if (infoArisan) {
             if (el('warga-arisan-nama')) el('warga-arisan-nama').textContent = infoArisan.arisanNama || '-';
@@ -9648,7 +9659,9 @@ window.loadDashboardWarga = function() {
     } catch(e){ console.warn('[loadDashboardWarga]', e); }
     window.loadQuickAccessPanel();
     if (typeof window.gtRefreshDashboard === 'function') window.gtRefreshDashboard();
+    try{ patchRekapArisan(); }catch(e){}
 };
+window.loadDashboardWarga.__gtV12 = true;  // ← cegah patch lama override
 
 window.loadQuickAccessPanel = function() {
     try {
@@ -11695,16 +11708,7 @@ window.dshTab = function(tab) {
   /* Also patch loadDashboardWarga to ensure arisan names ─ */
   var _dw = 0, _dwi = setInterval(function(){
     _dw++;
-    if (typeof window.loadDashboardWarga === 'function' && !window.loadDashboardWarga.__gtV12) {
-      var origDw = window.loadDashboardWarga;
-      window.loadDashboardWarga = function(){
-        var r = origDw.apply(this, arguments);
-        try{ patchRekapArisan(); }catch(e){}
-        return r;
-      };
-      window.loadDashboardWarga.__gtV12 = true;
-      clearInterval(_dwi);
-    }
+    
     if (_dw > 80) clearInterval(_dwi);
   }, 300);
 
@@ -13930,6 +13934,8 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 </script>
 </body>
 </html>
+
+
 
 
 

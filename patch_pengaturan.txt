@@ -1,0 +1,270 @@
+﻿<div id="pengaturan" class="admin-tab-content">
+            <div style="max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:10px;">
+
+            <!-- ACC 1: IDENTITAS LINGKUNGAN -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-identitas',this)">
+                    <span><i class="fa-solid fa-house" style="color:var(--accent-gold);margin-right:8px;"></i> Identitas Lingkungan</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-identitas" style="display:none;">
+                    <div class="acc-body-inner">
+                        <div class="form-grid" style="gap:12px;">
+                            <div class="form-group" style="margin:0;"><label>Nama RT</label><input type="text" id="set_nama_rt"></div>
+                            <div class="form-group" style="margin:0;"><label>Nama RW</label><input type="text" id="set_nama_rw"></div>
+                            <div class="form-group" style="margin:0;"><label>Nama Bendahara</label><input type="text" id="set_nama_ben"></div>
+                        </div>
+                        <button class="btn-submit bg-blue" style="margin-top:16px;" onclick="simpanPengaturanSistem()"><i class="fa-solid fa-floppy-disk"></i> Simpan Identitas</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC 2: JENIS IURAN -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-iuran',this)">
+                    <span><i class="fa-solid fa-list-check" style="color:#6366f1;margin-right:8px;"></i> Jenis Iuran Bulanan</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-iuran" style="display:none;">
+                    <div class="acc-body-inner">
+                        <p style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Atur komponen iuran bulanan. Total nominal otomatis dihitung.</p>
+                        <div id="list-jenis-iuran" style="margin-bottom:12px;"></div>
+                        <button class="btn-action bg-blue" style="width:100%;" onclick="tambahJenisIuran()"><i class="fa-solid fa-plus"></i> Tambah Jenis Iuran</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC 3: GANTI PASSWORD -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-password',this)">
+                    <span><i class="fa-solid fa-key" style="color:#ef4444;margin-right:8px;"></i> Ganti Password Sistem</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-password" style="display:none;">
+                    <div class="acc-body-inner">
+                        <p style="font-size:0.83rem;color:#64748b;margin-bottom:16px;">Ubah password login petugas. Kosongkan field yang tidak ingin diubah.</p>
+                        <div class="form-grid" style="gap:12px;">
+                            <div class="form-group" style="margin:0;">
+                                <label><i class="fa-solid fa-user-shield" style="color:#6366f1;"></i> Password Admin</label>
+                                <input type="password" id="set_pw_admin" placeholder="(default: admin005)" autocomplete="new-password">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label><i class="fa-solid fa-vault" style="color:#f59e0b;"></i> Password Bendahara</label>
+                                <input type="password" id="set_pw_bendahara" placeholder="(default: benda005)" autocomplete="new-password">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label><i class="fa-solid fa-handshake" style="color:#10b981;"></i> Password Koperasi</label>
+                                <input type="password" id="set_pw_koperasi" placeholder="(default: koperasi005)" autocomplete="new-password">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label><i class="fa-solid fa-users" style="color:#3b82f6;"></i> Password Warga</label>
+                                <input type="password" id="set_pw_warga" placeholder="(default: rt005)" autocomplete="new-password">
+                            </div>
+                        </div>
+                        <div style="background:#fef9c3;border:1px solid #fde047;border-radius:10px;padding:10px 14px;margin:12px 0;font-size:0.8rem;color:#78350f;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Catat password baru sebelum menyimpan.
+                        </div>
+                        <button class="btn-submit" style="background:#ef4444;" onclick="simpanPasswordSistem()"><i class="fa-solid fa-floppy-disk"></i> Simpan Password Baru</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC 4: BACKUP & RESTORE -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-backup',this)">
+                    <span><i class="fa-solid fa-database" style="color:#10b981;margin-right:8px;"></i> Backup &amp; Restore Database</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-backup" style="display:none;">
+                    <div class="acc-body-inner">
+                        <span id="backup-row-count" style="font-size:0.8rem;color:#64748b;display:block;margin-bottom:12px;"></span>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;">
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
+                                <div style="font-weight:700;color:#10b981;margin-bottom:6px;"><i class="fa-solid fa-cloud-arrow-down"></i> Download Backup</div>
+                                <div style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Unduh seluruh data dari server PostgreSQL dalam format JSON terenkripsi.</div>
+                                <button class="btn-action bg-green" style="width:100%;margin:0;" onclick="exportData()"><i class="fa-solid fa-download"></i> Download Backup (JSON)</button>
+                            </div>
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
+                                <div style="font-weight:700;color:#3b82f6;margin-bottom:6px;"><i class="fa-solid fa-cloud-arrow-up"></i> Restore Data</div>
+                                <div style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Pulihkan data dari file backup JSON ke server PostgreSQL.</div>
+                                <input type="file" id="import_file" accept=".json" style="display:none" onchange="prosesImportData(event)">
+                                <button class="btn-action bg-blue" style="width:100%;margin:0;" onclick="document.getElementById('import_file').click()"><i class="fa-solid fa-upload"></i> Restore Data (JSON)</button>
+                            </div>
+                        </div>
+                        <p style="font-size:0.78rem;color:#94a3b8;text-align:center;margin-top:8px;"><i class="fa-solid fa-shield-halved"></i> Backup diambil langsung dari PostgreSQL. Aman untuk multi-device.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC 5: INFO APLIKASI -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-info',this)">
+                    <span><i class="fa-solid fa-circle-info" style="color:#6366f1;margin-right:8px;"></i> Info Aplikasi &amp; Status Server</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-info" style="display:none;">
+                    <div class="acc-body-inner">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;">
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;">
+                                <div style="font-size:1.6rem;font-weight:800;color:#6366f1;" id="info-total-data">-</div>
+                                <div style="font-size:0.78rem;color:#64748b;margin-top:4px;">Total Data di Server</div>
+                            </div>
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;">
+                                <div style="font-size:1.1rem;font-weight:700;color:#10b981;" id="info-last-sync">-</div>
+                                <div style="font-size:0.78rem;color:#64748b;margin-top:4px;">Sync Terakhir</div>
+                            </div>
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;">
+                                <div style="font-size:1rem;font-weight:700;color:#3b82f6;">v6.0 (Phase 6)</div>
+                                <div style="font-size:0.78rem;color:#64748b;margin-top:4px;">Versi Aplikasi</div>
+                            </div>
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;">
+                                <div style="font-size:1rem;font-weight:700;color:#f59e0b;" id="info-sse-status">-</div>
+                                <div style="font-size:0.78rem;color:#64748b;margin-top:4px;">Status Realtime Sync</div>
+                            </div>
+                        </div>
+                        <div style="font-size:0.8rem;color:#94a3b8;text-align:center;">
+                            <i class="fa-solid fa-code"></i> Smart Portal RT 005 Tegalsari &bull; IndoDutaTech &bull; 2026<br>
+                            <i class="fa-solid fa-server"></i> PostgreSQL &bull; <i class="fa-solid fa-bolt"></i> SSE Realtime &bull; PWA Ready
+                        </div>
+                        <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+                            <button class="btn-action" style="background:#6366f1;margin:0;" onclick="refreshInfoAplikasi()"><i class="fa-solid fa-rotate"></i> Refresh Info</button>
+                            <button class="btn-action" style="background:#10b981;margin:0;" onclick="window.__GT_SYNC_REFRESH__()"><i class="fa-solid fa-cloud-arrow-down"></i> Paksa Sync</button>
+                            <button class="btn-action" style="background:#3b82f6;margin:0;" onclick="showAuditDetail()"><i class="fa-solid fa-stethoscope"></i> Audit Server</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC 6: PUSH NOTIFIKASI -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-push',this)">
+                    <span><i class="fa-solid fa-bell" style="color:#7c3aed;margin-right:8px;"></i> Notifikasi Push ke Warga</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-push" style="display:none;">
+                    <div class="acc-body-inner">
+                        <span id="push-sub-count" style="font-size:0.82rem;color:#64748b;background:#f3e8ff;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:12px;"></span>
+                        <div class="form-grid" style="gap:12px;">
+                            <div class="form-group" style="margin:0;">
+                                <label>Judul Notifikasi</label>
+                                <input type="text" id="push-title" placeholder="Contoh: Pengumuman RT 005" maxlength="60">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>Isi Pesan</label>
+                                <input type="text" id="push-body" placeholder="Contoh: Rapat warga Sabtu 19:30 di balai RT" maxlength="120">
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+                            <button class="btn-action" style="background:#7c3aed;color:#fff;border:none;" onclick="kirimPushNotifikasi()"><i class="fa-solid fa-paper-plane"></i> Kirim ke Semua Perangkat</button>
+                            <button class="btn-action" style="background:#94a3b8;color:#fff;border:none;" onclick="refreshPushCount()"><i class="fa-solid fa-rotate"></i> Refresh Subscriber</button>
+                        </div>
+                        <p style="font-size:0.78rem;color:#94a3b8;margin-top:10px;"><i class="fa-solid fa-circle-info"></i> Notifikasi dikirim ke semua warga yang sudah mengaktifkan izin notifikasi.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC 7: ZONA BERBAHAYA -->
+            <div class="acc-card" style="border:1px solid #fecaca;">
+                <div class="acc-header" onclick="toggleAcc('acc-danger',this)"
+$newContent += @'
+te-columns:1fr 1fr;gap:12px;margin-bottom:8px;">
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
+                                <div style="font-weight:700;color:#10b981;margin-bottom:6px;"><i class="fa-solid fa-cloud-arrow-down"></i> Download Backup</div>
+                                <div style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Unduh seluruh data dari server PostgreSQL dalam format JSON.</div>
+                                <button class="btn-action bg-green" style="width:100%;margin:0;" onclick="exportData()"><i class="fa-solid fa-download"></i> Download Backup (JSON)</button>
+                            </div>
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
+                                <div style="font-weight:700;color:#3b82f6;margin-bottom:6px;"><i class="fa-solid fa-cloud-arrow-up"></i> Restore Data</div>
+                                <div style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Pulihkan data dari file backup JSON ke server PostgreSQL.</div>
+                                <input type="file" id="import_file" accept=".json" style="display:none" onchange="prosesImportData(event)">
+                                <button class="btn-action bg-blue" style="width:100%;margin:0;" onclick="document.getElementById('import_file').click()"><i class="fa-solid fa-upload"></i> Restore Data (JSON)</button>
+                            </div>
+                        </div>
+                        <p style="font-size:0.78rem;color:#94a3b8;text-align:center;margin-top:8px;"><i class="fa-solid fa-shield-halved"></i> Backup diambil langsung dari PostgreSQL — aman untuk multi-device.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC 5: INFO APLIKASI -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-info',this)">
+                    <span><i class="fa-solid fa-circle-info" style="color:#6366f1;margin-right:8px;"></i> Info Aplikasi &amp; Status Server</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-info" style="display:none;">
+                    <div class="acc-body-inner">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;">
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;">
+                                <div style="font-size:1.6rem;font-weight:800;color:#6366f1;" id="info-total-data">-</div>
+                                <div style="font-size:0.78rem;color:#64748b;margin-top:4px;">Total Data di Server</div>
+                            </div>
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;">
+                                <div style="font-size:1.1rem;font-weight:700;color:#10b981;" id="info-last-sync">-</div>
+                                <div style="font-size:0.78rem;color:#64748b;margin-top:4px;">Sync Terakhir</div>
+                            </div>
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;">
+                                <div style="font-size:1rem;font-weight:700;color:#3b82f6;">v6.0 (Phase 6)</div>
+                                <div style="font-size:0.78rem;color:#64748b;margin-top:4px;">Versi Aplikasi</div>
+                            </div>
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center;">
+                                <div style="font-size:1rem;font-weight:700;color:#f59e0b;" id="info-sse-status">-</div>
+                                <div style="font-size:0.78rem;color:#64748b;margin-top:4px;">Status Realtime Sync</div>
+                            </div>
+                        </div>
+                        <div style="font-size:0.8rem;color:#94a3b8;text-align:center;">
+                            <i class="fa-solid fa-code"></i> Smart Portal RT 005 Tegalsari &bull; IndoDutaTech &bull; 2026<br>
+                            <i class="fa-solid fa-server"></i> PostgreSQL &bull; <i class="fa-solid fa-bolt"></i> SSE Realtime &bull; <i class="fa-brands fa-pwa"></i> PWA Ready
+                        </div>
+                        <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+                            <button class="btn-action" style="background:#6366f1;margin:0;" onclick="refreshInfoAplikasi()"><i class="fa-solid fa-rotate"></i> Refresh Info</button>
+                            <button class="btn-action" style="background:#10b981;margin:0;" onclick="window.__GT_SYNC_REFRESH__()"><i class="fa-solid fa-cloud-arrow-down"></i> Paksa Sync</button>
+                            <button class="btn-action" style="background:#3b82f6;margin:0;" onclick="showAuditDetail()"><i class="fa-solid fa-stethoscope"></i> Audit Server</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC 6: PUSH NOTIFIKASI -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-push',this)">
+                    <span><i class="fa-solid fa-bell" style="color:#7c3aed;margin-right:8px;"></i> Notifikasi Push ke Warga</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-push" style="display:none;">
+                    <div class="acc-body-inner">
+                        <span id="push-sub-count" style="font-size:0.82rem;color:#64748b;background:#f3e8ff;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:12px;"></span>
+                        <div class="form-grid" style="gap:12px;">
+                            <div class="form-group" style="margin:0;">
+                                <label>Judul Notifikasi</label>
+                                <input type="text" id="push-title" placeholder="Contoh: Pengumuman RT 005" maxlength="60">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>Isi Pesan</label>
+                                <input type="text" id="push-body" placeholder="Contoh: Rapat warga Sabtu 19:30 di balai RT" maxlength="120">
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+                            <button class="btn-action" style="background:#7c3aed;color:#fff;border:none;" onclick="kirimPushNotifikasi()"><i class="fa-solid fa-paper-plane"></i> Kirim ke Semua Perangkat</button>
+                            <button class="btn-action" style="background:#94a3b8;color:#fff;border:none;" onclick="refreshPushCount()"><i class="fa-solid fa-rotate"></i> Refresh Subscriber</button>
+                        </div>
+                        <p style="font-size:0.78rem;color:#94a3b8;margin-top:10px;"><i class="fa-solid fa-circle-info"></i> Notifikasi dikirim ke semua warga yang sudah mengaktifkan izin notifikasi.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC 7: ZONA BERBAHAYA -->
+            <div class="acc-card" style="border:1px solid #fecaca;">
+                <div class="acc-header" onclick="toggleAcc('acc-danger',this)" style="background:#fff5f5;">
+                    <span><i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;margin-right:8px;"></i> Zona Berbahaya (Reset Database)</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-danger" style="display:none;">
+                    <div class="acc-body-inner">
+                        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:15px;">Fitur ini digunakan untuk menghapus data spesifik atau mereset aplikasi ke pengaturan pabrik.</p>
+                        <button class="btn-submit bg-red" onclick="bukaMenuResetData()" style="max-width:300px;margin:0 auto;box-shadow:0 10px 20px rgba(239,68,68,0.3) !important;"><i class="fa-solid fa-trash-can"></i> Hapus / Reset Data</button>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>

@@ -1,0 +1,14 @@
+FILE = "artifacts/smart-portal-rt/index.html"
+with open(FILE, "r", encoding="utf-8") as f:
+    html = f.read()
+
+START = "window.loadMatriksIuran = function() {"
+END   = "window.cariTagihan = function"
+
+i_start = html.find(START)
+i_end   = html.find(END, i_start)
+
+if i_start == -1: print("GAGAL: loadMatriksIuran tidak ditemukan"); exit(1)
+if i_end   == -1: print("GAGAL: cariTagihan tidak ditemukan"); exit(1)
+
+print(f"Start: {i_start}, End: {i_end}, Panjang lama: {i_end - i_start}")
