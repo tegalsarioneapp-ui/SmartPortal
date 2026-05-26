@@ -18,30 +18,55 @@ function patch(label, oldStr, newStr) {
 patch("Fungsi manajemen jenis iuran",
 `    window.loadPengaturan = function() {`,
 `    window.getJenisIuran = function() {
-        return JSON.parse(localStorage.getItem('db_jenis_iuran')) || [
-            {nama:'Pembangunan', nominal:10000},
-            {nama:'Uang Meja', nominal:5000},
-            {nama:'17 Agustus', nominal:5000},
-            {nama:'Sosial', nominal:5000}
-        ];
+        try {
+            const stored = localStorage.getItem('db_jenis_iuran');
+            if (!stored) throw new Error('No data');
+            const parsed = JSON.parse(stored);
+            if (!Array.isArray(parsed) || parsed.length === 0) throw new Error('Invalid data');
+            return parsed;
+        } catch (e) {
+            return [
+                {nama:'Pembangunan', nominal:10000},
+                {nama:'Uang Meja', nominal:5000},
+                {nama:'17 Agustus', nominal:5000},
+                {nama:'Sosial', nominal:5000}
+            ];
+        }
     };
     window.renderJenisIuran = function() {
         let list = document.getElementById('jenis-iuran-list');
         if(!list) return;
         let data = window.getJenisIuran();
-        let rows = '';
+        list.innerHTML = '';
         data.forEach(function(item, idx) {
-            rows += '<div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">' +
-                '<input type="text" placeholder="Nama Komponen" value="' + item.nama + '" ' +
-                'id="ji-nama-' + idx + '" style="flex:2;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:0.9rem;">' +
-                '<input type="number" placeholder="Nominal" value="' + item.nominal + '" ' +
-                'id="ji-nominal-' + idx + '" oninput="window.updateTotalIuranPreview()" ' +
-                'style="flex:1;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:0.9rem;">' +
-                '<button onclick="window.hapusKomponenIuran(' + idx + ')" ' +
-                'style="padding:8px 14px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:1rem;">✕</button>' +
-                '</div>';
+            let row = document.createElement('div');
+            row.style.cssText = 'display:flex;gap:10px;align-items:center;margin-bottom:10px;';
+
+            let inputNama = document.createElement('input');
+            inputNama.type = 'text';
+            inputNama.placeholder = 'Nama Komponen';
+            inputNama.value = item.nama;
+            inputNama.id = 'ji-nama-' + idx;
+            inputNama.style.cssText = 'flex:2;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:0.9rem;';
+
+            let inputNominal = document.createElement('input');
+            inputNominal.type = 'number';
+            inputNominal.placeholder = 'Nominal';
+            inputNominal.value = item.nominal;
+            inputNominal.id = 'ji-nominal-' + idx;
+            inputNominal.style.cssText = 'flex:1;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:0.9rem;';
+            inputNominal.addEventListener('input', function() { window.updateTotalIuranPreview(); });
+
+            let btnHapus = document.createElement('button');
+            btnHapus.textContent = '✕';
+            btnHapus.style.cssText = 'padding:8px 14px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:1rem;';
+            btnHapus.addEventListener('click', function() { window.hapusKomponenIuran(idx); });
+
+            row.appendChild(inputNama);
+            row.appendChild(inputNominal);
+            row.appendChild(btnHapus);
+            list.appendChild(row);
         });
-        list.innerHTML = rows;
         window.updateTotalIuranPreview();
     };
     window.updateTotalIuranPreview = function() {

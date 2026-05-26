@@ -16,8 +16,15 @@ const newStr = `                <div class="card" style="border-top: 4px solid v
                     <button class="btn-submit bg-blue" onclick="simpanPengaturanSistem()">Simpan Pengaturan</button>
                 </div>`;
 
+// Check if already patched
+if (html.includes(newStr)) {
+    console.log("OK: Card Parameter sudah disederhanakan (idempotent)");
+    process.exit(0);
+}
+
+// Check if old string exists
 if (!html.includes(oldStr)) {
-    console.error("GAGAL: String tidak ditemukan");
+    console.error("GAGAL: String tidak ditemukan (bukan oldStr maupun newStr)");
     process.exit(1);
 }
 

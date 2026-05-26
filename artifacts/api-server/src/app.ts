@@ -68,7 +68,8 @@ const writeLimiter = rateLimit({
 app.use("/api", generalLimiter);
 app.use("/api/kv", (req: Request, res: Response, next: NextFunction) => {
   if (req.method === "PUT" || req.method === "DELETE") {
-    return writeLimiter(req, res, next);
+    writeLimiter(req, res, next);
+    return;
   }
   next();
 });

@@ -20,8 +20,10 @@ patch("CSS Accordion",
 `  .acc-header {
     display:flex; align-items:center; justify-content:space-between;
     cursor:pointer; user-select:none; padding:4px 0;
+    background:none; border:none; width:100%; text-align:left; font:inherit;
   }
   .acc-header:hover { opacity:0.85; }
+  .acc-header:focus { outline:2px solid var(--primary); outline-offset:2px; }
   .acc-header h3 { margin:0; pointer-events:none; }
   .acc-arrow {
     font-size:0.85rem; color:#94a3b8; transition:transform 0.3s;
@@ -42,10 +44,10 @@ patch("Accordion Identitas+Parameter",
                 <div class="card" style="border-top: 4px solid var(--accent-gold);">
                     <h3>Identitas Lingkungan</h3>`,
 `            <div class="card" style="border-top:4px solid var(--accent-gold);padding-bottom:8px;">
-              <div class="acc-header" onclick="toggleAcc('acc-identitas',this)">
+              <button class="acc-header" onclick="toggleAcc('acc-identitas',this)" aria-expanded="true" aria-controls="acc-identitas">
                 <h3><i class="fa-solid fa-id-card" style="color:var(--accent-gold);margin-right:8px;"></i>Identitas &amp; Parameter Sistem</h3>
                 <span class="acc-arrow open">&#9660;</span>
-              </div>
+              </button>
               <div class="acc-body" id="acc-identitas">
             <div class="form-grid" style="margin-top:12px;">
                 <div class="card" style="border-top: 4px solid var(--accent-gold);">
@@ -65,39 +67,11 @@ patch("Tutup Accordion Identitas+Parameter",
               </div>
             </div>
 
-            <div class="card" style="border-top: 4px solid #f59e0b;padding-bottom:8px;">
-              <div class="acc-header" onclick="toggleAcc('acc-iuran',this)">
-                <h3><i class="fa-solid fa-coins" style="color:#f59e0b;margin-right:8px;"></i>Komponen Iuran Warga</h3>
-                <span class="acc-arrow">&#9660;</span>
-              </div>
-              <div class="acc-body closed" id="acc-iuran">`
+            <div class="card" style="border-top: 4px solid #f59e0b;">`
 );
 
-// PATCH 3: Wrap isi Komponen Iuran (hapus header lama, tutup accordion)
-patch("Isi Komponen Iuran dalam accordion",
-`                <div class="card-title-header" style="margin-bottom:16px;">
-                    <h3><i class="fa-solid fa-coins" style="color:#f59e0b;"></i> Komponen Iuran Warga</h3>
-                    <span style="font-size:0.82rem;color:#64748b;">Atur nama dan nominal tiap komponen. Total dihitung otomatis.</span>
-                </div>
-                <div id="jenis-iuran-list" style="margin-bottom:16px;"></div>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-                    <button class="btn-action bg-green" onclick="window.tambahKomponenIuran()"><i class="fa-solid fa-plus"></i> Tambah Komponen</button>
-                    <button class="btn-action bg-blue" onclick="window.simpanJenisIuran()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
-                </div>
-                <div id="total-iuran-preview" style="padding:12px 16px;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;font-weight:700;color:#166534;font-size:1rem;"></div>
-            </div>`,
-`                <div style="margin-top:12px;font-size:0.82rem;color:#64748b;margin-bottom:14px;">Atur nama dan nominal tiap komponen. Total dihitung otomatis.</div>
-                <div id="jenis-iuran-list" style="margin-bottom:16px;"></div>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-                    <button class="btn-action bg-green" onclick="window.tambahKomponenIuran()"><i class="fa-solid fa-plus"></i> Tambah Komponen</button>
-                    <button class="btn-action bg-blue" onclick="window.simpanJenisIuran()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
-                </div>
-                <div id="total-iuran-preview" style="padding:12px 16px;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;font-weight:700;color:#166534;font-size:1rem;"></div>
-              </div>
-            </div>`
-);
 
-// PATCH 4: Accordion Ganti Password
+// PATCH 3: Accordion Ganti Password
 patch("Accordion Ganti Password",
 `            <!-- ===== KARTU GANTI PASSWORD SISTEM ===== -->
             <div class="card" style="margin-top:0;border-top:4px solid #ef4444;">
@@ -106,11 +80,11 @@ patch("Accordion Ganti Password",
                 </div>`,
 `            <!-- ===== KARTU GANTI PASSWORD SISTEM ===== -->
             <div class="card" style="margin-top:0;border-top:4px solid #ef4444;padding-bottom:8px;">
-              <div class="acc-header" onclick="toggleAcc('acc-password',this)">
+              <button class="acc-header" onclick="toggleAcc('acc-password',this)" aria-expanded="false" aria-controls="acc-password">
                 <h3><i class="fa-solid fa-key" style="color:#ef4444;margin-right:8px;"></i>Ganti Password Sistem</h3>
                 <span class="acc-arrow">&#9660;</span>
-              </div>
-              <div class="acc-body closed" id="acc-password">`
+              </button>
+              <div class="acc-body closed" id="acc-password" hidden>`
 );
 
 patch("Tutup Accordion Password",
@@ -121,22 +95,22 @@ patch("Tutup Accordion Password",
             </div>`
 );
 
-// PATCH 5: Accordion Backup & Restore
+// PATCH 4: Accordion Backup & Restore
 patch("Accordion Backup Restore",
 `            <div class="card">
                 <div class="card-title-header" style="margin-bottom:16px;">
                     <h3><i class="fa-solid fa-database" style="color:#10b981;"></i> Backup &amp; Restore Database</h3>`,
 `            <div class="card" style="padding-bottom:8px;">
-              <div class="acc-header" onclick="toggleAcc('acc-backup',this)">
+              <button class="acc-header" onclick="toggleAcc('acc-backup',this)" aria-expanded="false" aria-controls="acc-backup">
                 <h3><i class="fa-solid fa-database" style="color:#10b981;margin-right:8px;"></i>Backup &amp; Restore Database</h3>
                 <span class="acc-arrow">&#9660;</span>
-              </div>
-              <div class="acc-body closed" id="acc-backup">
+              </button>
+              <div class="acc-body closed" id="acc-backup" hidden>
                 <div class="card-title-header" style="margin-bottom:16px;display:none;">
                     <h3><i class="fa-solid fa-database" style="color:#10b981;"></i> Backup &amp; Restore Database</h3>`
 );
 
-// PATCH 6: Accordion Info Aplikasi
+// PATCH 5: Accordion Info Aplikasi
 patch("Accordion Info Aplikasi",
 `            <!-- Info Aplikasi Card -->
             <div class="card" style="margin-top:16px;border-top:4px solid #6366f1;">
@@ -145,11 +119,11 @@ patch("Accordion Info Aplikasi",
                 </div>`,
 `            <!-- Info Aplikasi Card -->
             <div class="card" style="margin-top:16px;border-top:4px solid #6366f1;padding-bottom:8px;">
-              <div class="acc-header" onclick="toggleAcc('acc-info',this)">
+              <button class="acc-header" onclick="toggleAcc('acc-info',this)" aria-expanded="false" aria-controls="acc-info">
                 <h3><i class="fa-solid fa-circle-info" style="color:#6366f1;margin-right:8px;"></i>Info Aplikasi</h3>
                 <span class="acc-arrow">&#9660;</span>
-              </div>
-              <div class="acc-body closed" id="acc-info">`
+              </button>
+              <div class="acc-body closed" id="acc-info" hidden>`
 );
 
 patch("Tutup Accordion Info Aplikasi",
@@ -167,17 +141,17 @@ patch("Tutup Accordion Info Aplikasi",
             <!-- Push Notification Card -->`
 );
 
-// PATCH 7: Accordion Push Notification
+// PATCH 6: Accordion Push Notification
 patch("Accordion Push Notifikasi",
 `            <div class="card" style="margin-top:16px;border-top:4px solid #7c3aed;">
                 <div class="card-title-header" style="margin-bottom:16px;">
                     <h3><i class="fa-solid fa-bell" style="color:#7c3aed;"></i> Notifikasi Push ke Warga</h3>`,
 `            <div class="card" style="margin-top:16px;border-top:4px solid #7c3aed;padding-bottom:8px;">
-              <div class="acc-header" onclick="toggleAcc('acc-push',this)">
+              <button class="acc-header" onclick="toggleAcc('acc-push',this)" aria-expanded="false" aria-controls="acc-push">
                 <h3><i class="fa-solid fa-bell" style="color:#7c3aed;margin-right:8px;"></i>Notifikasi Push ke Warga</h3>
                 <span class="acc-arrow">&#9660;</span>
-              </div>
-              <div class="acc-body closed" id="acc-push">
+              </button>
+              <div class="acc-body closed" id="acc-push" hidden>
                 <div class="card-title-header" style="margin-bottom:16px;display:none;">
                     <h3><i class="fa-solid fa-bell" style="color:#7c3aed;"></i> Notifikasi Push ke Warga</h3>`
 );
@@ -192,7 +166,7 @@ patch("Tutup Accordion Push Notifikasi",
             </div>`
 );
 
-// PATCH 8: Tambah fungsi toggleAcc sebelum loadPengaturan
+// PATCH 7: Tambah fungsi toggleAcc sebelum loadPengaturan
 patch("Fungsi toggleAcc",
 `    window.getJenisIuran = function() {`,
 `    window.toggleAcc = function(id, header) {
@@ -202,6 +176,13 @@ patch("Fungsi toggleAcc",
         let isClosed = body.classList.contains('closed');
         body.classList.toggle('closed', !isClosed);
         if(arrow) arrow.classList.toggle('open', isClosed);
+        if(body.hasAttribute('hidden')) {
+            body.removeAttribute('hidden');
+            header.setAttribute('aria-expanded', 'true');
+        } else {
+            body.setAttribute('hidden', '');
+            header.setAttribute('aria-expanded', 'false');
+        }
     };
     window.getJenisIuran = function() {`
 );
