@@ -1,0 +1,184 @@
+# FIX BOTTOM NAVIGATION ICON + UI STANDARDIZATION
+
+## Context
+Ada masalah pada Portal Admin dan Portal Warga terkait bottom navigation di mobile phone (responsive mode).
+
+Saat tampilan mobile dibuka, **bottom navigation di Portal Admin bertumpuk (double render)** antara:
+- bottom navigation baru
+- bottom navigation lama
+
+Hal ini menyebabkan icon overlap/duplicate dan UI rusak.
+
+Selain memperbaiki bug tersebut, saya ingin **menyamakan seluruh gaya icon navigation Portal Warga dengan Portal Admin** menggunakan style bottom navigation yang sudah ada (hide/show / hide-and-seek navigation behavior).
+
+---
+
+# OBJECTIVE
+
+## 1. FIX BUG: Bottom Navigation Bertumpuk (Portal Admin)
+
+### Problem
+Pada mobile mode, bottom navigation Portal Admin muncul ganda / bertumpuk.
+
+Terjadi konflik antara:
+- bottom nav lama
+- bottom nav baru
+
+### Expected Behavior
+- Gunakan **hanya satu bottom navigation**
+- Pertahankan **bottom navigation lama (existing/legacy one)** sebagai standar
+- Hapus render, duplicate mount, atau konflik dari navigation baru
+- Tidak boleh ada icon double
+- Tidak boleh overlap
+
+### Validation
+Cek kemungkinan penyebab:
+- duplicate component rendering
+- duplicate import
+- conditional render error
+- responsive breakpoint conflict
+- `position: fixed`
+- `position: sticky`
+- `z-index`
+- nested layout issue
+- duplicated mobile navbar mount
+
+### Requirements
+Mobile mode:
+- hanya tampil satu bottom navigation
+- responsive
+- icon center
+- spacing rapi
+- tidak keluar layar
+- safe area compatible
+- active menu tetap bekerja
+- routing tetap normal
+
+Desktop/tablet:
+- jangan merusak layout existing
+- tidak ada regression
+
+---
+
+## 2. STANDARDIZE NAVIGATION ICON (Portal Warga)
+
+### Goal
+Samakan seluruh style navigation Portal Warga dengan Portal Admin.
+
+Gunakan:
+- icon style
+- animation
+- spacing
+- interaction
+- hide/show behavior (hide-and-seek)
+- active state
+- hover/touch behavior
+- shadow
+- border radius
+- sizing
+
+mengikuti bottom navigation Portal Admin.
+
+### IMPORTANT
+Yang dijadikan acuan = **bottom navigation Portal Admin yang lama/existing**
+
+JANGAN membuat design baru.
+
+### Requirements
+Portal Warga harus memakai navigation style yang sama dengan Portal Admin tetapi:
+
+#### Menu harus disesuaikan dengan portal masing-masing
+
+Contoh:
+
+Portal Admin:
+- Beranda
+- Berita
+- Iuran
+- Surat
+- Lapor
+(dst sesuai existing)
+
+Portal Warga:
+- tetap memakai menu warga
+- icon mengikuti fungsi menu
+- style visual mengikuti Portal Admin
+- active state sesuai route
+- hide/show behavior sama
+
+Artinya:
+**style disamakan, isi menu tetap sesuai portal masing-masing**
+
+---
+
+## 3. RESPONSIVE & MOBILE UX REVIEW
+
+Lakukan pengecekan penuh:
+
+### UI/UX
+- icon bertumpuk
+- overflow horizontal
+- broken spacing
+- clipped icon
+- text overlap
+- navbar terlalu tinggi/rendah
+- hidden element issue
+- bottom safe-area problem Android/iPhone
+- scrolling conflict
+- fixed footer conflict
+
+### Functional
+- active tab state
+- broken routing
+- menu click issue
+- duplicate listeners
+- navigation animation glitch
+- route mismatch
+- render duplication
+
+### Performance
+- unnecessary rerender
+- duplicate component mount
+- duplicate DOM
+- repeated event listener
+
+---
+
+## Implementation Rules
+1. Reuse existing component jika memungkinkan
+2. Jangan duplicate component baru
+3. Refactor jika perlu
+4. Jangan merusak desktop UI
+5. Jangan mengubah struktur menu portal
+6. Preserve existing routes
+7. Keep styling consistent
+
+---
+
+## Deliverables
+Berikan:
+
+1. Root cause analysis
+2. Files changed
+3. Summary perubahan
+4. Bug yang ditemukan
+5. Perbaikan yang dilakukan
+6. Regression risk
+7. Confirmation:
+   - bottom nav admin tidak bertumpuk
+   - hanya menggunakan old bottom nav
+   - portal warga memakai style icon yang sama
+   - menu tetap sesuai portal masing-masing
+   - responsive mobile berjalan normal
+   - tidak ada broken route
+
+## Acceptance Criteria
+- [ ] Tidak ada icon navigation bertumpuk
+- [ ] Hanya old bottom nav digunakan
+- [ ] Portal Warga style sama dengan Portal Admin
+- [ ] Menu tetap sesuai portal masing-masing
+- [ ] Active route bekerja
+- [ ] Hide/show navigation bekerja
+- [ ] Responsive mobile normal
+- [ ] Tidak ada console error
+- [ ] Tidak ada regression desktop/tablet
