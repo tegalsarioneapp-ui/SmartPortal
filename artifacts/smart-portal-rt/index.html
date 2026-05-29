@@ -14529,90 +14529,96 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 })();
 </script>
 
-<style id="gt-mobile-chatgpt-sidebar-style">
-/* === ChatGPT-like Mobile Sidebar Drawer === */
-#gt-mobile-menu-overlay {
+<style id="gt-portal-sidebar-menu-style">
+/* === SmartPortal Mobile Sidebar — ChatGPT style, portal-aware === */
+#gt-portal-sidebar-overlay {
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(0, 0, 0, .48) !important;
+  background: rgba(0,0,0,.55) !important;
   z-index: 2147482500 !important;
   opacity: 0 !important;
   pointer-events: none !important;
   transition: opacity .25s ease !important;
 }
 
-#gt-mobile-menu-overlay.open {
+#gt-portal-sidebar-overlay.open {
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
-#gt-mobile-drawer {
+#gt-portal-sidebar {
   position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: min(84vw, 330px) !important;
+  inset: 0 auto 0 0 !important;
+  width: min(86vw, 345px) !important;
   height: 100dvh !important;
   background: #050505 !important;
-  color: #ffffff !important;
+  color: #fff !important;
   z-index: 2147482600 !important;
   transform: translateX(-105%) !important;
-  transition: transform .32s cubic-bezier(.22, 1, .36, 1) !important;
-  box-shadow: 20px 0 60px rgba(0,0,0,.45) !important;
+  transition: transform .32s cubic-bezier(.22,1,.36,1) !important;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
+  box-shadow: 22px 0 70px rgba(0,0,0,.55) !important;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
 }
 
-#gt-mobile-drawer.open {
+#gt-portal-sidebar.open {
   transform: translateX(0) !important;
 }
 
-.gt-mobile-drawer-head {
-  padding: calc(22px + env(safe-area-inset-top, 0px)) 20px 16px 20px !important;
+.gt-portal-sidebar-head {
+  padding: calc(22px + env(safe-area-inset-top, 0px)) 20px 14px 20px !important;
+  border-bottom: 1px solid rgba(255,255,255,.08) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  border-bottom: 1px solid rgba(255,255,255,.08) !important;
+  gap: 12px !important;
 }
 
-.gt-mobile-drawer-brand {
-  font-size: 1.18rem !important;
-  font-weight: 800 !important;
+.gt-portal-sidebar-brand {
+  font-size: 1.15rem !important;
+  font-weight: 900 !important;
   letter-spacing: -.02em !important;
-  color: #ffffff !important;
+  color: #fff !important;
 }
 
-.gt-mobile-drawer-close {
-  width: 36px !important;
-  height: 36px !important;
-  border: 1px solid rgba(255,255,255,.16) !important;
-  border-radius: 12px !important;
+.gt-portal-sidebar-role {
+  margin-top: 4px !important;
+  font-size: .78rem !important;
+  color: #94a3b8 !important;
+  font-weight: 600 !important;
+}
+
+.gt-portal-sidebar-close {
+  width: 38px !important;
+  height: 38px !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
   background: transparent !important;
-  color: #ffffff !important;
+  color: #fff !important;
+  border-radius: 13px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer !important;
-  font-size: 1rem !important;
 }
 
-.gt-mobile-drawer-list {
+.gt-portal-sidebar-list {
   flex: 1 !important;
-  padding: 14px 10px 16px 10px !important;
   overflow-y: auto !important;
+  padding: 12px 10px 18px 10px !important;
 }
 
-.gt-mobile-drawer-section-title {
-  padding: 18px 14px 8px 14px !important;
+.gt-portal-sidebar-section {
+  padding: 16px 14px 7px 14px !important;
   color: #cbd5e1 !important;
-  font-size: .78rem !important;
-  font-weight: 800 !important;
+  font-size: .76rem !important;
+  font-weight: 900 !important;
   text-transform: uppercase !important;
-  letter-spacing: .04em !important;
+  letter-spacing: .05em !important;
 }
 
-.gt-mobile-drawer-item {
+.gt-portal-sidebar-item {
   width: 100% !important;
   border: 0 !important;
   background: transparent !important;
@@ -14624,97 +14630,94 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   align-items: center !important;
   gap: 14px !important;
   text-align: left !important;
-  font-size: .98rem !important;
-  font-weight: 600 !important;
+  font-size: .96rem !important;
+  font-weight: 700 !important;
   cursor: pointer !important;
   transition: background .18s ease, transform .18s ease !important;
 }
 
-.gt-mobile-drawer-item:hover,
-.gt-mobile-drawer-item:active {
-  background: #2f2f2f !important;
+.gt-portal-sidebar-item:hover,
+.gt-portal-sidebar-item:active,
+.gt-portal-sidebar-item.gt-active {
+  background: #333333 !important;
 }
 
-.gt-mobile-drawer-item.gt-active {
-  background: #343434 !important;
-}
-
-.gt-mobile-drawer-item i {
+.gt-portal-sidebar-item i {
   width: 24px !important;
   min-width: 24px !important;
   text-align: center !important;
+  color: #fff !important;
   font-size: 1.05rem !important;
-  color: #ffffff !important;
 }
 
-.gt-mobile-drawer-item span {
+.gt-portal-sidebar-item span {
   flex: 1 !important;
   overflow: hidden !important;
-  text-overflow: ellipsis !important;
   white-space: nowrap !important;
+  text-overflow: ellipsis !important;
 }
 
-.gt-mobile-drawer-footer {
-  padding: 12px 12px calc(14px + env(safe-area-inset-bottom, 0px)) 12px !important;
-  border-top: 1px solid rgba(255,255,255,.08) !important;
-}
-
-.gt-mobile-drawer-user {
-  border-radius: 16px !important;
-  background: #111111 !important;
-  padding: 12px 14px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-}
-
-.gt-mobile-drawer-avatar {
-  width: 36px !important;
-  height: 36px !important;
-  border-radius: 50% !important;
-  background: linear-gradient(135deg, #2563eb, #22c55e) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: white !important;
-  font-weight: 900 !important;
-}
-
-.gt-mobile-drawer-user-main {
-  color: #ffffff !important;
-  font-weight: 800 !important;
-  font-size: .9rem !important;
-}
-
-.gt-mobile-drawer-user-sub {
-  color: #94a3b8 !important;
-  font-size: .76rem !important;
-  margin-top: 2px !important;
-}
-
-.gt-mobile-drawer-empty {
+.gt-portal-sidebar-empty {
   color: #94a3b8 !important;
   padding: 18px 14px !important;
   font-size: .9rem !important;
   line-height: 1.45 !important;
 }
 
-body.gt-mobile-drawer-open {
+.gt-portal-sidebar-footer {
+  border-top: 1px solid rgba(255,255,255,.08) !important;
+  padding: 12px 12px calc(14px + env(safe-area-inset-bottom, 0px)) 12px !important;
+}
+
+.gt-portal-sidebar-profile {
+  background: #111 !important;
+  border-radius: 16px !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.gt-portal-sidebar-avatar {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg,#2563eb,#22c55e) !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 900 !important;
+}
+
+.gt-portal-sidebar-profile-main {
+  color: #fff !important;
+  font-weight: 900 !important;
+  font-size: .9rem !important;
+}
+
+.gt-portal-sidebar-profile-sub {
+  color: #94a3b8 !important;
+  font-size: .76rem !important;
+  margin-top: 2px !important;
+}
+
+body.gt-portal-sidebar-open {
   overflow: hidden !important;
 }
 
 @media (min-width: 769px) {
-  #gt-mobile-menu-overlay,
-  #gt-mobile-drawer {
+  #gt-portal-sidebar-overlay,
+  #gt-portal-sidebar {
     display: none !important;
   }
 }
 </style>
 
-<script id="gt-mobile-chatgpt-sidebar-script">
+<script id="gt-portal-sidebar-menu-script">
 (function () {
-  if (window.__gtChatGPTMobileSidebarLoaded) return;
-  window.__gtChatGPTMobileSidebarLoaded = true;
+  if (window.__gtPortalSidebarMenuLoaded) return;
+  window.__gtPortalSidebarMenuLoaded = true;
 
   var mq = window.matchMedia("(max-width: 768px)");
 
@@ -14722,126 +14725,203 @@ body.gt-mobile-drawer-open {
     return mq.matches;
   }
 
-  function cleanLabel(text) {
-    return String(text || "")
+  function cleanText(value) {
+    return String(value || "")
       .replace(/\s+/g, " ")
       .replace(/^\s+|\s+$/g, "");
   }
 
-  function ensureDrawer() {
-    if (document.getElementById("gt-mobile-drawer")) return;
+  function isShown(el) {
+    if (!el) return false;
+
+    var node = el;
+    while (node && node !== document.body && node.nodeType === 1) {
+      var style = window.getComputedStyle(node);
+      if (style.display === "none" || style.visibility === "hidden") return false;
+      node = node.parentElement;
+    }
+
+    return true;
+  }
+
+  function detectPortalRole() {
+    var adminVisible =
+      isShown(document.getElementById("view-admin")) ||
+      document.querySelector(".admin-nav-tabs .active") ||
+      document.body.classList.contains("admin-mode");
+
+    var wargaVisible =
+      isShown(document.getElementById("view-warga")) ||
+      document.querySelector(".nav-tabs .active") ||
+      document.body.classList.contains("warga-mode");
+
+    if (adminVisible) return "Admin Portal";
+    if (wargaVisible) return "Warga Portal";
+
+    try {
+      var loggedInAs = localStorage.getItem("loggedInAs") || "";
+      if (loggedInAs.toLowerCase().indexOf("admin") !== -1) return "Admin Portal";
+      if (loggedInAs.toLowerCase().indexOf("warga") !== -1) return "Warga Portal";
+    } catch (_) {}
+
+    return "SmartPortal";
+  }
+
+  function ensureSidebar() {
+    if (document.getElementById("gt-portal-sidebar")) return;
 
     var overlay = document.createElement("div");
-    overlay.id = "gt-mobile-menu-overlay";
+    overlay.id = "gt-portal-sidebar-overlay";
 
-    var drawer = document.createElement("aside");
-    drawer.id = "gt-mobile-drawer";
-    drawer.setAttribute("aria-label", "Menu navigasi SmartPortal");
+    var sidebar = document.createElement("aside");
+    sidebar.id = "gt-portal-sidebar";
+    sidebar.setAttribute("aria-label", "Sidebar menu SmartPortal");
 
-    drawer.innerHTML =
-      '<div class="gt-mobile-drawer-head">' +
-        '<div class="gt-mobile-drawer-brand">SmartPortal</div>' +
-        '<button type="button" class="gt-mobile-drawer-close" aria-label="Tutup menu"><i class="fa-solid fa-xmark"></i></button>' +
+    sidebar.innerHTML =
+      '<div class="gt-portal-sidebar-head">' +
+        '<div>' +
+          '<div class="gt-portal-sidebar-brand">SmartPortal</div>' +
+          '<div class="gt-portal-sidebar-role">Menu Portal</div>' +
+        '</div>' +
+        '<button type="button" class="gt-portal-sidebar-close" aria-label="Tutup menu">' +
+          '<i class="fa-solid fa-xmark"></i>' +
+        '</button>' +
       '</div>' +
-      '<div class="gt-mobile-drawer-list">' +
-        '<div class="gt-mobile-drawer-section-title">Menu</div>' +
-      '</div>' +
-      '<div class="gt-mobile-drawer-footer">' +
-        '<div class="gt-mobile-drawer-user">' +
-          '<div class="gt-mobile-drawer-avatar">T1</div>' +
+      '<div class="gt-portal-sidebar-list"></div>' +
+      '<div class="gt-portal-sidebar-footer">' +
+        '<div class="gt-portal-sidebar-profile">' +
+          '<div class="gt-portal-sidebar-avatar">T1</div>' +
           '<div>' +
-            '<div class="gt-mobile-drawer-user-main">Tegalsari OneApp</div>' +
-            '<div class="gt-mobile-drawer-user-sub">RT 005 Tegalsari</div>' +
+            '<div class="gt-portal-sidebar-profile-main">Tegalsari OneApp</div>' +
+            '<div class="gt-portal-sidebar-profile-sub">RT 005 Tegalsari</div>' +
           '</div>' +
         '</div>' +
       '</div>';
 
     document.body.appendChild(overlay);
-    document.body.appendChild(drawer);
+    document.body.appendChild(sidebar);
 
-    overlay.addEventListener("click", closeDrawer);
-    drawer.querySelector(".gt-mobile-drawer-close").addEventListener("click", closeDrawer);
+    overlay.addEventListener("click", closeSidebar);
+    sidebar.querySelector(".gt-portal-sidebar-close").addEventListener("click", closeSidebar);
 
     document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") closeDrawer();
+      if (event.key === "Escape") closeSidebar();
     });
   }
 
-  function getNavButtons() {
-    var selectors = [
-      ".admin-nav-tabs button",
-      ".nav-tabs button",
-      ".wfb-nav-item",
-      ".bottom-nav button",
-      ".mobile-nav button",
-      "[data-tab]"
-    ];
+  function getIconHtml(original) {
+    var icon = original.querySelector("i");
+    if (icon) return icon.outerHTML;
 
-    var result = [];
-    var seen = new Set();
+    var text = cleanText(original.innerText || original.textContent || original.getAttribute("aria-label"));
+    var lower = text.toLowerCase();
 
-    selectors.forEach(function (selector) {
-      document.querySelectorAll(selector).forEach(function (el) {
-        if (el.closest("#gt-mobile-drawer")) return;
-        if (el.closest("#gt-mobile-menu-overlay")) return;
+    if (lower.indexOf("dashboard") !== -1 || lower.indexOf("beranda") !== -1) return '<i class="fa-solid fa-house"></i>';
+    if (lower.indexOf("warga") !== -1 || lower.indexOf("kk") !== -1) return '<i class="fa-solid fa-users"></i>';
+    if (lower.indexOf("kas") !== -1 || lower.indexOf("bendahara") !== -1) return '<i class="fa-solid fa-wallet"></i>';
+    if (lower.indexOf("surat") !== -1) return '<i class="fa-solid fa-envelope-open-text"></i>';
+    if (lower.indexOf("berita") !== -1 || lower.indexOf("info") !== -1) return '<i class="fa-solid fa-newspaper"></i>';
+    if (lower.indexOf("darurat") !== -1 || lower.indexOf("sos") !== -1) return '<i class="fa-solid fa-triangle-exclamation"></i>';
+    if (lower.indexOf("pengaturan") !== -1 || lower.indexOf("setting") !== -1) return '<i class="fa-solid fa-gear"></i>';
+    if (lower.indexOf("logout") !== -1 || lower.indexOf("keluar") !== -1) return '<i class="fa-solid fa-right-from-bracket"></i>';
 
-        var label = cleanLabel(el.innerText || el.textContent || el.getAttribute("aria-label") || el.getAttribute("title"));
-        if (!label || label.length > 48) return;
+    return '<i class="fa-solid fa-circle-dot"></i>';
+  }
 
-        var key = label.toLowerCase();
+  function collectButtonsFromSelector(selector, label, out, seen) {
+    document.querySelectorAll(selector).forEach(function (container) {
+      if (!isShown(container)) return;
+
+      container.querySelectorAll("button, a, [role='button']").forEach(function (btn) {
+        if (btn.closest("#gt-portal-sidebar")) return;
+
+        var text = cleanText(btn.innerText || btn.textContent || btn.getAttribute("aria-label") || btn.getAttribute("title"));
+        if (!text || text.length > 64) return;
+
+        var key = label + "::" + text.toLowerCase();
         if (seen.has(key)) return;
         seen.add(key);
 
-        result.push(el);
+        out.push({
+          group: label,
+          text: text,
+          original: btn,
+          active:
+            btn.classList.contains("active") ||
+            btn.getAttribute("aria-selected") === "true" ||
+            btn.closest(".active")
+        });
       });
     });
-
-    return result;
   }
 
-  function rebuildDrawer() {
-    ensureDrawer();
+  function getPortalMenus() {
+    var role = detectPortalRole();
+    var items = [];
+    var seen = new Set();
 
-    var list = document.querySelector("#gt-mobile-drawer .gt-mobile-drawer-list");
+    if (role === "Admin Portal") {
+      collectButtonsFromSelector(".admin-nav-tabs", "Menu Admin", items, seen);
+      collectButtonsFromSelector(".nav-tabs", "Menu Warga", items, seen);
+    } else if (role === "Warga Portal") {
+      collectButtonsFromSelector(".nav-tabs", "Menu Warga", items, seen);
+      collectButtonsFromSelector(".wfb-nav-item", "Layanan Cepat", items, seen);
+    } else {
+      collectButtonsFromSelector(".nav-tabs", "Menu Warga", items, seen);
+      collectButtonsFromSelector(".admin-nav-tabs", "Menu Admin", items, seen);
+      collectButtonsFromSelector(".wfb-nav-item", "Layanan Cepat", items, seen);
+    }
+
+    return items;
+  }
+
+  function rebuildSidebar() {
+    ensureSidebar();
+
+    var role = detectPortalRole();
+    var roleEl = document.querySelector(".gt-portal-sidebar-role");
+    if (roleEl) roleEl.textContent = role;
+
+    var list = document.querySelector("#gt-portal-sidebar .gt-portal-sidebar-list");
     if (!list) return;
 
-    list.innerHTML = '<div class="gt-mobile-drawer-section-title">Menu</div>';
+    var items = getPortalMenus();
+    list.innerHTML = "";
 
-    var buttons = getNavButtons();
+    var lastGroup = "";
 
-    buttons.forEach(function (original) {
-      var label = cleanLabel(original.innerText || original.textContent || original.getAttribute("aria-label") || "Menu");
-      var icon = original.querySelector("i");
-      var iconHtml = icon ? icon.outerHTML : '<i class="fa-solid fa-circle-dot"></i>';
-
-      var item = document.createElement("button");
-      item.type = "button";
-      item.className = "gt-mobile-drawer-item";
-      item.innerHTML = iconHtml + "<span>" + label + "</span>";
-
-      if (
-        original.classList.contains("active") ||
-        original.getAttribute("aria-selected") === "true"
-      ) {
-        item.classList.add("gt-active");
+    items.forEach(function (item) {
+      if (item.group !== lastGroup) {
+        var section = document.createElement("div");
+        section.className = "gt-portal-sidebar-section";
+        section.textContent = item.group;
+        list.appendChild(section);
+        lastGroup = item.group;
       }
 
-      item.addEventListener("click", function () {
-        closeDrawer();
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "gt-portal-sidebar-item" + (item.active ? " gt-active" : "");
+      btn.innerHTML = getIconHtml(item.original) + "<span>" + item.text + "</span>";
+
+      btn.addEventListener("click", function () {
+        closeSidebar();
         setTimeout(function () {
-          original.click();
+          item.original.click();
         }, 90);
       });
 
-      list.appendChild(item);
+      list.appendChild(btn);
     });
 
-    if (!buttons.length) {
-      list.innerHTML += '<div class="gt-mobile-drawer-empty">Menu belum terdeteksi. Navigasi akan muncul setelah login atau setelah halaman selesai dimuat.</div>';
+    if (!items.length) {
+      list.innerHTML =
+        '<div class="gt-portal-sidebar-section">Menu</div>' +
+        '<div class="gt-portal-sidebar-empty">Menu portal belum terdeteksi. Login sebagai Admin atau Warga, lalu buka kembali menu ini.</div>';
     }
   }
 
-  function openDrawer(event) {
+  function openSidebar(event) {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
@@ -14849,45 +14929,45 @@ body.gt-mobile-drawer-open {
 
     if (!isMobile()) return;
 
-    rebuildDrawer();
+    rebuildSidebar();
 
-    var overlay = document.getElementById("gt-mobile-menu-overlay");
-    var drawer = document.getElementById("gt-mobile-drawer");
+    var overlay = document.getElementById("gt-portal-sidebar-overlay");
+    var sidebar = document.getElementById("gt-portal-sidebar");
 
-    if (!overlay || !drawer) return;
+    if (!overlay || !sidebar) return;
 
     overlay.classList.add("open");
-    drawer.classList.add("open");
-    document.body.classList.add("gt-mobile-drawer-open");
+    sidebar.classList.add("open");
+    document.body.classList.add("gt-portal-sidebar-open");
   }
 
-  function closeDrawer() {
-    var overlay = document.getElementById("gt-mobile-menu-overlay");
-    var drawer = document.getElementById("gt-mobile-drawer");
+  function closeSidebar() {
+    var overlay = document.getElementById("gt-portal-sidebar-overlay");
+    var sidebar = document.getElementById("gt-portal-sidebar");
 
     if (overlay) overlay.classList.remove("open");
-    if (drawer) drawer.classList.remove("open");
-    document.body.classList.remove("gt-mobile-drawer-open");
+    if (sidebar) sidebar.classList.remove("open");
+    document.body.classList.remove("gt-portal-sidebar-open");
   }
 
-  function toggleDrawer(event) {
-    var drawer = document.getElementById("gt-mobile-drawer");
-    if (drawer && drawer.classList.contains("open")) {
+  function toggleSidebar(event) {
+    var sidebar = document.getElementById("gt-portal-sidebar");
+    if (sidebar && sidebar.classList.contains("open")) {
       if (event) {
         event.preventDefault();
         event.stopPropagation();
       }
-      closeDrawer();
+      closeSidebar();
       return;
     }
 
-    openDrawer(event);
+    openSidebar(event);
   }
 
-  function isHamburgerLike(el) {
+  function looksLikeMenuButton(el) {
     if (!el) return false;
 
-    var text = cleanLabel(el.innerText || el.textContent);
+    var text = cleanText(el.innerText || el.textContent);
     var aria = String(el.getAttribute("aria-label") || el.getAttribute("title") || "").toLowerCase();
     var cls = String(el.className || "").toLowerCase();
 
@@ -14909,24 +14989,24 @@ body.gt-mobile-drawer-open {
     ));
 
     candidates.forEach(function (el) {
-      if (!isHamburgerLike(el)) return;
+      if (!looksLikeMenuButton(el)) return;
 
       var target = el.closest("button, a, [role='button']") || el;
-      if (target.dataset.gtChatgptSidebarBound === "1") return;
+      if (target.dataset.gtPortalSidebarBound === "1") return;
 
-      target.dataset.gtChatgptSidebarBound = "1";
+      target.dataset.gtPortalSidebarBound = "1";
       target.addEventListener("click", function (event) {
-        if (isMobile()) toggleDrawer(event);
+        if (isMobile()) toggleSidebar(event);
       }, true);
     });
   }
 
-  window.openMobileSidebar = openDrawer;
-  window.closeMobileSidebar = closeDrawer;
-  window.toggleMobileSidebar = toggleDrawer;
+  window.openPortalSidebar = openSidebar;
+  window.closePortalSidebar = closeSidebar;
+  window.togglePortalSidebar = toggleSidebar;
 
   function boot() {
-    ensureDrawer();
+    ensureSidebar();
     bindHamburger();
   }
 
@@ -14937,7 +15017,7 @@ body.gt-mobile-drawer-open {
   }
 
   window.addEventListener("resize", function () {
-    if (!isMobile()) closeDrawer();
+    if (!isMobile()) closeSidebar();
   });
 
   var observer = new MutationObserver(function () {
@@ -14953,6 +15033,7 @@ body.gt-mobile-drawer-open {
 
 </body>
 </html>
+
 
 
 
