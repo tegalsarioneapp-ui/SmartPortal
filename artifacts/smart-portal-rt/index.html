@@ -4124,29 +4124,26 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
         });
     }
 
-    // === PWA INSTALL PROMPT ===
-    var _pwaInstallPrompt = null;
-    window.addEventListener('beforeinstallprompt', function(e) {
-        e.preventDefault();
-        _pwaInstallPrompt = e;
-        // Show install button after 3 seconds if not already installed
-        setTimeout(function() {
-            var btn = document.getElementById('pwa-install-btn');
-            if (btn) btn.style.display = 'flex';
-        }, 3000);
-    });
+    // === PWA INSTALL PROMPT (shim — satu handler terpusat di bawah, pakai window._gtDeferredPrompt) ===
     window.triggerPWAInstall = function() {
-        if (!_pwaInstallPrompt) return;
-        _pwaInstallPrompt.prompt();
-        _pwaInstallPrompt.userChoice.then(function(result) {
+        var p = window._gtDeferredPrompt;
+        if (!p) {
+            Swal.fire('Info','Tombol install tidak tersedia.\nCoba buka aplikasi di browser Chrome/Edge dan refresh halaman.','info');
+            return;
+        }
+        p.prompt();
+        p.userChoice.then(function(result) {
+            window._gtDeferredPrompt = null;
             var btn = document.getElementById('pwa-install-btn');
             if (btn) btn.style.display = 'none';
-            _pwaInstallPrompt = null;
+            if (typeof window._gtHideInstallBanner === 'function') window._gtHideInstallBanner();
         });
     };
     window.addEventListener('appinstalled', function() {
+        window._gtDeferredPrompt = null;
         var btn = document.getElementById('pwa-install-btn');
         if (btn) btn.style.display = 'none';
+        if (typeof window._gtHideInstallBanner === 'function') window._gtHideInstallBanner();
         if (typeof Toast !== 'undefined') Toast.fire({icon:'success', title:'Aplikasi berhasil diinstall!'});
     });
     </script>
@@ -5624,6 +5621,29 @@ window.addEventListener('load', () => {
                             </div>
                         </div>
                         <p style="font-size:0.78rem;color:#94a3b8;text-align:center;margin-top:8px;"><i class="fa-solid fa-shield-halved"></i> Backup diambil langsung dari PostgreSQL. Aman untuk multi-device.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC PWA: INSTALL APLIKASI -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-pwa',this)">
+                    <span><i class="fa-solid fa-mobile-screen-button" style="color:#3b82f6;margin-right:8px;"></i> Install Aplikasi (PWA)</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-pwa">
+                    <div class="acc-body-inner">
+                        <div style="display:flex;align-items:center;gap:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px 16px;margin-bottom:14px;">
+                            <i class="fa-solid fa-circle-info" style="color:#3b82f6;font-size:1.3rem;flex-shrink:0;"></i>
+                            <div style="font-size:0.83rem;color:#1e40af;line-height:1.5;">
+                                Install Smart Portal RT 005 sebagai aplikasi di HP atau komputer.<br>
+                                <b>Syarat:</b> Buka di Chrome/Edge (Android, desktop). iOS Safari: gunakan Share → Add to Home Screen.
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                            <button class="btn-action bg-blue" onclick="window.triggerPWAInstall()"><i class="fa-solid fa-download"></i> Install Sekarang</button>
+                            <button class="btn-action" style="background:#64748b;" onclick="try{localStorage.removeItem('ft-install-dismissed-ts');}catch(e){}Toast.fire({icon:'success',title:'Banner install direset, akan muncul saat reload'});"><i class="fa-solid fa-rotate-right"></i> Reset Banner Install</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -13779,20 +13799,33 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
     setTimeout(function () { t.classList.remove('show'); }, 8000);
   }
 
-  /* ── 4. INSTALL PROMPT (Android A2HS) ────────────────── */
-  var deferredPrompt = null;
-  var bannerDismissed = false;
+  /* ── 4. INSTALL PROMPT (Android A2HS) ─── satu handler terpusat ── */
 
-  try { bannerDismissed = !!localStorage.getItem('ft-install-dismissed'); } catch {}
+  /* Cek cooldown 24 jam (bukan permanent dismiss) */
+  function _gtInstallDismissed() {
+    try {
+      var ts = localStorage.getItem('ft-install-dismissed-ts');
+      if (!ts) return false;
+      return (Date.now() - parseInt(ts)) < 86400000; /* 24 jam */
+    } catch { return false; }
+  }
 
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
-    deferredPrompt = e;
-    if (!bannerDismissed) setTimeout(showInstallBanner, 3000);
+    window._gtDeferredPrompt = e;
+    /* Tampil 12 detik setelah event (setelah splash 10s selesai) */
+    var delay = _gtInstallDismissed() ? 0 : 12000;
+    if (!_gtInstallDismissed()) setTimeout(_gtShowInstallBanner, delay);
+    /* Juga tampilkan floating button setelah splash selesai */
+    setTimeout(function () {
+      var btn = document.getElementById('pwa-install-btn');
+      if (btn) btn.style.display = 'flex';
+    }, 11000);
   });
 
-  function showInstallBanner() {
+  function _gtShowInstallBanner() {
     if (document.getElementById('ft-install-banner')) return;
+    if (!window._gtDeferredPrompt) return;
     var banner = document.createElement('div');
     banner.id = 'ft-install-banner';
     banner.innerHTML = [
@@ -13810,31 +13843,27 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
     setTimeout(function () { banner.classList.add('ft-banner-show'); }, 50);
 
     document.getElementById('ft-install-btn').onclick = function () {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(function (res) {
-        deferredPrompt = null;
-        hideBanner();
-      });
+      window.triggerPWAInstall();
     };
 
     document.getElementById('ft-install-close').onclick = function () {
-      hideBanner();
-      try { localStorage.setItem('ft-install-dismissed', '1'); } catch {}
+      window._gtHideInstallBanner();
+      /* Simpan timestamp (cooldown 24 jam, bukan permanent) */
+      try { localStorage.setItem('ft-install-dismissed-ts', String(Date.now())); } catch {}
     };
   }
 
-  function hideBanner() {
+  window._gtHideInstallBanner = function () {
     var b = document.getElementById('ft-install-banner');
     if (!b) return;
     b.classList.remove('ft-banner-show');
     setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 400);
-  }
+    var btn = document.getElementById('pwa-install-btn');
+    if (btn) btn.style.display = 'none';
+  };
 
-  window.addEventListener('appinstalled', function () {
-    hideBanner();
-    deferredPrompt = null;
-  });
+  /* Hapus key lama (permanent dismiss) agar tidak menghalangi */
+  try { localStorage.removeItem('ft-install-dismissed'); } catch {}
 
   /* ── 5. OFFLINE INDICATOR ────────────────────────────── */
   function updateOnlineStatus() {
