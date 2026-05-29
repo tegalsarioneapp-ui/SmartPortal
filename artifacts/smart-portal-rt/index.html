@@ -1791,18 +1791,17 @@ textarea, select {
   .user-text-header { max-width: 60vw; }
   #realtime-clock { display: none !important; }
 
-  /* Side-sidebar -> top horizontal scroll bar */
+  /* Side-sidebar -> fixed bottom nav on mobile
+     Note: position:fixed + bottom:0 diatur oleh hotfix v7 (lebih spesifik).
+     Block ini hanya override layout properties, BUKAN position. */
   .admin-nav-tabs, .nav-tabs {
-    width: 100% !important; min-width: 100% !important;
-    max-width: 100% !important;
+    width: 100vw !important; min-width: 100vw !important;
+    max-width: 100vw !important;
     height: auto !important;
     flex-direction: row !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
     border-right: 0 !important;
-    border-bottom: 1px solid var(--gt-border) !important;
-    padding: 12px 14px !important;
-    position: sticky !important; top: 0;
     gap: 8px !important;
     -webkit-overflow-scrolling: touch;
     flex-wrap: nowrap !important;
@@ -3569,9 +3568,11 @@ html[data-theme="dark"] select option {
     }
 }
 
-/* ── Mobile bottom nav for warga FB ── */
+/* ── Mobile bottom nav for warga FB ──
+   Hanya tampil saat body.warga-portal-aktif (diatur JS BukaPortal)
+   Ini mencegah overlap dengan admin-nav-tabs di portal Admin/Koperasi */
 @media (max-width: 768px) {
-    .wfb-mobile-nav {
+    body.warga-portal-aktif .wfb-mobile-nav {
         display: flex !important;
     }
 }
@@ -7055,6 +7056,7 @@ window.addEventListener('load', () => {
     window.lupaPassword = function() { Swal.fire({ icon: 'info', title: 'Lupa Password?', text: 'Hubungi Sekretaris RT untuk mereset password.', confirmButtonColor: '#0ea5e9' }); };
     window.logout = function() {
         loggedInWarga = null;
+        document.body.classList.remove('warga-portal-aktif');
         // Flush semua pending writes ke server SEBELUM reload
         // agar data tidak hilang akibat debounce yang belum selesai
         var doReload = function(){ location.reload(); };
@@ -7137,10 +7139,12 @@ window.addEventListener('load', () => {
     window.BukaPortal = function(role) {
         document.getElementById('login-screen').style.display = 'none'; document.getElementById('main-app').style.display = 'block';
         ['warga', 'bendahara', 'koperasi', 'admin'].forEach(r => { let v = document.getElementById('view-' + r); if(v) { v.style.display = 'none'; v.classList.remove('active-grid'); } });
+        document.body.classList.remove('warga-portal-aktif');
         
         if(role === 'warga' && loggedInWarga) {
             document.getElementById('user-name').innerText = loggedInWarga.nama; document.getElementById('user-role').innerText = loggedInWarga.isGuest ? "Akses Publik Terbatas" : "Anggota Warga RT 005";
             document.getElementById('user-avatar').style.background = loggedInWarga.isGuest ? "linear-gradient(135deg, #10b981, #059669)" : "linear-gradient(135deg, #3b82f6, #2563eb)"; document.getElementById('user-avatar').innerHTML = loggedInWarga.isGuest ? "<i class='fa-solid fa-eye'></i>" : "<i class='fa-solid fa-user'></i>";
+            document.body.classList.add('warga-portal-aktif');
             let v = document.getElementById('view-warga'); v.style.display = ''; v.classList.add('active-grid'); let navTabs = document.querySelector('#view-warga .admin-nav-tabs');
             
             if(loggedInWarga.isGuest) {
@@ -12512,57 +12516,85 @@ html[data-theme="dark"] #view-warga .wfb-nav-item.active {
 html[data-theme="dark"] #view-warga .wfb-nav-icon { background: #1e293b !important; }
 
 /* ══════════════════════════════════════════════════════════════
-   MOBILE BOTTOM NAV — GLASS PREMIUM
+   MOBILE BOTTOM NAV WARGA — DISAMAKAN DENGAN ADMIN NAV
+   Menggunakan Navy Dark + Gold Luxury seperti admin-nav-tabs
 ══════════════════════════════════════════════════════════════ */
 .wfb-mobile-nav {
-  background: rgba(255,255,255,.9) !important;
-  backdrop-filter: blur(24px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-  border-top: 1px solid rgba(226,232,240,.7) !important;
-  box-shadow: 0 -4px 24px rgba(30,58,138,.1), 0 -1px 0 rgba(226,232,240,.5) !important;
-  height: 68px !important;
-  padding: 0 6px env(safe-area-inset-bottom,0px) !important;
+  background: var(--navy-dark, #001f5b) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-top: 3px solid var(--gold-luxury, #f59e0b) !important;
+  border-radius: 16px 16px 0 0 !important;
+  box-shadow: 0 -5px 15px rgba(0,0,0,0.3) !important;
+  height: auto !important;
+  padding: 8px 6px calc(10px + env(safe-area-inset-bottom, 0px)) 6px !important;
+  z-index: 9999 !important;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 html[data-theme="dark"] .wfb-mobile-nav {
-  background: rgba(15,22,42,.92) !important;
-  border-top-color: rgba(35,49,82,.6) !important;
-  box-shadow: 0 -4px 28px rgba(0,0,0,.4) !important;
+  background: var(--navy-dark, #001f5b) !important;
+  border-top-color: var(--gold-luxury, #f59e0b) !important;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.5) !important;
 }
 
-/* Mobile nav buttons */
+/* Mobile nav buttons — disamakan dengan admin-tab-btn */
 .wfb-mob-btn {
-  flex: 1 !important;
+  flex: 1 1 0 !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 3px !important;
+  gap: 0 !important;
   padding: 6px 4px !important;
-  border-radius: 14px !important;
-  font-size: 9px !important;
+  border-radius: 10px !important;
+  font-size: 0.62rem !important;
   font-weight: 700 !important;
-  color: #94a3b8 !important;
-  text-transform: uppercase !important;
-  letter-spacing: .3px !important;
-  transition: all .2s cubic-bezier(.4,0,.2,1) !important;
+  color: #cbd5e1 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  transition: background 0.2s ease !important;
   position: relative !important;
   min-width: 0 !important;
+  min-height: 54px !important;
+  background: transparent !important;
+  border: 0 !important;
+  cursor: pointer !important;
 }
-.wfb-mob-btn i { font-size: 20px !important; transition: transform .2s ease !important; }
-.wfb-mob-btn.active { color: #1e40af !important; }
-html[data-theme="dark"] .wfb-mob-btn.active { color: #60a5fa !important; }
-.wfb-mob-btn.active i { transform: translateY(-2px) scale(1.08) !important; }
-/* Active glow dot */
-.wfb-mob-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: #1e40af;
-  left: 50%; transform: translateX(-50%);
+.wfb-mob-btn i {
+  font-size: 1.1rem !important;
+  color: #cbd5e1 !important;
+  margin: 0 0 4px 0 !important;
+  transition: none !important;
+  display: block !important;
 }
-html[data-theme="dark"] .wfb-mob-btn.active::after { background: #60a5fa; }
+.wfb-mob-btn span {
+  display: block !important;
+  font-size: 0.6rem !important;
+  line-height: 1.1 !important;
+  color: #cbd5e1 !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.wfb-mob-btn.active {
+  background: rgba(245,158,11,0.14) !important;
+  color: var(--gold-luxury, #f59e0b) !important;
+}
+.wfb-mob-btn.active i,
+.wfb-mob-btn.active span {
+  color: var(--gold-luxury, #f59e0b) !important;
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.4) !important;
+}
+html[data-theme="dark"] .wfb-mob-btn.active,
+html[data-theme="dark"] .wfb-mob-btn.active i,
+html[data-theme="dark"] .wfb-mob-btn.active span {
+  color: var(--gold-luxury, #f59e0b) !important;
+}
+.wfb-mob-btn.active i { transform: none !important; }
+.wfb-mob-btn.active::after { display: none !important; }
 
 /* ══════════════════════════════════════════════════════════════
    DASHBOARD — GREETING HERO CARD (fintech balance-card feel)
@@ -13738,13 +13770,20 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 /* ─── Responsive iPhone spacing ─────────────────────────── */
 @media (max-width: 480px) {
   #view-warga .warga-tab-content.active { padding: 16px 14px 110px !important; }
-  .wfb-mobile-nav { height: 72px !important; }
-  .wfb-mob-btn { padding: 8px 4px 6px !important; }
+  .wfb-mobile-nav { height: auto !important; }
+  .wfb-mob-btn { padding: 6px 4px !important; min-height: 50px !important; }
 }
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .wfb-mobile-nav {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 6px) !important;
-    height: calc(68px + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 10px) !important;
+    height: auto !important;
+  }
+}
+
+/* Konten warga harus punya ruang di bawah untuk bottom nav */
+@media (max-width: 768px) {
+  body.warga-portal-aktif #view-warga .warga-tab-content.active {
+    padding-bottom: 100px !important;
   }
 }
 </style>
