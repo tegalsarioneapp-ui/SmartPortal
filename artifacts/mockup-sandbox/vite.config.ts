@@ -24,7 +24,7 @@ const basePath = process.env.BASE_PATH ?? "/";
 
 export default defineConfig({
   base: basePath,
-  plugins: [
+
     mockupPreviewPlugin(),
     react(),
     tailwindcss(),

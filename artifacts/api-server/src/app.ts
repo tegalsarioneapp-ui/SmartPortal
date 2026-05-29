@@ -71,7 +71,7 @@ app.use("/api/kv", (req: Request, res: Response, next: NextFunction) => {
     writeLimiter(req, res, next);
     return;
   }
-  next();
+  return next();
 });
 
 app.use(express.json({ limit: "12mb" }));

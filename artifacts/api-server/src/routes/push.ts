@@ -31,7 +31,9 @@ async function loadSubs(): Promise<webpush.PushSubscription[]> {
   const value = rows[0].value;
   if (!value) return [];
   try {
-    return JSON.parse(value) as webpush.PushSubscription[];
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+    return parsed as webpush.PushSubscription[];
   } catch {
     return [];
   }
