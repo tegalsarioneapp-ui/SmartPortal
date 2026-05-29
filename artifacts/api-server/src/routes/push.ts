@@ -28,8 +28,10 @@ async function loadSubs(): Promise<webpush.PushSubscription[]> {
     .from(kvStoreTable)
     .where(eq(kvStoreTable.key, SUBS_KEY));
   if (!rows.length) return [];
+  const value = rows[0].value;
+  if (!value) return [];
   try {
-    return JSON.parse(rows[0].value) as webpush.PushSubscription[];
+    return JSON.parse(value) as webpush.PushSubscription[];
   } catch {
     return [];
   }

@@ -1,7 +1,13 @@
 import { readFileSync, writeFileSync } from 'fs';
 
 const file = 'artifacts/smart-portal-rt/index.html';
-let html = readFileSync(file, 'utf8');
+let html;
+try {
+    html = readFileSync(file, 'utf8');
+} catch (error) {
+    console.error(`Failed to read ${file}: ${error.message}`);
+    process.exit(1);
+}
 
 const oldEnding = `    if (typeof window.gtRefreshDashboard === 'function') window.gtRefreshDashboard();
 };`;
@@ -24,17 +30,22 @@ const oldPatch = `if (typeof window.loadDashboardWarga === 'function' && !window
 
 const newPatch = `// patch wrapper dihapus - sudah terintegrasi di loadDashboardWarga`;
 
-if (!html.includes(oldEnding)) {
-    console.error('GAGAL: oldEnding tidak ditemukan!');
-    process.exit(1);
-}
-if (!html.includes(oldPatch)) {
-    console.error('GAGAL: oldPatch tidak ditemukan!');
+// Check if already patched (idempotent)
+if (html.includes(newEnding) && html.includes(newPatch)) {
+    console.log('Already patched - skipping (idempotent)');
+} else if (html.includes(oldEnding) && html.includes(oldPatch)) {
+    // Apply the patch
+    html = html.replace(oldEnding, newEnding);
+    html = html.replace(oldPatch, newPatch);
+} else {
+    console.error('GAGAL: Neither old nor new patterns found in the file!');
     process.exit(1);
 }
 
-html = html.replace(oldEnding, newEnding);
-html = html.replace(oldPatch, newPatch);
-
-writeFileSync(file, html, 'utf8');
-console.log('BERHASIL: index.html sudah diupdate!');
+try {
+    writeFileSync(file, html, 'utf8');
+    console.log('BERHASIL: index.html sudah diupdate!');
+} catch (error) {
+    console.error(`Failed to write ${file}: ${error.message}`);
+    process.exit(1);
+}

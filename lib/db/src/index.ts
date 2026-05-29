@@ -52,7 +52,7 @@ export async function ensureSchema(): Promise<void> {
     `);
     console.log("[DB] Schema ready");
   } catch (err) {
-    console.error("[DB] Schema check failed:", err.message);
+    console.error("[DB] Schema check failed:", err instanceof Error ? err.message : String(err));
   } finally {
     client.release();
   }

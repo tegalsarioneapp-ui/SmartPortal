@@ -212,7 +212,7 @@
         /* LAIN-LAIN (MODAL, DLL) */
         .logo-3d-container { width: 90px !important; height: 90px !important; margin-left: 20px; display: flex; align-items: center; justify-content: center; }
         .logo-3d { width: 100%; height: 100%; object-fit: contain; animation: spin3D 15s linear infinite; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px); z-index: 99999; align-items: center; justify-content: center; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); z-index: 99999; align-items: center; justify-content: center; }
         .modal-overlay.show { display: flex; }
         .modal-content { background: var(--bg-panel); border-radius: var(--radius-lg); width: 90%; max-width: 500px; padding: 40px; position: relative; max-height: 90vh; overflow-y: auto; }
         .swal2-popup { background: #ffffff !important; border-radius: 20px !important; }
@@ -1791,18 +1791,17 @@ textarea, select {
   .user-text-header { max-width: 60vw; }
   #realtime-clock { display: none !important; }
 
-  /* Side-sidebar -> top horizontal scroll bar */
+  /* Side-sidebar -> fixed bottom nav on mobile
+     Note: position:fixed + bottom:0 diatur oleh hotfix v7 (lebih spesifik).
+     Block ini hanya override layout properties, BUKAN position. */
   .admin-nav-tabs, .nav-tabs {
-    width: 100% !important; min-width: 100% !important;
-    max-width: 100% !important;
+    width: 100vw !important; min-width: 100vw !important;
+    max-width: 100vw !important;
     height: auto !important;
     flex-direction: row !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
     border-right: 0 !important;
-    border-bottom: 1px solid var(--gt-border) !important;
-    padding: 12px 14px !important;
-    position: sticky !important; top: 0;
     gap: 8px !important;
     -webkit-overflow-scrolling: touch;
     flex-wrap: nowrap !important;
@@ -3289,7 +3288,7 @@ html[data-theme="dark"] select option {
 .acc-chevron { transition:transform 0.3s; color:#94a3b8; }
 .acc-header.open .acc-chevron { transform:rotate(180deg); }
 .acc-body { max-height:0; overflow:hidden; transition:max-height 0.35s ease; }
-.acc-body.open { max-height:2000px; }
+.acc-body.open { max-height:9999px; }
 .acc-body-inner { padding:16px; }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -3569,9 +3568,11 @@ html[data-theme="dark"] select option {
     }
 }
 
-/* ── Mobile bottom nav for warga FB ── */
+/* ── Mobile bottom nav for warga FB ──
+   Hanya tampil saat body.warga-portal-aktif (diatur JS BukaPortal)
+   Ini mencegah overlap dengan admin-nav-tabs di portal Admin/Koperasi */
 @media (max-width: 768px) {
-    .wfb-mobile-nav {
+    body.warga-portal-aktif .wfb-mobile-nav {
         display: flex !important;
     }
 }
@@ -4123,48 +4124,238 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
         });
     }
 
-    // === PWA INSTALL PROMPT ===
-    var _pwaInstallPrompt = null;
-    window.addEventListener('beforeinstallprompt', function(e) {
-        e.preventDefault();
-        _pwaInstallPrompt = e;
-        // Show install button after 3 seconds if not already installed
-        setTimeout(function() {
-            var btn = document.getElementById('pwa-install-btn');
-            if (btn) btn.style.display = 'flex';
-        }, 3000);
-    });
+    // === PWA INSTALL PROMPT (shim — satu handler terpusat di bawah, pakai window._gtDeferredPrompt) ===
     window.triggerPWAInstall = function() {
-        if (!_pwaInstallPrompt) return;
-        _pwaInstallPrompt.prompt();
-        _pwaInstallPrompt.userChoice.then(function(result) {
+        var p = window._gtDeferredPrompt;
+        if (!p) {
+            Swal.fire('Info','Tombol install tidak tersedia.\nCoba buka aplikasi di browser Chrome/Edge dan refresh halaman.','info');
+            return;
+        }
+        p.prompt();
+        p.userChoice.then(function(result) {
+            window._gtDeferredPrompt = null;
             var btn = document.getElementById('pwa-install-btn');
             if (btn) btn.style.display = 'none';
-            _pwaInstallPrompt = null;
+            if (typeof window._gtHideInstallBanner === 'function') window._gtHideInstallBanner();
         });
     };
     window.addEventListener('appinstalled', function() {
+        window._gtDeferredPrompt = null;
         var btn = document.getElementById('pwa-install-btn');
         if (btn) btn.style.display = 'none';
+        if (typeof window._gtHideInstallBanner === 'function') window._gtHideInstallBanner();
         if (typeof Toast !== 'undefined') Toast.fire({icon:'success', title:'Aplikasi berhasil diinstall!'});
     });
     </script>
+<style>
+  /* ===== LAYOUT FIX: Prevent bottom-nav overlap ===== */
+  .admin-tab-content, .warga-tab-content,
+  .ben-tab-content, .kop-tab-content {
+    padding-bottom: 80px !important;   /* Clear fixed bottom nav */
+    overflow-x: auto !important;       /* Allow horizontal scroll, not clip */
+    box-sizing: border-box !important;
+  }
+  /* Remove body margin-bottom */
+  html, body { margin-bottom: 0 !important; }
+
+  /* Responsive: card & form tidak meluber ke kanan */
+  @media (max-width: 768px) {
+    .card, .form-grid, .stat-grid {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+  }
+  /* ===== END LAYOUT FIX ===== */
+    </style>
+
+<script>
+window.addEventListener('load', () => {
+    // 1. Kembalikan fungsi panel kanan yang sudah berhasil sebelumnya
+    const syncPanelKanan = () => {
+        try {
+            const saldoAwal = parseFloat(localStorage.getItem('ben_saldo_awal')) || parseFloat(localStorage.getItem('db_saldo_awal')) || 0;
+            const dataKas = JSON.parse(localStorage.getItem('db_kas')) || [];
+            const totalTransaksi = dataKas.reduce((sum, item) => {
+                return sum + (item.jenis === 'masuk' ? (parseFloat(item.nominal) || 0) : -(parseFloat(item.nominal) || 0));
+            }, 0);
+            const saldoAkhir = saldoAwal + totalTransaksi;
+
+            const elSaldo = document.getElementById('wfb-saldo-kas');
+            if(elSaldo) elSaldo.innerText = 'Rp ' + saldoAkhir.toLocaleString('id-ID');
+
+            const infoArisan = JSON.parse(localStorage.getItem('db_info_arisan')) || {};
+            const elArisan = document.getElementById('wfb-arisan');
+            if(elArisan) elArisan.innerText = infoArisan.arisanNama || '—';
+
+            const elHost = document.getElementById('wfb-host');
+            if(elHost) elHost.innerText = infoArisan.hostNama || '—';
+        } catch(e) {}
+    };
+    
+    window.loadWargaFbRight = syncPanelKanan;
+    syncPanelKanan();
+
+    // 2. Bersihkan teks 'undefined' secara spesifik pada sel tabel
+    setTimeout(() => {
+        const cells = document.querySelectorAll('td, span, div, p');
+        cells.forEach(cell => {
+            if (cell.childNodes.length === 1 && cell.childNodes[0].nodeType === Node.TEXT_NODE) {
+                if (cell.innerText.trim() === 'undefined') {
+                    cell.innerText = '—';
+                }
+            }
+        });
+    }, 1000);
+});
+</script>
+
 </head>
 <body>
+<!-- ═══════════════════════════════════════════════════════
+     TEGALSARIONEAPP — PREMIUM SPLASH (inline, renders first)
+     CSS + HTML + dismiss-script inline at top of body so it
+     is painted BEFORE any data-fetch or heavy JS runs.
+═══════════════════════════════════════════════════════ -->
+<style>
+/* ═══ SPLASH SCREEN — autofit portrait & landscape, mobile & desktop ═══ */
+#t1-splash {
+  position: fixed; inset: 0; z-index: 2147483647;
+  background: #0b2878; /* fallback saat gambar belum load */
+  overflow: hidden;
+  transition: opacity .6s ease, transform .6s ease;
+}
+#t1-splash.t1s-out { opacity: 0; transform: scale(1.03); pointer-events: none; }
+
+/* ── Gambar hero: selalu cover penuh tanpa letterbox ── */
+#t1s-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Portrait: tunjukkan dari atas (logo T1 → landmarks → fitur)   */
+  /* Landscape: tunjukkan area tengah gambar (landmarks + fitur)   */
+  object-position: center 20%;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Portrait: geser posisi ke atas agar logo T1 terlihat */
+@media (orientation: portrait) {
+  #t1s-hero-img { object-position: center top; }
+  /* Bar lebih lebar di portrait */
+  #t1s-bar-overlay { width: 72%; bottom: 22%; }
+}
+
+/* Landscape mobile: tengahkan secara vertikal */
+@media (orientation: landscape) and (max-height: 500px) {
+  #t1s-hero-img { object-position: center 35%; }
+  #t1s-bar-overlay { bottom: 8%; width: 60%; }
+  #t1s-bar-track   { height: 5px; }
+}
+
+/* Landscape desktop: sedikit ke atas agar landmarks terlihat */
+@media (orientation: landscape) and (min-height: 501px) {
+  #t1s-hero-img { object-position: center 28%; }
+  #t1s-bar-overlay { bottom: 16%; width: 55%; }
+}
+
+/* ── Overlay loading bar ── */
+#t1s-bar-overlay {
+  position: absolute;
+  bottom: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 72%;
+  pointer-events: none;
+}
+#t1s-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.22);
+  border-radius: 99px;
+  overflow: hidden;
+  box-shadow: 0 0 16px rgba(30,120,255,0.5), 0 1px 0 rgba(255,255,255,0.15);
+}
+#t1s-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #1a6bea, #44ccff, #1a6bea);
+  background-size: 200% 100%;
+  transition: width 9.5s cubic-bezier(.4,0,.2,1);
+  animation: t1sShimmer 1.5s linear infinite;
+}
+@keyframes t1sShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+</style>
+
+<div id="t1-splash">
+  <img id="t1s-hero-img" src="/splash-hero.png" alt="TegalsariOneApp Splash" draggable="false">
+  <div id="t1s-bar-overlay">
+    <div id="t1s-bar-track">
+      <div id="t1s-fill"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Dismiss splash — show for ~3.2s then fade-scale out */
+(function(){
+  var _t1dismissed = false;
+  function _t1dismiss(){
+    if(_t1dismissed) return; _t1dismissed = true;
+    var el = document.getElementById('t1-splash');
+    if(!el || el.classList.contains('t1s-out')) return;
+    el.classList.add('t1s-out');
+    setTimeout(function(){ if(el && el.parentNode) el.parentNode.removeChild(el); }, 580);
+  }
+  /* Start loading bar fill after 120ms */
+  setTimeout(function(){
+    var f = document.getElementById('t1s-fill');
+    if(f) f.style.width = '100%';
+  }, 120);
+  /* Hard dismiss at 10s */
+  setTimeout(_t1dismiss, 10000);
+  /* Also dismiss on load event (min 3s after load, cap 10s total) */
+  window.addEventListener('load', function(){ setTimeout(_t1dismiss, 3000); });
+})();
+</script>
+
 <div id="gt-progress-bar"></div>
 
 
 <div id="login-screen">
     <div id="splash-view" onclick="bukaFormLogin()" style="cursor: pointer; text-align: center; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-        <div class="logo-wrap-3d-huge">
-            <img src="/Lambang_Kota_Semarang.png" alt="Logo" class="logo-3d-fast" onerror="this.src='/Lambang_Kota_Semarang.png';">
+        <!-- 3D rotating T1 logo -->
+        <div style="perspective:380px;width:118px;height:118px;margin-bottom:18px;">
+          <div style="width:118px;height:118px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(0,210,255,.22),rgba(0,50,160,.18));border:2px solid rgba(100,210,255,.45);display:flex;align-items:center;justify-content:center;box-shadow:0 0 38px rgba(0,150,255,.45),0 0 70px rgba(0,90,200,.28),inset 0 0 24px rgba(255,255,255,.06);animation:t1HomeGlow 3s ease-in-out infinite;">
+            <svg style="width:86px;height:86px;filter:drop-shadow(0 4px 18px rgba(0,210,255,.7));animation:t1Home3D 7s linear infinite;" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="hgB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#0052cc"/></linearGradient>
+                <linearGradient id="hgG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00e87b"/><stop offset="100%" stop-color="#00a854"/></linearGradient>
+                <filter id="hgl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(0,200,255,0.45)" stroke-width="1.5" stroke-dasharray="9 5"/>
+              <rect x="18" y="30" width="56" height="14" rx="7" fill="url(#hgB)" filter="url(#hgl)"/>
+              <rect x="40" y="44" width="14" height="45" rx="7" fill="url(#hgB)" filter="url(#hgl)"/>
+              <rect x="78" y="38" width="11" height="50" rx="5.5" fill="url(#hgG)" filter="url(#hgl)"/>
+              <rect x="68" y="38" width="15" height="9" rx="4" fill="url(#hgG)" filter="url(#hgl)"/>
+              <ellipse cx="89" cy="27" rx="9" ry="5" fill="url(#hgG)" transform="rotate(-35 89 27)" opacity="0.9"/>
+              <ellipse cx="89" cy="27" rx="5" ry="2.5" fill="rgba(255,255,255,0.38)" transform="rotate(-35 89 27)"/>
+            </svg>
+          </div>
         </div>
-        <h1 class="sipada-title">SMART PORTAL RT 005</h1>
-        <p class="sipada-subtitle">TEGALASARI</p>
+        <h1 class="sipada-title" style="font-size:clamp(1.4rem,5vw,2.2rem);letter-spacing:1px;">TEGALSARIONEAPP</h1>
+        <p class="sipada-subtitle">RT 005 · TEGALSARI · SEMARANG</p>
         <div class="sipada-hint">
             <span class="pulse-text"><i class="fa-solid fa-hand-pointer"></i> KLIK UNTUK MASUK</span>
         </div>
     </div>
+    <style>
+      @keyframes t1Home3D{0%{transform:rotateY(0deg) rotateX(6deg)}100%{transform:rotateY(360deg) rotateX(6deg)}}
+      @keyframes t1HomeGlow{0%,100%{box-shadow:0 0 35px rgba(0,150,255,.45),0 0 70px rgba(0,90,200,.28)}50%{box-shadow:0 0 55px rgba(0,220,255,.7),0 0 110px rgba(0,150,255,.4)}}
+    </style>
 
     <div id="login-form-view" style="display: none; width: 100%; max-width: 450px; margin: auto; animation: slideUp 0.5s ease;">
         <div class="ultra-login-wrapper" style="flex-direction: column;">
@@ -5362,6 +5553,29 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
                             </div>
                         </div>
                         <p style="font-size:0.78rem;color:#94a3b8;text-align:center;margin-top:8px;"><i class="fa-solid fa-shield-halved"></i> Backup diambil langsung dari PostgreSQL. Aman untuk multi-device.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACC PWA: INSTALL APLIKASI -->
+            <div class="acc-card">
+                <div class="acc-header" onclick="toggleAcc('acc-pwa',this)">
+                    <span><i class="fa-solid fa-mobile-screen-button" style="color:#3b82f6;margin-right:8px;"></i> Install Aplikasi (PWA)</span>
+                    <i class="fa-solid fa-chevron-down acc-chevron"></i>
+                </div>
+                <div class="acc-body" id="acc-pwa">
+                    <div class="acc-body-inner">
+                        <div style="display:flex;align-items:center;gap:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px 16px;margin-bottom:14px;">
+                            <i class="fa-solid fa-circle-info" style="color:#3b82f6;font-size:1.3rem;flex-shrink:0;"></i>
+                            <div style="font-size:0.83rem;color:#1e40af;line-height:1.5;">
+                                Install Smart Portal RT 005 sebagai aplikasi di HP atau komputer.<br>
+                                <b>Syarat:</b> Buka di Chrome/Edge (Android, desktop). iOS Safari: gunakan Share → Add to Home Screen.
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                            <button class="btn-action bg-blue" onclick="window.triggerPWAInstall()"><i class="fa-solid fa-download"></i> Install Sekarang</button>
+                            <button class="btn-action" style="background:#64748b;" onclick="try{localStorage.removeItem('ft-install-dismissed-ts');}catch(e){}Toast.fire({icon:'success',title:'Banner install direset, akan muncul saat reload'});"><i class="fa-solid fa-rotate-right"></i> Reset Banner Install</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -6993,6 +7207,7 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
     window.lupaPassword = function() { Swal.fire({ icon: 'info', title: 'Lupa Password?', text: 'Hubungi Sekretaris RT untuk mereset password.', confirmButtonColor: '#0ea5e9' }); };
     window.logout = function() {
         loggedInWarga = null;
+        document.body.classList.remove('warga-portal-aktif');
         // Flush semua pending writes ke server SEBELUM reload
         // agar data tidak hilang akibat debounce yang belum selesai
         var doReload = function(){ location.reload(); };
@@ -7075,10 +7290,12 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
     window.BukaPortal = function(role) {
         document.getElementById('login-screen').style.display = 'none'; document.getElementById('main-app').style.display = 'block';
         ['warga', 'bendahara', 'koperasi', 'admin'].forEach(r => { let v = document.getElementById('view-' + r); if(v) { v.style.display = 'none'; v.classList.remove('active-grid'); } });
+        document.body.classList.remove('warga-portal-aktif');
         
         if(role === 'warga' && loggedInWarga) {
             document.getElementById('user-name').innerText = loggedInWarga.nama; document.getElementById('user-role').innerText = loggedInWarga.isGuest ? "Akses Publik Terbatas" : "Anggota Warga RT 005";
             document.getElementById('user-avatar').style.background = loggedInWarga.isGuest ? "linear-gradient(135deg, #10b981, #059669)" : "linear-gradient(135deg, #3b82f6, #2563eb)"; document.getElementById('user-avatar').innerHTML = loggedInWarga.isGuest ? "<i class='fa-solid fa-eye'></i>" : "<i class='fa-solid fa-user'></i>";
+            document.body.classList.add('warga-portal-aktif');
             let v = document.getElementById('view-warga'); v.style.display = ''; v.classList.add('active-grid'); let navTabs = document.querySelector('#view-warga .admin-nav-tabs');
             
             if(loggedInWarga.isGuest) {
@@ -7100,7 +7317,7 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
         } 
         else if(role === 'bendahara') { window.location.href = 'bendahara.html'; return; } 
         else if(role === 'koperasi') { document.getElementById('user-name').innerText = "Pengurus Koperasi"; document.getElementById('user-role').innerText = "Simpan Pinjam RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #8b5cf6, #6d28d9)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-handshake-angle'></i>"; let v = document.getElementById('view-koperasi'); v.style.display = ''; v.classList.add('active-grid'); openKopTab('kop-simpanan'); } 
-        else if(role === 'admin') { document.getElementById('user-name').innerText = "Christian Eka"; document.getElementById('user-role').innerText = "Otoritas Sekretaris RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #f59e0b, #b45309)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-user-tie'></i>"; let v = document.getElementById('view-admin'); v.style.display = ''; v.classList.add('active-grid'); openAdminTab('admin-datakk'); document.getElementById('p_no').value = getNextSuratNumber(); document.getElementById('p_tgl_manual').innerText = new Date().toLocaleDateString('id-ID'); }
+        else if(role === 'admin') { document.getElementById('user-name').innerText = "Christian Eka"; document.getElementById('user-role').innerText = "Otoritas Sekretaris RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #f59e0b, #b45309)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-user-tie'></i>"; let v = document.getElementById('view-admin'); v.style.display = ''; v.classList.add('active-grid'); openAdminTab('admin-datakk'); let _pno = document.getElementById('p_no'); if(_pno) _pno.value = getNextSuratNumber(); let _ptgl = document.getElementById('p_tgl_manual'); if(_ptgl) _ptgl.innerText = new Date().toLocaleDateString('id-ID'); }
         syncSemuaData();
     };
     // === FUNGSI SUB-TAB PUBLIKASI ===
@@ -7517,7 +7734,7 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
     // === 7. MUTASI, BERITA, AGENDA ===
     window.saveMutasi = function(e) { e.preventDefault(); let db = JSON.parse(localStorage.getItem('mutasi')) || []; let w = document.getElementById('m_nama'); if(!w.value) return Swal.fire('Gagal','Pilih nama warga!','warning'); let namaW = w.options[w.selectedIndex].text; db.push({ id: Date.now(), nama: namaW, status: document.getElementById('m_status').value, ket: document.getElementById('m_keterangan').value, tgl: document.getElementById('m_tanggal').value }); localStorage.setItem('mutasi', JSON.stringify(db)); e.target.reset(); if(typeof jQuery !== 'undefined') $(w).val('').trigger('change'); syncSemuaData(); Toast.fire({icon:'success',title:'Disimpan'}); };
     window.loadMutasi = function() { let db = JSON.parse(localStorage.getItem('mutasi')) || []; let tb = document.getElementById('tabel-mutasi'); if(!tb) return; tb.innerHTML = ''; db.forEach(m => { let badge = m.status === 'Datang' ? 'badge-masuk' : 'badge-keluar'; tb.innerHTML += `<tr><td><b>${m.nama}</b></td><td><span class="badge ${badge}">${m.status}</span></td><td>${m.ket}</td><td>${m.tgl}</td><td><button class="btn-table btn-tbl-del" onclick="hapusMutasi(${m.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`; }); };
-    window.hapusMutasi = function(id) { let db = JSON.parse(localStorage.getItem('mutasi')) || []; localStorage.setItem('mutasi', JSON.stringify(db.filter(x => x.id !== id))); syncSemuaData(); };
+    window.hapusMutasi = function(id) { Swal.fire({title:'Hapus data mutasi?',text:'Tindakan ini tidak dapat dibatalkan.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('mutasi')) || []; localStorage.setItem('mutasi', JSON.stringify(db.filter(x => x.id !== id))); syncSemuaData(); Toast.fire({icon:'success',title:'Data dihapus'}); } }); };
 
     window.saveBeritaAdmin = function(e) { e.preventDefault(); let f = document.getElementById('b_gambar').files[0]; if(f) { let r = new FileReader(); r.onload = function(evt) { prosesSimpanBerita(evt.target.result); }; r.readAsDataURL(f); } else { prosesSimpanBerita(''); } };
     window.prosesSimpanBerita = function(b64) { let db = JSON.parse(localStorage.getItem('db_berita')) || []; db.push({ id: Date.now(), kategori: document.getElementById('b_kategori').value, judul: document.getElementById('b_judul').value, isi: document.getElementById('b_isi').value, foto: b64, tgl: new Date().toLocaleDateString('id-ID') }); localStorage.setItem('db_berita', JSON.stringify(db)); document.getElementById('form-berita').reset(); if (typeof syncSemuaData === 'function') syncSemuaData(true); Swal.fire('Siap', 'Kabar disiarkan.', 'success'); };
@@ -7685,7 +7902,7 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
         let url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
         window.open(url, '_blank');
     };
-    window.hapusBerita = function(id) { let db = JSON.parse(localStorage.getItem('db_berita')) || []; localStorage.setItem('db_berita', JSON.stringify(db.filter(x => x.id !== id))); syncSemuaData(); };
+    window.hapusBerita = function(id) { Swal.fire({title:'Hapus berita ini?',text:'Berita akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('db_berita')) || []; localStorage.setItem('db_berita', JSON.stringify(db.filter(x => x.id !== id))); syncSemuaData(); Toast.fire({icon:'success',title:'Berita dihapus'}); } }); };
     // === MODUL AGENDA & KEGIATAN RT (UPDATE: EDIT, PREVIEW, RUNNING TEXT, WA, PDF) ===
     let editKegiatanId = null;
 
@@ -7982,14 +8199,14 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
     }, 500);
     window.batalEditReqSurat = function() { document.getElementById('req_keperluan').value = ''; document.getElementById('btn-batal-req').style.display='none'; };
     window.accSurat = function(id) { let db = JSON.parse(localStorage.getItem('db_req_surat')) || []; let idx = db.findIndex(x=>x.id===id); if(idx!==-1){ db[idx].status='Selesai'; localStorage.setItem('db_req_surat',JSON.stringify(db)); syncSemuaData(); Toast.fire({icon:'success',title:'Di-Acc!'}); } };
-    window.hapusSurat = function(id) { let db = JSON.parse(localStorage.getItem('db_req_surat')) || []; localStorage.setItem('db_req_surat', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); };
+    window.hapusSurat = function(id) { Swal.fire({title:'Hapus surat ini?',text:'Data surat akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('db_req_surat')) || []; localStorage.setItem('db_req_surat', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); Toast.fire({icon:'success',title:'Surat dihapus'}); } }); };
     
 
     window.kirimAduanWarga = function(e) { e.preventDefault(); let f = document.getElementById('aduan-bukti').files[0]; if(f) { let r = new FileReader(); r.onload = function(evt) { prosesSimpanAduan(evt.target.result); }; r.readAsDataURL(f); } else { Swal.fire('Gagal', 'Wajib upload foto!', 'warning'); } };
     window.prosesSimpanAduan = function(b64) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let d = new Date(); let tFormat = `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}`; db.push({ id: Date.now(), tglAsli: tFormat, tglTampil: d.toLocaleDateString('id-ID'), idPelapor: loggedInWarga.id, namaPelapor: loggedInWarga.nama, kategori: document.getElementById('aduan-kategori').value, judul: document.getElementById('aduan-judul').value, isi: document.getElementById('aduan-isi').value, foto: b64, status: 'Menunggu' }); localStorage.setItem('db_aduan', JSON.stringify(db)); document.getElementById('aduan-judul').value=''; document.getElementById('aduan-isi').value=''; if (typeof syncSemuaData === 'function') syncSemuaData(true); Swal.fire('Terkirim!', 'Aduan masuk ke meja RT.', 'success'); if(typeof window.loadAduanWarga==='function') window.loadAduanWarga(); };
     window.lihatBuktiAduan = function(id) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let a = db.find(x=>x.id===id); if(a && a.foto) Swal.fire({ imageUrl: a.foto, width: 600 }); };
     window.updateStatusAduan = function(id, val) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let idx = db.findIndex(x=>x.id===id); if(idx!==-1) { db[idx].status=val; localStorage.setItem('db_aduan',JSON.stringify(db)); syncSemuaData(); Toast.fire({icon:'success',title:'Status Update!'}); } };
-    window.hapusAduan = function(id) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; localStorage.setItem('db_aduan', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); };
+    window.hapusAduan = function(id) { Swal.fire({title:'Hapus aduan ini?',text:'Data aduan akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('db_aduan')) || []; localStorage.setItem('db_aduan', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); Toast.fire({icon:'success',title:'Aduan dihapus'}); } }); };
     window.loadAduanWarga = function() { if(!loggedInWarga) return; let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let my = db.filter(x => String(x.idPelapor)===String(loggedInWarga.id)); let tb = document.getElementById('tbody-aduan-warga'); if(tb) { tb.innerHTML=''; my.forEach(a => { let bd = a.status==='Selesai'?'badge-selesai':(a.status==='Diproses'?'badge-proses':'badge-menunggu'); tb.innerHTML+=`<tr><td>${a.tglTampil}</td><td>${a.kategori}</td><td><b>${a.judul}</b></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})"><i class="fa-solid fa-image"></i></button></td><td><span class="badge ${bd}">${a.status}</span></td></tr>`; }); } };
     window.loadAduanAdmin = function() { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let fb = document.getElementById('filter-bulan-aduan').value; let tb = document.getElementById('tbody-aduan-admin'); if(tb) { tb.innerHTML=''; if(fb!=='Semua') db=db.filter(x=>x.tglAsli.split('-')[1]===fb); db.forEach(a => { let s = `<select style="padding:6px;font-size:0.8rem;" onchange="updateStatusAduan(${a.id}, this.value)"><option value="Menunggu" ${a.status==='Menunggu'?'selected':''}>Menunggu</option><option value="Diproses" ${a.status==='Diproses'?'selected':''}>Diproses</option><option value="Selesai" ${a.status==='Selesai'?'selected':''}>Selesai</option></select>`; tb.innerHTML+=`<tr><td><b>${a.tglTampil}</b><br><small>${a.namaPelapor}</small></td><td>${a.kategori}</td><td><b>${a.judul}</b><br><small>${a.isi}</small></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})"><i class="fa-solid fa-image"></i></button> <button class="btn-table btn-tbl-del" onclick="hapusAduan(${a.id})"><i class="fa-solid fa-trash"></i></button></td><td>${s}</td></tr>`; }); } };
     window.cetakRekapAduan = function() {
@@ -8529,10 +8746,15 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
     };
 
     window.hapusSuratPengajuan = function(id) {
-        let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
-        localStorage.setItem('db_req_surat_v2', JSON.stringify(db.filter(x => x.id !== id)));
-        if(typeof syncSemuaData==='function') syncSemuaData(true);
-        if(typeof loadSuratAdmin === 'function') loadSuratAdmin();
+        Swal.fire({title:'Hapus pengajuan surat?',text:'Data surat akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{
+            if(r.isConfirmed){
+                let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
+                localStorage.setItem('db_req_surat_v2', JSON.stringify(db.filter(x => x.id !== id)));
+                if(typeof syncSemuaData==='function') syncSemuaData(true);
+                if(typeof loadSuratAdmin === 'function') loadSuratAdmin();
+                Toast.fire({icon:'success',title:'Surat dihapus'});
+            }
+        });
     };
 
     // === MESIN CETAK PDF A4 ANTI BOCOR (VERSI OPTIMAL 1 HALAMAN) ===
@@ -11156,19 +11378,28 @@ window.dshTab = function(tab) {
 ═══════════════════════════════════════════════════════════════ -->
 <div class="wfb-mobile-nav no-print" id="wfb-mobile-nav">
     <button class="wfb-mob-btn active" data-tab="warga-dashboard" onclick="openWargaTab('warga-dashboard')">
-        <i class="fa-solid fa-cube"></i><span>Beranda</span>
+        <i class="fa-solid fa-house"></i><span>Beranda</span>
     </button>
     <button class="wfb-mob-btn" data-tab="warga-berita-portal" onclick="openWargaTab('warga-berita-portal')">
         <i class="fa-solid fa-newspaper"></i><span>Berita</span>
     </button>
+    <button class="wfb-mob-btn" data-tab="warga-profil" onclick="openWargaTab('warga-profil')">
+        <i class="fa-solid fa-id-badge"></i><span>Keluarga</span>
+    </button>
     <button class="wfb-mob-btn" data-tab="warga-keuangan" onclick="openWargaTab('warga-keuangan')">
         <i class="fa-solid fa-sack-dollar"></i><span>Iuran</span>
+    </button>
+    <button class="wfb-mob-btn" data-tab="warga-koperasi" onclick="openWargaTab('warga-koperasi')">
+        <i class="fa-solid fa-piggy-bank"></i><span>Koperasi</span>
     </button>
     <button class="wfb-mob-btn" data-tab="warga-surat" onclick="openWargaTab('warga-surat')">
         <i class="fa-solid fa-envelope-open-text"></i><span>Surat</span>
     </button>
     <button class="wfb-mob-btn" data-tab="warga-aduan" onclick="openWargaTab('warga-aduan')">
         <i class="fa-solid fa-bullhorn"></i><span>Lapor</span>
+    </button>
+    <button class="wfb-mob-btn" data-tab="warga-darurat" onclick="openWargaTab('warga-darurat')">
+        <i class="fa-solid fa-truck-medical" style="color:#ef4444 !important"></i><span style="color:#ef4444 !important">Darurat</span>
     </button>
 </div>
 
@@ -11417,6 +11648,96 @@ window.dshTab = function(tab) {
         }
         if (__wfbBukaAttempts > 80) clearInterval(__wfbBukaInterval);
     }, 250);
+
+    /* ──────────────────────────────────────────────────────
+       6. Swipe gesture: swipe down to hide, swipe up to show
+          Auto-scroll active button into view
+    ────────────────────────────────────────────────────── */
+    (function initWfbSwipe() {
+        var nav = document.getElementById('wfb-mobile-nav');
+        if (!nav) { setTimeout(initWfbSwipe, 500); return; }
+
+        var touchStartY = 0, touchStartX = 0;
+        var navHidden = false;
+        var lastScrollY = 0;
+        var scrollContent = null;
+
+        function hideNav() {
+            if (navHidden) return;
+            navHidden = true;
+            nav.classList.add('wfb-nav-hidden');
+        }
+        function showNav() {
+            if (!navHidden) return;
+            navHidden = false;
+            nav.classList.remove('wfb-nav-hidden');
+            scrollActiveIntoView();
+        }
+
+        /* Auto-scroll active button into view */
+        function scrollActiveIntoView() {
+            var active = nav.querySelector('.wfb-mob-btn.active');
+            if (!active) return;
+            try {
+                active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            } catch(e) {}
+        }
+
+        /* Touch on nav: swipe up to show (if hidden), swipe down to hide */
+        nav.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        nav.addEventListener('touchend', function(e) {
+            var dy = e.changedTouches[0].clientY - touchStartY;
+            var dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+            if (dx > 40) return; /* horizontal scroll — ignore */
+            if (dy < -30) showNav();   /* swipe up on nav — ensure visible */
+            if (dy > 30) hideNav();    /* swipe down on nav — hide */
+        }, { passive: true });
+
+        /* Track page content scroll to auto-hide/show nav */
+        function bindScrollListener() {
+            var containers = document.querySelectorAll(
+                '#view-warga .warga-tab-content.active, #view-warga .warga-fb-main'
+            );
+            containers.forEach(function(c) {
+                if (c.__wfbScrollBound) return;
+                c.__wfbScrollBound = true;
+                c.addEventListener('scroll', function() {
+                    var y = c.scrollTop;
+                    var delta = y - lastScrollY;
+                    lastScrollY = y;
+                    if (delta > 8 && y > 60) hideNav();
+                    else if (delta < -8) showNav();
+                }, { passive: true });
+            });
+        }
+
+        /* Rebind scroll on tab changes */
+        var origOpen = window.openWargaTab;
+        if (typeof origOpen === 'function' && !origOpen.__wfbSwipeBound) {
+            window.openWargaTab = function(tabId) {
+                var r = origOpen.apply(this, arguments);
+                navHidden = false;
+                nav.classList.remove('wfb-nav-hidden');
+                lastScrollY = 0;
+                setTimeout(function() {
+                    bindScrollListener();
+                    scrollActiveIntoView();
+                }, 200);
+                return r;
+            };
+            window.openWargaTab.__wfbSwipeBound = true;
+        }
+
+        /* Initial scroll into view and bind */
+        setTimeout(function() {
+            bindScrollListener();
+            scrollActiveIntoView();
+        }, 800);
+    })();
 
 })();
 
@@ -12450,57 +12771,96 @@ html[data-theme="dark"] #view-warga .wfb-nav-item.active {
 html[data-theme="dark"] #view-warga .wfb-nav-icon { background: #1e293b !important; }
 
 /* ══════════════════════════════════════════════════════════════
-   MOBILE BOTTOM NAV — GLASS PREMIUM
+   MOBILE BOTTOM NAV WARGA — DISAMAKAN DENGAN ADMIN NAV
+   Menggunakan Navy Dark + Gold Luxury seperti admin-nav-tabs
 ══════════════════════════════════════════════════════════════ */
 .wfb-mobile-nav {
-  background: rgba(255,255,255,.9) !important;
-  backdrop-filter: blur(24px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-  border-top: 1px solid rgba(226,232,240,.7) !important;
-  box-shadow: 0 -4px 24px rgba(30,58,138,.1), 0 -1px 0 rgba(226,232,240,.5) !important;
-  height: 68px !important;
-  padding: 0 6px env(safe-area-inset-bottom,0px) !important;
+  background: var(--navy-dark, #001f5b) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-top: 3px solid var(--gold-luxury, #f59e0b) !important;
+  border-radius: 16px 16px 0 0 !important;
+  box-shadow: 0 -5px 15px rgba(0,0,0,0.3) !important;
+  height: auto !important;
+  padding: 6px 4px calc(8px + env(safe-area-inset-bottom, 0px)) 4px !important;
+  z-index: 9999 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.wfb-mobile-nav::-webkit-scrollbar { display: none !important; }
+.wfb-mobile-nav.wfb-nav-hidden {
+  transform: translateY(100%) !important;
+  pointer-events: none !important;
 }
 html[data-theme="dark"] .wfb-mobile-nav {
-  background: rgba(15,22,42,.92) !important;
-  border-top-color: rgba(35,49,82,.6) !important;
-  box-shadow: 0 -4px 28px rgba(0,0,0,.4) !important;
+  background: var(--navy-dark, #001f5b) !important;
+  border-top-color: var(--gold-luxury, #f59e0b) !important;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.5) !important;
 }
 
-/* Mobile nav buttons */
+/* Mobile nav buttons — scrollable row, fixed min-width per item */
 .wfb-mob-btn {
-  flex: 1 !important;
+  flex: 0 0 auto !important;
+  min-width: 64px !important;
+  width: 64px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 3px !important;
-  padding: 6px 4px !important;
-  border-radius: 14px !important;
-  font-size: 9px !important;
+  gap: 0 !important;
+  padding: 5px 3px !important;
+  border-radius: 10px !important;
+  font-size: 0.6rem !important;
   font-weight: 700 !important;
-  color: #94a3b8 !important;
-  text-transform: uppercase !important;
-  letter-spacing: .3px !important;
-  transition: all .2s cubic-bezier(.4,0,.2,1) !important;
+  color: #cbd5e1 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  transition: background 0.2s ease !important;
   position: relative !important;
-  min-width: 0 !important;
+  min-height: 52px !important;
+  background: transparent !important;
+  border: 0 !important;
+  cursor: pointer !important;
 }
-.wfb-mob-btn i { font-size: 20px !important; transition: transform .2s ease !important; }
-.wfb-mob-btn.active { color: #1e40af !important; }
-html[data-theme="dark"] .wfb-mob-btn.active { color: #60a5fa !important; }
-.wfb-mob-btn.active i { transform: translateY(-2px) scale(1.08) !important; }
-/* Active glow dot */
-.wfb-mob-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: #1e40af;
-  left: 50%; transform: translateX(-50%);
+.wfb-mob-btn i {
+  font-size: 1.05rem !important;
+  color: #cbd5e1 !important;
+  margin: 0 0 4px 0 !important;
+  transition: none !important;
+  display: block !important;
 }
-html[data-theme="dark"] .wfb-mob-btn.active::after { background: #60a5fa; }
+.wfb-mob-btn span {
+  display: block !important;
+  font-size: 0.58rem !important;
+  line-height: 1.1 !important;
+  color: #cbd5e1 !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  max-width: 62px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.wfb-mob-btn.active {
+  background: rgba(245,158,11,0.14) !important;
+  color: var(--gold-luxury, #f59e0b) !important;
+}
+.wfb-mob-btn.active i,
+.wfb-mob-btn.active span {
+  color: var(--gold-luxury, #f59e0b) !important;
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.4) !important;
+}
+html[data-theme="dark"] .wfb-mob-btn.active,
+html[data-theme="dark"] .wfb-mob-btn.active i,
+html[data-theme="dark"] .wfb-mob-btn.active span {
+  color: var(--gold-luxury, #f59e0b) !important;
+}
+.wfb-mob-btn.active i { transform: none !important; }
+.wfb-mob-btn.active::after { display: none !important; }
 
 /* ══════════════════════════════════════════════════════════════
    DASHBOARD — GREETING HERO CARD (fintech balance-card feel)
@@ -12891,76 +13251,98 @@ html[data-theme="dark"] body { background: #0b1220; }
 }
 
 /* ─── PWA Splash Screen ───────────────────────────────────── */
-#ft-splash {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  background: linear-gradient(160deg, #1e3a8a 0%, #2d3282 50%, #4338ca 100%);
-  transition: opacity .4s ease, transform .4s ease;
-}
-#ft-splash.ft-splash-out {
-  opacity: 0;
-  transform: scale(1.06);
-  pointer-events: none;
-}
-#ft-splash-logo {
-  width: 88px;
-  height: 88px;
-  border-radius: 24px;
-  background: rgba(255,255,255,.12);
-  border: 2px solid rgba(255,255,255,.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: ftSplashPop .5s cubic-bezier(.34,1.56,.64,1) both;
-  box-shadow: 0 12px 40px rgba(0,0,0,.3), 0 0 0 12px rgba(255,255,255,.04);
-}
-#ft-splash-logo img {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,.25));
-}
-#ft-splash-name {
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -.2px;
-  animation: ftSplashPop .5s .12s cubic-bezier(.34,1.56,.64,1) both;
-}
-#ft-splash-sub {
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-  font-size: .8rem;
-  color: rgba(255,255,255,.6);
-  font-weight: 500;
-  margin-top: -14px;
-  animation: ftSplashPop .5s .2s cubic-bezier(.34,1.56,.64,1) both;
-}
-#ft-splash-bar {
-  width: 140px;
-  height: 3px;
-  background: rgba(255,255,255,.18);
-  border-radius: 99px;
+/* ═══════════════════════════════════════════════════════════
+   PREMIUM SPLASH — TegalsariOneApp
+   ═══════════════════════════════════════════════════════════ */
+#t1-splash {
+  position: fixed; inset: 0; z-index: 2147483647;
+  display: flex; flex-direction: column; align-items: center;
+  background: linear-gradient(180deg, #030d2e 0%, #0a2a6e 30%, #0c4cc7 60%, #1a7bea 85%, #2d9bf0 100%);
   overflow: hidden;
-  animation: ftSplashPop .5s .28s cubic-bezier(.34,1.56,.64,1) both;
+  transition: opacity .5s ease, transform .5s ease;
 }
-#ft-splash-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, rgba(255,255,255,.5), #fff);
-  border-radius: 99px;
-  width: 0%;
-  transition: width .7s cubic-bezier(.4,0,.2,1);
+#t1-splash.t1s-out { opacity: 0; transform: scale(1.04); pointer-events: none; }
+
+/* Light rays */
+.t1s-ray {
+  position: absolute; top: 0; left: 50%; width: 2px;
+  height: 60%; background: linear-gradient(180deg, rgba(255,220,100,.18), transparent);
+  transform-origin: top center; animation: t1sRayPulse 4s ease-in-out infinite;
 }
-@keyframes ftSplashPop {
-  from { opacity: 0; transform: translateY(12px) scale(.9); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+.t1s-ray-1 { transform: rotate(-30deg); animation-delay: 0s; }
+.t1s-ray-2 { transform: rotate(0deg); opacity: 0.7; animation-delay: .8s; }
+.t1s-ray-3 { transform: rotate(30deg); animation-delay: 1.6s; }
+@keyframes t1sRayPulse { 0%,100%{opacity:.15} 50%{opacity:.35} }
+
+/* Floating particles */
+.t1s-dot {
+  position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,.5); animation: t1sFloat 6s ease-in-out infinite;
 }
+@keyframes t1sFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-18px) scale(1.1)} }
+
+/* ── Logo hero ── */
+.t1s-logo-wrap {
+  position: relative; margin-top: max(env(safe-area-inset-top,0px), 28px);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  animation: t1sPop .7s .1s cubic-bezier(.34,1.56,.64,1) both;
+}
+.t1s-logo-ring {
+  width: 110px; height: 110px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(0,200,255,.35), rgba(0,80,200,.25));
+  border: 2px solid rgba(100,200,255,.5);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 40px rgba(0,150,255,.5), 0 0 80px rgba(0,100,200,.3), inset 0 0 30px rgba(255,255,255,.08);
+  animation: t1sGlowPulse 3s ease-in-out infinite;
+}
+@keyframes t1sGlowPulse { 0%,100%{box-shadow:0 0 35px rgba(0,150,255,.5),0 0 70px rgba(0,100,200,.3)} 50%{box-shadow:0 0 55px rgba(0,200,255,.7),0 0 110px rgba(0,150,255,.4)} }
+.t1s-logo-svg { width: 80px; height: 80px; filter: drop-shadow(0 4px 16px rgba(0,200,255,.6)); }
+
+/* Float effect on logo */
+@keyframes t1sFloatLogo { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+.t1s-logo-ring { animation: t1sGlowPulse 3s ease-in-out infinite, t1sFloatLogo 4s ease-in-out infinite; }
+
+.t1s-brand { font-family:'Plus Jakarta Sans','Inter',sans-serif; font-size:1.65rem; font-weight:800; letter-spacing:-.3px; animation: t1sPop .7s .25s cubic-bezier(.34,1.56,.64,1) both; }
+.t1s-brand-a { color:#fff; }
+.t1s-brand-b { color:#4cf; }
+.t1s-tagline { font-size:.78rem; color:rgba(255,255,255,.7); font-weight:500; letter-spacing:.5px; animation: t1sPop .7s .35s cubic-bezier(.34,1.56,.64,1) both; }
+
+/* ── Landmark scene ── */
+.t1s-scene { width:100%; position:relative; flex:1; min-height:100px; max-height:140px; animation: t1sFadeUp .8s .5s both; }
+.t1s-landmark-svg { width:100%; height:100%; position:absolute; bottom:0; left:0; }
+.t1s-scene-labels { position:absolute; bottom:6px; left:0; right:0; display:flex; justify-content:space-around; }
+.t1s-slabel { display:flex; flex-direction:column; align-items:center; gap:2px; color:rgba(255,255,255,.75); font-size:.62rem; font-weight:700; }
+.t1s-slabel i { font-size:.75rem; }
+
+/* ── Value cards ── */
+.t1s-values {
+  display:flex; gap:8px; padding:0 16px; width:100%; box-sizing:border-box;
+  animation: t1sFadeUp .8s .65s both;
+}
+.t1s-val {
+  flex:1; background:rgba(255,255,255,.12); backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.2); border-radius:12px;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:8px 4px; font-family:'Plus Jakarta Sans','Inter',sans-serif;
+}
+.t1s-val-icon { font-size:1.15rem; }
+.t1s-val b { color:#fff; font-size:.65rem; font-weight:800; }
+.t1s-val small { color:rgba(255,255,255,.55); font-size:.55rem; text-align:center; line-height:1.2; }
+
+/* ── Loading bar ── */
+.t1s-load-wrap { width:100%; padding:8px 20px 6px; box-sizing:border-box; animation: t1sFadeUp .8s .8s both; }
+.t1s-load-text { color:rgba(255,255,255,.6); font-size:.72rem; font-weight:600; text-align:center; margin-bottom:6px; font-family:'Plus Jakarta Sans','Inter',sans-serif; }
+.t1s-load-bar { width:100%; height:4px; background:rgba(255,255,255,.15); border-radius:99px; overflow:hidden; }
+.t1s-load-fill { height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,#4cf,#fff,#4cf); background-size:200% 100%; transition:width 9.5s cubic-bezier(.4,0,.2,1); animation:t1sBarShimmer 1.5s linear infinite; }
+@keyframes t1sBarShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ── Bottom wave ── */
+.t1s-bottom { width:100%; position:relative; flex-shrink:0; }
+.t1s-wave-svg { width:100%; display:block; }
+.t1s-people { position:absolute; bottom:22px; left:0; right:0; display:flex; justify-content:center; gap:14px; color:rgba(255,255,255,.5); font-size:1.3rem; }
+.t1s-footer { position:absolute; bottom:6px; left:0; right:0; text-align:center; color:rgba(255,255,255,.65); font-size:.68rem; font-weight:700; font-family:'Plus Jakarta Sans','Inter',sans-serif; letter-spacing:.3px; }
+
+/* @keyframes t1sPop and t1sFadeUp already defined inline in splash block above — no duplicate needed */
 
 /* ─── Install Banner (Android-quality) ───────────────────── */
 #ft-install-banner {
@@ -13143,53 +13525,163 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
 (function () {
   'use strict';
 
-  /* ── 1. SPLASH SCREEN ─────────────────────────────────── */
+  /* ── 1. SPLASH SCREEN — inline at top of body (no injection needed) */
   function injectSplash() {
-    if (document.getElementById('ft-splash')) return;
+    /* Splash is baked into HTML at top of <body> for immediate render.
+       This function is kept as a stub to avoid reference errors. */
+    return;
+    /* Dead code below preserved for reference only */
+    if (document.getElementById('t1-splash')) return;
     var sp = document.createElement('div');
-    sp.id = 'ft-splash';
+    sp.id = 't1-splash';
     sp.innerHTML = [
-      '<div id="ft-splash-logo">',
-        '<img src="/Lambang_Kota_Semarang.png" alt="RT 005" onerror="this.style.display=\'none\'">',
+      /* Light rays */
+      '<div class="t1s-ray t1s-ray-1"></div>',
+      '<div class="t1s-ray t1s-ray-2"></div>',
+      '<div class="t1s-ray t1s-ray-3"></div>',
+      /* Floating particles */
+      '<div class="t1s-dot" style="width:6px;height:6px;top:15%;left:12%;animation-delay:0s;animation-duration:5s"></div>',
+      '<div class="t1s-dot" style="width:4px;height:4px;top:22%;left:80%;animation-delay:1s;animation-duration:7s"></div>',
+      '<div class="t1s-dot" style="width:5px;height:5px;top:8%;left:55%;animation-delay:.5s;animation-duration:6s"></div>',
+      '<div class="t1s-dot" style="width:3px;height:3px;top:30%;left:30%;animation-delay:2s;animation-duration:8s"></div>',
+      '<div class="t1s-dot" style="width:7px;height:7px;top:5%;left:68%;animation-delay:1.5s;animation-duration:5.5s;opacity:.35"></div>',
+      /* Logo hero area */
+      '<div class="t1s-logo-wrap">',
+        '<div class="t1s-logo-ring">',
+          '<svg class="t1s-logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">',
+            '<defs>',
+              '<linearGradient id="t1gBlue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#0052cc"/></linearGradient>',
+              '<linearGradient id="t1gGreen" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00e87b"/><stop offset="100%" stop-color="#00a854"/></linearGradient>',
+              '<filter id="t1glow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>',
+            '</defs>',
+            /* Orbital ring */
+            '<circle cx="60" cy="60" r="55" fill="none" stroke="rgba(0,200,255,0.4)" stroke-width="1.5" stroke-dasharray="10 5"/>',
+            /* T crossbar */
+            '<rect x="18" y="30" width="56" height="14" rx="7" fill="url(#t1gBlue)" filter="url(#t1glow)"/>',
+            /* T stem */
+            '<rect x="40" y="44" width="14" height="46" rx="7" fill="url(#t1gBlue)" filter="url(#t1glow)"/>',
+            /* 1 numeral */
+            '<rect x="78" y="38" width="11" height="50" rx="5.5" fill="url(#t1gGreen)" filter="url(#t1glow)"/>',
+            '<rect x="68" y="38" width="16" height="9" rx="4" fill="url(#t1gGreen)" filter="url(#t1glow)"/>',
+            /* Green leaf accent */
+            '<ellipse cx="89" cy="27" rx="9" ry="5" fill="url(#t1gGreen)" transform="rotate(-35 89 27)" opacity="0.9"/>',
+            '<ellipse cx="89" cy="27" rx="5" ry="2.5" fill="rgba(255,255,255,0.4)" transform="rotate(-35 89 27)"/>',
+          '</svg>',
+        '</div>',
+        '<div class="t1s-brand"><span class="t1s-brand-a">Tegalsari</span><span class="t1s-brand-b">OneApp</span></div>',
+        '<div class="t1s-tagline">Satu Aplikasi, Banyak Kemudahan</div>',
       '</div>',
-      '<div id="ft-splash-name">Smart Portal RT 005</div>',
-      '<div id="ft-splash-sub">Tegalsari · Candisari · Semarang</div>',
-      '<div id="ft-splash-bar"><div id="ft-splash-bar-fill"></div></div>'
+      /* Landmark skyline scene */
+      '<div class="t1s-scene">',
+        '<svg class="t1s-landmark-svg" viewBox="0 0 375 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">',
+          '<defs>',
+            '<radialGradient id="sunGlow" cx="50%" cy="90%" r="70%"><stop offset="0%" stop-color="rgba(255,220,100,0.25)"/><stop offset="100%" stop-color="rgba(255,220,100,0)"/></radialGradient>',
+          '</defs>',
+          /* Sun glow from horizon */
+          '<rect x="0" y="0" width="375" height="120" fill="url(#sunGlow)"/>',
+          /* Ground */
+          '<rect x="0" y="96" width="375" height="24" fill="rgba(0,30,100,0.35)" rx="0"/>',
+          /* --- SAM POO KONG (left) --- */
+          '<rect x="18" y="62" width="78" height="34" rx="2" fill="rgba(255,255,255,0.38)"/>',
+          '<rect x="28" y="47" width="58" height="17" rx="2" fill="rgba(255,255,255,0.38)"/>',
+          '<polygon points="12,62 102,62 92,54 22,54" fill="rgba(255,255,255,0.48)"/>',
+          '<polygon points="24,47 90,47 82,40 32,40" fill="rgba(255,255,255,0.48)"/>',
+          '<rect x="41" y="28" width="32" height="14" rx="2" fill="rgba(255,255,255,0.38)"/>',
+          '<polygon points="36,40 78,40 72,32 42,32" fill="rgba(255,255,255,0.48)"/>',
+          '<polygon points="50,28 64,28 60,19 54,19" fill="rgba(255,255,255,0.52)"/>',
+          '<polygon points="54,19 60,19 57,11" fill="rgba(255,255,255,0.6)"/>',
+          /* --- TUGU MUDA (center) --- */
+          '<ellipse cx="188" cy="97" rx="34" ry="5" fill="rgba(255,255,255,0.2)"/>',
+          '<rect x="170" y="82" width="36" height="15" rx="2" fill="rgba(255,255,255,0.42)"/>',
+          '<rect x="178" y="52" width="20" height="30" fill="rgba(255,255,255,0.48)"/>',
+          '<rect x="176" y="68" width="24" height="6" fill="rgba(255,255,255,0.45)"/>',
+          '<polygon points="176,52 200,52 196,38 180,38" fill="rgba(255,255,255,0.52)"/>',
+          '<polygon points="180,38 196,38 192,24 184,24" fill="rgba(255,255,255,0.56)"/>',
+          '<polygon points="184,24 192,24 188,14" fill="rgba(255,255,255,0.65)"/>',
+          /* --- GEREJA BLENDUK (right) --- */
+          '<rect x="272" y="58" width="82" height="38" rx="2" fill="rgba(255,255,255,0.38)"/>',
+          '<ellipse cx="313" cy="57" rx="29" ry="20" fill="rgba(255,255,255,0.44)"/>',
+          '<rect x="311" y="36" width="4" height="17" fill="rgba(255,255,255,0.7)"/>',
+          '<rect x="304" y="43" width="18" height="4" fill="rgba(255,255,255,0.7)"/>',
+          '<rect x="279" y="62" width="8" height="34" fill="rgba(255,255,255,0.28)"/>',
+          '<rect x="295" y="62" width="8" height="34" fill="rgba(255,255,255,0.28)"/>',
+          '<rect x="323" y="62" width="8" height="34" fill="rgba(255,255,255,0.28)"/>',
+          '<rect x="339" y="62" width="8" height="34" fill="rgba(255,255,255,0.28)"/>',
+          '<rect x="301" y="74" width="24" height="22" rx="12" fill="rgba(0,25,90,0.22)"/>',
+          /* Horizon glow line */
+          '<rect x="0" y="95" width="375" height="2" fill="rgba(255,200,80,0.25)"/>',
+        '</svg>',
+        '<div class="t1s-scene-labels">',
+          '<div class="t1s-slabel"><i class="fa-solid fa-torii-gate"></i><span>Sam Poo Kong</span></div>',
+          '<div class="t1s-slabel"><i class="fa-solid fa-monument"></i><span>Tugu Muda</span></div>',
+          '<div class="t1s-slabel"><i class="fa-solid fa-church"></i><span>Gereja Blenduk</span></div>',
+        '</div>',
+      '</div>',
+      /* Value cards */
+      '<div class="t1s-values">',
+        '<div class="t1s-val"><span class="t1s-val-icon"><i class="fa-solid fa-people-group" style="color:#4cf;font-size:1rem"></i></span><b>Mudah</b><small>Digunakan</small></div>',
+        '<div class="t1s-val"><span class="t1s-val-icon"><i class="fa-solid fa-shield-halved" style="color:#4d4;font-size:1rem"></i></span><b>Aman</b><small>Terpercaya</small></div>',
+        '<div class="t1s-val"><span class="t1s-val-icon"><i class="fa-solid fa-bolt" style="color:#fc4;font-size:1rem"></i></span><b>Cepat</b><small>&amp; Efisien</small></div>',
+        '<div class="t1s-val"><span class="t1s-val-icon"><i class="fa-solid fa-network-wired" style="color:#c8f;font-size:1rem"></i></span><b>Terintegrasi</b><small>Untuk Kita</small></div>',
+      '</div>',
+      /* Loading bar */
+      '<div class="t1s-load-wrap">',
+        '<div class="t1s-load-text">Memuat TegalsariOneApp...</div>',
+        '<div class="t1s-load-bar"><div class="t1s-load-fill" id="t1s-fill"></div></div>',
+      '</div>',
+      /* Bottom wave + city skyline */
+      '<div class="t1s-bottom">',
+        '<svg class="t1s-wave-svg" viewBox="0 0 375 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">',
+          '<path d="M0,22 C70,4 140,42 215,18 C290,-6 340,32 375,12 L375,56 L0,56 Z" fill="rgba(5,40,160,0.6)"/>',
+          '<path d="M0,36 C65,22 148,50 220,34 C292,18 338,44 375,30 L375,56 L0,56 Z" fill="rgba(3,25,100,0.75)"/>',
+          /* City skyline buildings */
+          '<rect x="10" y="38" width="18" height="18" fill="rgba(255,255,255,0.12)"/>',
+          '<rect x="32" y="30" width="14" height="26" fill="rgba(255,255,255,0.1)"/>',
+          '<rect x="50" y="34" width="20" height="22" fill="rgba(255,255,255,0.12)"/>',
+          '<rect x="305" y="32" width="16" height="24" fill="rgba(255,255,255,0.1)"/>',
+          '<rect x="325" y="38" width="12" height="18" fill="rgba(255,255,255,0.12)"/>',
+          '<rect x="341" y="28" width="20" height="28" fill="rgba(255,255,255,0.1)"/>',
+        '</svg>',
+        '<div class="t1s-people">',
+          '<i class="fa-solid fa-person"></i>',
+          '<i class="fa-solid fa-person-dress"></i>',
+          '<i class="fa-solid fa-person"></i>',
+          '<i class="fa-solid fa-person-dress"></i>',
+          '<i class="fa-solid fa-person"></i>',
+        '</div>',
+        '<div class="t1s-footer">Tegalsari One App, Solusi untuk Semua!</div>',
+      '</div>'
     ].join('');
     document.body.insertBefore(sp, document.body.firstChild);
 
-    // Animate loading bar
+    /* Start loading bar fill after short delay */
     setTimeout(function () {
-      var fill = document.getElementById('ft-splash-bar-fill');
+      var fill = document.getElementById('t1s-fill');
       if (fill) fill.style.width = '100%';
-    }, 50);
+    }, 120);
 
-    // Dismiss after load
+    /* Dismiss logic */
     function dismiss() {
-      var el = document.getElementById('ft-splash');
-      if (!el || el.classList.contains('ft-splash-out')) return;
-      el.classList.add('ft-splash-out');
-      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 450);
+      var el = document.getElementById('t1-splash');
+      if (!el || el.classList.contains('t1s-out')) return;
+      el.classList.add('t1s-out');
+      setTimeout(function () { if (el && el.parentNode) el.parentNode.removeChild(el); }, 550);
     }
 
-    if (document.readyState === 'complete') {
-      setTimeout(dismiss, 800);
-    } else {
-      window.addEventListener('load', function () { setTimeout(dismiss, 600); });
-      setTimeout(dismiss, 2500); // hard cap
+    /* Always show for ~3.2s, hard cap 4s */
+    var dismissed = false;
+    function safeDismiss() {
+      if (dismissed) return;
+      dismissed = true;
+      dismiss();
     }
+    setTimeout(safeDismiss, 3200);
+    window.addEventListener('load', function () { setTimeout(safeDismiss, 2600); });
   }
 
-  // Only show splash in standalone/installed PWA mode
-  var isStandalone =
-    window.matchMedia('(display-mode: standalone)').matches ||
-    window.matchMedia('(display-mode: fullscreen)').matches ||
-    window.navigator.standalone === true;
-
-  if (isStandalone) {
-    if (document.body) injectSplash();
-    else document.addEventListener('DOMContentLoaded', injectSplash);
-  }
+  /* Show splash on every page load (not just PWA) */
+  if (document.body) injectSplash();
+  else document.addEventListener('DOMContentLoaded', injectSplash);
 
   /* ── 2. SERVICE WORKER REGISTRATION ──────────────────── */
   if ('serviceWorker' in navigator) {
@@ -13239,20 +13731,33 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
     setTimeout(function () { t.classList.remove('show'); }, 8000);
   }
 
-  /* ── 4. INSTALL PROMPT (Android A2HS) ────────────────── */
-  var deferredPrompt = null;
-  var bannerDismissed = false;
+  /* ── 4. INSTALL PROMPT (Android A2HS) ─── satu handler terpusat ── */
 
-  try { bannerDismissed = !!localStorage.getItem('ft-install-dismissed'); } catch {}
+  /* Cek cooldown 24 jam (bukan permanent dismiss) */
+  function _gtInstallDismissed() {
+    try {
+      var ts = localStorage.getItem('ft-install-dismissed-ts');
+      if (!ts) return false;
+      return (Date.now() - parseInt(ts)) < 86400000; /* 24 jam */
+    } catch { return false; }
+  }
 
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
-    deferredPrompt = e;
-    if (!bannerDismissed) setTimeout(showInstallBanner, 3000);
+    window._gtDeferredPrompt = e;
+    /* Tampil 12 detik setelah event (setelah splash 10s selesai) */
+    var delay = _gtInstallDismissed() ? 0 : 12000;
+    if (!_gtInstallDismissed()) setTimeout(_gtShowInstallBanner, delay);
+    /* Juga tampilkan floating button setelah splash selesai */
+    setTimeout(function () {
+      var btn = document.getElementById('pwa-install-btn');
+      if (btn) btn.style.display = 'flex';
+    }, 11000);
   });
 
-  function showInstallBanner() {
+  function _gtShowInstallBanner() {
     if (document.getElementById('ft-install-banner')) return;
+    if (!window._gtDeferredPrompt) return;
     var banner = document.createElement('div');
     banner.id = 'ft-install-banner';
     banner.innerHTML = [
@@ -13270,31 +13775,27 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
     setTimeout(function () { banner.classList.add('ft-banner-show'); }, 50);
 
     document.getElementById('ft-install-btn').onclick = function () {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(function (res) {
-        deferredPrompt = null;
-        hideBanner();
-      });
+      window.triggerPWAInstall();
     };
 
     document.getElementById('ft-install-close').onclick = function () {
-      hideBanner();
-      try { localStorage.setItem('ft-install-dismissed', '1'); } catch {}
+      window._gtHideInstallBanner();
+      /* Simpan timestamp (cooldown 24 jam, bukan permanent) */
+      try { localStorage.setItem('ft-install-dismissed-ts', String(Date.now())); } catch {}
     };
   }
 
-  function hideBanner() {
+  window._gtHideInstallBanner = function () {
     var b = document.getElementById('ft-install-banner');
     if (!b) return;
     b.classList.remove('ft-banner-show');
     setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 400);
-  }
+    var btn = document.getElementById('pwa-install-btn');
+    if (btn) btn.style.display = 'none';
+  };
 
-  window.addEventListener('appinstalled', function () {
-    hideBanner();
-    deferredPrompt = null;
-  });
+  /* Hapus key lama (permanent dismiss) agar tidak menghalangi */
+  try { localStorage.removeItem('ft-install-dismissed'); } catch {}
 
   /* ── 5. OFFLINE INDICATOR ────────────────────────────── */
   function updateOnlineStatus() {
@@ -13356,7 +13857,11 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
   });
 
   // Push initial state for back button support
-  if (isStandalone) {
+  var isStandalonePWA =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+  if (isStandalonePWA) {
     history.pushState(null, '', location.href);
     // On every tab switch, push a history state
     var _tabPatchInterval = setInterval(function () {
@@ -13559,17 +14064,11 @@ html[data-theme="dark"] .ft-skel {
 
 /* ─── Mobile bottom nav spring ──────────────────────────── */
 .wfb-mob-btn {
-  transition: all .3s var(--spring) !important;
+  transition: background .2s ease, transform .3s var(--spring) !important;
 }
-.wfb-mob-btn.active {
-  background: rgba(30,64,175,.08) !important;
-  border-radius: 14px !important;
-}
-html[data-theme="dark"] .wfb-mob-btn.active {
-  background: rgba(96,165,250,.12) !important;
-}
+/* Keep gold active — do NOT override with blue here */
 .wfb-mob-btn:active {
-  transform: scale(.8) !important;
+  transform: scale(.82) !important;
   transition: transform .09s var(--snap-in) !important;
 }
 /* Active dot — animated pulse */
@@ -13676,13 +14175,20 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 /* ─── Responsive iPhone spacing ─────────────────────────── */
 @media (max-width: 480px) {
   #view-warga .warga-tab-content.active { padding: 16px 14px 110px !important; }
-  .wfb-mobile-nav { height: 72px !important; }
-  .wfb-mob-btn { padding: 8px 4px 6px !important; }
+  .wfb-mobile-nav { height: auto !important; }
+  .wfb-mob-btn { padding: 6px 4px !important; min-height: 50px !important; }
 }
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .wfb-mobile-nav {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 6px) !important;
-    height: calc(68px + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 10px) !important;
+    height: auto !important;
+  }
+}
+
+/* Konten warga harus punya ruang di bawah untuk bottom nav */
+@media (max-width: 768px) {
+  body.warga-portal-aktif #view-warga .warga-tab-content.active {
+    padding-bottom: 100px !important;
   }
 }
 </style>
