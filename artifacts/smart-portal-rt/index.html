@@ -11904,8 +11904,6 @@ window.dshTab = function(tab) {
 
   /* ── (5) Sidebar toggle fix ── */
   function fixSidebarToggle() {
-    catch(_){}
-    };
     try{
       if (localStorage.getItem('sidebar_state') === 'hidden') {
         document.body.classList.add('sidebar-collapsed');
@@ -12293,24 +12291,19 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
     }
 
     // Fungsi utama toggle — mobile vs desktop
-    );
-        navs.forEach(function(n){
-          n.classList.toggle('gt-nav-hidden', !anyHidden);
-          n.classList.toggle('hidden-footer', !anyHidden);
-        });
-        document.body.classList.toggle('gt-nav-is-hidden', !anyHidden);
-        // Update ikon hamburger
+    window.toggleSidebar = window.toggleSidebar || function() {
+      var isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        if (typeof window.gtSpOpen === 'function') window.gtSpOpen();
+      } else {
+        document.body.classList.toggle('sidebar-collapsed');
+        var ic2 = document.body.classList.contains('sidebar-collapsed');
+        try { localStorage.setItem('sidebar_state', ic2 ? 'hidden' : 'visible'); } catch(e) {}
         var btn = document.getElementById('gt-sidebar-toggle-btn');
         if (btn) {
           var ic = btn.querySelector('i');
-          if (ic) ic.className = anyHidden ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+          if (ic) ic.className = ic2 ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
         }
-        try{ localStorage.setItem('sidebar_state_mobile', anyHidden ? 'visible' : 'hidden'); }catch(_){}
-      } else {
-        // Desktop: toggle sidebar collapse
-        document.body.classList.toggle('sidebar-collapsed');
-        var ic = document.body.classList.contains('sidebar-collapsed');
-        try{ localStorage.setItem('sidebar_state', ic?'hidden':'visible'); }catch(_){}
       }
     };
 
