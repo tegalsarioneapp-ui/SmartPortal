@@ -1,0 +1,6 @@
+﻿language: "id-ID"
+reviews:
+  profile: "CHILL"
+  poem: false
+  review_status: false
+tone_instructions: "Respond casually in Indonesian, be concise, and focus purely on functional code fixes."

@@ -1,0 +1,1 @@
+Memicu peninjauan otomatis CodeRabbit untuk layout dan sinkronisasi panel kanan.
