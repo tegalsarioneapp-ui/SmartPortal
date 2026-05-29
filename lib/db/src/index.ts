@@ -35,7 +35,7 @@ export async function testConnection(): Promise<boolean> {
     await pool.query("SELECT 1");
     return true;
   } catch (err) {
-    console.error("[DB] Connection test failed:", err.message);
+    console.error("[DB] Connection test failed:", err instanceof Error ? err.message : String(err));
     return false;
   }
 }
