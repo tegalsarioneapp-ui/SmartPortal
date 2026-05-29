@@ -25,7 +25,10 @@ export const pool = new Pool({
 });
 
 pool.on("error", (err) => {
-  console.error("[DB] Unexpected pool error:", err.message);
+  console.error(
+    "[DB] Unexpected pool error:",
+    err instanceof Error ? err.message : String(err)
+  );
 });
 
 export const db = drizzle(pool, { schema });
