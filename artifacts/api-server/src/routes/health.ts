@@ -13,8 +13,7 @@ router.get("/health", async (_req: Request, res: Response) => {
     latencyMs = Date.now() - t0;
     dbOk = true;
   } catch (err) {
-    const errMsg = err instanceof Error ? err.message : String(err);
-    console.error("[Health] DB check failed:", errMsg);
+    console.error("[Health] DB check failed:", err instanceof Error ? err.message : String(err));
   }
 
   res.status(200).json({
@@ -40,10 +39,9 @@ router.get("/debug/db", async (_req: Request, res: Response) => {
       envSet: !!process.env["DATABASE_URL"],
     });
   } catch (err) {
-    const errMsg = err instanceof Error ? err.message : String(err);
     res.status(500).json({
       connected: false,
-      error: errMsg,
+      error: err instanceof Error ? err.message : String(err),
       envSet: !!process.env["DATABASE_URL"],
     });
   }

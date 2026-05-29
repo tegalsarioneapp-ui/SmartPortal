@@ -1,0 +1,278 @@
+# Build Premium Splash Screen — TegalsariOneApp (Modern Animated)
+
+## Objective
+
+Buat splash screen mobile premium untuk aplikasi **TegalsariOneApp** dengan visual modern, cinematic, clean, premium, dan terasa seperti aplikasi smart city / super app komunitas.
+
+Splash screen harus memiliki nuansa **modern Indonesia smart community**, dengan identitas khas **Semarang/Tegalsari** menggunakan ikon landmark:
+
+* Sam Poo Kong (Shampokong)
+* Tugu Muda
+* Gereja Blenduk
+
+dan dipadukan dengan logo utama **T1 (TegalsariOneApp)** sebagai identitas brand.
+
+---
+
+## Design Direction
+
+### Visual Style
+
+Gunakan style:
+
+* modern mobile app splash screen
+* premium UI/UX
+* soft glassmorphism
+* cinematic lighting
+* subtle motion graphics
+* futuristic smart city feel
+* clean composition
+* elegant gradients
+* semi-3D illustration
+* soft glow animation
+* smooth transitions
+
+Referensi feel:
+
+> fintech + smart city + modern government app + startup ecosystem
+
+Harus terlihat:
+**premium, profesional, keren, modern, tidak norak**
+
+---
+
+## Main Hero Composition
+
+### Centerpiece Logo
+
+Tampilkan **logo T1 (TegalsariOneApp)** sebagai fokus utama.
+
+Rules:
+
+* posisi center
+* ukuran dominan
+* glow soft neon biru-hijau
+* floating animation ringan
+* subtle parallax
+* shadow premium
+* clean scaling entrance animation
+
+Animation:
+
+* fade + zoom smooth
+* pulse glow lembut
+* floating movement sangat ringan
+
+---
+
+## Landmark Scene (Cover Background)
+
+Background wajib menggambarkan identitas Semarang/Tegalsari menggunakan:
+
+### 1. Sam Poo Kong
+
+* muncul sebagai silhouette premium / semi 3D
+* diberi pencahayaan ambient
+* sedikit glow
+* elegant motion particles
+
+### 2. Tugu Muda
+
+* menjadi visual focal landmark
+* cinematic lighting
+* subtle animated light sweep
+* terasa hero monument
+
+### 3. Gereja Blenduk
+
+* muncul harmonis dalam komposisi
+* tidak terlalu dominan
+* memberi identitas heritage Semarang
+
+### IMPORTANT
+
+Jangan terlihat seperti foto tempel.
+
+Harus dibuat seperti:
+**stylized premium illustration / semi realistic digital cityscape**
+
+Semua landmark menyatu dalam satu scene modern.
+
+---
+
+## Layout Composition
+
+### Top Area
+
+* clean space
+* subtle particles
+* elegant gradient sky
+* motion dots / floating geometry
+
+### Middle Area (Hero)
+
+* logo T1 besar
+* text:
+
+TegalsariOneApp
+
+sub tagline:
+
+"Satu Aplikasi, Banyak Kemudahan"
+
+atau
+
+"Semua Layanan Warga Dalam Satu Genggaman"
+
+Typography:
+
+* modern sans serif
+* premium
+* bold clean
+* spacing rapi
+
+---
+
+### Mid-Lower Area
+
+Tambahkan quick identity card modern (glassmorphism)
+
+isi value:
+
+* Mudah
+* Aman
+* Cepat
+* Terintegrasi
+
+pakai icon modern minimal
+
+dengan subtle hover animation
+
+---
+
+### Bottom Area
+
+Tambahkan city-wave animation modern:
+
+* glowing blue wave
+* curved dynamic line
+* smooth motion
+
+dengan siluet masyarakat digital / warga memakai smartphone secara subtle
+
+Loading animation:
+
+* premium progress bar
+* animated gradient fill
+* glow motion
+
+Text:
+
+Memuat TegalsariOneApp...
+
+---
+
+## Animation Requirements
+
+Gunakan animation modern:
+
+### Logo
+
+* fade in
+* zoom in smooth
+* floating
+* glow pulse
+
+### Landmark
+
+* parallax motion ringan
+* ambient light animation
+* slow cinematic movement
+
+### Particles
+
+* floating dots
+* soft blur
+* motion subtle
+
+### Progress Bar
+
+* animated gradient
+* smooth loading
+* easing modern
+
+### Transition
+
+Saat selesai loading:
+
+* fade transition
+* smooth scale out
+* navigate to dashboard
+
+---
+
+## Color Palette
+
+Primary:
+
+* deep blue (#0A4DDB)
+* cyan blue
+* emerald green
+
+Accent:
+
+* white glass
+* soft gold sunlight
+* subtle purple glow
+
+Mood:
+modern + premium + trustworthy + smart city
+
+---
+
+## Technical Requirements
+
+Responsive:
+
+* mobile first
+* Android friendly
+* safe area compatible
+
+Performance:
+
+* lightweight animation
+* avoid lag
+* GPU-friendly transforms
+* no heavy repaint
+
+Preferred stack:
+
+* React + Tailwind
+* Framer Motion
+* CSS animation
+* Lottie if needed
+
+---
+
+## Deliverables
+
+1. Modern splash screen component
+2. Animated entrance
+3. Premium loading state
+4. Stylized landmark cover scene:
+
+   * Sam Poo Kong
+   * Tugu Muda
+   * Gereja Blenduk
+5. T1 logo hero section
+6. Smooth transition to app
+
+Acceptance Criteria:
+
+* terlihat seperti aplikasi premium modern
+* identitas Semarang kuat
+* logo T1 dominan
+* animasi smooth dan kekinian
+* clean UI
+* tidak ramai / tidak norak
+* terasa seperti super app warga profesional
