@@ -70,7 +70,7 @@ app.use("/api/kv", (req: Request, res: Response, next: NextFunction) => {
   if (req.method === "PUT" || req.method === "DELETE") {
     return writeLimiter(req, res, next);
   }
-  next();
+  return next();
 });
 
 app.use(express.json({ limit: "12mb" }));

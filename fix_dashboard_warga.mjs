@@ -24,6 +24,12 @@ const oldPatch = `if (typeof window.loadDashboardWarga === 'function' && !window
 
 const newPatch = `// patch wrapper dihapus - sudah terintegrasi di loadDashboardWarga`;
 
+// Idempotency check: if already patched, skip
+if (html.includes(newEnding) && html.includes(newPatch)) {
+    console.log('BERHASIL: index.html sudah diupdate (sudah patched sebelumnya)!');
+    process.exit(0);
+}
+
 if (!html.includes(oldEnding)) {
     console.error('GAGAL: oldEnding tidak ditemukan!');
     process.exit(1);
