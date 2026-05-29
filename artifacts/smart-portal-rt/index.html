@@ -4220,7 +4220,7 @@ window.addEventListener('load', () => {
      is painted BEFORE any data-fetch or heavy JS runs.
 ═══════════════════════════════════════════════════════ -->
 <style>
-#t1-splash{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;overflow:hidden;background:linear-gradient(180deg,#030d2e 0%,#0a2a6e 28%,#0c4cc7 58%,#1a7bea 80%,#2d9bf0 100%);transition:opacity .55s ease,transform .55s ease}
+#t1-splash{position:fixed;inset:0;z-index:2147483647;display:flex;flex-direction:column;align-items:center;overflow:hidden;background:linear-gradient(180deg,#030d2e 0%,#0a2a6e 28%,#0c4cc7 58%,#1a7bea 80%,#2d9bf0 100%);transition:opacity .55s ease,transform .55s ease}
 #t1-splash.t1s-out{opacity:0;transform:scale(1.05);pointer-events:none}
 .t1s-ray{position:absolute;top:0;left:50%;width:3px;height:55%;background:linear-gradient(180deg,rgba(255,220,100,.22),transparent);transform-origin:top center;animation:t1sRay 4s ease-in-out infinite}
 .t1s-ray-1{transform:rotate(-35deg);animation-delay:0s}.t1s-ray-2{transform:rotate(0deg);opacity:.7;animation-delay:.9s}.t1s-ray-3{transform:rotate(35deg);animation-delay:1.8s}
@@ -4388,7 +4388,7 @@ window.addEventListener('load', () => {
   }, 120);
   /* Hard dismiss at 3.2s */
   setTimeout(_t1dismiss, 3200);
-  /* Also dismiss on load event (2.6s after load, min 3.2s total) */
+  /* Also dismiss on load event (800ms after load, min 3.2s total) */
   window.addEventListener('load', function(){ setTimeout(_t1dismiss, 800); });
 })();
 </script>
@@ -13298,7 +13298,7 @@ html[data-theme="dark"] body { background: #0b1220; }
    PREMIUM SPLASH — TegalsariOneApp
    ═══════════════════════════════════════════════════════════ */
 #t1-splash {
-  position: fixed; inset: 0; z-index: 99999;
+  position: fixed; inset: 0; z-index: 2147483647;
   display: flex; flex-direction: column; align-items: center;
   background: linear-gradient(180deg, #030d2e 0%, #0a2a6e 30%, #0c4cc7 60%, #1a7bea 85%, #2d9bf0 100%);
   overflow: hidden;
