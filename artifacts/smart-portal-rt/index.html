@@ -155,7 +155,7 @@
         /* 2. LAYOUT UTAMA & HEADER (DESKTOP)                      */
         /* ======================================================= */
         .app-view.active-grid { display: block !important; }
-        .tab-view.active-grid { display: flex !important; flex-direction: row !important; align-items: stretch; width: 100%; min-height: calc(100vh - 80px); }
+        .tab-view.active-grid { display: flex !important; flex-direction: row !important; align-items: stretch; width: 100%;  }
         .main-header { width: 100%; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; background: var(--bg-panel); padding: 15px 40px; border-bottom: 1px solid var(--border-light); box-shadow: 0 4px 15px rgba(0,0,0,0.03); z-index: 100; position: sticky; top: 0; }
         .user-info { display: flex; align-items: center; gap: 15px; }
         .avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark)); color: white; font-weight: bold; font-size: 1.3rem; }
@@ -165,7 +165,7 @@
         .btn-logout { background: #fee2e2 !important; color: #dc2626 !important; border: 1px solid #fca5a5 !important; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
 
         /* SIDEBAR DESKTOP */
-        .admin-nav-tabs, .nav-tabs { width: 260px !important; min-width: 260px !important; display: flex !important; flex-direction: column !important; background: var(--bg-panel); border-right: 1px solid var(--border-light); padding: 25px 20px; box-sizing: border-box; height: calc(100vh - 80px); position: sticky !important; top: 80px; overflow-y: auto; transition: all 0.4s ease; }
+        .admin-nav-tabs, .nav-tabs { width: 260px !important; min-width: 260px !important; display: flex !important; flex-direction: column !important; background: var(--bg-panel); border-right: 1px solid var(--border-light); padding: 25px 20px; box-sizing: border-box; height: auto; position: sticky !important; top: 60px; overflow-y: auto; transition: all 0.4s ease; }
         .admin-tab-btn, .nav-btn { display: flex; align-items: center; padding: 14px 20px; margin-bottom: 8px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; border-radius: 12px; cursor: pointer; transition: 0.3s; }
         .admin-tab-btn.active, .nav-btn.active { background: var(--primary-blue) !important; color: white !important; }
         .admin-tab-btn i, .nav-btn i { font-size: 1.4rem; margin-right: 15px; width: 30px; text-align: center; color: var(--primary-blue); }
@@ -1551,14 +1551,11 @@ html[data-theme="dark"] .gt-search-info mark { background: rgba(245,158,11,0.30)
 .ben-tab-content.active,
 .kop-tab-content.active {
   overflow-y: auto !important;
-  max-height: calc(100vh - 80px) !important;
+  max-height: auto !important;
 }
 
 /* Wrapper utama harus bisa scroll */
-#main-app, .app-view, .admin-view, .warga-view {
-  overflow-y: auto !important;
-  height: calc(100vh - 80px) !important;
-}
+
 
 /* Pastikan body tidak memblokir scroll */
 html, body {
@@ -3248,7 +3245,7 @@ html[data-theme="dark"] select option {
     background: #f0f2f5 !important;
     align-items: flex-start !important;
     gap: 0 !important;
-    min-height: calc(100vh - 80px);
+    
 }
 
 /* LEFT SIDEBAR */
@@ -3260,8 +3257,8 @@ html[data-theme="dark"] select option {
     padding: 12px 8px 20px 8px;
     box-sizing: border-box;
     position: sticky;
-    top: 80px;
-    height: calc(100vh - 80px);
+    top:0;
+    height:calc(100vh - 60px);
     overflow-y: auto;
     overflow-x: hidden;
     flex-shrink: 0;
@@ -3292,8 +3289,8 @@ html[data-theme="dark"] select option {
     padding: 12px 8px 20px 8px;
     box-sizing: border-box;
     position: sticky;
-    top: 80px;
-    height: calc(100vh - 80px);
+    top: 60px;
+    height: auto;
     overflow-y: auto;
     flex-shrink: 0;
     scrollbar-width: thin;
@@ -4171,71 +4168,77 @@ window.toggleSidebar = function() {
 </script>
 
 
-<style id="gt-layout-fix">
-/* ══════════════════════════════════════════════
-   ROOT LAYOUT FIX — hapus semua gap & konflik
-   ══════════════════════════════════════════════ */
 
-/* 1. Pastikan app-container TAMPIL */
-.app-container,
+<style id="gt-gap-fix">
+/* ══════════════════════════════════════════
+   GAP FIX FINAL - override semua height 80px
+   ══════════════════════════════════════════ */
+
+/* Reset height pada main-app dan views */
+#main-app,
 .app-view,
-#app,
-#main-app {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+.admin-view,
+.warga-view {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow-y: visible !important;
 }
 
-/* 2. Body & HTML tidak overflow tersembunyi */
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow-x: hidden;
-}
-
-/* 3. Header - sticky, tidak ada gap */
+/* Header sticky, tinggi 60px */
 .main-header {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  padding: 10px 16px !important;
   position: sticky !important;
   top: 0 !important;
   z-index: 1000 !important;
-  background: var(--bg-panel, #ffffff) !important;
-  border-bottom: 1px solid var(--border-light, #e2e8f0) !important;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  gap: 10px !important;
-  flex-wrap: nowrap !important;
+  height: auto !important;
   min-height: 60px !important;
   max-height: 70px !important;
   margin: 0 !important;
-  margin-top: 0 !important;
+  padding: 10px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  gap: 10px !important;
+  background: var(--bg-panel, #fff) !important;
+  border-bottom: 1px solid var(--border-light, #e2e8f0) !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
 }
 
-/* 4. Hapus gap setelah header */
-.main-header + *,
-.main-header ~ .tab-view,
-.main-header ~ #view-warga,
-.main-header ~ #view-admin,
-.main-header ~ #view-bendahara,
-.main-header ~ #view-koperasi {
+/* view-warga langsung di bawah header */
+#view-warga,
+#view-admin,
+#view-bendahara,
+#view-koperasi {
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
 
-/* 5. Tab views - langsung di bawah header */
-.tab-view,
-.app-view,
-[id^="view-"] {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
+/* warga-fb-layout: flex row, tidak ada offset 80px */
+.warga-fb-layout {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  min-height: calc(100vh - 60px) !important;
+  height: auto !important;
 }
 
-/* 6. Hamburger - selalu tampil di header */
+/* Sidebar kiri: sticky top sesuai header (60px) */
+.warga-fb-left {
+  position: sticky !important;
+  top: 60px !important;
+  height: calc(100vh - 60px) !important;
+  overflow-y: auto !important;
+}
+
+/* tab-view active tidak punya min-height besar */
+.tab-view.active-grid {
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+/* Hamburger - selalu tampil */
 #gt-sp-hamburger {
   position: static !important;
   display: flex !important;
@@ -4251,19 +4254,17 @@ html, body {
   font-size: 1.1rem !important;
   cursor: pointer !important;
   flex-shrink: 0 !important;
-  z-index: auto !important;
+  box-shadow: 0 2px 8px rgba(29,78,216,0.3) !important;
+}
+#gt-sp-hamburger:hover {
+  background: #1e40af !important;
 }
 
-/* 7. Sembunyikan toggle sidebar lama */
-.btn-toggle-sidebar,
-#gt-sidebar-toggle-btn {
-  display: none !important;
-}
-
-/* 8. Tombol Keluar - selalu tampil */
+/* Tombol Keluar */
 .btn-logout {
   display: inline-flex !important;
   align-items: center !important;
+  justify-content: center !important;
   gap: 6px !important;
   padding: 8px 14px !important;
   background: #fee2e2 !important;
@@ -4275,51 +4276,15 @@ html, body {
   cursor: pointer !important;
   flex-shrink: 0 !important;
   white-space: nowrap !important;
-  width: auto !important;
-  height: auto !important;
 }
+.btn-logout:hover { background: #fecaca !important; }
 
-.btn-logout span,
-.btn-logout span.hide-on-mobile {
-  display: inline !important;
-}
-
-/* 9. Sidebar drawer - tidak geser konten */
-#gt-sp-drawer {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  bottom: 0 !important;
-  z-index: 9999 !important;
-}
-
-/* 10. Main sidebar (desktop) */
-.sidebar,
-.app-sidebar,
-#app-sidebar,
-.admin-sidebar {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-/* 11. Content area - tidak ada gap */
-.content-area,
-.main-content,
-.page-content,
-.content-wrapper {
-  margin-top: 0 !important;
-  padding-top: 16px !important;
-}
-
-/* Mobile */
+.btn-logout span.hide-on-mobile { display: inline !important; }
 @media (max-width: 480px) {
-  .btn-logout span,
-  .btn-logout span.hide-on-mobile {
-    display: none !important;
-  }
-  .main-header {
-    padding: 8px 10px !important;
-  }
+  .btn-logout span.hide-on-mobile { display: none !important; }
+  .main-header { padding: 8px 10px !important; }
+  .warga-fb-left { display: none !important; }
+  .warga-fb-layout { flex-direction: column !important; }
 }
 </style>
 </head>
@@ -4526,7 +4491,7 @@ html, body {
 
 
 <div id="login-screen">
-    <div id="splash-view" onclick="bukaFormLogin()" style="cursor: pointer; text-align: center; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div id="splash-view" onclick="bukaFormLogin()" style="cursor: pointer; text-align: center; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
         <!-- 3D rotating T1 logo -->
         <div style="perspective:380px;width:118px;height:118px;margin-bottom:18px;">
           <div style="width:118px;height:118px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(0,210,255,.22),rgba(0,50,160,.18));border:2px solid rgba(100,210,255,.45);display:flex;align-items:center;justify-content:center;box-shadow:0 0 38px rgba(0,150,255,.45),0 0 70px rgba(0,90,200,.28),inset 0 0 24px rgba(255,255,255,.06);animation:t1HomeGlow 3s ease-in-out infinite;">
