@@ -162,7 +162,7 @@
         .user-info h3 { color: var(--text-dark) !important; margin: 0; font-size: 1.1rem; font-weight: 800; }
         .user-info p { color: var(--primary-blue) !important; margin: 0; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; }
         #realtime-clock { color: var(--text-muted); font-weight: 700; font-size: 0.95rem; }
-        .btn-logout { background: #fee2e2 !important; color: #dc2626 !important; border: 1px solid #fca5a5 !important; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        
 
         /* SIDEBAR DESKTOP */
         .admin-nav-tabs, .nav-tabs { width: 260px !important; min-width: 260px !important; display: flex !important; flex-direction: column !important; background: var(--bg-panel); border-right: 1px solid var(--border-light); padding: 25px 20px; box-sizing: border-box; height: auto; position: sticky !important; top: 60px; overflow-y: auto; transition: all 0.4s ease; }
@@ -759,17 +759,9 @@ html[data-theme="dark"] ::selection { background: rgba(96,165,250,0.35); color: 
 .btn-header-icon:hover { background: var(--gt-primary-50) !important; color: var(--gt-primary-700) !important; border-color: var(--gt-primary-200) !important; }
 html[data-theme="dark"] .btn-header-icon:hover { background: rgba(37,99,235,0.18) !important; color: #93c5fd !important; border-color: #1e3a8a !important; }
 
-.btn-logout {
-  background: var(--gt-surface-2) !important;
-  color: var(--gt-danger-500) !important;
-  border: 1px solid var(--gt-border) !important;
-  border-radius: var(--gt-radius-sm) !important;
-  padding: 8px 16px !important;
-  font-weight: 600 !important;
-  transition: all .15s ease;
-}
-.btn-logout:hover { background: var(--gt-danger-50) !important; border-color: #fecaca !important; }
-html[data-theme="dark"] .btn-logout:hover { background: rgba(239,68,68,0.15) !important; border-color: #7f1d1d !important; }
+
+
+
 
 /* User chip in header */
 .avatar {
@@ -1792,8 +1784,7 @@ textarea, select {
   .user-text-header p  { font-size: 0.7rem !important; }
   
   
-  .btn-logout span.hide-on-mobile, 
-  .main-header [onclick*="syncSemuaData"] { padding: 6px 8px !important; }
+  
   .main-header [onclick*="syncSemuaData"] #sync-text { display: none !important; }
 
   .card-header-premium { flex-direction: column; gap: 12px; align-items: flex-start; padding: 18px !important; }
@@ -4261,30 +4252,84 @@ window.toggleSidebar = function() {
 }
 
 /* Tombol Keluar */
-.btn-logout {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  padding: 8px 14px !important;
-  background: #fee2e2 !important;
-  color: #dc2626 !important;
-  border: 1px solid #fca5a5 !important;
-  border-radius: 10px !important;
-  font-weight: 700 !important;
-  font-size: 0.85rem !important;
-  cursor: pointer !important;
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-}
-.btn-logout:hover { background: #fecaca !important; }
 
-.btn-logout span.hide-on-mobile { display: inline !important; }
+
+
+
 @media (max-width: 480px) {
-  .btn-logout span.hide-on-mobile { display: none !important; }
+  
   .main-header { padding: 8px 10px !important; }
   .warga-fb-left { display: none !important; }
   .warga-fb-layout { flex-direction: column !important; }
+}
+</style>
+
+<style id="gt-sidebar-keluar-css">
+/* ══ Tombol Keluar - Sidebar Dinamis ══ */
+.sp-keluar-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 11px 14px;
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 2px 6px rgba(220,38,38,0.10);
+  box-sizing: border-box;
+  letter-spacing: 0.2px;
+}
+.sp-keluar-btn:hover {
+  background: linear-gradient(135deg, #fecaca, #fca5a5);
+  box-shadow: 0 4px 14px rgba(220,38,38,0.20);
+  transform: translateY(-1px);
+}
+.sp-keluar-btn:active {
+  transform: scale(0.97);
+}
+.sp-keluar-btn i {
+  font-size: 1rem;
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
+/* Warga FB Left - tombol keluar di bawah divider */
+.wfb-keluar-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 14px;
+  background: #fff0f0;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s, transform 0.15s;
+  box-sizing: border-box;
+}
+.wfb-keluar-btn:hover {
+  background: #fee2e2;
+  transform: translateY(-1px);
+}
+.wfb-keluar-btn:active {
+  transform: scale(0.97);
+}
+.wfb-keluar-btn i {
+  font-size: 0.95rem;
+  color: #dc2626;
+  flex-shrink: 0;
 }
 </style>
 </head>
@@ -4607,14 +4652,7 @@ window.toggleSidebar = function() {
                              display:flex;align-items:center;justify-content:center;
                              border-radius:50%;border:2px solid white;">1</span>
             </div>
-            <button class="btn-logout btn-header-icon"
-                    onclick="logout()" title="Keluar"
-                    style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;
-                           border-radius:10px;padding:6px 14px;font-weight:bold;cursor:pointer;
-                           display:flex;align-items:center;gap:6px;font-size:0.85rem;">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span class="hide-on-mobile">Keluar</span>
-            </button>
+            
         </div>
     </div>
 
@@ -4690,6 +4728,13 @@ window.toggleSidebar = function() {
                 © 2026 Smart Portal RT 005<br>
                 <span style="color:#cbd5e1;">Indo Duta Tech</span>
             </div>
+        
+            <!-- ══ TOMBOL KELUAR ══ -->
+            <div class="wfb-divider"></div>
+            <button class="wfb-keluar-btn" onclick="gtKeluar()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Keluar dari Portal</span>
+            </button>
         </aside>
 
         <!-- ══════════════════════════════════════════════
@@ -7385,12 +7430,7 @@ window.toggleSidebar = function() {
           // === 2. LOGIN & AUTENTIKASI ===
     window.toggleUnivPass = function() { let p = document.getElementById('univ-pass'), i = document.getElementById('univ-eye'); if(p.type === 'password') { p.type = 'text'; i.classList.replace('fa-eye-slash','fa-eye'); i.style.color = 'var(--primary-blue)'; } else { p.type = 'password'; i.classList.replace('fa-eye','fa-eye-slash'); i.style.color = '#94a3b8'; } };
     window.lupaPassword = function() { Swal.fire({ icon: 'info', title: 'Lupa Password?', text: 'Hubungi Sekretaris RT untuk mereset password.', confirmButtonColor: '#0ea5e9' }); };
-    window.logout = function() {
-        loggedInWarga = null;
-        document.body.classList.remove('warga-portal-aktif');
-        // Flush semua pending writes ke server SEBELUM reload
-        // agar data tidak hilang akibat debounce yang belum selesai
-        var doReload = function(){ location.reload(); };
+    ;
         if(typeof window.GT_FLUSH_NOW === 'function'){
             window.GT_FLUSH_NOW().then(doReload).catch(doReload);
             setTimeout(doReload, 2000); // fallback: reload dalam 2 detik jika flush gagal
@@ -14601,6 +14641,14 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
     <button class="sp-close" onclick="gtSpClose()"><i class="fa-solid fa-xmark"></i></button>
   </div>
   <div class="sp-list" id="gt-sp-list"></div>
+  
+  <!-- ══ TOMBOL KELUAR MOBILE ══ -->
+  <div style="padding:10px 10px 4px;">
+    <button class="sp-keluar-btn" onclick="gtKeluar()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      <span>Keluar dari Portal</span>
+    </button>
+  </div>
   <div class="sp-footer">SmartPortal RT &copy; 2025</div>
 </div>
 
@@ -14730,6 +14778,30 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
 })();
 </script>
 
+
+<script id="gt-logout-fn">
+/* ══ FUNGSI KELUAR TERPADU — SmartPortal RT ══ */
+window.gtKeluar = function() {
+  if (!confirm('Yakin ingin keluar dari portal?')) return;
+  // Reset state login
+  try { window.loggedInWarga = null; } catch(_) {}
+  try { document.body.classList.remove('warga-portal-aktif'); } catch(_) {}
+  try { window.__GT_PORTAL_ACTIVE__ = false; } catch(_) {}
+  // Hapus session lokal
+  try { localStorage.removeItem('gt_local_session'); } catch(_) {}
+  try { localStorage.removeItem('gt_local_lastView'); } catch(_) {}
+  // Flush pending data ke server lalu reload
+  var doReload = function() { location.reload(); };
+  if (typeof window.GT_FLUSH_NOW === 'function') {
+    window.GT_FLUSH_NOW().then(doReload).catch(doReload);
+    setTimeout(doReload, 2000);
+  } else {
+    doReload();
+  }
+};
+// Alias untuk backward compat jika ada yang masih panggil logout()
+window.logout = window.gtKeluar;
+</script>
 </body>
 </html>
 
