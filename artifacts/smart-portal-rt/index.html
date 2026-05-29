@@ -7430,14 +7430,7 @@ window.toggleSidebar = function() {
           // === 2. LOGIN & AUTENTIKASI ===
     window.toggleUnivPass = function() { let p = document.getElementById('univ-pass'), i = document.getElementById('univ-eye'); if(p.type === 'password') { p.type = 'text'; i.classList.replace('fa-eye-slash','fa-eye'); i.style.color = 'var(--primary-blue)'; } else { p.type = 'password'; i.classList.replace('fa-eye','fa-eye-slash'); i.style.color = '#94a3b8'; } };
     window.lupaPassword = function() { Swal.fire({ icon: 'info', title: 'Lupa Password?', text: 'Hubungi Sekretaris RT untuk mereset password.', confirmButtonColor: '#0ea5e9' }); };
-    ;
-        if(typeof window.GT_FLUSH_NOW === 'function'){
-            window.GT_FLUSH_NOW().then(doReload).catch(doReload);
-            setTimeout(doReload, 2000); // fallback: reload dalam 2 detik jika flush gagal
-        } else {
-            doReload();
-        }
-    };
+    
     window.loginSebagaiTamu = function() { loggedInWarga = { id: 'guest_'+Date.now(), nama: "Tamu / Pengunjung", isGuest: true }; window.BukaPortal('warga'); };
     
     window.prosesLoginUniversal = function(e) {
@@ -14642,9 +14635,10 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   </div>
   <div class="sp-list" id="gt-sp-list"></div>
   
+  
   <!-- ══ TOMBOL KELUAR MOBILE ══ -->
   <div style="padding:10px 10px 4px;">
-    <button class="sp-keluar-btn" onclick="gtKeluar()">
+    <button class="sp-keluar-btn" onclick="gtSpClose(); setTimeout(gtKeluar, 200);">
       <i class="fa-solid fa-right-from-bracket"></i>
       <span>Keluar dari Portal</span>
     </button>
