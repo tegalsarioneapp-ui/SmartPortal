@@ -4194,7 +4194,7 @@ window.toggleSidebar = function() {
   } else {
     document.body.classList.toggle("sidebar-collapsed");
     var isCollapsed = document.body.classList.contains("sidebar-collapsed");
-    try { localStorage.setItem("sidebar_state", isCollapsed ? "hidden" : "visible"); } catch(_) {}
+    try { localStorage.setItem("sidebar_state", isCollapsed ? "hidden" : "visible"); } catch(e) {}
     var btn = document.getElementById("gt-sidebar-toggle-btn");
     if (btn) {
       var ic = btn.querySelector("i");
