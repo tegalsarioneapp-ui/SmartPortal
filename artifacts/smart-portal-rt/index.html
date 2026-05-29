@@ -4217,61 +4217,66 @@ window.addEventListener('load', () => {
      is painted BEFORE any data-fetch or heavy JS runs.
 ═══════════════════════════════════════════════════════ -->
 <style>
-/* ═══ SPLASH SCREEN — gambar hero + loading bar animasi overlay ═══ */
+/* ═══ SPLASH SCREEN — autofit portrait & landscape, mobile & desktop ═══ */
 #t1-splash {
   position: fixed; inset: 0; z-index: 2147483647;
-  /* Gradient background sesuai warna tepi gambar */
-  background: linear-gradient(180deg, #1a7dd4 0%, #0c4cc7 40%, #062a8a 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity .6s ease, transform .6s ease;
+  background: #0b2878; /* fallback saat gambar belum load */
   overflow: hidden;
+  transition: opacity .6s ease, transform .6s ease;
 }
-#t1-splash.t1s-out { opacity: 0; transform: scale(1.04); pointer-events: none; }
+#t1-splash.t1s-out { opacity: 0; transform: scale(1.03); pointer-events: none; }
 
-/* Gambar hero — contain agar seluruh gambar terlihat di semua ukuran layar */
+/* ── Gambar hero: selalu cover penuh tanpa letterbox ── */
 #t1s-hero-img {
   position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
+  inset: 0;
+  width: 100%;
   height: 100%;
-  width: auto;
-  max-width: none;
-  object-fit: contain;
-  object-position: top center;
+  object-fit: cover;
+  /* Portrait: tunjukkan dari atas (logo T1 → landmarks → fitur)   */
+  /* Landscape: tunjukkan area tengah gambar (landmarks + fitur)   */
+  object-position: center 20%;
   display: block;
-  /* Di layar portrait/mobile gambar akan penuh lebar */
-}
-/* Di layar yang lebih lebar dari tinggi (landscape/desktop) — isi lebar */
-@media (orientation: landscape) {
-  #t1s-hero-img {
-    width: 100%;
-    height: auto;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-/* Overlay loading bar — posisi relatif ke gambar yang ditampilkan */
+/* Portrait: geser posisi ke atas agar logo T1 terlihat */
+@media (orientation: portrait) {
+  #t1s-hero-img { object-position: center top; }
+  /* Bar lebih lebar di portrait */
+  #t1s-bar-overlay { width: 72%; bottom: 22%; }
+}
+
+/* Landscape mobile: tengahkan secara vertikal */
+@media (orientation: landscape) and (max-height: 500px) {
+  #t1s-hero-img { object-position: center 35%; }
+  #t1s-bar-overlay { bottom: 8%; width: 60%; }
+  #t1s-bar-track   { height: 5px; }
+}
+
+/* Landscape desktop: sedikit ke atas agar landmarks terlihat */
+@media (orientation: landscape) and (min-height: 501px) {
+  #t1s-hero-img { object-position: center 28%; }
+  #t1s-bar-overlay { bottom: 16%; width: 55%; }
+}
+
+/* ── Overlay loading bar ── */
 #t1s-bar-overlay {
   position: absolute;
-  bottom: 23%;
+  bottom: 22%;
   left: 50%;
   transform: translateX(-50%);
-  width: 68%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
+  width: 72%;
+  pointer-events: none;
 }
 #t1s-bar-track {
   width: 100%;
   height: 6px;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.22);
   border-radius: 99px;
   overflow: hidden;
-  box-shadow: 0 0 14px rgba(30,107,255,0.45);
+  box-shadow: 0 0 16px rgba(30,120,255,0.5), 0 1px 0 rgba(255,255,255,0.15);
 }
 #t1s-fill {
   height: 100%;
