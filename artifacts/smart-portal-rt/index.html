@@ -4488,29 +4488,55 @@ window.toggleSidebar = function() {
                 
 <div class="app-container app-view" id="main-app" style="display:none;">
     <div class="main-header no-print">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <!-- Desktop sidebar toggle (hidden on mobile) -->
-            <button class="btn-toggle-sidebar" id="gt-sidebar-toggle-btn" onclick="if(typeof toggleSidebar==='function') toggleSidebar();" title="Menu Navigasi">
+        <!-- KIRI: Hamburger + User Info -->
+        <div style="display:flex; align-items:center; gap:12px;">
+            <!-- Satu tombol hamburger untuk semua ukuran layar -->
+            <button id="gt-sp-hamburger"
+                    onclick="if(window.innerWidth>768 && typeof toggleSidebar==='function'){toggleSidebar();}else if(typeof gtSpOpen==='function'){gtSpOpen();}"
+                    title="Menu Navigasi"
+                    style="background:#1d4ed8;color:#fff;border:none;border-radius:10px;
+                           width:40px;height:40px;font-size:1.1rem;cursor:pointer;
+                           display:flex;align-items:center;justify-content:center;
+                           box-shadow:0 2px 8px rgba(0,0,0,0.2);flex-shrink:0;">
                 <i class="fa-solid fa-bars"></i>
             </button>
-            <!-- Mobile hamburger (hidden on desktop) -->
-            <button id="gt-sp-hamburger" onclick="gtSpOpen()" title="Menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <div class="user-info">
-                <div class="avatar" id="user-avatar" style="width:45px; height:45px; font-size:1.1rem;">?</div>
+            <div class="user-info" style="display:flex;align-items:center;gap:10px;">
+                <div class="avatar" id="user-avatar"
+                     style="width:40px;height:40px;font-size:1rem;flex-shrink:0;">?</div>
                 <div class="user-text-header">
-                    <h3 id="user-name" style="font-size:1.05rem;">Nama User</h3>
-                    <p id="user-role" style="font-size:0.75rem;">Role</p>
+                    <h3 id="user-name" style="font-size:1rem;margin:0;line-height:1.2;">Nama User</h3>
+                    <p  id="user-role" style="font-size:0.72rem;margin:0;color:var(--text-muted);">Role</p>
                 </div>
             </div>
         </div>
-        
-        <div style="display:flex; align-items:center; gap:12px;">
-            <button class="btn-logout btn-header-icon" onclick="logout()" title="Keluar">
-                <i class="fa-solid fa-right-from-bracket" style="color:var(--danger) !important;"></i>
+
+        <!-- KANAN: Notif + Logout -->
+        <div style="display:flex;align-items:center;gap:10px;">
+            <div class="notif-bell"
+                 onclick="Swal.fire('Notifikasi','Tidak ada pembaruan data saat ini.','info')"
+                 style="position:relative;cursor:pointer;font-size:1.3rem;
+                        color:var(--text-muted);transition:0.3s;">
+                <i class="fa-solid fa-bell"></i>
+                <span class="notif-badge"
+                      style="position:absolute;top:-4px;right:-4px;background:var(--danger);
+                             color:white;font-size:0.6rem;font-weight:bold;width:18px;height:18px;
+                             display:flex;align-items:center;justify-content:center;
+                             border-radius:50%;border:2px solid white;">1</span>
+            </div>
+            <button class="btn-logout btn-header-icon"
+                    onclick="logout()" title="Keluar"
+                    style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;
+                           border-radius:10px;padding:6px 14px;font-weight:bold;cursor:pointer;
+                           display:flex;align-items:center;gap:6px;font-size:0.85rem;">
+                <i class="fa-solid fa-right-from-bracket"></i>
                 <span class="hide-on-mobile">Keluar</span>
             </button>
+        </div>
+    </div>
+    </div>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+            
             <div class="notif-bell" onclick="Swal.fire('Notifikasi', 'Tidak ada pembaruan data saat ini.', 'info')" style="position:relative; cursor:pointer; font-size:1.4rem; color:var(--text-muted); transition:0.3s; margin-right:5px;">
                 <i class="fa-solid fa-bell"></i>
                 <span class="notif-badge" style="position:absolute; top:-4px; right:-4px; background:var(--danger); color:white; font-size:0.6rem; font-weight:bold; width:18px; height:18px; display:flex; align-items:center; justify-content:center; border-radius:50%; border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.2);">1</span>
@@ -4525,9 +4551,7 @@ window.toggleSidebar = function() {
             <button class="btn-toggle-right-panel hide-on-mobile" id="btn-toggle-right-panel" onclick="toggleRightPanel()" title="Sembunyikan/Munculkan Panel Info Kanan">
                 <i class="fa-solid fa-table-columns"></i>
             </button>
-            <button class="btn-logout btn-header-icon" onclick="logout()" title="Keluar">
-                <i class="fa-solid fa-right-from-bracket" style="color:var(--danger) !important;"></i> <span class="hide-on-mobile">Keluar</span>
-            </button>
+            
         </div>
     </div>
 
