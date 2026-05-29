@@ -351,7 +351,7 @@
         
         @media (max-width: 768px) {
             html, body { overflow-x: hidden !important; width: 100% !important; margin-bottom: 75px; background: #f8fafc; }
-            .hide-on-mobile, .btn-toggle-sidebar { display: none !important; }
+            .hide-on-mobile, 
             
             .app-view.active-grid, .tab-view.active-grid { display: flex !important; flex-direction: column !important; width: 100%; overflow-x: hidden; }
             
@@ -462,14 +462,7 @@
         .user-info h3 { color: #ffffff !important; }
         .user-info p { color: var(--gold-luxury) !important; }
         .notif-bell { color: #ffffff !important; }
-.btn-toggle-sidebar { 
-    background: transparent !important; 
-    border: none !important;
-    color: #ffffff !important; /* Biarkan putih karena header kamu Navy Dark */
-    cursor: pointer;
-    font-size: 1.3rem;
-    transition: all 0.3s ease;
-}
+
 .btn-toggle-sidebar:hover {
     transform: scale(1.1);
     color: var(--gold-luxury) !important; /* Berubah jadi emas saat disentuh agar mewah */
@@ -1721,16 +1714,7 @@ textarea, select {
 #realtime-clock { color: var(--gt-text-3); font-size: 0.85rem; font-weight: 600; }
 #realtime-clock i { color: var(--gt-primary-600); margin-right: 4px; }
 
-.btn-toggle-sidebar {
-  background: var(--gt-surface-2);
-  border: 1px solid var(--gt-border);
-  color: var(--gt-text-2);
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  display: inline-flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: all .15s ease;
-}
+
 .btn-toggle-sidebar:hover { background: var(--gt-primary-50); color: var(--gt-primary-700); border-color: var(--gt-primary-200); }
 
 /* ===== 4. Sidebar -> mobile horizontal strip ===== */
@@ -1831,7 +1815,7 @@ textarea, select {
   .user-info .avatar { width: 38px !important; height: 38px !important; font-size: 0.95rem !important; }
   .user-text-header h3 { font-size: 0.95rem !important; }
   .user-text-header p  { font-size: 0.7rem !important; }
-  .btn-toggle-sidebar { display: none !important; }
+  
   .btn-logout, .gt-theme-toggle, .btn-header-icon { width: 38px; height: 38px; }
   .btn-logout span.hide-on-mobile, .btn-logout span { display: none !important; }
   .main-header [onclick*="syncSemuaData"] { padding: 6px 8px !important; }
@@ -2970,14 +2954,7 @@ html[data-theme="dark"] .swal2-popup.swal2-toast .swal2-title { color: #f1f5f9 !
 }
 
 /* === Haptic-style tap feedback for action buttons (semua portal) === */
-.btn-action, .btn-submit, .btn-ultra, .btn-logout, .btn-header-icon, .btn-toggle-sidebar {
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.18s ease,
-              filter 0.18s ease !important;
-  -webkit-tap-highlight-color: transparent;
-}
+.btn-action, .btn-submit, .btn-ultra, .btn-logout, .btn-header-icon, 
 .btn-action::after, .btn-submit::after, .btn-ultra::after,
 .btn-logout::after, .btn-header-icon::after, .btn-toggle-sidebar::after {
   content: "";
@@ -3009,7 +2986,7 @@ html[data-theme="dark"] .swal2-popup.swal2-toast .swal2-title { color: #f1f5f9 !
 }
 @media (prefers-reduced-motion: reduce) {
   .btn-action, .btn-submit, .btn-ultra, .btn-logout,
-  .btn-header-icon, .btn-toggle-sidebar { transition: none !important; }
+  .btn-header-icon, 
   .btn-action:active, .btn-submit:active, .btn-ultra:active,
   .btn-logout:active, .btn-header-icon:active,
   .btn-toggle-sidebar:active { transform: none !important; }
@@ -3980,10 +3957,7 @@ html[data-theme="dark"] .darurat-item h4.darurat-nama { color: #e2e8f0 !importan
 
 /* ── (5) SIDEBAR TOGGLE — tampil di desktop ── */
 @media (min-width: 769px) {
-  .btn-toggle-sidebar {
-    display: inline-flex !important; align-items: center !important;
-    gap: 6px !important; visibility: visible !important; opacity: 1 !important;
-  }
+  
 }
 
 /* ── (6) HERO DASHBOARD — foto & nama RT ── */
@@ -4495,9 +4469,7 @@ window.addEventListener('load', () => {
 <div class="app-container app-view" id="main-app">
     <div class="main-header no-print">
         <div style="display: flex; align-items: center; gap: 15px;">
-            <button class="btn-toggle-sidebar" onclick="toggleSidebar()" id="gt-sidebar-toggle-btn" title="Menu Navigasi">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+            
             <div class="user-info">
                 <div class="avatar" id="user-avatar" style="width:45px; height:45px; font-size:1.1rem;">?</div>
                 <div class="user-text-header">
@@ -8927,14 +8899,7 @@ window.cetakPDFSurat = function(id, isSalinan) {
     return window.downloadPdfFromHtml(htmlCetak, __title);
 };
     // === FUNGSI PENGGERAK HIDE & SEEK SIDEBAR ===
-    window.toggleSidebar = function() {
-        // Menambahkan/menghapus class 'sidebar-collapsed' pada body
-        document.body.classList.toggle('sidebar-collapsed');
-        
-        // Simpan preferensi user agar saat refresh tidak kembali ke awal
-        let isCollapsed = document.body.classList.contains('sidebar-collapsed');
-        localStorage.setItem('sidebar_state', isCollapsed ? 'hidden' : 'visible');
-    };
+    
 
     // === FUNGSI HIDE & SHOW PANEL KANAN (widget info warga) ===
     window.toggleRightPanel = function() {
@@ -11908,10 +11873,7 @@ window.dshTab = function(tab) {
 
   /* ── (5) Sidebar toggle fix ── */
   function fixSidebarToggle() {
-    window.toggleSidebar = function() {
-      document.body.classList.toggle('sidebar-collapsed');
-      var ic = document.body.classList.contains('sidebar-collapsed');
-      try{ localStorage.setItem('sidebar_state', ic ? 'hidden' : 'visible'); }catch(_){}
+    catch(_){}
     };
     try{
       if (localStorage.getItem('sidebar_state') === 'hidden') {
@@ -12200,10 +12162,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
 
 /* FIX 3 Sidebar toggle — make btn visible always on desktop */
 @media (min-width: 769px) {
-  .btn-toggle-sidebar {
-    display: inline-flex !important; align-items: center !important;
-    visibility: visible !important; opacity: 1 !important;
-  }
+  
 }
 
 /* FIX 4 News hero auto-slide overlay styles */
@@ -12303,13 +12262,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
     }
 
     // Fungsi utama toggle — mobile vs desktop
-    window.toggleSidebar = function() {
-      var isMobile = window.innerWidth <= 768;
-      if (isMobile) {
-        // Mobile: toggle bottom nav hide/show
-        var navs = document.querySelectorAll('.admin-nav-tabs, .nav-tabs');
-        var anyHidden = false;
-        navs.forEach(function(n){ if(n.classList.contains('gt-nav-hidden')) anyHidden = true; });
+    );
         navs.forEach(function(n){
           n.classList.toggle('gt-nav-hidden', !anyHidden);
           n.classList.toggle('hidden-footer', !anyHidden);
@@ -12645,21 +12598,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
    ============================================================ */
 
 /* Hamburger button: tampil di semua ukuran layar */
-.btn-toggle-sidebar {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(255,255,255,0.10);
-  color: inherit;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: background 0.2s;
-}
+
 .btn-toggle-sidebar:hover { background: rgba(255,255,255,0.20); }
 
 @media (max-width: 768px) {
