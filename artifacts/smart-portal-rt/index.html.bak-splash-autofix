@@ -4227,23 +4227,12 @@ window.addEventListener('load', () => {
 #t1-splash.t1s-out { opacity: 0; transform: scale(1.03); pointer-events: none; }
 
 /* ── Gambar hero: selalu cover penuh tanpa letterbox ── */
-#t1s-picture {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
 #t1s-hero-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center center;
-  display: block;
-  background: #0b2878;
+  object-fit: cover;
   /* Portrait: tunjukkan dari atas (logo T1 → landmarks → fitur)   */
   /* Landscape: tunjukkan area tengah gambar (landmarks + fitur)   */
   object-position: center 20%;
@@ -4301,84 +4290,8 @@ window.addEventListener('load', () => {
 @keyframes t1sShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 </style>
 
-
-<style id="t1-mobile-full-splash-fix">
-/* === FINAL SPLASH FIX: full visual background + no cropped main artwork === */
-#t1-splash {
-  overflow: hidden !important;
-  background: #0b2878 !important;
-}
-
-#t1-splash::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: -32px !important;
-  background-image: url("/splash-hero.png") !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-  filter: blur(24px) saturate(1.12) brightness(0.9) !important;
-  transform: scale(1.08) !important;
-  opacity: 0.72 !important;
-  z-index: 0 !important;
-}
-
-#t1s-picture {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  z-index: 1 !important;
-}
-
-#t1s-hero-img {
-  position: relative !important;
-  inset: auto !important;
-  width: auto !important;
-  height: auto !important;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
-  object-fit: contain !important;
-  object-position: center center !important;
-  display: block !important;
-  background: transparent !important;
-  z-index: 2 !important;
-}
-
-#t1s-bar-overlay {
-  z-index: 3 !important;
-}
-
-@media (orientation: landscape) {
-  #t1-splash::before {
-    background-image: url("/splash-scene.png") !important;
-  }
-}
-
-/* Mobile phone portrait: keep full artwork visible, fill background visually */
-@media (orientation: portrait) and (max-width: 768px) {
-  #t1-splash::before {
-    background-image: url("/splash-hero.png") !important;
-    opacity: 0.9 !important;
-    filter: blur(18px) saturate(1.18) brightness(0.88) !important;
-  }
-
-  #t1s-hero-img {
-    max-width: 100vw !important;
-    max-height: 100vh !important;
-    object-fit: contain !important;
-  }
-}
-</style>
-
 <div id="t1-splash">
-  <picture id="t1s-picture">
-  <source media="(orientation: landscape)" srcset="/splash-scene.png">
   <img id="t1s-hero-img" src="/splash-hero.png" alt="TegalsariOneApp Splash" draggable="false">
-</picture>
   <div id="t1s-bar-overlay">
     <div id="t1s-bar-track">
       <div id="t1s-fill"></div>
@@ -4588,10 +4501,7 @@ window.addEventListener('load', () => {
 
             <!-- AI Chat shortcut -->
             <button class="wfb-nav-item" onclick="window.openGtChat()">
-                <div class="wfb-nav-icon wfb-icon-indigo" style="overflow:hidden;padding:0;border-radius:50%;"><img src="/benny-avatar.png" style="width:100%;height:100%;object-fit:contain;
-  object-position: center center;
-  display: block;
-  background: #0b2878;object-position:center 10%;border-radius:50%;"></div>
+                <div class="wfb-nav-icon wfb-icon-indigo" style="overflow:hidden;padding:0;border-radius:50%;"><img src="/benny-avatar.png" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;border-radius:50%;"></div>
                 <span style="color:#6366f1;font-weight:600;">TANYA BENNY</span>
             </button>
 
@@ -14528,182 +14438,8 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   }
 })();
 </script>
-
-
-
-
-
-
-<style id="gt-smartportal-sidebar-style">
-#gt-sp-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;backdrop-filter:blur(2px)}
-#gt-sp-overlay.open{display:block}
-#gt-sp-drawer{position:fixed;top:0;left:0;bottom:0;width:280px;max-width:85vw;background:#111827;z-index:9999;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.3s cubic-bezier(.4,0,.2,1);box-shadow:4px 0 24px rgba(0,0,0,0.4);padding-bottom:env(safe-area-inset-bottom,0px)}
-#gt-sp-drawer.open{transform:translateX(0)}
-#gt-sp-drawer .sp-head{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 14px;border-bottom:1px solid #1f2937}
-#gt-sp-drawer .sp-title{color:#f9fafb;font-size:1rem;font-weight:700}
-#gt-sp-drawer .sp-role{font-size:0.72rem;color:#6b7280;margin-top:2px}
-#gt-sp-drawer .sp-close{background:#1f2937;border:none;color:#9ca3af;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
-#gt-sp-drawer .sp-close:hover{background:#374151;color:#f9fafb}
-#gt-sp-drawer .sp-list{flex:1;overflow-y:auto;padding:10px}
-#gt-sp-drawer .sp-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:#d1d5db;font-size:0.92rem;font-weight:500;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;transition:background 0.15s,color 0.15s;margin-bottom:2px}
-#gt-sp-drawer .sp-item:hover{background:#1f2937;color:#f9fafb}
-#gt-sp-drawer .sp-item.active{background:#1d4ed8;color:#fff}
-#gt-sp-drawer .sp-item i{width:20px;text-align:center;font-size:0.95rem;flex-shrink:0}
-#gt-sp-drawer .sp-section-label{font-size:0.68rem;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:8px 14px 4px}
-#gt-sp-drawer .sp-divider{height:1px;background:#1f2937;margin:8px 4px}
-#gt-sp-drawer .sp-footer{padding:12px 16px;border-top:1px solid #1f2937;font-size:0.75rem;color:#4b5563;text-align:center}
-#gt-sp-hamburger{display:none;position:fixed;top:12px;left:12px;z-index:9997;background:#1d4ed8;color:#fff;border:none;border-radius:10px;width:40px;height:40px;font-size:1.1rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
-#gt-sp-hamburger:hover{background:#1e40af}
-@media(max-width:768px){#gt-sp-hamburger{display:flex}}
-</style>
-
-<div id="gt-sp-overlay" onclick="gtSpClose()"></div>
-<div id="gt-sp-drawer">
-  <div class="sp-head">
-    <div>
-      <div class="sp-title" id="gt-sp-title">SmartPortal RT</div>
-      <div class="sp-role" id="gt-sp-role">Menu</div>
-    </div>
-    <button class="sp-close" onclick="gtSpClose()"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="sp-list" id="gt-sp-list"></div>
-  <div class="sp-footer">SmartPortal RT &copy; 2025</div>
-</div>
-<button id="gt-sp-hamburger" onclick="gtSpOpen()"><i class="fa-solid fa-bars"></i></button>
-
-<script id="gt-smartportal-sidebar-script">
-(function(){
-
-var WARGA_MENUS = [
-  {icon:"fa-gauge",         label:"Dashboard",        fn:"openWargaTab('warga-dashboard')"},
-  {icon:"fa-newspaper",     label:"Berita Portal",    fn:"openWargaTab('warga-berita-portal')"},
-  {icon:"fa-money-bill",    label:"Keuangan",         fn:"openWargaTab('warga-keuangan')"},
-  {icon:"fa-piggy-bank",    label:"Koperasi",         fn:"openWargaTab('warga-koperasi')"},
-  {icon:"fa-envelope",      label:"Surat",            fn:"openWargaTab('warga-surat')"},
-  {icon:"fa-flag",          label:"Aduan",            fn:"openWargaTab('warga-aduan')"},
-  {icon:"fa-sitemap",       label:"Struktur",         fn:"openWargaTab('warga-struktur')"},
-  {icon:"fa-triangle-exclamation", label:"Darurat",   fn:"openWargaTab('warga-darurat')"},
-  {icon:"fa-user",          label:"Profil",           fn:"openWargaTab('warga-profil')"},
-];
-
-var ADMIN_MENUS = [
-  {icon:"fa-users-rectangle",   label:"Data Keluarga (KK)",  fn:"openAdminTab('admin-datakk'); if(typeof loadTabelKKAdmin==='function') loadTabelKKAdmin();"},
-  {icon:"fa-truck-moving",      label:"Mutasi Warga",        fn:"openAdminTab('mutasi')"},
-  {icon:"fa-envelope",          label:"Surat & Acc",         fn:"openAdminTab('surat'); if(typeof loadSuratAdmin==='function') loadSuratAdmin();"},
-  {icon:"fa-inbox",             label:"Kotak Aduan",         fn:"openAdminTab('admin-aduan')"},
-  {icon:"fa-tower-broadcast",   label:"Publikasi Info",      fn:"openAdminTab('admin-publikasi')"},
-  {icon:"fa-sitemap",           label:"Susunan Pengurus",    fn:"openAdminTab('admin-struktur')"},
-  {icon:"fa-gear",              label:"Pengaturan Sistem",   fn:"openAdminTab('pengaturan')"},
-  {icon:"fa-hand-holding-heart",label:"Bantuan Sosial",      fn:"openAdminTab('bantuan-sosial')"},
-  {icon:"fa-truck-medical",     label:"Call Darurat",        fn:"openAdminTab('darurat')"},
-];
-
-var BEN_MENUS = [
-  {icon:"fa-cash-register",        label:"Input Data",          fn:"openBenTab('ben-input')"},
-  {icon:"fa-file-invoice-dollar",  label:"Laporan BA Kas",      fn:"openBenTab('ben-laporan')"},
-];
-
-var KOP_MENUS = [
-  {icon:"fa-coins",          label:"Buku Tabungan",     fn:"openKopTab('kop-simpanan')"},
-  {icon:"fa-handshake-angle",label:"Pinjaman Pintar",   fn:"openKopTab('kop-pinjaman')"},
-  {icon:"fa-chart-line",     label:"Tutup Buku (SHU)",  fn:"openKopTab('kop-laporan')"},
-];
-
-function gtSpOpen() {
-  var overlay = document.getElementById("gt-sp-overlay");
-  var drawer  = document.getElementById("gt-sp-drawer");
-  if (!overlay || !drawer) return;
-
-  // Tentukan role aktif
-  var isAdmin = (typeof loggedInAs !== "undefined" && loggedInAs === "admin");
-  var isBen   = (typeof loggedInAs !== "undefined" && loggedInAs === "bendahara");
-  var isKop   = (typeof loggedInAs !== "undefined" && loggedInAs === "koperasi");
-  var isWarga = !isAdmin && !isBen && !isKop;
-
-  // Set title
-  var titleEl = document.getElementById("gt-sp-title");
-  var roleEl  = document.getElementById("gt-sp-role");
-  if (isAdmin) {
-    titleEl.textContent = "Portal Admin";
-    roleEl.textContent  = "Administrator";
-  } else if (isBen) {
-    titleEl.textContent = "Portal Bendahara";
-    roleEl.textContent  = "Bendahara";
-  } else if (isKop) {
-    titleEl.textContent = "Portal Koperasi";
-    roleEl.textContent  = "Koperasi";
-  } else {
-    titleEl.textContent = "Portal Warga";
-    var nm = (window.loggedInWarga && window.loggedInWarga.nama) ? window.loggedInWarga.nama : "Warga";
-    roleEl.textContent  = nm;
-  }
-
-  // Pilih menu
-  var menus = isAdmin ? ADMIN_MENUS : isBen ? BEN_MENUS : isKop ? KOP_MENUS : WARGA_MENUS;
-
-  // Render menu
-  var list = document.getElementById("gt-sp-list");
-  list.innerHTML = "";
-  menus.forEach(function(m) {
-    var btn = document.createElement("button");
-    btn.className = "sp-item";
-    btn.innerHTML = "<i class=\"fa-solid " + m.icon + "\"></i><span>" + m.label + "</span>";
-    btn.addEventListener("click", function() {
-      // Hapus active dari semua item
-      list.querySelectorAll(".sp-item").forEach(function(el){ el.classList.remove("active"); });
-      btn.classList.add("active");
-      // Jalankan fungsi navigasi
-      try { eval(m.fn); } catch(e) { console.warn("gtSidebar nav error:", e); }
-      // Tutup sidebar setelah navigasi
-      setTimeout(gtSpClose, 150);
-    });
-    list.appendChild(btn);
-  });
-
-  overlay.classList.add("open");
-  drawer.classList.add("open");
-  document.body.style.overflow = "hidden";
-}
-
-function gtSpClose() {
-  var overlay = document.getElementById("gt-sp-overlay");
-  var drawer  = document.getElementById("gt-sp-drawer");
-  if (overlay) overlay.classList.remove("open");
-  if (drawer)  drawer.classList.remove("open");
-  document.body.style.overflow = "";
-}
-
-window.gtSpOpen  = gtSpOpen;
-window.gtSpClose = gtSpClose;
-
-// Tutup dengan tombol ESC
-document.addEventListener("keydown", function(e){
-  if (e.key === "Escape") gtSpClose();
-});
-
-// Swipe kiri untuk tutup
-(function(){
-  var startX = 0;
-  var drawer = document.getElementById("gt-sp-drawer");
-  if (!drawer) return;
-  drawer.addEventListener("touchstart", function(e){ startX = e.touches[0].clientX; }, {passive:true});
-  drawer.addEventListener("touchend",   function(e){
-    if (e.changedTouches[0].clientX - startX < -60) gtSpClose();
-  }, {passive:true});
-})();
-
-console.log("[gtSidebar] Mobile sidebar final loaded OK");
-})();
-</script>
-
 </body>
 </html>
-
-
-
-
-
-
 
 
 

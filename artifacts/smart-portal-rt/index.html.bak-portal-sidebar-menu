@@ -14529,178 +14529,430 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 })();
 </script>
 
+<style id="gt-mobile-chatgpt-sidebar-style">
+/* === ChatGPT-like Mobile Sidebar Drawer === */
+#gt-mobile-menu-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, .48) !important;
+  z-index: 2147482500 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity .25s ease !important;
+}
 
+#gt-mobile-menu-overlay.open {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
 
+#gt-mobile-drawer {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: min(84vw, 330px) !important;
+  height: 100dvh !important;
+  background: #050505 !important;
+  color: #ffffff !important;
+  z-index: 2147482600 !important;
+  transform: translateX(-105%) !important;
+  transition: transform .32s cubic-bezier(.22, 1, .36, 1) !important;
+  box-shadow: 20px 0 60px rgba(0,0,0,.45) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
 
+#gt-mobile-drawer.open {
+  transform: translateX(0) !important;
+}
 
+.gt-mobile-drawer-head {
+  padding: calc(22px + env(safe-area-inset-top, 0px)) 20px 16px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border-bottom: 1px solid rgba(255,255,255,.08) !important;
+}
 
-<style id="gt-smartportal-sidebar-style">
-#gt-sp-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;backdrop-filter:blur(2px)}
-#gt-sp-overlay.open{display:block}
-#gt-sp-drawer{position:fixed;top:0;left:0;bottom:0;width:280px;max-width:85vw;background:#111827;z-index:9999;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.3s cubic-bezier(.4,0,.2,1);box-shadow:4px 0 24px rgba(0,0,0,0.4);padding-bottom:env(safe-area-inset-bottom,0px)}
-#gt-sp-drawer.open{transform:translateX(0)}
-#gt-sp-drawer .sp-head{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 14px;border-bottom:1px solid #1f2937}
-#gt-sp-drawer .sp-title{color:#f9fafb;font-size:1rem;font-weight:700}
-#gt-sp-drawer .sp-role{font-size:0.72rem;color:#6b7280;margin-top:2px}
-#gt-sp-drawer .sp-close{background:#1f2937;border:none;color:#9ca3af;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
-#gt-sp-drawer .sp-close:hover{background:#374151;color:#f9fafb}
-#gt-sp-drawer .sp-list{flex:1;overflow-y:auto;padding:10px}
-#gt-sp-drawer .sp-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:#d1d5db;font-size:0.92rem;font-weight:500;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;transition:background 0.15s,color 0.15s;margin-bottom:2px}
-#gt-sp-drawer .sp-item:hover{background:#1f2937;color:#f9fafb}
-#gt-sp-drawer .sp-item.active{background:#1d4ed8;color:#fff}
-#gt-sp-drawer .sp-item i{width:20px;text-align:center;font-size:0.95rem;flex-shrink:0}
-#gt-sp-drawer .sp-section-label{font-size:0.68rem;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:8px 14px 4px}
-#gt-sp-drawer .sp-divider{height:1px;background:#1f2937;margin:8px 4px}
-#gt-sp-drawer .sp-footer{padding:12px 16px;border-top:1px solid #1f2937;font-size:0.75rem;color:#4b5563;text-align:center}
-#gt-sp-hamburger{display:none;position:fixed;top:12px;left:12px;z-index:9997;background:#1d4ed8;color:#fff;border:none;border-radius:10px;width:40px;height:40px;font-size:1.1rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
-#gt-sp-hamburger:hover{background:#1e40af}
-@media(max-width:768px){#gt-sp-hamburger{display:flex}}
+.gt-mobile-drawer-brand {
+  font-size: 1.18rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -.02em !important;
+  color: #ffffff !important;
+}
+
+.gt-mobile-drawer-close {
+  width: 36px !important;
+  height: 36px !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 1rem !important;
+}
+
+.gt-mobile-drawer-list {
+  flex: 1 !important;
+  padding: 14px 10px 16px 10px !important;
+  overflow-y: auto !important;
+}
+
+.gt-mobile-drawer-section-title {
+  padding: 18px 14px 8px 14px !important;
+  color: #cbd5e1 !important;
+  font-size: .78rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .04em !important;
+}
+
+.gt-mobile-drawer-item {
+  width: 100% !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #f8fafc !important;
+  border-radius: 14px !important;
+  padding: 12px 14px !important;
+  margin: 2px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  text-align: left !important;
+  font-size: .98rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: background .18s ease, transform .18s ease !important;
+}
+
+.gt-mobile-drawer-item:hover,
+.gt-mobile-drawer-item:active {
+  background: #2f2f2f !important;
+}
+
+.gt-mobile-drawer-item.gt-active {
+  background: #343434 !important;
+}
+
+.gt-mobile-drawer-item i {
+  width: 24px !important;
+  min-width: 24px !important;
+  text-align: center !important;
+  font-size: 1.05rem !important;
+  color: #ffffff !important;
+}
+
+.gt-mobile-drawer-item span {
+  flex: 1 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.gt-mobile-drawer-footer {
+  padding: 12px 12px calc(14px + env(safe-area-inset-bottom, 0px)) 12px !important;
+  border-top: 1px solid rgba(255,255,255,.08) !important;
+}
+
+.gt-mobile-drawer-user {
+  border-radius: 16px !important;
+  background: #111111 !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.gt-mobile-drawer-avatar {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #2563eb, #22c55e) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: white !important;
+  font-weight: 900 !important;
+}
+
+.gt-mobile-drawer-user-main {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: .9rem !important;
+}
+
+.gt-mobile-drawer-user-sub {
+  color: #94a3b8 !important;
+  font-size: .76rem !important;
+  margin-top: 2px !important;
+}
+
+.gt-mobile-drawer-empty {
+  color: #94a3b8 !important;
+  padding: 18px 14px !important;
+  font-size: .9rem !important;
+  line-height: 1.45 !important;
+}
+
+body.gt-mobile-drawer-open {
+  overflow: hidden !important;
+}
+
+@media (min-width: 769px) {
+  #gt-mobile-menu-overlay,
+  #gt-mobile-drawer {
+    display: none !important;
+  }
+}
 </style>
 
-<div id="gt-sp-overlay" onclick="gtSpClose()"></div>
-<div id="gt-sp-drawer">
-  <div class="sp-head">
-    <div>
-      <div class="sp-title" id="gt-sp-title">SmartPortal RT</div>
-      <div class="sp-role" id="gt-sp-role">Menu</div>
-    </div>
-    <button class="sp-close" onclick="gtSpClose()"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="sp-list" id="gt-sp-list"></div>
-  <div class="sp-footer">SmartPortal RT &copy; 2025</div>
-</div>
-<button id="gt-sp-hamburger" onclick="gtSpOpen()"><i class="fa-solid fa-bars"></i></button>
+<script id="gt-mobile-chatgpt-sidebar-script">
+(function () {
+  if (window.__gtChatGPTMobileSidebarLoaded) return;
+  window.__gtChatGPTMobileSidebarLoaded = true;
 
-<script id="gt-smartportal-sidebar-script">
-(function(){
+  var mq = window.matchMedia("(max-width: 768px)");
 
-var WARGA_MENUS = [
-  {icon:"fa-gauge",         label:"Dashboard",        fn:"openWargaTab('warga-dashboard')"},
-  {icon:"fa-newspaper",     label:"Berita Portal",    fn:"openWargaTab('warga-berita-portal')"},
-  {icon:"fa-money-bill",    label:"Keuangan",         fn:"openWargaTab('warga-keuangan')"},
-  {icon:"fa-piggy-bank",    label:"Koperasi",         fn:"openWargaTab('warga-koperasi')"},
-  {icon:"fa-envelope",      label:"Surat",            fn:"openWargaTab('warga-surat')"},
-  {icon:"fa-flag",          label:"Aduan",            fn:"openWargaTab('warga-aduan')"},
-  {icon:"fa-sitemap",       label:"Struktur",         fn:"openWargaTab('warga-struktur')"},
-  {icon:"fa-triangle-exclamation", label:"Darurat",   fn:"openWargaTab('warga-darurat')"},
-  {icon:"fa-user",          label:"Profil",           fn:"openWargaTab('warga-profil')"},
-];
-
-var ADMIN_MENUS = [
-  {icon:"fa-users-rectangle",   label:"Data Keluarga (KK)",  fn:"openAdminTab('admin-datakk'); if(typeof loadTabelKKAdmin==='function') loadTabelKKAdmin();"},
-  {icon:"fa-truck-moving",      label:"Mutasi Warga",        fn:"openAdminTab('mutasi')"},
-  {icon:"fa-envelope",          label:"Surat & Acc",         fn:"openAdminTab('surat'); if(typeof loadSuratAdmin==='function') loadSuratAdmin();"},
-  {icon:"fa-inbox",             label:"Kotak Aduan",         fn:"openAdminTab('admin-aduan')"},
-  {icon:"fa-tower-broadcast",   label:"Publikasi Info",      fn:"openAdminTab('admin-publikasi')"},
-  {icon:"fa-sitemap",           label:"Susunan Pengurus",    fn:"openAdminTab('admin-struktur')"},
-  {icon:"fa-gear",              label:"Pengaturan Sistem",   fn:"openAdminTab('pengaturan')"},
-  {icon:"fa-hand-holding-heart",label:"Bantuan Sosial",      fn:"openAdminTab('bantuan-sosial')"},
-  {icon:"fa-truck-medical",     label:"Call Darurat",        fn:"openAdminTab('darurat')"},
-];
-
-var BEN_MENUS = [
-  {icon:"fa-cash-register",        label:"Input Data",          fn:"openBenTab('ben-input')"},
-  {icon:"fa-file-invoice-dollar",  label:"Laporan BA Kas",      fn:"openBenTab('ben-laporan')"},
-];
-
-var KOP_MENUS = [
-  {icon:"fa-coins",          label:"Buku Tabungan",     fn:"openKopTab('kop-simpanan')"},
-  {icon:"fa-handshake-angle",label:"Pinjaman Pintar",   fn:"openKopTab('kop-pinjaman')"},
-  {icon:"fa-chart-line",     label:"Tutup Buku (SHU)",  fn:"openKopTab('kop-laporan')"},
-];
-
-function gtSpOpen() {
-  var overlay = document.getElementById("gt-sp-overlay");
-  var drawer  = document.getElementById("gt-sp-drawer");
-  if (!overlay || !drawer) return;
-
-  // Tentukan role aktif
-  var isAdmin = (typeof loggedInAs !== "undefined" && loggedInAs === "admin");
-  var isBen   = (typeof loggedInAs !== "undefined" && loggedInAs === "bendahara");
-  var isKop   = (typeof loggedInAs !== "undefined" && loggedInAs === "koperasi");
-  var isWarga = !isAdmin && !isBen && !isKop;
-
-  // Set title
-  var titleEl = document.getElementById("gt-sp-title");
-  var roleEl  = document.getElementById("gt-sp-role");
-  if (isAdmin) {
-    titleEl.textContent = "Portal Admin";
-    roleEl.textContent  = "Administrator";
-  } else if (isBen) {
-    titleEl.textContent = "Portal Bendahara";
-    roleEl.textContent  = "Bendahara";
-  } else if (isKop) {
-    titleEl.textContent = "Portal Koperasi";
-    roleEl.textContent  = "Koperasi";
-  } else {
-    titleEl.textContent = "Portal Warga";
-    var nm = (window.loggedInWarga && window.loggedInWarga.nama) ? window.loggedInWarga.nama : "Warga";
-    roleEl.textContent  = nm;
+  function isMobile() {
+    return mq.matches;
   }
 
-  // Pilih menu
-  var menus = isAdmin ? ADMIN_MENUS : isBen ? BEN_MENUS : isKop ? KOP_MENUS : WARGA_MENUS;
+  function cleanLabel(text) {
+    return String(text || "")
+      .replace(/\s+/g, " ")
+      .replace(/^\s+|\s+$/g, "");
+  }
 
-  // Render menu
-  var list = document.getElementById("gt-sp-list");
-  list.innerHTML = "";
-  menus.forEach(function(m) {
-    var btn = document.createElement("button");
-    btn.className = "sp-item";
-    btn.innerHTML = "<i class=\"fa-solid " + m.icon + "\"></i><span>" + m.label + "</span>";
-    btn.addEventListener("click", function() {
-      // Hapus active dari semua item
-      list.querySelectorAll(".sp-item").forEach(function(el){ el.classList.remove("active"); });
-      btn.classList.add("active");
-      // Jalankan fungsi navigasi
-      try { eval(m.fn); } catch(e) { console.warn("gtSidebar nav error:", e); }
-      // Tutup sidebar setelah navigasi
-      setTimeout(gtSpClose, 150);
+  function ensureDrawer() {
+    if (document.getElementById("gt-mobile-drawer")) return;
+
+    var overlay = document.createElement("div");
+    overlay.id = "gt-mobile-menu-overlay";
+
+    var drawer = document.createElement("aside");
+    drawer.id = "gt-mobile-drawer";
+    drawer.setAttribute("aria-label", "Menu navigasi SmartPortal");
+
+    drawer.innerHTML =
+      '<div class="gt-mobile-drawer-head">' +
+        '<div class="gt-mobile-drawer-brand">SmartPortal</div>' +
+        '<button type="button" class="gt-mobile-drawer-close" aria-label="Tutup menu"><i class="fa-solid fa-xmark"></i></button>' +
+      '</div>' +
+      '<div class="gt-mobile-drawer-list">' +
+        '<div class="gt-mobile-drawer-section-title">Menu</div>' +
+      '</div>' +
+      '<div class="gt-mobile-drawer-footer">' +
+        '<div class="gt-mobile-drawer-user">' +
+          '<div class="gt-mobile-drawer-avatar">T1</div>' +
+          '<div>' +
+            '<div class="gt-mobile-drawer-user-main">Tegalsari OneApp</div>' +
+            '<div class="gt-mobile-drawer-user-sub">RT 005 Tegalsari</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(drawer);
+
+    overlay.addEventListener("click", closeDrawer);
+    drawer.querySelector(".gt-mobile-drawer-close").addEventListener("click", closeDrawer);
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeDrawer();
     });
-    list.appendChild(btn);
+  }
+
+  function getNavButtons() {
+    var selectors = [
+      ".admin-nav-tabs button",
+      ".nav-tabs button",
+      ".wfb-nav-item",
+      ".bottom-nav button",
+      ".mobile-nav button",
+      "[data-tab]"
+    ];
+
+    var result = [];
+    var seen = new Set();
+
+    selectors.forEach(function (selector) {
+      document.querySelectorAll(selector).forEach(function (el) {
+        if (el.closest("#gt-mobile-drawer")) return;
+        if (el.closest("#gt-mobile-menu-overlay")) return;
+
+        var label = cleanLabel(el.innerText || el.textContent || el.getAttribute("aria-label") || el.getAttribute("title"));
+        if (!label || label.length > 48) return;
+
+        var key = label.toLowerCase();
+        if (seen.has(key)) return;
+        seen.add(key);
+
+        result.push(el);
+      });
+    });
+
+    return result;
+  }
+
+  function rebuildDrawer() {
+    ensureDrawer();
+
+    var list = document.querySelector("#gt-mobile-drawer .gt-mobile-drawer-list");
+    if (!list) return;
+
+    list.innerHTML = '<div class="gt-mobile-drawer-section-title">Menu</div>';
+
+    var buttons = getNavButtons();
+
+    buttons.forEach(function (original) {
+      var label = cleanLabel(original.innerText || original.textContent || original.getAttribute("aria-label") || "Menu");
+      var icon = original.querySelector("i");
+      var iconHtml = icon ? icon.outerHTML : '<i class="fa-solid fa-circle-dot"></i>';
+
+      var item = document.createElement("button");
+      item.type = "button";
+      item.className = "gt-mobile-drawer-item";
+      item.innerHTML = iconHtml + "<span>" + label + "</span>";
+
+      if (
+        original.classList.contains("active") ||
+        original.getAttribute("aria-selected") === "true"
+      ) {
+        item.classList.add("gt-active");
+      }
+
+      item.addEventListener("click", function () {
+        closeDrawer();
+        setTimeout(function () {
+          original.click();
+        }, 90);
+      });
+
+      list.appendChild(item);
+    });
+
+    if (!buttons.length) {
+      list.innerHTML += '<div class="gt-mobile-drawer-empty">Menu belum terdeteksi. Navigasi akan muncul setelah login atau setelah halaman selesai dimuat.</div>';
+    }
+  }
+
+  function openDrawer(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    if (!isMobile()) return;
+
+    rebuildDrawer();
+
+    var overlay = document.getElementById("gt-mobile-menu-overlay");
+    var drawer = document.getElementById("gt-mobile-drawer");
+
+    if (!overlay || !drawer) return;
+
+    overlay.classList.add("open");
+    drawer.classList.add("open");
+    document.body.classList.add("gt-mobile-drawer-open");
+  }
+
+  function closeDrawer() {
+    var overlay = document.getElementById("gt-mobile-menu-overlay");
+    var drawer = document.getElementById("gt-mobile-drawer");
+
+    if (overlay) overlay.classList.remove("open");
+    if (drawer) drawer.classList.remove("open");
+    document.body.classList.remove("gt-mobile-drawer-open");
+  }
+
+  function toggleDrawer(event) {
+    var drawer = document.getElementById("gt-mobile-drawer");
+    if (drawer && drawer.classList.contains("open")) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      closeDrawer();
+      return;
+    }
+
+    openDrawer(event);
+  }
+
+  function isHamburgerLike(el) {
+    if (!el) return false;
+
+    var text = cleanLabel(el.innerText || el.textContent);
+    var aria = String(el.getAttribute("aria-label") || el.getAttribute("title") || "").toLowerCase();
+    var cls = String(el.className || "").toLowerCase();
+
+    return (
+      cls.indexOf("fa-bars") !== -1 ||
+      cls.indexOf("hamburger") !== -1 ||
+      cls.indexOf("menu-toggle") !== -1 ||
+      cls.indexOf("sidebar-toggle") !== -1 ||
+      aria.indexOf("menu") !== -1 ||
+      text === "☰" ||
+      text === "≡" ||
+      text === "☷"
+    );
+  }
+
+  function bindHamburger() {
+    var candidates = Array.from(document.querySelectorAll(
+      "button, a, [role='button'], i, svg, .fa-bars, [class*='hamburger'], [class*='menu-toggle'], [class*='sidebar-toggle'], [aria-label*='menu' i], [title*='menu' i]"
+    ));
+
+    candidates.forEach(function (el) {
+      if (!isHamburgerLike(el)) return;
+
+      var target = el.closest("button, a, [role='button']") || el;
+      if (target.dataset.gtChatgptSidebarBound === "1") return;
+
+      target.dataset.gtChatgptSidebarBound = "1";
+      target.addEventListener("click", function (event) {
+        if (isMobile()) toggleDrawer(event);
+      }, true);
+    });
+  }
+
+  window.openMobileSidebar = openDrawer;
+  window.closeMobileSidebar = closeDrawer;
+  window.toggleMobileSidebar = toggleDrawer;
+
+  function boot() {
+    ensureDrawer();
+    bindHamburger();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+
+  window.addEventListener("resize", function () {
+    if (!isMobile()) closeDrawer();
   });
 
-  overlay.classList.add("open");
-  drawer.classList.add("open");
-  document.body.style.overflow = "hidden";
-}
+  var observer = new MutationObserver(function () {
+    bindHamburger();
+  });
 
-function gtSpClose() {
-  var overlay = document.getElementById("gt-sp-overlay");
-  var drawer  = document.getElementById("gt-sp-drawer");
-  if (overlay) overlay.classList.remove("open");
-  if (drawer)  drawer.classList.remove("open");
-  document.body.style.overflow = "";
-}
-
-window.gtSpOpen  = gtSpOpen;
-window.gtSpClose = gtSpClose;
-
-// Tutup dengan tombol ESC
-document.addEventListener("keydown", function(e){
-  if (e.key === "Escape") gtSpClose();
-});
-
-// Swipe kiri untuk tutup
-(function(){
-  var startX = 0;
-  var drawer = document.getElementById("gt-sp-drawer");
-  if (!drawer) return;
-  drawer.addEventListener("touchstart", function(e){ startX = e.touches[0].clientX; }, {passive:true});
-  drawer.addEventListener("touchend",   function(e){
-    if (e.changedTouches[0].clientX - startX < -60) gtSpClose();
-  }, {passive:true});
-})();
-
-console.log("[gtSidebar] Mobile sidebar final loaded OK");
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
 })();
 </script>
 
 </body>
 </html>
-
-
-
 
 
 
