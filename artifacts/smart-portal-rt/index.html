@@ -4469,7 +4469,14 @@ window.addEventListener('load', () => {
 <div class="app-container app-view" id="main-app">
     <div class="main-header no-print">
         <div style="display: flex; align-items: center; gap: 15px;">
-            
+            <!-- Desktop sidebar toggle (hidden on mobile) -->
+            <button class="btn-toggle-sidebar" id="gt-sidebar-toggle-btn" onclick="toggleSidebar()" title="Menu Navigasi">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <!-- Mobile hamburger (hidden on desktop) -->
+            <button id="gt-sp-hamburger" onclick="gtSpOpen()" title="Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <div class="user-info">
                 <div class="avatar" id="user-avatar" style="width:45px; height:45px; font-size:1.1rem;">?</div>
                 <div class="user-text-header">
@@ -14494,6 +14501,95 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 #gt-sp-hamburger{display:none;position:fixed;top:12px;left:12px;z-index:9997;background:#1d4ed8;color:#fff;border:none;border-radius:10px;width:40px;height:40px;font-size:1.1rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
 #gt-sp-hamburger:hover{background:#1e40af}
 @media(max-width:768px){#gt-sp-hamburger{display:flex}}
+
+<script id="gt-toggle-sidebar-restore">
+window.toggleSidebar = function() {
+  var isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    if (typeof gtSpOpen === "function") gtSpOpen();
+  } else {
+    document.body.classList.toggle("sidebar-collapsed");
+    var isCollapsed = document.body.classList.contains("sidebar-collapsed");
+    localStorage.setItem("sidebar_state", isCollapsed ? "hidden" : "visible");
+    var btn = document.getElementById("gt-sidebar-toggle-btn");
+    if (btn) {
+      var ic = btn.querySelector("i");
+      if (ic) ic.className = isCollapsed ? "fa-solid fa-bars" : "fa-solid fa-xmark";
+    }
+  }
+};
+</script>
+<style id="gt-toggle-sidebar-style">
+/* ── Reset posisi hamburger (tidak fixed lagi) ── */
+#gt-sp-hamburger {
+  position: static !important;
+  display: none;
+  background: transparent !important;
+  border: none !important;
+  color: var(--text-dark, #1e293b) !important;
+  font-size: 1.2rem !important;
+  cursor: pointer;
+  padding: 6px 10px !important;
+  border-radius: 8px !important;
+  width: auto !important;
+  height: auto !important;
+  box-shadow: none !important;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+#gt-sp-hamburger:hover {
+  background: rgba(0,0,0,0.07) !important;
+}
+
+/* Mobile: tampilkan hamburger, sembunyikan desktop toggle */
+@media (max-width: 768px) {
+  #gt-sp-hamburger  { display: flex !important; }
+  #gt-sidebar-toggle-btn { display: none !important; }
+}
+
+/* Desktop: tampilkan desktop toggle, sembunyikan hamburger mobile */
+@media (min-width: 769px) {
+  #gt-sp-hamburger  { display: none !important; }
+  #gt-sidebar-toggle-btn { display: flex !important; }
+}
+/* ── EXISTING CSS BELOW ──
+/* ── Desktop toggle sidebar button ── */
+.btn-toggle-sidebar {
+  background: transparent;
+  border: none;
+  color: var(--text-dark, #1e293b);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.btn-toggle-sidebar:hover {
+  background: rgba(0,0,0,0.07);
+}
+
+/* ── Hamburger mobile: jangan tumpuk icon nama ── */
+@media (max-width: 768px) {
+  #gt-sp-hamburger {
+    top: 10px !important;
+    left: 10px !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1rem !important;
+    z-index: 9997 !important;
+  }
+}
+
+/* ── Sembunyikan hamburger mobile di desktop ── */
+@media (min-width: 769px) {
+  #gt-sp-hamburger {
+    display: none !important;
+  }
+}
 </style>
 
 <div id="gt-sp-overlay" onclick="gtSpClose()"></div>
@@ -14508,7 +14604,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   <div class="sp-list" id="gt-sp-list"></div>
   <div class="sp-footer">SmartPortal RT &copy; 2025</div>
 </div>
-<button id="gt-sp-hamburger" onclick="gtSpOpen()"><i class="fa-solid fa-bars"></i></button>
+
 
 <script id="gt-smartportal-sidebar-script">
 (function(){
