@@ -4590,11 +4590,39 @@ window.logout = window.gtKeluar;
             if(el && el.parentNode) el.parentNode.removeChild(el);
             var splashView = document.getElementById('splash-view');
             var loginForm  = document.getElementById('login-form-view');
+            var loginScreen = document.getElementById('login-screen');
             if (!window.__GT_PORTAL_ACTIVE__) {
-                if (splashView) splashView.style.display = 'none';
-                if (loginForm)  loginForm.style.display  = 'block';
-                var inp = document.getElementById('univ-id');
-                if (inp) setTimeout(function(){ inp.focus(); }, 100);
+                // Sembunyikan splash-view
+                if (splashView) {
+                    splashView.style.display = 'none';
+                    splashView.style.opacity = '0';
+                }
+                // Pastikan login-screen visible
+                if (loginScreen) {
+                    loginScreen.style.display = 'flex';
+                    loginScreen.style.flexDirection = 'column';
+                    loginScreen.style.alignItems = 'center';
+                    loginScreen.style.justifyContent = 'center';
+                    loginScreen.style.minHeight = '100vh';
+                }
+                // Tampilkan login form
+                if (loginForm) {
+                    loginForm.style.display  = 'block';
+                    loginForm.style.opacity  = '0';
+                    loginForm.style.transform = 'translateY(30px)';
+                    // Smooth entrance
+                    setTimeout(function(){
+                        loginForm.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                        loginForm.style.opacity    = '1';
+                        loginForm.style.transform  = 'translateY(0)';
+                    }, 50);
+                    var inp = document.getElementById('univ-id');
+                    if (inp) setTimeout(function(){ inp.focus(); }, 200);
+                }
+                // Juga dismiss splash-view lama jika masih ada
+                if (typeof window.bukaFormLogin === 'function') {
+                    // sudah handled di atas, tidak perlu panggil lagi
+                }
             }
         }, 580);
   }
