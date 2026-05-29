@@ -14529,12 +14529,11 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 })();
 </script>
 
-<style id="gt-mobile-sidebar-final-style">
-/* === FINAL MOBILE SIDEBAR: clean, portal-aware, no duplicated old drawer === */
+<style id="gt-sidebar-click-final-style">
 #gt-final-sidebar-overlay {
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(0, 0, 0, .55) !important;
+  background: rgba(0,0,0,.55) !important;
   z-index: 2147482500 !important;
   opacity: 0 !important;
   pointer-events: none !important;
@@ -14553,10 +14552,10 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   width: min(86vw, 340px) !important;
   height: 100dvh !important;
   background: #050505 !important;
-  color: #ffffff !important;
+  color: #fff !important;
   z-index: 2147482600 !important;
   transform: translateX(-105%) !important;
-  transition: transform .32s cubic-bezier(.22, 1, .36, 1) !important;
+  transition: transform .32s cubic-bezier(.22,1,.36,1) !important;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
@@ -14595,7 +14594,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   height: 38px !important;
   border: 1px solid rgba(255,255,255,.16) !important;
   background: transparent !important;
-  color: #ffffff !important;
+  color: #fff !important;
   border-radius: 13px !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -14633,7 +14632,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   font-size: .96rem !important;
   font-weight: 700 !important;
   cursor: pointer !important;
-  transition: background .18s ease, transform .18s ease !important;
+  transition: background .18s ease !important;
 }
 
 .gt-final-sidebar-item:hover,
@@ -14646,7 +14645,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   width: 24px !important;
   min-width: 24px !important;
   text-align: center !important;
-  color: #ffffff !important;
+  color: #fff !important;
   font-size: 1.05rem !important;
 }
 
@@ -14670,7 +14669,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 }
 
 .gt-final-sidebar-profile {
-  background: #111111 !important;
+  background: #111 !important;
   border-radius: 16px !important;
   padding: 12px 14px !important;
   display: flex !important;
@@ -14682,7 +14681,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   width: 36px !important;
   height: 36px !important;
   border-radius: 50% !important;
-  background: linear-gradient(135deg, #2563eb, #22c55e) !important;
+  background: linear-gradient(135deg,#2563eb,#22c55e) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -14712,10 +14711,10 @@ body.gt-final-sidebar-open {
 }
 </style>
 
-<script id="gt-mobile-sidebar-final-script">
+<script id="gt-sidebar-click-final-script">
 (function () {
-  if (window.__GT_FINAL_MOBILE_SIDEBAR__) return;
-  window.__GT_FINAL_MOBILE_SIDEBAR__ = true;
+  if (window.__GT_FINAL_SIDEBAR_CLICK_FIX__) return;
+  window.__GT_FINAL_SIDEBAR_CLICK_FIX__ = true;
 
   var mq = window.matchMedia("(max-width: 768px)");
 
@@ -14723,69 +14722,54 @@ body.gt-final-sidebar-open {
     return mq.matches;
   }
 
-  function txt(value) {
+  function clean(value) {
     return String(value || "").replace(/\s+/g, " ").trim();
   }
 
-  function safeGetComputed(el) {
-    try { return window.getComputedStyle(el); } catch (_) { return null; }
+  function normalize(value) {
+    return clean(value).toLowerCase().replace(/[^a-z0-9]+/g, "");
   }
 
-  function elementLooksVisible(el) {
+  function isVisible(el) {
     if (!el) return false;
-    var s = safeGetComputed(el);
-    if (!s) return false;
-    return s.display !== "none" && s.visibility !== "hidden" && s.opacity !== "0";
-  }
-
-  function hasWargaSession() {
     try {
-      if (typeof loggedInWarga !== "undefined" && loggedInWarga) return true;
-    } catch (_) {}
-
-    try {
-      for (var i = 0; i < localStorage.length; i++) {
-        var key = localStorage.key(i);
-        var value = localStorage.getItem(key) || "";
-        if (/warga/i.test(key) && value && value !== "null" && value !== "undefined") return true;
-        if (/"role"\s*:\s*"warga"/i.test(value)) return true;
+      var node = el;
+      while (node && node !== document.body && node.nodeType === 1) {
+        var s = window.getComputedStyle(node);
+        if (s.display === "none" || s.visibility === "hidden") return false;
+        node = node.parentElement;
       }
-    } catch (_) {}
-
-    return false;
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
-  function hasAdminSession() {
+  function activeRole() {
+    var admin = document.getElementById("view-admin");
+    var warga = document.getElementById("view-warga");
+
+    var adminActive = admin && (admin.classList.contains("active") || isVisible(admin));
+    var wargaActive = warga && (warga.classList.contains("active") || isVisible(warga));
+
     try {
-      if (typeof loggedInAs !== "undefined" && String(loggedInAs).toLowerCase() === "admin") return true;
+      if (typeof loggedInWarga !== "undefined" && loggedInWarga && !adminActive) return "warga";
     } catch (_) {}
 
     try {
-      for (var i = 0; i < localStorage.length; i++) {
-        var key = localStorage.key(i);
-        var value = localStorage.getItem(key) || "";
-        if (/admin/i.test(key) && value && value !== "null" && value !== "undefined") return true;
-        if (/"role"\s*:\s*"admin"/i.test(value)) return true;
-      }
+      if (typeof loggedInAs !== "undefined" && String(loggedInAs).toLowerCase() === "admin") return "admin";
     } catch (_) {}
 
-    return false;
-  }
+    if (wargaActive && !adminActive) return "warga";
+    if (adminActive) return "admin";
 
-  function activePortalRole() {
-    var wargaView = document.getElementById("view-warga");
-    var adminView = document.getElementById("view-admin");
+    try {
+      var role = localStorage.getItem("loggedInAs") || "";
+      if (/admin/i.test(role)) return "admin";
+      if (/warga/i.test(role)) return "warga";
+    } catch (_) {}
 
-    var wargaVisible = elementLooksVisible(wargaView);
-    var adminVisible = elementLooksVisible(adminView);
-
-    /* Prioritas warga dulu agar login warga tidak dipaksa jadi admin */
-    if (hasWargaSession() && !adminVisible) return "warga";
-    if (wargaVisible && !adminVisible) return "warga";
-    if (hasAdminSession() || adminVisible) return "admin";
-    if (hasWargaSession()) return "warga";
-
-    return "unknown";
+    return "warga";
   }
 
   function ensureSidebar() {
@@ -14830,31 +14814,262 @@ body.gt-final-sidebar-open {
     });
   }
 
-  function isMenuButton(el) {
-    if (!el) return false;
-    var label = txt(el.innerText || el.textContent || el.getAttribute("aria-label") || el.getAttribute("title"));
-    if (!label) return false;
-    if (label.length > 80) return false;
+  function menuButtonLabel(btn) {
+    var clone = btn.cloneNode(true);
+    clone.querySelectorAll("i, svg, img").forEach(function (x) { x.remove(); });
+    return clean(clone.innerText || clone.textContent || btn.getAttribute("aria-label") || btn.getAttribute("title"));
+  }
 
-    var cls = String(el.className || "").toLowerCase();
-    var aria = String(el.getAttribute("aria-label") || "").toLowerCase();
+  function isValidMenuButton(btn) {
+    if (!btn || btn.closest("#gt-final-sidebar")) return false;
 
+    var label = menuButtonLabel(btn);
+    if (!label || label.length > 80) return false;
+
+    var cls = String(btn.className || "").toLowerCase();
     if (cls.indexOf("gt-final-sidebar") !== -1) return false;
     if (cls.indexOf("hamburger") !== -1 || cls.indexOf("menu-toggle") !== -1 || cls.indexOf("sidebar-toggle") !== -1) return false;
-    if (aria.indexOf("menu") !== -1 && label.length <= 4) return false;
 
     return true;
   }
 
-  function iconFor(el, label) {
-    var icon = el.querySelector("i");
+  function getMenuSelectors(role) {
+    if (role === "admin") {
+      return [
+        "#view-admin .admin-nav-tabs button",
+        "#view-admin .admin-nav-tabs a",
+        ".admin-nav-tabs button",
+        ".admin-nav-tabs a"
+      ];
+    }
+
+    return [
+      "#view-warga .nav-tabs button",
+      "#view-warga .nav-tabs a",
+      ".nav-tabs button",
+      ".nav-tabs a",
+      ".wfb-nav-item"
+    ];
+  }
+
+  function collectMenus(role) {
+    var selectors = getMenuSelectors(role);
+    var items = [];
+    var seen = new Set();
+
+    selectors.forEach(function (selector) {
+      document.querySelectorAll(selector).forEach(function (btn) {
+        if (!isValidMenuButton(btn)) return;
+
+        var label = menuButtonLabel(btn);
+        var key = normalize(label);
+        if (!key || seen.has(key)) return;
+
+        seen.add(key);
+
+        items.push({
+          label: label,
+          source: btn,
+          role: role,
+          navRoot: btn.closest(".admin-nav-tabs, .nav-tabs") || null,
+          active: btn.classList.contains("active") || btn.getAttribute("aria-selected") === "true"
+        });
+      });
+    });
+
+    return items;
+  }
+
+  function contentSelectors(role) {
+    if (role === "admin") {
+      return [
+        "#view-admin .admin-tab-content",
+        "#view-admin .tab-content",
+        "#view-admin [id^='admin-']",
+        "#view-admin [id^='adm-']"
+      ];
+    }
+
+    return [
+      "#view-warga .warga-tab-content",
+      "#view-warga .tab-content",
+      "#view-warga [id^='warga-']"
+    ];
+  }
+
+  function getContentList(role) {
+    var selectors = contentSelectors(role);
+    var list = [];
+    var seen = new Set();
+
+    selectors.forEach(function (selector) {
+      document.querySelectorAll(selector).forEach(function (el) {
+        if (!el.id) return;
+        if (seen.has(el.id)) return;
+
+        var className = String(el.className || "");
+        if (
+          selector.indexOf("[id^=") !== -1 &&
+          className.indexOf("tab-content") === -1 &&
+          className.indexOf("warga-tab-content") === -1 &&
+          className.indexOf("admin-tab-content") === -1
+        ) {
+          return;
+        }
+
+        seen.add(el.id);
+        list.push(el);
+      });
+    });
+
+    return list;
+  }
+
+  function parseTargetFromButton(btn) {
+    var attrs = ["data-target", "data-tab", "data-view", "data-id", "aria-controls"];
+    for (var i = 0; i < attrs.length; i++) {
+      var v = btn.getAttribute(attrs[i]);
+      if (v) {
+        v = v.replace(/^#/, "");
+        if (document.getElementById(v)) return v;
+      }
+    }
+
+    var href = btn.getAttribute("href");
+    if (href && href.charAt(0) === "#" && document.getElementById(href.slice(1))) {
+      return href.slice(1);
+    }
+
+    var onclick = btn.getAttribute("onclick") || "";
+    var matches = onclick.match(/['"]#?([A-Za-z][A-Za-z0-9_-]+)['"]/g) || [];
+    for (var j = 0; j < matches.length; j++) {
+      var id = matches[j].replace(/['"#]/g, "");
+      if (document.getElementById(id)) return id;
+    }
+
+    return "";
+  }
+
+  function bestContentForItem(item, index) {
+    var explicit = parseTargetFromButton(item.source);
+    if (explicit) return document.getElementById(explicit);
+
+    var contents = getContentList(item.role);
+    if (!contents.length) return null;
+
+    var labelKey = normalize(item.label);
+
+    var best = null;
+    var bestScore = 0;
+
+    contents.forEach(function (content) {
+      var heading = content.querySelector("h1,h2,h3,h4,.card-title-header");
+      var haystack = normalize(
+        content.id + " " +
+        String(content.className || "") + " " +
+        (heading ? heading.textContent : "")
+      );
+
+      var score = 0;
+
+      if (haystack.indexOf(labelKey) !== -1) score += 100;
+
+      labelKey.split(/(?=[A-Z])|(?=\d)/).forEach(function (_) {});
+
+      var words = clean(item.label).toLowerCase().split(/\s+/).filter(function (w) {
+        return w.length >= 3;
+      });
+
+      words.forEach(function (word) {
+        if (haystack.indexOf(normalize(word)) !== -1) score += 10;
+      });
+
+      if (score > bestScore) {
+        bestScore = score;
+        best = content;
+      }
+    });
+
+    if (best) return best;
+
+    if (contents[index]) return contents[index];
+
+    return null;
+  }
+
+  function activateTabFallback(item, index) {
+    var target = bestContentForItem(item, index);
+    if (!target) return false;
+
+    var contents = getContentList(item.role);
+    contents.forEach(function (content) {
+      content.classList.remove("active");
+      content.style.display = "none";
+    });
+
+    target.classList.add("active");
+    target.style.display = "block";
+
+    if (item.navRoot) {
+      item.navRoot.querySelectorAll("button,a,[role='button']").forEach(function (btn) {
+        btn.classList.remove("active");
+        btn.setAttribute("aria-selected", "false");
+      });
+    }
+
+    item.source.classList.add("active");
+    item.source.setAttribute("aria-selected", "true");
+
+    try {
+      if (typeof window.gtSaveLastView === "function") {
+        window.gtSaveLastView(item.role, target.id || item.label);
+      }
+    } catch (_) {}
+
+    try {
+      target.scrollTop = 0;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (_) {}
+
+    return true;
+  }
+
+  function runOriginalHandlers(btn) {
+    var ran = false;
+
+    try {
+      var inline = btn.getAttribute("onclick");
+      if (inline) {
+        new Function("event", inline).call(btn, { type: "click", target: btn, currentTarget: btn });
+        ran = true;
+      }
+    } catch (err) {
+      console.warn("[Sidebar] inline onclick failed:", err);
+    }
+
+    try {
+      btn.dispatchEvent(new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      }));
+      ran = true;
+    } catch (err2) {
+      console.warn("[Sidebar] native click dispatch failed:", err2);
+    }
+
+    return ran;
+  }
+
+  function iconFor(btn, label) {
+    var icon = btn.querySelector("i");
     if (icon) return icon.outerHTML;
 
     var lower = label.toLowerCase();
 
     if (lower.indexOf("dashboard") !== -1 || lower.indexOf("beranda") !== -1) return '<i class="fa-solid fa-house"></i>';
     if (lower.indexOf("warga") !== -1 || lower.indexOf("kk") !== -1 || lower.indexOf("keluarga") !== -1) return '<i class="fa-solid fa-users"></i>';
-    if (lower.indexOf("kas") !== -1 || lower.indexOf("bendahara") !== -1 || lower.indexOf("iuran") !== -1) return '<i class="fa-solid fa-wallet"></i>';
+    if (lower.indexOf("kas") !== -1 || lower.indexOf("iuran") !== -1 || lower.indexOf("bendahara") !== -1) return '<i class="fa-solid fa-wallet"></i>';
     if (lower.indexOf("surat") !== -1) return '<i class="fa-solid fa-envelope-open-text"></i>';
     if (lower.indexOf("berita") !== -1 || lower.indexOf("agenda") !== -1 || lower.indexOf("info") !== -1) return '<i class="fa-solid fa-newspaper"></i>';
     if (lower.indexOf("darurat") !== -1 || lower.indexOf("sos") !== -1) return '<i class="fa-solid fa-triangle-exclamation"></i>';
@@ -14865,116 +15080,48 @@ body.gt-final-sidebar-open {
     return '<i class="fa-solid fa-circle-dot"></i>';
   }
 
-  function collectButtons(role) {
-    var selectors = [];
-
-    if (role === "warga") {
-      selectors = [
-        "#view-warga .nav-tabs button",
-        "#view-warga .nav-tabs a",
-        ".nav-tabs button",
-        ".nav-tabs a",
-        ".wfb-nav-item"
-      ];
-    } else if (role === "admin") {
-      selectors = [
-        "#view-admin .admin-nav-tabs button",
-        "#view-admin .admin-nav-tabs a",
-        ".admin-nav-tabs button",
-        ".admin-nav-tabs a"
-      ];
-    } else {
-      selectors = [
-        ".nav-tabs button",
-        ".nav-tabs a",
-        ".admin-nav-tabs button",
-        ".admin-nav-tabs a",
-        ".wfb-nav-item"
-      ];
-    }
-
-    var list = [];
-    var seen = new Set();
-
-    selectors.forEach(function (selector) {
-      document.querySelectorAll(selector).forEach(function (btn) {
-        if (btn.closest("#gt-final-sidebar")) return;
-        if (!isMenuButton(btn)) return;
-
-        var label = txt(btn.innerText || btn.textContent || btn.getAttribute("aria-label") || btn.getAttribute("title"));
-        var key = role + "::" + label.toLowerCase();
-
-        if (seen.has(key)) return;
-        seen.add(key);
-
-        list.push({
-          label: label,
-          source: btn,
-          active: btn.classList.contains("active") || btn.getAttribute("aria-selected") === "true"
-        });
-      });
-    });
-
-    return list;
-  }
-
-  function runOriginalMenu(btn) {
-    closeSidebar();
-
-    setTimeout(function () {
-      try {
-        btn.click();
-      } catch (_) {
-        try {
-          btn.dispatchEvent(new MouseEvent("click", {
-            bubbles: true,
-            cancelable: true,
-            view: window
-          }));
-        } catch (__){}
-      }
-
-      setTimeout(function () {
-        try {
-          if (typeof window.gtSaveLastView === "function") {
-            var role = activePortalRole();
-            var label = txt(btn.innerText || btn.textContent || "");
-            window.gtSaveLastView(role, label);
-          }
-        } catch (_) {}
-      }, 80);
-    }, 90);
-  }
-
   function rebuildSidebar() {
     ensureSidebar();
 
-    var role = activePortalRole();
-    var roleText = role === "admin" ? "Portal Admin" : role === "warga" ? "Portal Warga" : "Menu Portal";
+    var role = activeRole();
+    var roleText = role === "admin" ? "Portal Admin" : "Portal Warga";
+
     var roleEl = document.querySelector(".gt-final-sidebar-role");
     if (roleEl) roleEl.textContent = roleText;
 
-    var container = document.querySelector("#gt-final-sidebar .gt-final-sidebar-list");
-    if (!container) return;
+    var list = document.querySelector("#gt-final-sidebar .gt-final-sidebar-list");
+    if (!list) return;
 
-    var items = collectButtons(role);
-
-    container.innerHTML = '<div class="gt-final-sidebar-section">' + roleText + '</div>';
+    var items = collectMenus(role);
+    list.innerHTML = '<div class="gt-final-sidebar-section">' + roleText + '</div>';
 
     if (!items.length) {
-      container.innerHTML += '<div class="gt-final-sidebar-empty">Menu belum terdeteksi. Buka portal warga/admin sampai halaman utama tampil, lalu tekan tombol menu lagi.</div>';
+      list.innerHTML += '<div class="gt-final-sidebar-empty">Menu belum terdeteksi. Pastikan portal sudah terbuka, lalu tekan menu lagi.</div>';
       return;
     }
 
-    items.forEach(function (item) {
-      var button = document.createElement("button");
-      button.type = "button";
-      button.className = "gt-final-sidebar-item" + (item.active ? " active" : "");
-      button.innerHTML = iconFor(item.source, item.label) + "<span>" + item.label + "</span>";
-      button.addEventListener("click", function () {
-        runOriginalMenu(item.source);
+    items.forEach(function (item, index) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "gt-final-sidebar-item" + (item.active ? " active" : "");
+      btn.innerHTML = iconFor(item.source, item.label) + "<span>" + item.label + "</span>";
+
+      btn.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        closeSidebar();
+
+        setTimeout(function () {
+          runOriginalHandlers(item.source);
+
+          setTimeout(function () {
+            activateTabFallback(item, index);
+          }, 40);
+        }, 90);
       });
-      container.appendChild(button);
+
+      list.appendChild(btn);
     });
   }
 
@@ -15026,7 +15173,7 @@ body.gt-final-sidebar-open {
   function looksLikeHamburger(el) {
     if (!el) return false;
 
-    var label = txt(el.innerText || el.textContent);
+    var label = clean(el.innerText || el.textContent);
     var aria = String(el.getAttribute("aria-label") || el.getAttribute("title") || "").toLowerCase();
     var cls = String(el.className || "").toLowerCase();
 
@@ -15092,6 +15239,7 @@ body.gt-final-sidebar-open {
 
 </body>
 </html>
+
 
 
 
