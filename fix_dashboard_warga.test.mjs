@@ -218,36 +218,34 @@ describe("fix_dashboard_warga.mjs – error: file does not exist", () => {
 
     // Node will throw ENOENT from readFileSync (no try/catch in new version)
     assert.notEqual(result.status, 0, "Should exit non-zero when file is missing");
+    // Verify the error is specifically due to the missing file
+    assert.match(
+      result.stderr,
+      /ENOENT|index\.html/,
+      "Error should mention ENOENT or the missing filename"
+    );
 
     rmSync(emptyDir, { recursive: true, force: true });
   });
 });
 
-describe("fix_dashboard_warga.mjs – behaviour regression: no idempotency check", () => {
-  it("re-applies replacements even when newEnding is already present (no idempotency)", () => {
-    // The old version would skip if already patched; the new version does not.
-    // If the file already has NEW_ENDING but still has OLD_PATCH, the script
-    // will succeed because the oldEnding check happens first and OLD_ENDING
-    // is not present → exits 1.
-    //
-    // The important regression to document: calling the script twice on a
-    // fully-patched file (neither old pattern present) exits with code 1
-    // instead of silently succeeding, because the idempotency guard was removed.
-
+describe("fix_dashboard_warga.mjs – idempotency check", () => {
+  it("succeeds on second run when file is already patched (idempotent behavior)", () => {
     // First run: patch the file
     const { result: firstRun, htmlPath } = runScript(buildValidHtml());
     assert.equal(firstRun.status, 0, "First run should succeed");
 
-    // Second run on already-patched file: old patterns are gone → exits 1
+    // Second run on already-patched file: should detect it's already patched and exit 0
     const secondRun = spawnSync(process.execPath, [SCRIPT_PATH], {
       cwd: tmpDir,
       encoding: "utf8",
     });
     assert.equal(
       secondRun.status,
-      1,
-      "Second run exits 1 because old patterns are gone and there is no idempotency check",
+      0,
+      "Second run should exit 0 due to idempotency check",
     );
-    assert.match(secondRun.stderr, /GAGAL/);
+    assert.match(secondRun.stdout, /BERHASIL/);
+    assert.doesNotMatch(secondRun.stderr, /GAGAL/);
   });
 });

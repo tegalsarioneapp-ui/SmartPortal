@@ -29,7 +29,12 @@ async function loadSubs(): Promise<webpush.PushSubscription[]> {
     .where(eq(kvStoreTable.key, SUBS_KEY));
   if (!rows.length) return [];
   try {
-    return JSON.parse(rows[0].value) as webpush.PushSubscription[];
+    const value = rows[0].value;
+    if (value === null) return [];
+    const parsed = JSON.parse(value);
+    // JSON.parse(null) returns null, not an array
+    if (!Array.isArray(parsed)) return [];
+    return parsed as webpush.PushSubscription[];
   } catch {
     return [];
   }

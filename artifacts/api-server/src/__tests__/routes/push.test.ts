@@ -165,25 +165,14 @@ describe("push.ts – loadSubs() / GET /push/count", () => {
     expect(res.json).toHaveBeenCalledWith({ count: 0 });
   });
 
-  it("documents regression: null value passes to JSON.parse and returns null instead of []", async () => {
-    // PR removed the `if (!value) return [];` guard.
-    // JSON.parse(null) === null (no exception in JS), so loadSubs returns null.
-    // Subsequent code calling .length on null will throw a TypeError.
+  it("returns count=0 when value is null (normalized to empty array)", async () => {
+    // JSON.parse(null) === null, which is not an array.
+    // loadSubs now normalizes non-array values to [] to ensure .length is always safe.
     setupSelectChain([{ key: "push_subscriptions", value: null }]);
 
-    let threw = false;
-    let countValue: unknown;
-    try {
-      const { res } = await callRoute("GET", "/push/count");
-      countValue = (res.json.mock.calls[0]?.[0] as { count: unknown })?.count;
-    } catch {
-      threw = true;
-    }
+    const { res } = await callRoute("GET", "/push/count");
 
-    // Either a TypeError is thrown (null.length) or count is not a valid number.
-    // Both outcomes confirm the null guard removal is a regression.
-    const isRegression = threw || countValue == null || typeof countValue !== "number";
-    expect(isRegression).toBe(true);
+    expect(res.json).toHaveBeenCalledWith({ count: 0 });
   });
 });
 

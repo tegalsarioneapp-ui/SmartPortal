@@ -39,11 +39,11 @@ function makeRes(): Partial<Response> {
  *   next();
  */
 function buildKvMiddleware(writeLimiter: (req: unknown, res: unknown, next: NextFunction) => unknown) {
-  return (req: Partial<Request>, res: Partial<Response>, next: NextFunction) => {
+  return (req: Partial<Request>, res: Partial<Response>, next: NextFunction): unknown => {
     if (req.method === "PUT" || req.method === "DELETE") {
       return writeLimiter(req, res, next);
     }
-    next();
+    return next();
   };
 }
 

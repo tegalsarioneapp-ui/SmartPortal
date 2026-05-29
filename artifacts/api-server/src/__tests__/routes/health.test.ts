@@ -205,18 +205,16 @@ describe("GET /debug/db", () => {
     expect(body.error).toBe("timeout");
   });
 
-  it("returns connected:false with error=undefined when pool.query throws a non-Error (PR regression)", async () => {
-    // PR changed `err instanceof Error ? err.message : String(err)` to `err.message`.
-    // When err is a string, `err.message` is `undefined` (strings have no .message property).
+  it("returns connected:false with stringified error when pool.query throws a non-Error", async () => {
+    // When err is a string, we now normalize it using String(err).
     mockQuery.mockRejectedValueOnce("DB_DOWN");
 
     const { res } = await callRoute("GET", "/debug/db");
 
     expect(res.status).toHaveBeenCalledWith(500);
-    const body = res.json.mock.calls[0][0] as { connected: boolean; error: unknown };
+    const body = res.json.mock.calls[0][0] as { connected: boolean; error: string };
     expect(body.connected).toBe(false);
-    // Document the regression: non-Error rejects produce undefined message
-    expect(body.error).toBeUndefined();
+    expect(body.error).toBe("DB_DOWN");
   });
 
   it("includes envSet=true when DATABASE_URL env var is set", async () => {
