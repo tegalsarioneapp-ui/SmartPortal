@@ -14529,33 +14529,34 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 })();
 </script>
 
-<style id="gt-portal-sidebar-menu-style">
-/* === SmartPortal Mobile Sidebar — ChatGPT style, portal-aware === */
-#gt-portal-sidebar-overlay {
+<style id="gt-mobile-sidebar-final-style">
+/* === FINAL MOBILE SIDEBAR: clean, portal-aware, no duplicated old drawer === */
+#gt-final-sidebar-overlay {
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(0,0,0,.55) !important;
+  background: rgba(0, 0, 0, .55) !important;
   z-index: 2147482500 !important;
   opacity: 0 !important;
   pointer-events: none !important;
-  transition: opacity .25s ease !important;
+  transition: opacity .24s ease !important;
 }
 
-#gt-portal-sidebar-overlay.open {
+#gt-final-sidebar-overlay.open {
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
-#gt-portal-sidebar {
+#gt-final-sidebar {
   position: fixed !important;
-  inset: 0 auto 0 0 !important;
-  width: min(86vw, 345px) !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: min(86vw, 340px) !important;
   height: 100dvh !important;
   background: #050505 !important;
-  color: #fff !important;
+  color: #ffffff !important;
   z-index: 2147482600 !important;
   transform: translateX(-105%) !important;
-  transition: transform .32s cubic-bezier(.22,1,.36,1) !important;
+  transition: transform .32s cubic-bezier(.22, 1, .36, 1) !important;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
@@ -14563,39 +14564,38 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
 }
 
-#gt-portal-sidebar.open {
+#gt-final-sidebar.open {
   transform: translateX(0) !important;
 }
 
-.gt-portal-sidebar-head {
-  padding: calc(22px + env(safe-area-inset-top, 0px)) 20px 14px 20px !important;
-  border-bottom: 1px solid rgba(255,255,255,.08) !important;
+.gt-final-sidebar-head {
+  padding: calc(22px + env(safe-area-inset-top, 0px)) 18px 14px 18px !important;
+  border-bottom: 1px solid rgba(255,255,255,.09) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 12px !important;
 }
 
-.gt-portal-sidebar-brand {
-  font-size: 1.15rem !important;
+.gt-final-sidebar-title {
+  font-size: 1.1rem !important;
   font-weight: 900 !important;
   letter-spacing: -.02em !important;
-  color: #fff !important;
 }
 
-.gt-portal-sidebar-role {
-  margin-top: 4px !important;
-  font-size: .78rem !important;
+.gt-final-sidebar-role {
   color: #94a3b8 !important;
-  font-weight: 600 !important;
+  font-size: .76rem !important;
+  font-weight: 700 !important;
+  margin-top: 3px !important;
 }
 
-.gt-portal-sidebar-close {
+.gt-final-sidebar-close {
   width: 38px !important;
   height: 38px !important;
-  border: 1px solid rgba(255,255,255,.14) !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
   background: transparent !important;
-  color: #fff !important;
+  color: #ffffff !important;
   border-radius: 13px !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -14603,13 +14603,13 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   cursor: pointer !important;
 }
 
-.gt-portal-sidebar-list {
+.gt-final-sidebar-list {
   flex: 1 !important;
   overflow-y: auto !important;
   padding: 12px 10px 18px 10px !important;
 }
 
-.gt-portal-sidebar-section {
+.gt-final-sidebar-section {
   padding: 16px 14px 7px 14px !important;
   color: #cbd5e1 !important;
   font-size: .76rem !important;
@@ -14618,7 +14618,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   letter-spacing: .05em !important;
 }
 
-.gt-portal-sidebar-item {
+.gt-final-sidebar-item {
   width: 100% !important;
   border: 0 !important;
   background: transparent !important;
@@ -14636,41 +14636,41 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   transition: background .18s ease, transform .18s ease !important;
 }
 
-.gt-portal-sidebar-item:hover,
-.gt-portal-sidebar-item:active,
-.gt-portal-sidebar-item.gt-active {
+.gt-final-sidebar-item:hover,
+.gt-final-sidebar-item:active,
+.gt-final-sidebar-item.active {
   background: #333333 !important;
 }
 
-.gt-portal-sidebar-item i {
+.gt-final-sidebar-item i {
   width: 24px !important;
   min-width: 24px !important;
   text-align: center !important;
-  color: #fff !important;
+  color: #ffffff !important;
   font-size: 1.05rem !important;
 }
 
-.gt-portal-sidebar-item span {
+.gt-final-sidebar-item span {
   flex: 1 !important;
   overflow: hidden !important;
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
 }
 
-.gt-portal-sidebar-empty {
-  color: #94a3b8 !important;
+.gt-final-sidebar-empty {
   padding: 18px 14px !important;
+  color: #94a3b8 !important;
   font-size: .9rem !important;
   line-height: 1.45 !important;
 }
 
-.gt-portal-sidebar-footer {
-  border-top: 1px solid rgba(255,255,255,.08) !important;
+.gt-final-sidebar-footer {
+  border-top: 1px solid rgba(255,255,255,.09) !important;
   padding: 12px 12px calc(14px + env(safe-area-inset-bottom, 0px)) 12px !important;
 }
 
-.gt-portal-sidebar-profile {
-  background: #111 !important;
+.gt-final-sidebar-profile {
+  background: #111111 !important;
   border-radius: 16px !important;
   padding: 12px 14px !important;
   display: flex !important;
@@ -14678,46 +14678,44 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   gap: 12px !important;
 }
 
-.gt-portal-sidebar-avatar {
+.gt-final-sidebar-avatar {
   width: 36px !important;
   height: 36px !important;
   border-radius: 50% !important;
-  background: linear-gradient(135deg,#2563eb,#22c55e) !important;
-  color: #fff !important;
+  background: linear-gradient(135deg, #2563eb, #22c55e) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   font-weight: 900 !important;
 }
 
-.gt-portal-sidebar-profile-main {
-  color: #fff !important;
-  font-weight: 900 !important;
+.gt-final-sidebar-profile-main {
   font-size: .9rem !important;
+  font-weight: 900 !important;
 }
 
-.gt-portal-sidebar-profile-sub {
+.gt-final-sidebar-profile-sub {
   color: #94a3b8 !important;
   font-size: .76rem !important;
   margin-top: 2px !important;
 }
 
-body.gt-portal-sidebar-open {
+body.gt-final-sidebar-open {
   overflow: hidden !important;
 }
 
 @media (min-width: 769px) {
-  #gt-portal-sidebar-overlay,
-  #gt-portal-sidebar {
+  #gt-final-sidebar-overlay,
+  #gt-final-sidebar {
     display: none !important;
   }
 }
 </style>
 
-<script id="gt-portal-sidebar-menu-script">
+<script id="gt-mobile-sidebar-final-script">
 (function () {
-  if (window.__gtPortalSidebarMenuLoaded) return;
-  window.__gtPortalSidebarMenuLoaded = true;
+  if (window.__GT_FINAL_MOBILE_SIDEBAR__) return;
+  window.__GT_FINAL_MOBILE_SIDEBAR__ = true;
 
   var mq = window.matchMedia("(max-width: 768px)");
 
@@ -14725,75 +14723,98 @@ body.gt-portal-sidebar-open {
     return mq.matches;
   }
 
-  function cleanText(value) {
-    return String(value || "")
-      .replace(/\s+/g, " ")
-      .replace(/^\s+|\s+$/g, "");
+  function txt(value) {
+    return String(value || "").replace(/\s+/g, " ").trim();
   }
 
-  function isShown(el) {
+  function safeGetComputed(el) {
+    try { return window.getComputedStyle(el); } catch (_) { return null; }
+  }
+
+  function elementLooksVisible(el) {
     if (!el) return false;
-
-    var node = el;
-    while (node && node !== document.body && node.nodeType === 1) {
-      var style = window.getComputedStyle(node);
-      if (style.display === "none" || style.visibility === "hidden") return false;
-      node = node.parentElement;
-    }
-
-    return true;
+    var s = safeGetComputed(el);
+    if (!s) return false;
+    return s.display !== "none" && s.visibility !== "hidden" && s.opacity !== "0";
   }
 
-  function detectPortalRole() {
-    var adminVisible =
-      isShown(document.getElementById("view-admin")) ||
-      document.querySelector(".admin-nav-tabs .active") ||
-      document.body.classList.contains("admin-mode");
-
-    var wargaVisible =
-      isShown(document.getElementById("view-warga")) ||
-      document.querySelector(".nav-tabs .active") ||
-      document.body.classList.contains("warga-mode");
-
-    if (adminVisible) return "Admin Portal";
-    if (wargaVisible) return "Warga Portal";
-
+  function hasWargaSession() {
     try {
-      var loggedInAs = localStorage.getItem("loggedInAs") || "";
-      if (loggedInAs.toLowerCase().indexOf("admin") !== -1) return "Admin Portal";
-      if (loggedInAs.toLowerCase().indexOf("warga") !== -1) return "Warga Portal";
+      if (typeof loggedInWarga !== "undefined" && loggedInWarga) return true;
     } catch (_) {}
 
-    return "SmartPortal";
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        var value = localStorage.getItem(key) || "";
+        if (/warga/i.test(key) && value && value !== "null" && value !== "undefined") return true;
+        if (/"role"\s*:\s*"warga"/i.test(value)) return true;
+      }
+    } catch (_) {}
+
+    return false;
+  }
+
+  function hasAdminSession() {
+    try {
+      if (typeof loggedInAs !== "undefined" && String(loggedInAs).toLowerCase() === "admin") return true;
+    } catch (_) {}
+
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        var value = localStorage.getItem(key) || "";
+        if (/admin/i.test(key) && value && value !== "null" && value !== "undefined") return true;
+        if (/"role"\s*:\s*"admin"/i.test(value)) return true;
+      }
+    } catch (_) {}
+
+    return false;
+  }
+
+  function activePortalRole() {
+    var wargaView = document.getElementById("view-warga");
+    var adminView = document.getElementById("view-admin");
+
+    var wargaVisible = elementLooksVisible(wargaView);
+    var adminVisible = elementLooksVisible(adminView);
+
+    /* Prioritas warga dulu agar login warga tidak dipaksa jadi admin */
+    if (hasWargaSession() && !adminVisible) return "warga";
+    if (wargaVisible && !adminVisible) return "warga";
+    if (hasAdminSession() || adminVisible) return "admin";
+    if (hasWargaSession()) return "warga";
+
+    return "unknown";
   }
 
   function ensureSidebar() {
-    if (document.getElementById("gt-portal-sidebar")) return;
+    if (document.getElementById("gt-final-sidebar")) return;
 
     var overlay = document.createElement("div");
-    overlay.id = "gt-portal-sidebar-overlay";
+    overlay.id = "gt-final-sidebar-overlay";
 
     var sidebar = document.createElement("aside");
-    sidebar.id = "gt-portal-sidebar";
-    sidebar.setAttribute("aria-label", "Sidebar menu SmartPortal");
+    sidebar.id = "gt-final-sidebar";
+    sidebar.setAttribute("aria-label", "Menu SmartPortal Mobile");
 
     sidebar.innerHTML =
-      '<div class="gt-portal-sidebar-head">' +
+      '<div class="gt-final-sidebar-head">' +
         '<div>' +
-          '<div class="gt-portal-sidebar-brand">SmartPortal</div>' +
-          '<div class="gt-portal-sidebar-role">Menu Portal</div>' +
+          '<div class="gt-final-sidebar-title">SmartPortal</div>' +
+          '<div class="gt-final-sidebar-role">Menu Portal</div>' +
         '</div>' +
-        '<button type="button" class="gt-portal-sidebar-close" aria-label="Tutup menu">' +
+        '<button type="button" class="gt-final-sidebar-close" aria-label="Tutup menu">' +
           '<i class="fa-solid fa-xmark"></i>' +
         '</button>' +
       '</div>' +
-      '<div class="gt-portal-sidebar-list"></div>' +
-      '<div class="gt-portal-sidebar-footer">' +
-        '<div class="gt-portal-sidebar-profile">' +
-          '<div class="gt-portal-sidebar-avatar">T1</div>' +
+      '<div class="gt-final-sidebar-list"></div>' +
+      '<div class="gt-final-sidebar-footer">' +
+        '<div class="gt-final-sidebar-profile">' +
+          '<div class="gt-final-sidebar-avatar">T1</div>' +
           '<div>' +
-            '<div class="gt-portal-sidebar-profile-main">Tegalsari OneApp</div>' +
-            '<div class="gt-portal-sidebar-profile-sub">RT 005 Tegalsari</div>' +
+            '<div class="gt-final-sidebar-profile-main">Tegalsari OneApp</div>' +
+            '<div class="gt-final-sidebar-profile-sub">RT 005 Tegalsari</div>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -14802,160 +14823,198 @@ body.gt-portal-sidebar-open {
     document.body.appendChild(sidebar);
 
     overlay.addEventListener("click", closeSidebar);
-    sidebar.querySelector(".gt-portal-sidebar-close").addEventListener("click", closeSidebar);
+    sidebar.querySelector(".gt-final-sidebar-close").addEventListener("click", closeSidebar);
 
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") closeSidebar();
     });
   }
 
-  function getIconHtml(original) {
-    var icon = original.querySelector("i");
+  function isMenuButton(el) {
+    if (!el) return false;
+    var label = txt(el.innerText || el.textContent || el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (!label) return false;
+    if (label.length > 80) return false;
+
+    var cls = String(el.className || "").toLowerCase();
+    var aria = String(el.getAttribute("aria-label") || "").toLowerCase();
+
+    if (cls.indexOf("gt-final-sidebar") !== -1) return false;
+    if (cls.indexOf("hamburger") !== -1 || cls.indexOf("menu-toggle") !== -1 || cls.indexOf("sidebar-toggle") !== -1) return false;
+    if (aria.indexOf("menu") !== -1 && label.length <= 4) return false;
+
+    return true;
+  }
+
+  function iconFor(el, label) {
+    var icon = el.querySelector("i");
     if (icon) return icon.outerHTML;
 
-    var text = cleanText(original.innerText || original.textContent || original.getAttribute("aria-label"));
-    var lower = text.toLowerCase();
+    var lower = label.toLowerCase();
 
     if (lower.indexOf("dashboard") !== -1 || lower.indexOf("beranda") !== -1) return '<i class="fa-solid fa-house"></i>';
-    if (lower.indexOf("warga") !== -1 || lower.indexOf("kk") !== -1) return '<i class="fa-solid fa-users"></i>';
-    if (lower.indexOf("kas") !== -1 || lower.indexOf("bendahara") !== -1) return '<i class="fa-solid fa-wallet"></i>';
+    if (lower.indexOf("warga") !== -1 || lower.indexOf("kk") !== -1 || lower.indexOf("keluarga") !== -1) return '<i class="fa-solid fa-users"></i>';
+    if (lower.indexOf("kas") !== -1 || lower.indexOf("bendahara") !== -1 || lower.indexOf("iuran") !== -1) return '<i class="fa-solid fa-wallet"></i>';
     if (lower.indexOf("surat") !== -1) return '<i class="fa-solid fa-envelope-open-text"></i>';
-    if (lower.indexOf("berita") !== -1 || lower.indexOf("info") !== -1) return '<i class="fa-solid fa-newspaper"></i>';
+    if (lower.indexOf("berita") !== -1 || lower.indexOf("agenda") !== -1 || lower.indexOf("info") !== -1) return '<i class="fa-solid fa-newspaper"></i>';
     if (lower.indexOf("darurat") !== -1 || lower.indexOf("sos") !== -1) return '<i class="fa-solid fa-triangle-exclamation"></i>';
+    if (lower.indexOf("laporan") !== -1 || lower.indexOf("pdf") !== -1) return '<i class="fa-solid fa-file-lines"></i>';
     if (lower.indexOf("pengaturan") !== -1 || lower.indexOf("setting") !== -1) return '<i class="fa-solid fa-gear"></i>';
     if (lower.indexOf("logout") !== -1 || lower.indexOf("keluar") !== -1) return '<i class="fa-solid fa-right-from-bracket"></i>';
 
     return '<i class="fa-solid fa-circle-dot"></i>';
   }
 
-  function collectButtonsFromSelector(selector, label, out, seen) {
-    document.querySelectorAll(selector).forEach(function (container) {
-      if (!isShown(container)) return;
+  function collectButtons(role) {
+    var selectors = [];
 
-      container.querySelectorAll("button, a, [role='button']").forEach(function (btn) {
-        if (btn.closest("#gt-portal-sidebar")) return;
+    if (role === "warga") {
+      selectors = [
+        "#view-warga .nav-tabs button",
+        "#view-warga .nav-tabs a",
+        ".nav-tabs button",
+        ".nav-tabs a",
+        ".wfb-nav-item"
+      ];
+    } else if (role === "admin") {
+      selectors = [
+        "#view-admin .admin-nav-tabs button",
+        "#view-admin .admin-nav-tabs a",
+        ".admin-nav-tabs button",
+        ".admin-nav-tabs a"
+      ];
+    } else {
+      selectors = [
+        ".nav-tabs button",
+        ".nav-tabs a",
+        ".admin-nav-tabs button",
+        ".admin-nav-tabs a",
+        ".wfb-nav-item"
+      ];
+    }
 
-        var text = cleanText(btn.innerText || btn.textContent || btn.getAttribute("aria-label") || btn.getAttribute("title"));
-        if (!text || text.length > 64) return;
+    var list = [];
+    var seen = new Set();
 
-        var key = label + "::" + text.toLowerCase();
+    selectors.forEach(function (selector) {
+      document.querySelectorAll(selector).forEach(function (btn) {
+        if (btn.closest("#gt-final-sidebar")) return;
+        if (!isMenuButton(btn)) return;
+
+        var label = txt(btn.innerText || btn.textContent || btn.getAttribute("aria-label") || btn.getAttribute("title"));
+        var key = role + "::" + label.toLowerCase();
+
         if (seen.has(key)) return;
         seen.add(key);
 
-        out.push({
-          group: label,
-          text: text,
-          original: btn,
-          active:
-            btn.classList.contains("active") ||
-            btn.getAttribute("aria-selected") === "true" ||
-            btn.closest(".active")
+        list.push({
+          label: label,
+          source: btn,
+          active: btn.classList.contains("active") || btn.getAttribute("aria-selected") === "true"
         });
       });
     });
+
+    return list;
   }
 
-  function getPortalMenus() {
-    var role = detectPortalRole();
-    var items = [];
-    var seen = new Set();
+  function runOriginalMenu(btn) {
+    closeSidebar();
 
-    if (role === "Admin Portal") {
-      collectButtonsFromSelector(".admin-nav-tabs", "Menu Admin", items, seen);
-      collectButtonsFromSelector(".nav-tabs", "Menu Warga", items, seen);
-    } else if (role === "Warga Portal") {
-      collectButtonsFromSelector(".nav-tabs", "Menu Warga", items, seen);
-      collectButtonsFromSelector(".wfb-nav-item", "Layanan Cepat", items, seen);
-    } else {
-      collectButtonsFromSelector(".nav-tabs", "Menu Warga", items, seen);
-      collectButtonsFromSelector(".admin-nav-tabs", "Menu Admin", items, seen);
-      collectButtonsFromSelector(".wfb-nav-item", "Layanan Cepat", items, seen);
-    }
+    setTimeout(function () {
+      try {
+        btn.click();
+      } catch (_) {
+        try {
+          btn.dispatchEvent(new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true,
+            view: window
+          }));
+        } catch (__){}
+      }
 
-    return items;
+      setTimeout(function () {
+        try {
+          if (typeof window.gtSaveLastView === "function") {
+            var role = activePortalRole();
+            var label = txt(btn.innerText || btn.textContent || "");
+            window.gtSaveLastView(role, label);
+          }
+        } catch (_) {}
+      }, 80);
+    }, 90);
   }
 
   function rebuildSidebar() {
     ensureSidebar();
 
-    var role = detectPortalRole();
-    var roleEl = document.querySelector(".gt-portal-sidebar-role");
-    if (roleEl) roleEl.textContent = role;
+    var role = activePortalRole();
+    var roleText = role === "admin" ? "Portal Admin" : role === "warga" ? "Portal Warga" : "Menu Portal";
+    var roleEl = document.querySelector(".gt-final-sidebar-role");
+    if (roleEl) roleEl.textContent = roleText;
 
-    var list = document.querySelector("#gt-portal-sidebar .gt-portal-sidebar-list");
-    if (!list) return;
+    var container = document.querySelector("#gt-final-sidebar .gt-final-sidebar-list");
+    if (!container) return;
 
-    var items = getPortalMenus();
-    list.innerHTML = "";
+    var items = collectButtons(role);
 
-    var lastGroup = "";
-
-    items.forEach(function (item) {
-      if (item.group !== lastGroup) {
-        var section = document.createElement("div");
-        section.className = "gt-portal-sidebar-section";
-        section.textContent = item.group;
-        list.appendChild(section);
-        lastGroup = item.group;
-      }
-
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "gt-portal-sidebar-item" + (item.active ? " gt-active" : "");
-      btn.innerHTML = getIconHtml(item.original) + "<span>" + item.text + "</span>";
-
-      btn.addEventListener("click", function () {
-        closeSidebar();
-        setTimeout(function () {
-          item.original.click();
-        }, 90);
-      });
-
-      list.appendChild(btn);
-    });
+    container.innerHTML = '<div class="gt-final-sidebar-section">' + roleText + '</div>';
 
     if (!items.length) {
-      list.innerHTML =
-        '<div class="gt-portal-sidebar-section">Menu</div>' +
-        '<div class="gt-portal-sidebar-empty">Menu portal belum terdeteksi. Login sebagai Admin atau Warga, lalu buka kembali menu ini.</div>';
+      container.innerHTML += '<div class="gt-final-sidebar-empty">Menu belum terdeteksi. Buka portal warga/admin sampai halaman utama tampil, lalu tekan tombol menu lagi.</div>';
+      return;
     }
+
+    items.forEach(function (item) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "gt-final-sidebar-item" + (item.active ? " active" : "");
+      button.innerHTML = iconFor(item.source, item.label) + "<span>" + item.label + "</span>";
+      button.addEventListener("click", function () {
+        runOriginalMenu(item.source);
+      });
+      container.appendChild(button);
+    });
   }
 
   function openSidebar(event) {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
+      if (event.stopImmediatePropagation) event.stopImmediatePropagation();
     }
 
     if (!isMobile()) return;
 
     rebuildSidebar();
 
-    var overlay = document.getElementById("gt-portal-sidebar-overlay");
-    var sidebar = document.getElementById("gt-portal-sidebar");
+    var overlay = document.getElementById("gt-final-sidebar-overlay");
+    var sidebar = document.getElementById("gt-final-sidebar");
 
     if (!overlay || !sidebar) return;
 
     overlay.classList.add("open");
     sidebar.classList.add("open");
-    document.body.classList.add("gt-portal-sidebar-open");
+    document.body.classList.add("gt-final-sidebar-open");
   }
 
   function closeSidebar() {
-    var overlay = document.getElementById("gt-portal-sidebar-overlay");
-    var sidebar = document.getElementById("gt-portal-sidebar");
+    var overlay = document.getElementById("gt-final-sidebar-overlay");
+    var sidebar = document.getElementById("gt-final-sidebar");
 
     if (overlay) overlay.classList.remove("open");
     if (sidebar) sidebar.classList.remove("open");
-    document.body.classList.remove("gt-portal-sidebar-open");
+    document.body.classList.remove("gt-final-sidebar-open");
   }
 
   function toggleSidebar(event) {
-    var sidebar = document.getElementById("gt-portal-sidebar");
+    var sidebar = document.getElementById("gt-final-sidebar");
     if (sidebar && sidebar.classList.contains("open")) {
       if (event) {
         event.preventDefault();
         event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
       }
       closeSidebar();
       return;
@@ -14964,10 +15023,10 @@ body.gt-portal-sidebar-open {
     openSidebar(event);
   }
 
-  function looksLikeMenuButton(el) {
+  function looksLikeHamburger(el) {
     if (!el) return false;
 
-    var text = cleanText(el.innerText || el.textContent);
+    var label = txt(el.innerText || el.textContent);
     var aria = String(el.getAttribute("aria-label") || el.getAttribute("title") || "").toLowerCase();
     var cls = String(el.className || "").toLowerCase();
 
@@ -14977,9 +15036,9 @@ body.gt-portal-sidebar-open {
       cls.indexOf("menu-toggle") !== -1 ||
       cls.indexOf("sidebar-toggle") !== -1 ||
       aria.indexOf("menu") !== -1 ||
-      text === "☰" ||
-      text === "≡" ||
-      text === "☷"
+      label === "☰" ||
+      label === "≡" ||
+      label === "☷"
     );
   }
 
@@ -14989,12 +15048,12 @@ body.gt-portal-sidebar-open {
     ));
 
     candidates.forEach(function (el) {
-      if (!looksLikeMenuButton(el)) return;
+      if (!looksLikeHamburger(el)) return;
 
       var target = el.closest("button, a, [role='button']") || el;
-      if (target.dataset.gtPortalSidebarBound === "1") return;
+      if (target.dataset.gtFinalSidebarBound === "1") return;
 
-      target.dataset.gtPortalSidebarBound = "1";
+      target.dataset.gtFinalSidebarBound = "1";
       target.addEventListener("click", function (event) {
         if (isMobile()) toggleSidebar(event);
       }, true);
@@ -15033,6 +15092,7 @@ body.gt-portal-sidebar-open {
 
 </body>
 </html>
+
 
 
 
