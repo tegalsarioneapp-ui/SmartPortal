@@ -51,3 +51,13 @@ Thumbs.db
 node_modules/
 .env
 .DS_Store
+# Backup files
+*.bak-*
+*.bak
+
+# Python patch scripts
+fix_*.py
+inspect_*.py
+patch_*.py
+step*.py
+cleanup_*.py
