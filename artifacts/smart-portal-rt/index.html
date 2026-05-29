@@ -4337,7 +4337,7 @@ window.toggleSidebar = function() {
 window.gtKeluar = function() {
   Swal.fire({
     title: 'Keluar dari Portal?',
-    html: '<p style="color:#64748b;margin:0;">Sesi Anda akan diakhiri.<br>Data yang belum tersimpan akan di-flush terlebih dahulu.</p>',
+    html: '<p style="color:#64748b;margin:0;">Sesi Anda akan diakhiri.<br>Perubahan terakhir akan disimpan otomatis.</p>',
     icon: 'question',
     iconColor: '#dc2626',
     showCancelButton: true,
@@ -4364,7 +4364,7 @@ window.gtKeluar = function() {
     if (typeof window.GT_FLUSH_NOW === 'function') {
       Swal.fire({
         title: 'Menyimpan data...',
-        html: '<p style="color:#64748b;margin:0;">Harap tunggu sebentar.</p>',
+        html: '<p style="color:#64748b;margin:0;">Sedang menyimpan data Anda, harap tunggu...</p>',
         icon: 'info',
         iconColor: '#6366f1',
         allowOutsideClick: false,
@@ -4600,7 +4600,17 @@ window.logout = window.gtKeluar;
     var el = document.getElementById('t1-splash');
     if(!el || el.classList.contains('t1s-out')) return;
     el.classList.add('t1s-out');
-    setTimeout(function(){ if(el && el.parentNode) el.parentNode.removeChild(el); }, 580);
+        setTimeout(function(){
+            if(el && el.parentNode) el.parentNode.removeChild(el);
+            var splashView = document.getElementById('splash-view');
+            var loginForm  = document.getElementById('login-form-view');
+            if (!window.__GT_PORTAL_ACTIVE__) {
+                if (splashView) splashView.style.display = 'none';
+                if (loginForm)  loginForm.style.display  = 'block';
+                var inp = document.getElementById('univ-id');
+                if (inp) setTimeout(function(){ inp.focus(); }, 100);
+            }
+        }, 580);
   }
   /* Start loading bar fill after 120ms */
   setTimeout(function(){
