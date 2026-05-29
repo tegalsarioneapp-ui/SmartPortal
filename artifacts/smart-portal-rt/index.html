@@ -212,7 +212,7 @@
         /* LAIN-LAIN (MODAL, DLL) */
         .logo-3d-container { width: 90px !important; height: 90px !important; margin-left: 20px; display: flex; align-items: center; justify-content: center; }
         .logo-3d { width: 100%; height: 100%; object-fit: contain; animation: spin3D 15s linear infinite; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px); z-index: 99999; align-items: center; justify-content: center; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); z-index: 99999; align-items: center; justify-content: center; }
         .modal-overlay.show { display: flex; }
         .modal-content { background: var(--bg-panel); border-radius: var(--radius-lg); width: 90%; max-width: 500px; padding: 40px; position: relative; max-height: 90vh; overflow-y: auto; }
         .swal2-popup { background: #ffffff !important; border-radius: 20px !important; }
@@ -4252,7 +4252,7 @@ window.addEventListener('load', () => {
 .t1s-load-wrap{width:100%;padding:7px 18px 5px;box-sizing:border-box;animation:t1sFadeUp .8s .8s both}
 .t1s-load-text{color:rgba(255,255,255,.62);font-size:.71rem;font-weight:600;text-align:center;margin-bottom:6px;font-family:'Plus Jakarta Sans','Inter',sans-serif}
 .t1s-load-bar{width:100%;height:4px;background:rgba(255,255,255,.14);border-radius:99px;overflow:hidden}
-.t1s-load-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#44ccff,#fff,#44ccff);background-size:200% 100%;transition:width 2.3s cubic-bezier(.4,0,.2,1);animation:t1sShimmer 1.5s linear infinite}
+.t1s-load-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#44ccff,#fff,#44ccff);background-size:200% 100%;transition:width 9.5s cubic-bezier(.4,0,.2,1);animation:t1sShimmer 1.5s linear infinite}
 @keyframes t1sShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 /* ─ Bottom ─ */
 .t1s-bottom{width:100%;position:relative;flex-shrink:0}
@@ -4386,10 +4386,10 @@ window.addEventListener('load', () => {
     var f = document.getElementById('t1s-fill');
     if(f) f.style.width = '100%';
   }, 120);
-  /* Hard dismiss at 3.2s */
-  setTimeout(_t1dismiss, 3200);
-  /* Also dismiss on load event (800ms after load, min 3.2s total) */
-  window.addEventListener('load', function(){ setTimeout(_t1dismiss, 800); });
+  /* Hard dismiss at 10s */
+  setTimeout(_t1dismiss, 10000);
+  /* Also dismiss on load event (min 3s after load, cap 10s total) */
+  window.addEventListener('load', function(){ setTimeout(_t1dismiss, 3000); });
 })();
 </script>
 
@@ -7365,7 +7365,7 @@ window.addEventListener('load', () => {
         } 
         else if(role === 'bendahara') { window.location.href = 'bendahara.html'; return; } 
         else if(role === 'koperasi') { document.getElementById('user-name').innerText = "Pengurus Koperasi"; document.getElementById('user-role').innerText = "Simpan Pinjam RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #8b5cf6, #6d28d9)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-handshake-angle'></i>"; let v = document.getElementById('view-koperasi'); v.style.display = ''; v.classList.add('active-grid'); openKopTab('kop-simpanan'); } 
-        else if(role === 'admin') { document.getElementById('user-name').innerText = "Christian Eka"; document.getElementById('user-role').innerText = "Otoritas Sekretaris RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #f59e0b, #b45309)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-user-tie'></i>"; let v = document.getElementById('view-admin'); v.style.display = ''; v.classList.add('active-grid'); openAdminTab('admin-datakk'); document.getElementById('p_no').value = getNextSuratNumber(); document.getElementById('p_tgl_manual').innerText = new Date().toLocaleDateString('id-ID'); }
+        else if(role === 'admin') { document.getElementById('user-name').innerText = "Christian Eka"; document.getElementById('user-role').innerText = "Otoritas Sekretaris RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #f59e0b, #b45309)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-user-tie'></i>"; let v = document.getElementById('view-admin'); v.style.display = ''; v.classList.add('active-grid'); openAdminTab('admin-datakk'); let _pno = document.getElementById('p_no'); if(_pno) _pno.value = getNextSuratNumber(); let _ptgl = document.getElementById('p_tgl_manual'); if(_ptgl) _ptgl.innerText = new Date().toLocaleDateString('id-ID'); }
         syncSemuaData();
     };
     // === FUNGSI SUB-TAB PUBLIKASI ===
@@ -7782,7 +7782,7 @@ window.addEventListener('load', () => {
     // === 7. MUTASI, BERITA, AGENDA ===
     window.saveMutasi = function(e) { e.preventDefault(); let db = JSON.parse(localStorage.getItem('mutasi')) || []; let w = document.getElementById('m_nama'); if(!w.value) return Swal.fire('Gagal','Pilih nama warga!','warning'); let namaW = w.options[w.selectedIndex].text; db.push({ id: Date.now(), nama: namaW, status: document.getElementById('m_status').value, ket: document.getElementById('m_keterangan').value, tgl: document.getElementById('m_tanggal').value }); localStorage.setItem('mutasi', JSON.stringify(db)); e.target.reset(); if(typeof jQuery !== 'undefined') $(w).val('').trigger('change'); syncSemuaData(); Toast.fire({icon:'success',title:'Disimpan'}); };
     window.loadMutasi = function() { let db = JSON.parse(localStorage.getItem('mutasi')) || []; let tb = document.getElementById('tabel-mutasi'); if(!tb) return; tb.innerHTML = ''; db.forEach(m => { let badge = m.status === 'Datang' ? 'badge-masuk' : 'badge-keluar'; tb.innerHTML += `<tr><td><b>${m.nama}</b></td><td><span class="badge ${badge}">${m.status}</span></td><td>${m.ket}</td><td>${m.tgl}</td><td><button class="btn-table btn-tbl-del" onclick="hapusMutasi(${m.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`; }); };
-    window.hapusMutasi = function(id) { let db = JSON.parse(localStorage.getItem('mutasi')) || []; localStorage.setItem('mutasi', JSON.stringify(db.filter(x => x.id !== id))); syncSemuaData(); };
+    window.hapusMutasi = function(id) { Swal.fire({title:'Hapus data mutasi?',text:'Tindakan ini tidak dapat dibatalkan.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('mutasi')) || []; localStorage.setItem('mutasi', JSON.stringify(db.filter(x => x.id !== id))); syncSemuaData(); Toast.fire({icon:'success',title:'Data dihapus'}); } }); };
 
     window.saveBeritaAdmin = function(e) { e.preventDefault(); let f = document.getElementById('b_gambar').files[0]; if(f) { let r = new FileReader(); r.onload = function(evt) { prosesSimpanBerita(evt.target.result); }; r.readAsDataURL(f); } else { prosesSimpanBerita(''); } };
     window.prosesSimpanBerita = function(b64) { let db = JSON.parse(localStorage.getItem('db_berita')) || []; db.push({ id: Date.now(), kategori: document.getElementById('b_kategori').value, judul: document.getElementById('b_judul').value, isi: document.getElementById('b_isi').value, foto: b64, tgl: new Date().toLocaleDateString('id-ID') }); localStorage.setItem('db_berita', JSON.stringify(db)); document.getElementById('form-berita').reset(); if (typeof syncSemuaData === 'function') syncSemuaData(true); Swal.fire('Siap', 'Kabar disiarkan.', 'success'); };
@@ -7950,7 +7950,7 @@ window.addEventListener('load', () => {
         let url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
         window.open(url, '_blank');
     };
-    window.hapusBerita = function(id) { let db = JSON.parse(localStorage.getItem('db_berita')) || []; localStorage.setItem('db_berita', JSON.stringify(db.filter(x => x.id !== id))); syncSemuaData(); };
+    window.hapusBerita = function(id) { Swal.fire({title:'Hapus berita ini?',text:'Berita akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('db_berita')) || []; localStorage.setItem('db_berita', JSON.stringify(db.filter(x => x.id !== id))); syncSemuaData(); Toast.fire({icon:'success',title:'Berita dihapus'}); } }); };
     // === MODUL AGENDA & KEGIATAN RT (UPDATE: EDIT, PREVIEW, RUNNING TEXT, WA, PDF) ===
     let editKegiatanId = null;
 
@@ -8247,14 +8247,14 @@ window.addEventListener('load', () => {
     }, 500);
     window.batalEditReqSurat = function() { document.getElementById('req_keperluan').value = ''; document.getElementById('btn-batal-req').style.display='none'; };
     window.accSurat = function(id) { let db = JSON.parse(localStorage.getItem('db_req_surat')) || []; let idx = db.findIndex(x=>x.id===id); if(idx!==-1){ db[idx].status='Selesai'; localStorage.setItem('db_req_surat',JSON.stringify(db)); syncSemuaData(); Toast.fire({icon:'success',title:'Di-Acc!'}); } };
-    window.hapusSurat = function(id) { let db = JSON.parse(localStorage.getItem('db_req_surat')) || []; localStorage.setItem('db_req_surat', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); };
+    window.hapusSurat = function(id) { Swal.fire({title:'Hapus surat ini?',text:'Data surat akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('db_req_surat')) || []; localStorage.setItem('db_req_surat', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); Toast.fire({icon:'success',title:'Surat dihapus'}); } }); };
     
 
     window.kirimAduanWarga = function(e) { e.preventDefault(); let f = document.getElementById('aduan-bukti').files[0]; if(f) { let r = new FileReader(); r.onload = function(evt) { prosesSimpanAduan(evt.target.result); }; r.readAsDataURL(f); } else { Swal.fire('Gagal', 'Wajib upload foto!', 'warning'); } };
     window.prosesSimpanAduan = function(b64) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let d = new Date(); let tFormat = `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}`; db.push({ id: Date.now(), tglAsli: tFormat, tglTampil: d.toLocaleDateString('id-ID'), idPelapor: loggedInWarga.id, namaPelapor: loggedInWarga.nama, kategori: document.getElementById('aduan-kategori').value, judul: document.getElementById('aduan-judul').value, isi: document.getElementById('aduan-isi').value, foto: b64, status: 'Menunggu' }); localStorage.setItem('db_aduan', JSON.stringify(db)); document.getElementById('aduan-judul').value=''; document.getElementById('aduan-isi').value=''; if (typeof syncSemuaData === 'function') syncSemuaData(true); Swal.fire('Terkirim!', 'Aduan masuk ke meja RT.', 'success'); if(typeof window.loadAduanWarga==='function') window.loadAduanWarga(); };
     window.lihatBuktiAduan = function(id) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let a = db.find(x=>x.id===id); if(a && a.foto) Swal.fire({ imageUrl: a.foto, width: 600 }); };
     window.updateStatusAduan = function(id, val) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let idx = db.findIndex(x=>x.id===id); if(idx!==-1) { db[idx].status=val; localStorage.setItem('db_aduan',JSON.stringify(db)); syncSemuaData(); Toast.fire({icon:'success',title:'Status Update!'}); } };
-    window.hapusAduan = function(id) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; localStorage.setItem('db_aduan', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); };
+    window.hapusAduan = function(id) { Swal.fire({title:'Hapus aduan ini?',text:'Data aduan akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('db_aduan')) || []; localStorage.setItem('db_aduan', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); Toast.fire({icon:'success',title:'Aduan dihapus'}); } }); };
     window.loadAduanWarga = function() { if(!loggedInWarga) return; let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let my = db.filter(x => String(x.idPelapor)===String(loggedInWarga.id)); let tb = document.getElementById('tbody-aduan-warga'); if(tb) { tb.innerHTML=''; my.forEach(a => { let bd = a.status==='Selesai'?'badge-selesai':(a.status==='Diproses'?'badge-proses':'badge-menunggu'); tb.innerHTML+=`<tr><td>${a.tglTampil}</td><td>${a.kategori}</td><td><b>${a.judul}</b></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})"><i class="fa-solid fa-image"></i></button></td><td><span class="badge ${bd}">${a.status}</span></td></tr>`; }); } };
     window.loadAduanAdmin = function() { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let fb = document.getElementById('filter-bulan-aduan').value; let tb = document.getElementById('tbody-aduan-admin'); if(tb) { tb.innerHTML=''; if(fb!=='Semua') db=db.filter(x=>x.tglAsli.split('-')[1]===fb); db.forEach(a => { let s = `<select style="padding:6px;font-size:0.8rem;" onchange="updateStatusAduan(${a.id}, this.value)"><option value="Menunggu" ${a.status==='Menunggu'?'selected':''}>Menunggu</option><option value="Diproses" ${a.status==='Diproses'?'selected':''}>Diproses</option><option value="Selesai" ${a.status==='Selesai'?'selected':''}>Selesai</option></select>`; tb.innerHTML+=`<tr><td><b>${a.tglTampil}</b><br><small>${a.namaPelapor}</small></td><td>${a.kategori}</td><td><b>${a.judul}</b><br><small>${a.isi}</small></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})"><i class="fa-solid fa-image"></i></button> <button class="btn-table btn-tbl-del" onclick="hapusAduan(${a.id})"><i class="fa-solid fa-trash"></i></button></td><td>${s}</td></tr>`; }); } };
     window.cetakRekapAduan = function() {
@@ -8794,10 +8794,15 @@ window.addEventListener('load', () => {
     };
 
     window.hapusSuratPengajuan = function(id) {
-        let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
-        localStorage.setItem('db_req_surat_v2', JSON.stringify(db.filter(x => x.id !== id)));
-        if(typeof syncSemuaData==='function') syncSemuaData(true);
-        if(typeof loadSuratAdmin === 'function') loadSuratAdmin();
+        Swal.fire({title:'Hapus pengajuan surat?',text:'Data surat akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{
+            if(r.isConfirmed){
+                let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
+                localStorage.setItem('db_req_surat_v2', JSON.stringify(db.filter(x => x.id !== id)));
+                if(typeof syncSemuaData==='function') syncSemuaData(true);
+                if(typeof loadSuratAdmin === 'function') loadSuratAdmin();
+                Toast.fire({icon:'success',title:'Surat dihapus'});
+            }
+        });
     };
 
     // === MESIN CETAK PDF A4 ANTI BOCOR (VERSI OPTIMAL 1 HALAMAN) ===
@@ -13376,7 +13381,7 @@ html[data-theme="dark"] body { background: #0b1220; }
 .t1s-load-wrap { width:100%; padding:8px 20px 6px; box-sizing:border-box; animation: t1sFadeUp .8s .8s both; }
 .t1s-load-text { color:rgba(255,255,255,.6); font-size:.72rem; font-weight:600; text-align:center; margin-bottom:6px; font-family:'Plus Jakarta Sans','Inter',sans-serif; }
 .t1s-load-bar { width:100%; height:4px; background:rgba(255,255,255,.15); border-radius:99px; overflow:hidden; }
-.t1s-load-fill { height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,#4cf,#fff,#4cf); background-size:200% 100%; transition:width 2.2s cubic-bezier(.4,0,.2,1); animation:t1sBarShimmer 1.5s linear infinite; }
+.t1s-load-fill { height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,#4cf,#fff,#4cf); background-size:200% 100%; transition:width 9.5s cubic-bezier(.4,0,.2,1); animation:t1sBarShimmer 1.5s linear infinite; }
 @keyframes t1sBarShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
 /* ── Bottom wave ── */
@@ -13385,8 +13390,7 @@ html[data-theme="dark"] body { background: #0b1220; }
 .t1s-people { position:absolute; bottom:22px; left:0; right:0; display:flex; justify-content:center; gap:14px; color:rgba(255,255,255,.5); font-size:1.3rem; }
 .t1s-footer { position:absolute; bottom:6px; left:0; right:0; text-align:center; color:rgba(255,255,255,.65); font-size:.68rem; font-weight:700; font-family:'Plus Jakarta Sans','Inter',sans-serif; letter-spacing:.3px; }
 
-@keyframes t1sPop { from{opacity:0;transform:translateY(15px) scale(.88)} to{opacity:1;transform:translateY(0) scale(1)} }
-@keyframes t1sFadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+/* @keyframes t1sPop and t1sFadeUp already defined inline in splash block above — no duplicate needed */
 
 /* ─── Install Banner (Android-quality) ───────────────────── */
 #ft-install-banner {
