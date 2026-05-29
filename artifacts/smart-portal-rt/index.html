@@ -4335,26 +4335,85 @@ window.toggleSidebar = function() {
 <script id="gt-logout-fn">
 /* ══ FUNGSI KELUAR TERPADU — SmartPortal RT ══ */
 window.gtKeluar = function() {
-  if (!confirm('Yakin ingin keluar dari portal?')) return;
-  // Reset state login
-  try { window.loggedInWarga = null; } catch(_) {}
-  try { document.body.classList.remove('warga-portal-aktif'); } catch(_) {}
-  try { window.__GT_PORTAL_ACTIVE__ = false; } catch(_) {}
-  // Hapus session lokal
-  try { localStorage.removeItem('gt_local_session'); } catch(_) {}
-  try { localStorage.removeItem('gt_local_lastView'); } catch(_) {}
-  // Flush pending data ke server lalu reload
-  var doReload = function() { location.reload(); };
-  if (typeof window.GT_FLUSH_NOW === 'function') {
-    window.GT_FLUSH_NOW().then(doReload).catch(doReload);
-    setTimeout(doReload, 2000);
-  } else {
-    doReload();
-  }
+  Swal.fire({
+    title: 'Keluar dari Portal?',
+    html: '<p style="color:#64748b;margin:0;">Sesi Anda akan diakhiri.<br>Data yang belum tersimpan akan di-flush terlebih dahulu.</p>',
+    icon: 'question',
+    iconColor: '#dc2626',
+    showCancelButton: true,
+    confirmButtonText: '<i class="fa-solid fa-right-from-bracket"></i> Ya, Keluar',
+    cancelButtonText: '<i class="fa-solid fa-xmark"></i> Batal',
+    confirmButtonColor: '#dc2626',
+    cancelButtonColor: '#94a3b8',
+    reverseButtons: true,
+    customClass: {
+      popup:   'gt-swal-keluar-popup',
+      title:   'gt-swal-keluar-title',
+      actions: 'gt-swal-keluar-actions'
+    },
+    showClass:  { popup: 'animate__animated animate__fadeInDown animate__faster' },
+    hideClass:  { popup: 'animate__animated animate__fadeOutUp animate__faster' }
+  }).then(function(result) {
+    if (!result.isConfirmed) return;
+    try { window.loggedInWarga = null; } catch(_) {}
+    try { document.body.classList.remove('warga-portal-aktif'); } catch(_) {}
+    try { window.__GT_PORTAL_ACTIVE__ = false; } catch(_) {}
+    try { localStorage.removeItem('gt_local_session'); } catch(_) {}
+    try { localStorage.removeItem('gt_local_lastView'); } catch(_) {}
+    var doReload = function() { location.reload(); };
+    if (typeof window.GT_FLUSH_NOW === 'function') {
+      Swal.fire({
+        title: 'Menyimpan data...',
+        html: '<p style="color:#64748b;margin:0;">Harap tunggu sebentar.</p>',
+        icon: 'info',
+        iconColor: '#6366f1',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: function() { Swal.showLoading(); }
+      });
+      window.GT_FLUSH_NOW().then(doReload).catch(doReload);
+      setTimeout(doReload, 2500);
+    } else {
+      doReload();
+    }
+  });
 };
-// Alias untuk backward compat jika ada yang masih panggil logout()
+// Alias backward compat
 window.logout = window.gtKeluar;
 </script>
+
+<style id="gt-swal-keluar-css">
+.gt-swal-keluar-popup {
+  border-radius: 20px !important;
+  padding: 28px 24px 20px !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18) !important;
+  border: 1px solid #fecaca !important;
+}
+.gt-swal-keluar-title {
+  font-size: 1.2rem !important;
+  font-weight: 800 !important;
+  color: #dc2626 !important;
+}
+.gt-swal-keluar-actions {
+  gap: 10px !important;
+}
+.swal2-confirm.swal2-styled {
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  padding: 10px 22px !important;
+  font-size: 0.9rem !important;
+  box-shadow: 0 4px 12px rgba(220,38,38,0.25) !important;
+}
+.swal2-cancel.swal2-styled {
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  padding: 10px 22px !important;
+  font-size: 0.9rem !important;
+}
+</style>
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════════
