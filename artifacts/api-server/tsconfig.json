@@ -6,6 +6,11 @@
     "types": ["node"]
   },
   "include": ["src"],
+  "exclude": [
+    "src/__tests__/**",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
   "references": [
     {
       "path": "../../lib/db"
