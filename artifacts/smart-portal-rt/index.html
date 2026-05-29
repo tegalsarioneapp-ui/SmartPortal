@@ -2940,7 +2940,7 @@ html[data-theme="dark"] .swal2-popup.swal2-toast .swal2-title { color: #f1f5f9 !
   .btn-toggle-sidebar:active { transform: none !important; }
   .btn-action::after, .btn-submit::after, .btn-ultra::after,
   .btn-logout::after, .btn-header-icon::after,
-  .btn-toggle-sidebar::after { display: none !important; }
+  .btn-toggle-sidebar::after { display:block !important; }
 }
 /* === Haptic-style tap feedback for tab buttons (semua portal) === */
 .admin-tab-btn, .nav-btn, .gt-bn-item, .gt-service-card {
@@ -4615,11 +4615,43 @@ window.logout = window.gtKeluar;
 })();
 </script>
 
+<!-- gt-show-login-injected -->
+<script>
+/* Pastikan login form selalu muncul setelah splash selesai */
+(function(){
+  function gtShowLogin(){
+    if(window.__GT_PORTAL_ACTIVE__) return;
+    var splashView  = document.getElementById('splash-view');
+    var loginForm   = document.getElementById('login-form-view');
+    var loginScreen = document.getElementById('login-screen');
+    var t1splash    = document.getElementById('t1-splash');
+    if(splashView)  splashView.style.display  = 'none';
+    if(t1splash)    { t1splash.style.opacity  = '0'; t1splash.style.pointerEvents = 'none'; }
+    if(loginScreen) loginScreen.style.display = 'block';
+    if(loginForm)   {
+      loginForm.style.display   = 'block';
+      loginForm.style.opacity   = '1';
+      loginForm.style.transform = 'translateY(0)';
+      loginForm.style.visibility = 'visible';
+      loginForm.style.pointerEvents = 'auto';
+    }
+    var inp = document.getElementById('univ-id');
+    if(inp) setTimeout(function(){ try{ inp.focus(); }catch(_){} }, 100);
+  }
+  /* Tampil setelah 3.5 detik */
+  setTimeout(gtShowLogin, 3500);
+  /* Atau setelah window load + 3 detik */
+  window.addEventListener('load', function(){ setTimeout(gtShowLogin, 3000); });
+  /* Expose global agar bisa dipanggil manual */
+  window.gtShowLogin = gtShowLogin;
+})();
+</script>
+
 <div id="gt-progress-bar"></div>
 
 
 <div id="login-screen">
-    <div id="splash-view" onclick="bukaFormLogin()" style="cursor: pointer; text-align: center; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div id="splash-view" onclick="bukaFormLogin()" style="cursor: pointer; text-align: center; width: 100%; min-height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center;">
         <!-- 3D rotating T1 logo -->
         <div style="perspective:380px;width:118px;height:118px;margin-bottom:18px;">
           <div style="width:118px;height:118px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(0,210,255,.22),rgba(0,50,160,.18));border:2px solid rgba(100,210,255,.45);display:flex;align-items:center;justify-content:center;box-shadow:0 0 38px rgba(0,150,255,.45),0 0 70px rgba(0,90,200,.28),inset 0 0 24px rgba(255,255,255,.06);animation:t1HomeGlow 3s ease-in-out infinite;">
@@ -4650,7 +4682,7 @@ window.logout = window.gtKeluar;
       @keyframes t1HomeGlow{0%,100%{box-shadow:0 0 35px rgba(0,150,255,.45),0 0 70px rgba(0,90,200,.28)}50%{box-shadow:0 0 55px rgba(0,220,255,.7),0 0 110px rgba(0,150,255,.4)}}
     </style>
 
-    <div id="login-form-view" style="display: none; width: 100%; max-width: 450px; margin: auto; animation: slideUp 0.5s ease;">
+    <div id="login-form-view" style="display: block; width: 100%; max-width: 450px; margin: auto; animation: slideUp 0.5s ease;">
         <div class="ultra-login-wrapper" style="flex-direction: column;">
             <div class="ultra-right" style="padding: 35px 40px;">
                 <div style="text-align: center; margin-bottom: 25px;">
