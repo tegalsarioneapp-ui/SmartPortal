@@ -61,3 +61,6 @@ inspect_*.py
 patch_*.py
 step*.py
 cleanup_*.py
+
+# Ignore nested/broken local repository
+SmartPortal/
