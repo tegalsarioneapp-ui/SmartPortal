@@ -6124,6 +6124,9 @@ window.logout = window.gtKeluar;
 <script>
     // === Global state & helpers (must be initialized before any handler runs) ===
     var loggedInWarga = null;
+    var loggedInAs = null;
+    window.loggedInWarga = loggedInWarga;
+    window.loggedInAs = loggedInAs;
     var Toast = (typeof Swal !== 'undefined') ? Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -7618,9 +7621,11 @@ window.bukaFormLogin = function() {
             }).then(() => {
                 // SINKRON DATA AWAN HANYA DILAKUKAN 1X DI SINI
                 if(typeof syncSemuaData === 'function') syncSemuaData(); 
-                
-                window.window.__GT_LOGGED_ID__   = univId;
-    window.__GT_LOGGED_NAMA__ = namaWarga || univId;
+                var loginId = id;
+                var loginNama = (targetPortal === 'warga' && loggedInWarga && loggedInWarga.nama) ? loggedInWarga.nama : loginId;
+                window.__GT_LOGGED_ID__ = loginId;
+                window.__GT_LOGGED_NAMA__ = loginNama;
+                window.loggedInWarga = loggedInWarga;
     BukaPortal(targetPortal); // Buka pintunya
             });
         } else {
@@ -7634,6 +7639,11 @@ window.bukaFormLogin = function() {
     };
 
     window.BukaPortal = function(role) {
+        loggedInAs = role;
+        window.loggedInAs = role;
+        window.__GT_PORTAL_ACTIVE__ = true;
+        if (role !== 'warga') { loggedInWarga = null; window.loggedInWarga = null; }
+        if (typeof window.gtSpClose === 'function') { try { window.gtSpClose(); } catch(_) {} }
         document.getElementById('login-screen').style.display = 'none'; document.getElementById('main-app').style.display = 'block';
         ['warga', 'bendahara', 'koperasi', 'admin'].forEach(r => { let v = document.getElementById('view-' + r); if(v) { v.style.display = 'none'; v.classList.remove('active-grid'); } });
         document.body.classList.remove('warga-portal-aktif');
@@ -14195,6 +14205,9 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 
 
 
+
+</style>
+
 <div id="gt-sp-overlay" onclick="gtSpClose()"></div>
 <div id="gt-sp-drawer">
   <div class="sp-head">
@@ -14347,17 +14360,4 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
