@@ -824,7 +824,7 @@ html[data-theme="dark"] .btn-header-icon:hover { background: rgba(37,99,235,0.18
 .btn-action:active, .btn-submit:active { transform: translateY(0); filter: brightness(.96); }
 .btn-action:focus-visible, .btn-submit:focus-visible { outline: none; box-shadow: var(--gt-ring) !important; }
 
-/* Color variants — keep existing class names */
+/* Color variants Ã¢â‚¬â€ keep existing class names */
 .bg-blue   { background: var(--gt-grad-primary) !important; }
 .bg-green  { background: var(--gt-grad-emerald) !important; }
 .bg-gold   { background: var(--gt-grad-amber) !important; }
@@ -1084,7 +1084,7 @@ html[data-theme="dark"] tfoot[style*="background: #f8fafc"] { background: var(--
 
 /* Card / form-input-section text color always inherits theme text */
 .card, .form-input-section, .card *, .form-input-section * { /* gentle inheritance */
-  /* nothing — handled by .card text rules */
+  /* nothing Ã¢â‚¬â€ handled by .card text rules */
 }
 .card h1, .card h2, .card h3, .card h4, .card h5, .card h6,
 .form-input-section h1, .form-input-section h2, .form-input-section h3,
@@ -1505,7 +1505,7 @@ html[data-theme="dark"] .gt-search-info mark { background: rgba(245,158,11,0.30)
 
 
 /* ============================================================
-   ===== PHASE 2 — UI REPAIR + GOVTECH MODERNIZATION (v4) =====
+   ===== PHASE 2 Ã¢â‚¬â€ UI REPAIR + GOVTECH MODERNIZATION (v4) =====
    Pure visual / responsive layer. No markup or logic changes.
    ============================================================ */
 
@@ -1649,7 +1649,7 @@ textarea, select {
 .user-text-header h3,
 .user-text-header p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
-/* The malformed inline sync chip — re-style without touching markup */
+/* The malformed inline sync chip Ã¢â‚¬â€ re-style without touching markup */
 .main-header [onclick*="syncSemuaData"] {
   background: var(--gt-surface-2) !important;
   border: 1px solid var(--gt-border) !important;
@@ -1804,7 +1804,7 @@ button, .btn-action, .btn-submit, .btn-table {
 .gt-warga-modal { z-index: 10000 !important; }
 .swal2-container { z-index: 100000 !important; }
 
-/* ===== 13. Sticky bottom navigation (mobile only) — injected via JS ===== */
+/* ===== 13. Sticky bottom navigation (mobile only) Ã¢â‚¬â€ injected via JS ===== */
 .gt-bottom-nav {
   display: none;
   position: fixed; left: 0; right: 0; bottom: 0;
@@ -1884,7 +1884,7 @@ table { width: 100%; }
 }
 button, a { -webkit-tap-highlight-color: rgba(37,99,235,0.18); }
 
-/* ===== 21. Reduced motion already handled — keep ===== */
+/* ===== 21. Reduced motion already handled Ã¢â‚¬â€ keep ===== */
 
 /* ============================================================
    ===== END PHASE 2 =====
@@ -1895,7 +1895,7 @@ button, a { -webkit-tap-highlight-color: rgba(37,99,235,0.18); }
    ===== HOTFIX v5: icon overlap + long number wrap =====
    ============================================================ */
 
-/* ---- 1) LOGIN INPUT — bullet-proof icon clearance ----
+/* ---- 1) LOGIN INPUT Ã¢â‚¬â€ bullet-proof icon clearance ----
    Use box-sizing + WIDE left padding (60px) to guarantee no overlap
    regardless of any other rule. Use highly-specific compound selectors
    so this overrides any earlier .univ-input rule including media-query ones. */
@@ -1962,7 +1962,7 @@ form#form-universal-login .input-group-premium > input.univ-input,
   .input-group-premium > #univ-eye { width: 46px !important; }
 }
 
-/* ---- 2) GLOBAL WARGA SEARCH (header) — same icon-column pattern ---- */
+/* ---- 2) GLOBAL WARGA SEARCH (header) Ã¢â‚¬â€ same icon-column pattern ---- */
 .gt-search-wrap { padding: 0 !important; }
 .gt-search-wrap > input.gt-search-input,
 input#gt-search-input.gt-search-input,
@@ -1997,7 +1997,7 @@ input#gt-search-input.gt-search-input,
   transform: translateY(-50%) !important;
 }
 
-/* ---- 3) LONG NIK / KK NUMBERS — never blow out cards or grids ---- */
+/* ---- 3) LONG NIK / KK NUMBERS Ã¢â‚¬â€ never blow out cards or grids ---- */
 /* Tables: allow word wrap on long unbroken digits */
 table { table-layout: auto; width: 100%; }
 table th, table td {
@@ -2026,11 +2026,11 @@ table td b, table td small { word-break: break-word; overflow-wrap: anywhere; }
 /* Specific: warga-detail modal field value (where NIK lives) */
 .gt-warga-field .gt-fld-value {
   overflow-wrap: anywhere !important;
-  word-break: break-all !important;     /* NIK is pure digits — break anywhere */
+  word-break: break-all !important;     /* NIK is pure digits Ã¢â‚¬â€ break anywhere */
   white-space: normal !important;
   font-variant-numeric: tabular-nums;
 }
-/* Search row meta line was nowrap — let it wrap on small screens */
+/* Search row meta line was nowrap Ã¢â‚¬â€ let it wrap on small screens */
 .gt-search-info .gt-sr-meta {
   white-space: normal !important;
   word-break: break-word !important;
@@ -2179,7 +2179,7 @@ table td b, table td small { word-break: break-word; overflow-wrap: anywhere; }
   }
 }
 
-/* ---- 3) Inside-card buttons (Refresh/Import/Tambah) — wrap properly ---- */
+/* ---- 3) Inside-card buttons (Refresh/Import/Tambah) Ã¢â‚¬â€ wrap properly ---- */
 @media (max-width: 768px) {
   .card .btn-action, .form-input-section .btn-action,
   .card .btn-submit, .form-input-section .btn-submit {
@@ -2203,7 +2203,7 @@ table td b, table td small { word-break: break-word; overflow-wrap: anywhere; }
   }
 }
 
-/* ---- 4) KK list items / data cards — fluid full width ---- */
+/* ---- 4) KK list items / data cards Ã¢â‚¬â€ fluid full width ---- */
 @media (max-width: 768px) {
   /* Numbered/badge KK card containers commonly use inline 'border:1px solid #e2e8f0' style */
   [style*="border-radius:12px"][style*="padding"], 
@@ -2256,7 +2256,7 @@ table td b, table td small { word-break: break-word; overflow-wrap: anywhere; }
   .stats-grid { grid-template-columns: 1fr !important; }
 }
 
-/* ── Dashboard Redesign ─────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Dashboard Redesign Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 .dsh-greeting { display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
   background:linear-gradient(135deg,#1e3a5f 0%,#1e3a8a 60%,#312e81 100%);
   border-radius:18px;padding:18px 20px;margin-bottom:18px;
@@ -2303,7 +2303,7 @@ table td b, table td small { word-break: break-word; overflow-wrap: anywhere; }
 .dsh-ring-purple .dsh-ring-icon{ background:linear-gradient(135deg,#8b5cf6,#6d28d9); }
 .dsh-ring-purple{ border-left:3px solid #8b5cf6; }
 
-/* ── Quick-Access Cards ─────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Quick-Access Cards Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 .dsh-quick-grid { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px; }
 .gt-qa-card { display:flex;align-items:center;gap:12px;background:var(--bg-panel);border:1px solid var(--border-light);border-radius:14px;padding:13px 15px;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s; }
 .gt-qa-card:hover { transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.12); }
@@ -2312,7 +2312,7 @@ table td b, table td small { word-break: break-word; overflow-wrap: anywhere; }
 .gt-qa-val { font-size:0.88rem;font-weight:800;color:var(--text-dark); }
 .gt-qa-sub { font-size:0.66rem;color:#64748b;margin-top:1px; }
 
-/* ── GT Chat AI ─────────────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ GT Chat AI Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #gt-chat-fab { position:fixed;bottom:72px;right:18px;z-index:9000;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 4px 16px rgba(124,58,237,0.5);transition:transform 0.2s; }
 #gt-chat-fab:hover { transform:scale(1.1); }
 #gt-chat-fab .gt-chat-badge { position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:0.6rem;font-weight:800;display:none;align-items:center;justify-content:center; }
@@ -2991,7 +2991,7 @@ html[data-theme="dark"] .swal2-popup.swal2-toast .swal2-title { color: #f1f5f9 !
 /* === end smoothing === */
 
 
-/* ===== FIX #6: Header tabel — soften kontras di dark mode ===== */
+/* ===== FIX #6: Header tabel Ã¢â‚¬â€ soften kontras di dark mode ===== */
 html[data-theme="dark"] table thead th,
 html[data-theme="dark"] .table-responsive thead th,
 html[data-theme="dark"] table th {
@@ -3009,14 +3009,14 @@ html[data-theme="dark"] table tbody tr:hover td {
 /* Kecualikan iframe cetak dari override (sudah dipaksa light) */
 html[data-theme="dark"] iframe { color-scheme: light; }
 
-/* ===== FIX #5: Tombol "Keluar" — jangan terpotong di desktop ===== */
+/* ===== FIX #5: Tombol "Keluar" Ã¢â‚¬â€ jangan terpotong di desktop ===== */
 .main-header 
 .main-header 
 @media (min-width: 481px) {
   .main-header 
 }
 
-/* ===== FIX #1: Select2 dropdown — soften colors in dark mode ===== */
+/* ===== FIX #1: Select2 dropdown Ã¢â‚¬â€ soften colors in dark mode ===== */
 html[data-theme="dark"] .select2-container--default .select2-selection--single,
 html[data-theme="dark"] .select2-container--default .select2-selection--multiple {
   background: var(--gt-surface-2) !important;
@@ -3069,8 +3069,8 @@ html[data-theme="dark"] select option {
   color: var(--gt-text-2) !important;
 }
 
-/* ===== FIX #3: Matrix Iuran — rapikan font & kolom di desktop ===== */
-/* ── Accordion Matriks ── */
+/* ===== FIX #3: Matrix Iuran Ã¢â‚¬â€ rapikan font & kolom di desktop ===== */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Accordion Matriks Ã¢â€â‚¬Ã¢â€â‚¬ */
 .mtrx-accordion-wrap { display:flex; flex-direction:column; gap:6px; }
 .mtrx-row-header {
     display:flex; align-items:center; gap:10px;
@@ -3208,12 +3208,12 @@ html[data-theme="dark"] select option {
 .acc-body.open { max-height:9999px; }
 .acc-body-inner { padding:16px; }
 
-/* ═══════════════════════════════════════════════════════════════
-   PORTAL WARGA — FACEBOOK STYLE LAYOUT
-═══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   PORTAL WARGA Ã¢â‚¬â€ FACEBOOK STYLE LAYOUT
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 
 /* Override tab-view defaults for warga FB layout */
-/* NOTE: display is intentionally NOT set here — JS controls show/hide via inline style.
+/* NOTE: display is intentionally NOT set here Ã¢â‚¬â€ JS controls show/hide via inline style.
    When active, .tab-view.active-grid { display: flex !important } handles it. */
 #view-warga.warga-fb-layout {
     padding: 0 !important;
@@ -3275,7 +3275,7 @@ html[data-theme="dark"] select option {
     background: var(--gt-bg,#f0f2f5);
 }
 
-/* ── FB NAV ITEM ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ FB NAV ITEM Ã¢â€â‚¬Ã¢â€â‚¬ */
 .wfb-nav-item {
     display: flex;
     align-items: center;
@@ -3321,7 +3321,7 @@ html[data-theme="dark"] select option {
 .wfb-icon-red { background: #fee2e2; }
 .wfb-icon-indigo { background: #e0e7ff; }
 
-/* ── USER CARD ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ USER CARD Ã¢â€â‚¬Ã¢â€â‚¬ */
 .wfb-user-card {
     display: flex;
     align-items: center;
@@ -3364,7 +3364,7 @@ html[data-theme="dark"] select option {
     margin: 8px 0;
 }
 
-/* ── RIGHT SIDEBAR CARDS ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ RIGHT SIDEBAR CARDS Ã¢â€â‚¬Ã¢â€â‚¬ */
 .wfb-card {
     background: var(--gt-surface,#fff);
     border-radius: 12px;
@@ -3460,7 +3460,7 @@ html[data-theme="dark"] select option {
 .wfb-btn-red { background: #ef4444; color: #fff; }
 .wfb-btn-blue { background: #1d4ed8; color: #fff; }
 
-/* ── MOBILE RESPONSIVE ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ MOBILE RESPONSIVE Ã¢â€â‚¬Ã¢â€â‚¬ */
 @media (max-width: 768px) {
     #view-warga.warga-fb-layout {
         flex-direction: column !important;
@@ -3476,7 +3476,7 @@ html[data-theme="dark"] select option {
     }
 }
 
-/* ── MEDIUM (tablet: hide right sidebar) ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ MEDIUM (tablet: hide right sidebar) Ã¢â€â‚¬Ã¢â€â‚¬ */
 @media (min-width: 769px) and (max-width: 1100px) {
     .warga-fb-right { display: none; }
     .warga-fb-layout .warga-tab-content.active {
@@ -3485,7 +3485,7 @@ html[data-theme="dark"] select option {
     }
 }
 
-/* ── Mobile bottom nav for warga FB ──
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Mobile bottom nav for warga FB Ã¢â€â‚¬Ã¢â€â‚¬
    Hanya tampil saat body.warga-portal-aktif (diatur JS BukaPortal)
    Ini mencegah overlap dengan admin-nav-tabs di portal Admin/Koperasi */
 @media (max-width: 768px) {
@@ -3528,7 +3528,7 @@ html[data-theme="dark"] select option {
 .wfb-mob-btn i { font-size: 18px; }
 .wfb-mob-btn.active { color: #1d4ed8; }
 
-/* ═══════════════ GT PORTAL BERITA — PREMIUM NEWS ═══════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â GT PORTAL BERITA Ã¢â‚¬â€ PREMIUM NEWS Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #warga-berita-portal { padding: 0 !important; background: transparent; }
 .gt-news-wrap { display: flex; flex-direction: column; gap: 0; min-height: 100vh; }
 /* Breaking bar */
@@ -3575,7 +3575,7 @@ html[data-theme="dark"] select option {
   transition: all 0.18s; white-space: nowrap;
 }
 .gt-cat-btn.active, .gt-cat-btn:hover { background: #3b82f6; border-color: #3b82f6; color: #fff; }
-/* Search bar — baris terpisah di bawah nav kategori */
+/* Search bar Ã¢â‚¬â€ baris terpisah di bawah nav kategori */
 .gt-news-search-bar {
   display: flex; align-items: center; gap: 10px;
   background: #0f172a;
@@ -3744,10 +3744,10 @@ html[data-theme="dark"] select option {
 .src-default { background: #475569; color: #fff; }
 
 /* ===================================================================
-   GT-v12: 9 Perbaikan User (24 Mei 2026) — VERSI FINAL
+   GT-v12: 9 Perbaikan User (24 Mei 2026) Ã¢â‚¬â€ VERSI FINAL
    =================================================================== */
 
-/* ── (1) FAB TANYA BENNY ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ (1) FAB TANYA BENNY Ã¢â€â‚¬Ã¢â€â‚¬ */
 #gt-benny-fab {
   width: 68px !important; height: 68px !important;
   border-radius: 50% !important; overflow: hidden !important;
@@ -3774,7 +3774,7 @@ html[data-theme="dark"] select option {
   box-shadow: 0 2px 8px rgba(0,0,0,.4); letter-spacing: .05em;
 }
 
-/* ── (2)+(7) FONT & DARK/LIGHT SYNC MENYELURUH ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ (2)+(7) FONT & DARK/LIGHT SYNC MENYELURUH Ã¢â€â‚¬Ã¢â€â‚¬ */
 /* Light mode base */
 h1,h2,h3,h4,h5,h6 { color: var(--gt-text,#0f172a); }
 p { color: var(--gt-text-2,#334155); }
@@ -3791,7 +3791,7 @@ label, .form-label { color: var(--gt-text,#0f172a); }
 input:not([type=checkbox]):not([type=radio]), select, textarea {
   background: #fff; color: #0f172a; border-color: #e2e8f0;
 }
-/* Dark mode overrides — all in one block */
+/* Dark mode overrides Ã¢â‚¬â€ all in one block */
 html[data-theme="dark"] h1,html[data-theme="dark"] h2,
 html[data-theme="dark"] h3,html[data-theme="dark"] h4,
 html[data-theme="dark"] h5,html[data-theme="dark"] h6 { color: #f1f5f9 !important; }
@@ -3829,7 +3829,7 @@ html[data-theme="dark"] .dsh-ring-upd { color: #64748b !important; }
 html[data-theme="dark"] .dsh-section-hd { color: #e2e8f0 !important; }
 /* Hero always white text */
 .gt-hero h1, .gt-hero p, .gt-hero .gt-hero-chip { color: #fff !important; }
-/* Warga FB aside dark — LEFT PANEL */
+/* Warga FB aside dark Ã¢â‚¬â€ LEFT PANEL */
 html[data-theme="dark"] .warga-fb-aside,
 html[data-theme="dark"] .warga-fb-left,
 html[data-theme="dark"] .admin-nav-tabs,
@@ -3876,7 +3876,7 @@ html[data-theme="dark"] .gt-qa-card { background: #1e293b !important; border-col
 html[data-theme="dark"] .gt-qa-card h4 { color: #e2e8f0 !important; }
 html[data-theme="dark"] .gt-qa-card p  { color: #94a3b8 !important; }
 
-/* ── (3) DARURAT WARGA — font jelas + call button ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ (3) DARURAT WARGA Ã¢â‚¬â€ font jelas + call button Ã¢â€â‚¬Ã¢â€â‚¬ */
 .darurat-item { text-align: center; }
 .darurat-item h4.darurat-nama {
   color: var(--gt-text,#0f172a) !important; font-weight: 700 !important;
@@ -3895,12 +3895,8 @@ html[data-theme="dark"] .darurat-item h4.darurat-nama { color: #e2e8f0 !importan
 .darurat-item .call-btn i { color: #fff !important; }
 .darurat-item .call-btn:hover { background: #15803d !important; }
 
-/* ── (5) SIDEBAR TOGGLE — tampil di desktop ── */
-@media (min-width: 769px) {
 
-}
-
-/* ── (6) HERO DASHBOARD — foto & nama RT ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ (6) HERO DASHBOARD Ã¢â‚¬â€ foto & nama RT Ã¢â€â‚¬Ã¢â€â‚¬ */
 .gt-v11-hero-ring { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
 .gt-v11-hero-ring img {
   width: 60px; height: 60px; border-radius: 50%;
@@ -3911,7 +3907,7 @@ html[data-theme="dark"] .darurat-item h4.darurat-nama { color: #e2e8f0 !importan
 .gt-v11-hero-ring .gt-v11-info h2 { color: #fff !important; margin: 0 0 2px; font-size: 1rem; font-weight: 900; }
 .gt-v11-hero-ring .gt-v11-info p  { color: #bfdbfe !important; margin: 0; font-size: .78rem; }
 
-/* ── (8) BERITA SLIDER ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ (8) BERITA SLIDER Ã¢â€â‚¬Ã¢â€â‚¬ */
 #warga-berita-list { overflow: visible !important; max-height: none !important; }
 .gt-berita-slider-wrap { position: relative !important; overflow: hidden !important; border-radius: 12px !important; background: var(--gt-surface,#fff); }
 html[data-theme="dark"] .gt-berita-slider-wrap { background: #1e293b !important; }
@@ -3945,7 +3941,7 @@ html[data-theme="dark"] .gt-berita-arrow { background: #334155 !important; borde
 html[data-theme="dark"] .gt-berita-dot { background: #475569 !important; }
 html[data-theme="dark"] .gt-berita-dot.active { background: #60a5fa !important; }
 
-/* ── (9) KONTAK DARURAT SIDEBAR KANAN ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ (9) KONTAK DARURAT SIDEBAR KANAN Ã¢â€â‚¬Ã¢â€â‚¬ */
 #gt-sos-panel {
   position: fixed !important; right: 0 !important; top: 50% !important;
   transform: translateY(-50%) !important; z-index: 890 !important;
@@ -3983,7 +3979,7 @@ html[data-theme="dark"] #gt-sos-inner { background: #1e293b !important; border-c
   border-bottom: 1.5px solid #fecaca; padding-bottom: 8px;
 }
 html[data-theme="dark"] .gt-sos-h4 { color: #fca5a5 !important; border-color: #7f1d1d !important; }
-/* SOS table layout — neat columns */
+/* SOS table layout Ã¢â‚¬â€ neat columns */
 .gt-sos-table { width: 100%; border-collapse: collapse; }
 .gt-sos-table tr { border-bottom: 1px solid var(--gt-border,#e2e8f0); }
 html[data-theme="dark"] .gt-sos-table tr { border-color: #334155 !important; }
@@ -4038,7 +4034,7 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
         });
     }
 
-    // === PWA INSTALL PROMPT (shim — satu handler terpusat di bawah, pakai window._gtDeferredPrompt) ===
+    // === PWA INSTALL PROMPT (shim Ã¢â‚¬â€ satu handler terpusat di bawah, pakai window._gtDeferredPrompt) ===
     window.triggerPWAInstall = function() {
         var p = window._gtDeferredPrompt;
         if (!p) {
@@ -4099,10 +4095,10 @@ window.addEventListener('load', () => {
 
             const infoArisan = JSON.parse(localStorage.getItem('db_info_arisan')) || {};
             const elArisan = document.getElementById('wfb-arisan');
-            if(elArisan) elArisan.innerText = infoArisan.arisanNama || '—';
+            if(elArisan) elArisan.innerText = infoArisan.arisanNama || 'Ã¢â‚¬â€';
 
             const elHost = document.getElementById('wfb-host');
-            if(elHost) elHost.innerText = infoArisan.hostNama || '—';
+            if(elHost) elHost.innerText = infoArisan.hostNama || 'Ã¢â‚¬â€';
         } catch(e) {}
     };
 
@@ -4115,7 +4111,7 @@ window.addEventListener('load', () => {
         cells.forEach(cell => {
             if (cell.childNodes.length === 1 && cell.childNodes[0].nodeType === Node.TEXT_NODE) {
                 if (cell.innerText.trim() === 'undefined') {
-                    cell.innerText = '—';
+                    cell.innerText = 'Ã¢â‚¬â€';
                 }
             }
         });
@@ -4124,7 +4120,7 @@ window.addEventListener('load', () => {
 </script>
 
 <script id="gt-toggle-sidebar-restore">
-/* toggleSidebar — harus load lebih awal sebelum button render */
+/* toggleSidebar Ã¢â‚¬â€ harus load lebih awal sebelum button render */
 window.toggleSidebar = function() {
   var isMobile = window.innerWidth <= 768;
   if (isMobile) {
@@ -4147,9 +4143,9 @@ window.toggleSidebar = function() {
 
 
 <style id="gt-gap-fix">
-/* ══════════════════════════════════════════
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
    GAP FIX FINAL - override semua height 80px
-   ══════════════════════════════════════════ */
+   Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 
 /* Reset height pada main-app dan views */
 #main-app,
@@ -4251,7 +4247,7 @@ window.toggleSidebar = function() {
 </style>
 
 <style id="gt-sidebar-keluar-css">
-/* ══ Tombol Keluar - Sidebar Dinamis ══ */
+/* Ã¢â€¢ÂÃ¢â€¢Â Tombol Keluar - Sidebar Dinamis Ã¢â€¢ÂÃ¢â€¢Â */
 .sp-keluar-btn {
   display: flex;
   align-items: center;
@@ -4319,7 +4315,7 @@ window.toggleSidebar = function() {
 }
 </style>
 <script id="gt-logout-fn">
-/* ══ FUNGSI KELUAR TERPADU — SmartPortal RT ══ */
+/* Ã¢â€¢ÂÃ¢â€¢Â FUNGSI KELUAR TERPADU Ã¢â‚¬â€ SmartPortal RT Ã¢â€¢ÂÃ¢â€¢Â */
 window.gtKeluar = function() {
   Swal.fire({
     title: 'Keluar dari Portal?',
@@ -4402,13 +4398,13 @@ window.logout = window.gtKeluar;
 </style>
 </head>
 <body>
-<!-- ═══════════════════════════════════════════════════════
-     TEGALSARIONEAPP — PREMIUM SPLASH (inline, renders first)
+<!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+     TEGALSARIONEAPP Ã¢â‚¬â€ PREMIUM SPLASH (inline, renders first)
      CSS + HTML + dismiss-script inline at top of body so it
      is painted BEFORE any data-fetch or heavy JS runs.
-═══════════════════════════════════════════════════════ -->
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 <style>
-/* ═══ SPLASH SCREEN — autofit portrait & landscape, mobile & desktop ═══ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â SPLASH SCREEN Ã¢â‚¬â€ autofit portrait & landscape, mobile & desktop Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #t1-splash {
   position: fixed; inset: 0; z-index: 2147483647;
   background: #0b2878; /* fallback saat gambar belum load */
@@ -4417,7 +4413,7 @@ window.logout = window.gtKeluar;
 }
 #t1-splash.t1s-out { opacity: 0; transform: scale(1.03); pointer-events: none; }
 
-/* ── Gambar hero: selalu cover penuh tanpa letterbox ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Gambar hero: selalu cover penuh tanpa letterbox Ã¢â€â‚¬Ã¢â€â‚¬ */
 #t1s-picture {
   position: absolute;
   inset: 0;
@@ -4435,7 +4431,7 @@ window.logout = window.gtKeluar;
   object-position: center center;
   display: block;
   background: #0b2878;
-  /* Portrait: tunjukkan dari atas (logo T1 → landmarks → fitur)   */
+  /* Portrait: tunjukkan dari atas (logo T1 Ã¢â€ â€™ landmarks Ã¢â€ â€™ fitur)   */
   /* Landscape: tunjukkan area tengah gambar (landmarks + fitur)   */
   object-position: center 20%;
   display: block;
@@ -4463,7 +4459,7 @@ window.logout = window.gtKeluar;
   #t1s-bar-overlay { bottom: 16%; width: 55%; }
 }
 
-/* ── Overlay loading bar ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Overlay loading bar Ã¢â€â‚¬Ã¢â€â‚¬ */
 #t1s-bar-overlay {
   position: absolute;
   bottom: 22%;
@@ -4578,7 +4574,7 @@ window.logout = window.gtKeluar;
 </div>
 
 <script>
-/* Dismiss splash — show for ~3.2s then fade-scale out */
+/* Dismiss splash Ã¢â‚¬â€ show for ~3.2s then fade-scale out */
 (function(){
   var _t1dismissed = false;
   function _t1dismiss(){
@@ -4672,7 +4668,7 @@ window.logout = window.gtKeluar;
           </div>
         </div>
         <h1 class="sipada-title" style="font-size:clamp(1.4rem,5vw,2.2rem);letter-spacing:1px;">TEGALSARIONEAPP</h1>
-        <p class="sipada-subtitle">RT 005 · TEGALSARI · SEMARANG</p>
+        <p class="sipada-subtitle">RT 005 Ã‚Â· TEGALSARI Ã‚Â· SEMARANG</p>
         <div class="sipada-hint">
             <span class="pulse-text"><i class="fa-solid fa-hand-pointer"></i> KLIK UNTUK MASUK</span>
         </div>
@@ -4773,9 +4769,9 @@ window.logout = window.gtKeluar;
 
     <div id="view-warga" class="tab-view warga-fb-layout">
 
-        <!-- ══════════════════════════════════════════════
-             LEFT SIDEBAR — FACEBOOK STYLE
-        ══════════════════════════════════════════════ -->
+        <!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+             LEFT SIDEBAR Ã¢â‚¬â€ FACEBOOK STYLE
+        Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
         <aside class="warga-fb-left no-print">
 
             <!-- User Card -->
@@ -4840,11 +4836,11 @@ window.logout = window.gtKeluar;
 
             <div class="wfb-divider"></div>
             <div style="font-size:11px;color:#94a3b8;padding:4px 14px;line-height:1.6;">
-                © 2026 Smart Portal RT 005<br>
+                Ã‚Â© 2026 Smart Portal RT 005<br>
                 <span style="color:#cbd5e1;">Indo Duta Tech</span>
             </div>
 
-            <!-- ══ TOMBOL KELUAR ══ -->
+            <!-- Ã¢â€¢ÂÃ¢â€¢Â TOMBOL KELUAR Ã¢â€¢ÂÃ¢â€¢Â -->
             <div class="wfb-divider"></div>
             <button class="wfb-keluar-btn" onclick="gtKeluar()">
                 <i class="fa-solid fa-right-from-bracket"></i>
@@ -4852,18 +4848,18 @@ window.logout = window.gtKeluar;
             </button>
         </aside>
 
-        <!-- ══════════════════════════════════════════════
-             CENTER MAIN — semua warga-tab-content
-        ══════════════════════════════════════════════ -->
+        <!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+             CENTER MAIN Ã¢â‚¬â€ semua warga-tab-content
+        Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
         <main class="warga-fb-main">
 
         <div id="warga-dashboard" class="warga-tab-content active">
 
-            <!-- ── Greeting bar ── -->
+            <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Greeting bar Ã¢â€â‚¬Ã¢â€â‚¬ -->
             <div class="dsh-greeting">
                 <div>
                     <div class="dsh-greeting-date" id="warga-greeting-time">Selamat Datang</div>
-                    <div class="dsh-greeting-name">Halo, <span id="warga-welcome-name">Warga</span> 👋</div>
+                    <div class="dsh-greeting-name">Halo, <span id="warga-welcome-name">Warga</span> Ã°Å¸â€˜â€¹</div>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
                     <button onclick="window.openGtChat()" class="dsh-ai-btn" style="display:inline-flex;align-items:center;gap:6px;"><img src="/benny-avatar.png" style="width:22px;height:22px;border-radius:50%;object-fit:cover;object-position:center 10%;" onerror="this.style.display='none'"> TANYA BENNY</button>
@@ -4871,7 +4867,7 @@ window.logout = window.gtKeluar;
                 </div>
             </div>
 
-            <!-- ── Ringkasan Lingkungan ── -->
+            <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ringkasan Lingkungan Ã¢â€â‚¬Ã¢â€â‚¬ -->
             <div class="dsh-section-hd"><i class="fa-solid fa-chart-pie"></i> Ringkasan Lingkungan</div>
             <div class="dsh-ring-grid">
                 <div class="dsh-ring-card dsh-ring-blue">
@@ -4879,7 +4875,7 @@ window.logout = window.gtKeluar;
                     <div class="dsh-ring-body">
                         <div class="dsh-ring-lbl">Kas RT</div>
                         <div class="dsh-ring-val" id="warga-saldo-kas">Rp 0</div>
-                        <div class="dsh-ring-upd" id="upd-kas">—</div>
+                        <div class="dsh-ring-upd" id="upd-kas">Ã¢â‚¬â€</div>
                     </div>
                 </div>
                 <div class="dsh-ring-card dsh-ring-amber">
@@ -4887,14 +4883,14 @@ window.logout = window.gtKeluar;
                     <div class="dsh-ring-body">
                         <div class="dsh-ring-lbl">Jumlah KK</div>
                         <div class="dsh-ring-val" id="warga-total-kk">0 KK</div>
-                        <div class="dsh-ring-upd" id="upd-warga">—</div>
+                        <div class="dsh-ring-upd" id="upd-warga">Ã¢â‚¬â€</div>
                     </div>
                 </div>
                 <div class="dsh-ring-card dsh-ring-green">
                     <div class="dsh-ring-icon"><i class="fa-solid fa-gift"></i></div>
                     <div class="dsh-ring-body">
                         <div class="dsh-ring-lbl">Penerima Arisan</div>
-                        <div class="dsh-ring-val dsh-ring-val-sm" id="warga-arisan-nama">—</div>
+                        <div class="dsh-ring-val dsh-ring-val-sm" id="warga-arisan-nama">Ã¢â‚¬â€</div>
                         <div class="dsh-ring-upd" id="warga-arisan-tgl"></div>
                     </div>
                 </div>
@@ -4902,34 +4898,34 @@ window.logout = window.gtKeluar;
                     <div class="dsh-ring-icon"><i class="fa-solid fa-house-flag"></i></div>
                     <div class="dsh-ring-body">
                         <div class="dsh-ring-lbl">Tuan Rumah</div>
-                        <div class="dsh-ring-val dsh-ring-val-sm" id="warga-host-nama">—</div>
+                        <div class="dsh-ring-val dsh-ring-val-sm" id="warga-host-nama">Ã¢â‚¬â€</div>
                         <div class="dsh-ring-upd" id="warga-host-tgl"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- ── Akses Cepat ── -->
+            <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Akses Cepat Ã¢â€â‚¬Ã¢â€â‚¬ -->
             <div class="dsh-section-hd"><i class="fa-solid fa-bolt"></i> Akses Cepat</div>
             <div id="gt-quick-panel" class="dsh-quick-grid">
                 <div onclick="openWargaTab('warga-keuangan')" class="gt-qa-card">
                     <div class="gt-qa-icon" style="background:linear-gradient(135deg,#16a34a,#15803d);"><i class="fa-solid fa-receipt"></i></div>
-                    <div><div class="gt-qa-label">Iuran</div><div id="qa-iuran-status" class="gt-qa-val">—</div><div id="qa-iuran-sub" class="gt-qa-sub"></div></div>
+                    <div><div class="gt-qa-label">Iuran</div><div id="qa-iuran-status" class="gt-qa-val">Ã¢â‚¬â€</div><div id="qa-iuran-sub" class="gt-qa-sub"></div></div>
                 </div>
                 <div onclick="openWargaTab('warga-surat')" class="gt-qa-card">
                     <div class="gt-qa-icon" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);"><i class="fa-solid fa-envelope-open-text"></i></div>
-                    <div><div class="gt-qa-label">Surat</div><div id="qa-surat-status" class="gt-qa-val">—</div><div id="qa-surat-sub" class="gt-qa-sub"></div></div>
+                    <div><div class="gt-qa-label">Surat</div><div id="qa-surat-status" class="gt-qa-val">Ã¢â‚¬â€</div><div id="qa-surat-sub" class="gt-qa-sub"></div></div>
                 </div>
                 <div onclick="openWargaTab('warga-berita-portal')" class="gt-qa-card">
                     <div class="gt-qa-icon" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);"><i class="fa-solid fa-bullhorn"></i></div>
-                    <div><div class="gt-qa-label">Pengumuman</div><div id="qa-berita-status" class="gt-qa-val">—</div><div id="qa-berita-sub" class="gt-qa-sub"></div></div>
+                    <div><div class="gt-qa-label">Pengumuman</div><div id="qa-berita-status" class="gt-qa-val">Ã¢â‚¬â€</div><div id="qa-berita-sub" class="gt-qa-sub"></div></div>
                 </div>
                 <div onclick="openWargaTab('warga-aduan')" class="gt-qa-card">
                     <div class="gt-qa-icon" style="background:linear-gradient(135deg,#dc2626,#b91c1c);"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div><div class="gt-qa-label">Aduan</div><div id="qa-aduan-status" class="gt-qa-val">—</div><div id="qa-aduan-sub" class="gt-qa-sub"></div></div>
+                    <div><div class="gt-qa-label">Aduan</div><div id="qa-aduan-status" class="gt-qa-val">Ã¢â‚¬â€</div><div id="qa-aduan-sub" class="gt-qa-sub"></div></div>
                 </div>
             </div>
 
-            <!-- ── Status Pengajuan Saya ── -->
+            <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Status Pengajuan Saya Ã¢â€â‚¬Ã¢â€â‚¬ -->
             <div class="dsh-section-hd"><i class="fa-solid fa-route"></i> Status Pengajuan Saya
                 <button class="dsh-refresh-btn" onclick="if(window.gtRefreshDashboard) window.gtRefreshDashboard();">
                     <i class="fa-solid fa-rotate"></i> Perbarui
@@ -4944,7 +4940,7 @@ window.logout = window.gtKeluar;
                 </div>
             </div>
 
-            <!-- ── Informasi & Agenda ── -->
+            <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Informasi & Agenda Ã¢â€â‚¬Ã¢â€â‚¬ -->
             <div class="dsh-section-hd"><i class="fa-solid fa-newspaper"></i> Informasi &amp; Agenda</div>
             <div style="background:var(--bg-panel);border:1px solid var(--border-light);border-radius:16px;overflow:hidden;margin-bottom:80px;">
                 <div style="display:flex;border-bottom:1px solid var(--border-light);">
@@ -5166,7 +5162,7 @@ window.logout = window.gtKeluar;
         <div id="warga-darurat" class="warga-tab-content">
             <div class="card" style="border-top: 4px solid var(--danger);">
                 <div style="text-align: center; margin-bottom: 30px;"><div class="sos-pulse"><i class="fa-solid fa-circle-exclamation"></i></div><h2 style="color: var(--danger); margin-top:15px; font-weight:800;">SEMARANG EMERGENCY PRO</h2><p style="font-size: 0.95rem; color: var(--text-muted);">Akses cepat bantuan darurat wilayah RT 005 Tegalsari & sekitarnya</p></div>
-                <div style="margin-bottom: 25px;"><input type="text" id="search-darurat" class="search-box" style="width: 100%; border-color: rgba(239,68,68,0.4);" placeholder="🔍 Cari layanan (Cth: Polisi, Ambulans)..." onkeyup="filterKontakDarurat()"></div>
+                <div style="margin-bottom: 25px;"><input type="text" id="search-darurat" class="search-box" style="width: 100%; border-color: rgba(239,68,68,0.4);" placeholder="Ã°Å¸â€Â Cari layanan (Cth: Polisi, Ambulans)..." onkeyup="filterKontakDarurat()"></div>
                 <div class="stats-grid" id="container-darurat-warga" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px;"></div>
             </div>
         </div>
@@ -5184,7 +5180,7 @@ window.logout = window.gtKeluar;
             <!-- Breaking news bar -->
             <div class="gt-breaking-bar">
               <span class="gt-breaking-label"><span class="gt-live-dot"></span><i class="fa-solid fa-bolt"></i> LIVE</span>
-              <div class="gt-breaking-scroll"><div class="gt-breaking-inner" id="gt-brk-inner"><span style="color:#64748b;">Memuat berita terkini…</span></div></div>
+              <div class="gt-breaking-scroll"><div class="gt-breaking-inner" id="gt-brk-inner"><span style="color:#64748b;">Memuat berita terkiniÃ¢â‚¬Â¦</span></div></div>
               <button onclick="window.gtNewsRefresh(true)" title="Refresh berita" style="background:none;border:none;color:#64748b;cursor:pointer;margin-left:12px;font-size:0.9rem;"><i class="fa-solid fa-rotate"></i></button>
             </div>
             <!-- Navbar kategori -->
@@ -5197,14 +5193,14 @@ window.logout = window.gtKeluar;
               <button class="gt-cat-btn" data-cat="Gaya Hidup" onclick="window.gtNewsSetCat(this,'Gaya Hidup')">Gaya Hidup</button>
               <button class="gt-cat-btn" data-cat="Bookmark" onclick="window.gtNewsSetCat(this,'Bookmark')" style="margin-left:4px;border-color:#f59e0b;color:#f59e0b;"><i class="fa-solid fa-bookmark"></i> Tersimpan</button>
             </div>
-            <!-- Search bar — baris terpisah, rapi dan menarik -->
+            <!-- Search bar Ã¢â‚¬â€ baris terpisah, rapi dan menarik -->
             <div class="gt-news-search-bar">
               <div class="gt-news-search-wrap" id="gt-news-search-wrap">
                 <span class="gt-news-search-icon-wrap">
                   <i class="fa-solid fa-magnifying-glass"></i>
                 </span>
                 <input type="search" class="gt-news-search" id="gt-news-search"
-                  placeholder="Cari judul berita, topik, atau sumber…"
+                  placeholder="Cari judul berita, topik, atau sumberÃ¢â‚¬Â¦"
                   oninput="window.gtNewsSearch(this.value); var w=document.getElementById('gt-news-search-wrap'); w&&w.classList.toggle('has-text', this.value.length>0);"
                   autocomplete="off" spellcheck="false">
                 <button class="gt-news-search-clear" id="gt-news-search-clear" title="Hapus pencarian"
@@ -5246,16 +5242,16 @@ window.logout = window.gtKeluar;
             <!-- Status bar -->
             <div class="gt-news-status" id="gt-news-status">
               <span class="gt-news-status-dot" id="gt-news-dot"></span>
-              <span id="gt-news-status-text">Memuat berita…</span>
+              <span id="gt-news-status-text">Memuat beritaÃ¢â‚¬Â¦</span>
               <span style="margin-left:auto;color:#475569;" id="gt-news-count"></span>
             </div>
           </div>
         </div>
         </main><!-- /.warga-fb-main -->
 
-        <!-- ══════════════════════════════════════════════
-             RIGHT SIDEBAR — Statistik & Info RT
-        ══════════════════════════════════════════════ -->
+        <!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+             RIGHT SIDEBAR Ã¢â‚¬â€ Statistik & Info RT
+        Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
         <aside class="warga-fb-right no-print" id="warga-fb-right">
 
             <!-- Tombol tutup panel kanan -->
@@ -5270,23 +5266,23 @@ window.logout = window.gtKeluar;
                 <h3 class="wfb-card-title"><i class="fa-solid fa-chart-pie" style="color:#1d4ed8;"></i> Rekap RT 005</h3>
                 <div class="wfb-stats-grid">
                     <div class="wfb-stat" onclick="openWargaTab('warga-keuangan')" style="cursor:pointer;" title="Klik untuk lihat iuran">
-                        <div class="wfb-stat-icon">💰</div>
+                        <div class="wfb-stat-icon">Ã°Å¸â€™Â°</div>
                         <div id="wfb-saldo-kas" class="wfb-stat-val">Rp 0</div>
                         <div class="wfb-stat-lbl">Saldo Kas</div>
                     </div>
                     <div class="wfb-stat" onclick="openWargaTab('warga-profil')" style="cursor:pointer;" title="Klik untuk lihat profil">
-                        <div class="wfb-stat-icon">🏠</div>
+                        <div class="wfb-stat-icon">Ã°Å¸ÂÂ </div>
                         <div id="wfb-total-kk" class="wfb-stat-val">0 KK</div>
                         <div class="wfb-stat-lbl">Total KK</div>
                     </div>
                     <div class="wfb-stat">
-                        <div class="wfb-stat-icon">🎲</div>
-                        <div id="wfb-arisan" class="wfb-stat-val" style="font-size:10px;">—</div>
+                        <div class="wfb-stat-icon">Ã°Å¸Å½Â²</div>
+                        <div id="wfb-arisan" class="wfb-stat-val" style="font-size:10px;">Ã¢â‚¬â€</div>
                         <div class="wfb-stat-lbl">Arisan</div>
                     </div>
                     <div class="wfb-stat">
-                        <div class="wfb-stat-icon">🏘️</div>
-                        <div id="wfb-host" class="wfb-stat-val" style="font-size:10px;">—</div>
+                        <div class="wfb-stat-icon">Ã°Å¸ÂËœÃ¯Â¸Â</div>
+                        <div id="wfb-host" class="wfb-stat-val" style="font-size:10px;">Ã¢â‚¬â€</div>
                         <div class="wfb-stat-lbl">Tuan Rumah</div>
                     </div>
                 </div>
@@ -5576,11 +5572,11 @@ window.logout = window.gtKeluar;
                             <div class="form-group"><label><i class="fa-solid fa-heart-pulse" style="color:#e11d48;"></i> Status Sosial</label>
                                 <select id="adm-kk-status-sosial" style="width:100%; padding:14px 18px; border:2px solid #e2e8f0; border-radius:12px; font-size:1rem; background:#fff; color:#1e293b;">
                                     <option value="Umum">Umum (Normal)</option>
-                                    <option value="Janda">Janda — Bebas Iuran + Prioritas Bantuan</option>
-                                    <option value="Duda">Duda — Bebas Iuran + Prioritas Bantuan</option>
-                                    <option value="Lansia">Lansia (≥60 th) — Prioritas Bantuan</option>
-                                    <option value="Janda + Lansia">Janda + Lansia — Bebas Iuran + Prioritas Utama</option>
-                                    <option value="Duda + Lansia">Duda + Lansia — Bebas Iuran + Prioritas Utama</option>
+                                    <option value="Janda">Janda Ã¢â‚¬â€ Bebas Iuran + Prioritas Bantuan</option>
+                                    <option value="Duda">Duda Ã¢â‚¬â€ Bebas Iuran + Prioritas Bantuan</option>
+                                    <option value="Lansia">Lansia (Ã¢â€°Â¥60 th) Ã¢â‚¬â€ Prioritas Bantuan</option>
+                                    <option value="Janda + Lansia">Janda + Lansia Ã¢â‚¬â€ Bebas Iuran + Prioritas Utama</option>
+                                    <option value="Duda + Lansia">Duda + Lansia Ã¢â‚¬â€ Bebas Iuran + Prioritas Utama</option>
                                 </select>
                                 <small style="color:#64748b; margin-top:4px; display:block;">Warga Janda/Duda otomatis dibebaskan dari iuran wajib dan masuk daftar prioritas penerima bantuan RT.</small>
                             </div>
@@ -5909,7 +5905,7 @@ window.logout = window.gtKeluar;
                             <i class="fa-solid fa-circle-info" style="color:#3b82f6;font-size:1.3rem;flex-shrink:0;"></i>
                             <div style="font-size:0.83rem;color:#1e40af;line-height:1.5;">
                                 Install Smart Portal RT 005 sebagai aplikasi di HP atau komputer.<br>
-                                <b>Syarat:</b> Buka di Chrome/Edge (Android, desktop). iOS Safari: gunakan Share → Add to Home Screen.
+                                <b>Syarat:</b> Buka di Chrome/Edge (Android, desktop). iOS Safari: gunakan Share Ã¢â€ â€™ Add to Home Screen.
                             </div>
                         </div>
                         <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -6056,7 +6052,7 @@ window.logout = window.gtKeluar;
         <div id="hidden-pdf-container" style="display: none !important;">
     <div class="letter-paper" id="surat-warga-paper">
         <div class="kop-surat-resmi"><img src="/Lambang_Kota_Semarang.png" class="kop-logo" onerror="this.src='/Lambang_Kota_Semarang.png'"><div class="kop-teks"><h2>KOTA SEMARANG</h2><h3>KECAMATAN CANDISARI</h3><h3>KELURAHAN TEGALSARI</h3><h3>RT. 005 / RW. 012</h3></div></div><div class="kop-garis"></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:1.05rem; color:#000;"><div style="width:55%;"><div>Nomor : <b id="pdf-no"></b></div><div>Lampiran : -</div><div style="font-weight:bold; text-decoration:underline; margin-top:5px;">Hal : Surat Pengantar</div></div><div style="text-align:right;"><div>Semarang, <span id="pdf-tgl"></span></div><div style="margin-top:10px;">Kepada Yth.<br><b>Kepala Kelurahan Tegalsari</b><br>di -<br>    <b style="text-transform:uppercase; text-decoration:underline;">Semarang</b></div></div></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:1.05rem; color:#000;"><div style="width:55%;"><div>Nomor : <b id="pdf-no"></b></div><div>Lampiran : -</div><div style="font-weight:bold; text-decoration:underline; margin-top:5px;">Hal : Surat Pengantar</div></div><div style="text-align:right;"><div>Semarang, <span id="pdf-tgl"></span></div><div style="margin-top:10px;">Kepada Yth.<br><b>Kepala Kelurahan Tegalsari</b><br>di -<br>Ã‚Â Ã‚Â Ã‚Â Ã‚Â <b style="text-transform:uppercase; text-decoration:underline;">Semarang</b></div></div></div>
         <p style="margin-bottom:15px; color:#000; font-size:1.05rem;">Bersama ini menerangkan bahwa :</p>
         <table class="tabel-isi-surat">
             <tr><td class="label-cell">1. Nama</td><td class="colon-cell">:</td><td><b id="pdf-nama"></b></td></tr>
@@ -6076,7 +6072,7 @@ window.logout = window.gtKeluar;
 
 <div id="hidden-notulen-container" style="display: none;">
     <div class="letter-paper" id="notulen-paper">
-        <div class="kop-surat-resmi"><img src="/Lambang_Kota_Semarang.png" style="width: 70px; height: auto; filter: grayscale(100%);"><div style="flex: 1; text-align: center;"><h2 style="margin: 0; font-size: 1.4rem; font-weight: bold; text-transform: uppercase; color: black;">PENGURUS RUKUN TETANGGA 005 RUKUN WARGA 012</h2><h3 style="margin: 2px 0; font-size: 1.1rem; font-weight: normal; text-transform: uppercase; color: black;">KELURAHAN TEGALSARI • KECAMATAN CANDISARI</h3><h3 style="margin: 2px 0; font-size: 1.1rem; font-weight: normal; text-transform: uppercase; color: black;">KOTA SEMARANG</h3></div></div>
+        <div class="kop-surat-resmi"><img src="/Lambang_Kota_Semarang.png" style="width: 70px; height: auto; filter: grayscale(100%);"><div style="flex: 1; text-align: center;"><h2 style="margin: 0; font-size: 1.4rem; font-weight: bold; text-transform: uppercase; color: black;">PENGURUS RUKUN TETANGGA 005 RUKUN WARGA 012</h2><h3 style="margin: 2px 0; font-size: 1.1rem; font-weight: normal; text-transform: uppercase; color: black;">KELURAHAN TEGALSARI Ã¢â‚¬Â¢ KECAMATAN CANDISARI</h3><h3 style="margin: 2px 0; font-size: 1.1rem; font-weight: normal; text-transform: uppercase; color: black;">KOTA SEMARANG</h3></div></div>
         <div style="border-top: 3px solid black; border-bottom: 1px solid black; height: 1px; margin-bottom: 20px; padding-top: 2px;"></div>
         <h3 style="text-align:center; text-decoration:underline; font-weight:bold; color:black; margin-bottom: 25px;">NOTULENSI RAPAT</h3>
         <table style="width:100%; font-size:1.1rem; color:black; border:none; margin-bottom: 25px;"><tr><td style="width:150px; padding:3px 0; border:none; background:transparent;">Hari, Tanggal</td><td style="width:20px; border:none; background:transparent;">:</td><td style="border:none; background:transparent;"><b id="cetak_n_tgl"></b></td></tr><tr><td style="padding:3px 0; border:none; background:transparent;">Agenda Utama</td><td style="border:none; background:transparent;">:</td><td style="border:none; background:transparent;"><b id="cetak_n_judul"></b></td></tr></table>
@@ -6231,7 +6227,7 @@ window.logout = window.gtKeluar;
         }, 200);
     })();
 
-    // ===== THEME (light/dark) bootstrap — injected by audit overhaul =====
+    // ===== THEME (light/dark) bootstrap Ã¢â‚¬â€ injected by audit overhaul =====
     (function(){
         try {
             var saved = localStorage.getItem('gt_theme');
@@ -6269,7 +6265,7 @@ window.logout = window.gtKeluar;
         setTimeout(ensureToggle, 600);
         setTimeout(ensureToggle, 2000);
     })();
-    // ===== Citizen super-app dashboard injector — v2 =====
+    // ===== Citizen super-app dashboard injector Ã¢â‚¬â€ v2 =====
     (function(){
         function safeJSON(k, fb){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch(_) { return fb; } }
         function fmtDate(s){ try { var d = new Date(s); if (isNaN(d)) return s||'-'; return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}); } catch(_) { return s||'-'; } }
@@ -6347,7 +6343,7 @@ window.logout = window.gtKeluar;
                 {icon:'fa-circle-check',      label:'Selesai'}
             ];
             var judul = (it.judul||it.kategori||'Aduan').toString();
-            return '<div class="gt-status-head"><div><h4 class="gt-status-title"><i class="fa-solid fa-bullhorn" style="color:var(--gt-danger-500);"></i>'+escapeHtml(judul)+'</h4><div class="gt-status-meta">Dilaporkan '+fmtDate(it.tgl||it.tanggal)+' • '+escapeHtml(it.kategori||'-')+'</div></div><span class="badge '+(cur===2?'badge-masuk':'badge-menunggu')+'">'+escapeHtml(it.status||'Menunggu')+'</span></div>'
+            return '<div class="gt-status-head"><div><h4 class="gt-status-title"><i class="fa-solid fa-bullhorn" style="color:var(--gt-danger-500);"></i>'+escapeHtml(judul)+'</h4><div class="gt-status-meta">Dilaporkan '+fmtDate(it.tgl||it.tanggal)+' Ã¢â‚¬Â¢ '+escapeHtml(it.kategori||'-')+'</div></div><span class="badge '+(cur===2?'badge-masuk':'badge-menunggu')+'">'+escapeHtml(it.status||'Menunggu')+'</span></div>'
                 + renderTimeline(steps, cur);
         }
 
@@ -6366,8 +6362,8 @@ window.logout = window.gtKeluar;
             var gEl = document.getElementById('warga-greeting-time');
             if (gEl) {
                 var h = new Date().getHours();
-                var salam = h < 11 ? 'Selamat Pagi ☀️' : h < 15 ? 'Selamat Siang 🌤️' : h < 18 ? 'Selamat Sore 🌇' : 'Selamat Malam 🌙';
-                gEl.textContent = salam + ' · ' + new Date().toLocaleDateString('id-ID', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+                var salam = h < 11 ? 'Selamat Pagi Ã¢Ëœâ‚¬Ã¯Â¸Â' : h < 15 ? 'Selamat Siang Ã°Å¸Å’Â¤Ã¯Â¸Â' : h < 18 ? 'Selamat Sore Ã°Å¸Å’â€¡' : 'Selamat Malam Ã°Å¸Å’â„¢';
+                gEl.textContent = salam + ' Ã‚Â· ' + new Date().toLocaleDateString('id-ID', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
             }
         }
 
@@ -6398,7 +6394,7 @@ window.logout = window.gtKeluar;
             if (tries > 40) clearInterval(w);
         }, 250);
     })();
-    // ===== Notification Center & Global Warga Search — v1 =====
+    // ===== Notification Center & Global Warga Search Ã¢â‚¬â€ v1 =====
     (function(){
         function safeJSON(k, fb){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch(_){ return fb; } }
         function esc(s){ return (s==null?'':String(s)).replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
@@ -6426,7 +6422,7 @@ window.logout = window.gtKeluar;
                     type: 'aduan',
                     icon: 'fa-bullhorn',
                     title: 'Aduan: ' + (a.judul || a.kategori || 'Laporan'),
-                    sub: (a.namaPelapor ? a.namaPelapor + ' • ' : '') + (a.kategori || '') + ' • Status: ' + (a.status || 'Menunggu'),
+                    sub: (a.namaPelapor ? a.namaPelapor + ' Ã¢â‚¬Â¢ ' : '') + (a.kategori || '') + ' Ã¢â‚¬Â¢ Status: ' + (a.status || 'Menunggu'),
                     ts: a.id || Date.now(),
                     onClick: function(){
                         if (typeof openWargaTab === 'function') { try { openWargaTab('warga-aduan'); } catch(_){} }
@@ -6459,7 +6455,7 @@ window.logout = window.gtKeluar;
                         type: 'surat',
                         icon: 'fa-envelope-open-text',
                         title: 'Surat: ' + (s.keperluan || s.req_keperluan || 'Pengajuan'),
-                        sub: 'Status: ' + (s.status || 'Diproses') + (s.no_surat ? ' • '+s.no_surat : ''),
+                        sub: 'Status: ' + (s.status || 'Diproses') + (s.no_surat ? ' Ã¢â‚¬Â¢ '+s.no_surat : ''),
                         ts: new Date(s.tgl || s.tanggal || Date.now()).getTime() || Date.now(),
                         onClick: function(){
                             if (typeof openWargaTab === 'function') { try { openWargaTab('warga-surat'); } catch(_){} }
@@ -6555,7 +6551,7 @@ window.logout = window.gtKeluar;
         function wireBell(){
             var bell = document.querySelector('.main-header .notif-bell');
             if (!bell || bell.__gtWired) return;
-            // Strip the legacy onclick (Swal alert) — use property reset, not removeAttribute (would re-fire on reload)
+            // Strip the legacy onclick (Swal alert) Ã¢â‚¬â€ use property reset, not removeAttribute (would re-fire on reload)
             try { bell.onclick = null; bell.removeAttribute('onclick'); } catch(_){}
             bell.addEventListener('click', function(e){
                 e.stopPropagation();
@@ -6675,10 +6671,10 @@ window.logout = window.gtKeluar;
                             + '<div class="gt-search-avatar">'+esc(initial)+'</div>'
                             + '<div class="gt-search-info">'
                             +   '<p class="gt-sr-name">'+highlight(w.nama || '-', q)+'</p>'
-                            +   '<div class="gt-sr-meta">NIK '+highlight(w.nik || '-', q)+' • '+highlight(w.alamat || '-', q)+'</div>'
+                            +   '<div class="gt-sr-meta">NIK '+highlight(w.nik || '-', q)+' Ã¢â‚¬Â¢ '+highlight(w.alamat || '-', q)+'</div>'
                             + '</div></div>';
                     });
-                    html += '<div class="gt-search-foot"><span>'+current.length+' hasil</span><span><kbd>↑</kbd><kbd>↓</kbd> navigasi • <kbd>Enter</kbd> buka • <kbd>Esc</kbd> tutup</span></div>';
+                    html += '<div class="gt-search-foot"><span>'+current.length+' hasil</span><span><kbd>Ã¢â€ â€˜</kbd><kbd>Ã¢â€ â€œ</kbd> navigasi Ã¢â‚¬Â¢ <kbd>Enter</kbd> buka Ã¢â‚¬Â¢ <kbd>Esc</kbd> tutup</span></div>';
                     box.innerHTML = html;
                     box.querySelectorAll('.gt-search-row').forEach(function(row){
                         row.addEventListener('mousedown', function(e){
@@ -6745,7 +6741,7 @@ window.logout = window.gtKeluar;
             if (hookTries > 40) clearInterval(hk);
         }, 250);
     })();
-    // ===== Mobile sticky bottom nav (role-aware) — v1 =====
+    // ===== Mobile sticky bottom nav (role-aware) Ã¢â‚¬â€ v1 =====
     (function(){
         var WARGA_NAV = [
             { id:'warga-dashboard', icon:'fa-house',                 label:'Beranda' },
@@ -6986,7 +6982,7 @@ window.logout = window.gtKeluar;
         });
     })();
 
-    /* Hide & Seek pull-tab dipulihkan — IIFE "unhideNav" yang dulu
+    /* Hide & Seek pull-tab dipulihkan Ã¢â‚¬â€ IIFE "unhideNav" yang dulu
        menghapus pull-tab di setiap tab change sengaja dinonaktifkan.
        Smoothing transisi via CSS HOTFIX v9 + blok Hide & Seek smoothing. */
     (function(){ /* legacy kill-switch dimatikan total */ })();
@@ -7013,7 +7009,7 @@ window.logout = window.gtKeluar;
 
     // ===== HELPER CETAK VIA IFRAME (preview muncul untuk Notulen, BA Kas, Rekap, dll) =====
     // ============================================================
-    // PDF DOWNLOAD HELPER (mengganti seluruh "Cetak" → Download PDF)
+    // PDF DOWNLOAD HELPER (mengganti seluruh "Cetak" Ã¢â€ â€™ Download PDF)
     // - Render HTML ke offscreen container, capture pakai html2canvas,
     //   bagi ke multi halaman A4 dengan jsPDF, langsung trigger download.
     // - Selalu mencatat ke db_riwayat_ekspor agar fitur Riwayat Ekspor utuh.
@@ -7021,7 +7017,7 @@ window.logout = window.gtKeluar;
     window.downloadPdfFromHtml = async function(htmlBody, title){
         var safeTitle = String(title||'Dokumen').trim() || 'Dokumen';
         var fileName = safeTitle.replace(/[\\\/:*?"<>|]+/g,'_').replace(/\s+/g,'_').slice(0,140) + '.pdf';
-        // Catat riwayat ekspor (selalu, bahkan jika user batal — supaya konsisten dgn perilaku lama)
+        // Catat riwayat ekspor (selalu, bahkan jika user batal Ã¢â‚¬â€ supaya konsisten dgn perilaku lama)
         try {
             var rwk = JSON.parse(localStorage.getItem('db_riwayat_ekspor')) || [];
             rwk.push({
@@ -7035,13 +7031,13 @@ window.logout = window.gtKeluar;
             if (typeof syncSemuaData === 'function') { try { syncSemuaData(true); } catch(_){} }
         } catch(e){ console.warn('riwayat ekspor gagal disimpan', e); }
 
-        // Rewrite path img/asset relatif → absolute (Lambang_Kota_Semarang.png dll)
+        // Rewrite path img/asset relatif Ã¢â€ â€™ absolute (Lambang_Kota_Semarang.png dll)
         var baseAbs = (location.origin + location.pathname).replace(/[^\/]*$/, '');
         try {
             htmlBody = String(htmlBody||'').replace(/(<img\b[^>]*?\bsrc\s*=\s*["'])(?!https?:|data:|\/\/|\/)([^"']+)(["'])/gi, function(_, p1, p2, p3){ return p1 + baseAbs + p2 + p3; });
         } catch(_){}
 
-        // Buat container offscreen lebar 794px (≈ A4 96dpi)
+        // Buat container offscreen lebar 794px (Ã¢â€°Ë† A4 96dpi)
         var holder = document.createElement('div');
         holder.style.cssText = 'position:fixed; left:-10000px; top:0; width:794px; padding:0; background:white; color:black; font-family:"Times New Roman",Times,serif; z-index:-1;';
         // Reset dark mode agar PDF selalu putih
@@ -7864,7 +7860,7 @@ window.bukaFormLogin = function() {
             var badgeSS = (ss && ss !== 'Umum') ? '<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:700;background:#fdf4ff;color:#7e22ce;border:1px solid #d8b4fe;vertical-align:middle;margin-left:4px;"><i class="fa-solid fa-id-badge"></i> ' + ss + '</span>' : '';
             var badgePrioritas = isPrioritas ? '<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:700;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;vertical-align:middle;margin-left:4px;"><i class="fa-solid fa-hand-holding-heart"></i> Prioritas Bantuan</span>' : '';
             var telpTampil = myData.telp ? '<br><small><i class="fa-solid fa-phone" style="color:#059669;"></i> ' + myData.telp + '</small>' : '';
-            var pkrTampil = myData.pekerjaan ? '<br><small><i class="fa-solid fa-briefcase" style="color:#7c3aed;"></i> ' + myData.pekerjaan + (myData.pendapatan ? ' · ' + myData.pendapatan : '') + '</small>' : '';
+            var pkrTampil = myData.pekerjaan ? '<br><small><i class="fa-solid fa-briefcase" style="color:#7c3aed;"></i> ' + myData.pekerjaan + (myData.pendapatan ? ' Ã‚Â· ' + myData.pendapatan : '') + '</small>' : '';
             tb.innerHTML = '<tr>' +
                 '<td><b style="color:var(--primary-dark);font-size:1.05rem;">' + myData.nama + '</b> ' + badgeAktif + badgeSS + badgePrioritas + '<br><small>NIK: ' + (myData.nik||'-') + '</small>' + telpTampil + pkrTampil + '</td>' +
                 '<td><b>' + myData.alamat + '</b></td>' +
@@ -7953,7 +7949,7 @@ window.bukaFormLogin = function() {
         let tb = document.getElementById('body-tabel-kk-admin'); 
         if(!tb) return; tb.innerHTML = ''; 
         let showSensitive = !!window._GT_SHOW_SENSITIVE;
-        function maskData(val, last) { if(!val) return '-'; let s=String(val); if(showSensitive) return s; return '•'.repeat(Math.max(0,s.length-last))+s.slice(-last); }
+        function maskData(val, last) { if(!val) return '-'; let s=String(val); if(showSensitive) return s; return 'Ã¢â‚¬Â¢'.repeat(Math.max(0,s.length-last))+s.slice(-last); }
         if(db.length === 0) { tb.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada KK.</td></tr>`; return; } 
         db.forEach((w, idx) => { 
             let listAnak = w.anak && w.anak.length > 0 ? w.anak.join(', ') : '-'; 
@@ -8993,7 +8989,7 @@ window.bukaFormLogin = function() {
           let nowSyncStr = new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
           localStorage.setItem('ts_last_sync', new Date().toISOString());
           if(dot) { dot.style.background = 'var(--success)'; dot.style.color = 'var(--success)'; dot.style.boxShadow = '0 0 14px var(--success)'; dot.classList.remove('sync-syncing'); dot.classList.add('sync-success'); }
-          if(txt) { txt.innerText = '✓ ' + nowSyncStr + ' WIB'; txt.style.color = 'var(--success)'; }
+          if(txt) { txt.innerText = 'Ã¢Å“â€œ ' + nowSyncStr + ' WIB'; txt.style.color = 'var(--success)'; }
           setTimeout(function() {
               if(dot) { dot.style.background = '#3b82f6'; dot.style.boxShadow = '0 0 8px #3b82f6'; dot.classList.remove('sync-syncing','sync-success'); }
               if(txt) { txt.innerText = 'Siap'; txt.style.color = '#3b82f6'; }
@@ -9219,7 +9215,7 @@ window.cetakPDFSurat = function(id, isSalinan) {
         </table>
     </div>`;
 
-    // Download langsung sebagai PDF (bukan dialog Print) — Riwayat Ekspor tetap tercatat.
+    // Download langsung sebagai PDF (bukan dialog Print) Ã¢â‚¬â€ Riwayat Ekspor tetap tercatat.
     var __title = (isSalinan ? 'Salinan_Surat_' : 'Surat_Pengantar_') + String(dt.nama||'').replace(/\s/g,'_') + '_' + String(dt.noSurat||'').replace(/[^A-Za-z0-9]+/g,'-');
     return window.downloadPdfFromHtml(htmlCetak, __title);
 };
@@ -9440,7 +9436,7 @@ window.cetakPDFSurat = function(id, isSalinan) {
     };
 
     // ============================================================
-    // BIOMETRIC LOGIN (WebAuthn — sidik jari / Face ID)
+    // BIOMETRIC LOGIN (WebAuthn Ã¢â‚¬â€ sidik jari / Face ID)
     // ============================================================
     window.gtBio = (function(){
         var KEY_LOCAL_HINT = 'gt_local_biometric_hint'; // perangkat ini terakhir kali login dgn warga ini
@@ -9569,7 +9565,7 @@ window.cetakPDFSurat = function(id, isSalinan) {
             try { sessionStorage.setItem('gt_session_warga', JSON.stringify(window.loggedInWarga)); } catch(_){}
             try { localStorage.setItem('gt_local_session', JSON.stringify({ role:'warga', warga: window.loggedInWarga, at: Date.now() })); } catch(_){}
             window.BukaPortal('warga');
-            Toast.fire({icon:'success', title:'Login biometrik berhasil — selamat datang '+ w.nama});
+            Toast.fire({icon:'success', title:'Login biometrik berhasil Ã¢â‚¬â€ selamat datang '+ w.nama});
         } catch(err){
             console.warn('biometrik gagal', err);
             Swal.fire({icon:'error', title:'Login Biometrik Gagal', text: (err && err.message) || 'Coba lagi.'});
@@ -9600,7 +9596,7 @@ window.cetakPDFSurat = function(id, isSalinan) {
     };
 
     // ============================================================
-    // SESSION RESTORE — refresh tetap di halaman terakhir, bukan splash
+    // SESSION RESTORE Ã¢â‚¬â€ refresh tetap di halaman terakhir, bukan splash
     // ============================================================
     window.gtSaveLastView = function(role, tab){
         try {
@@ -9684,8 +9680,8 @@ loadDashboardWarga = function() {
         var gEl = el('warga-greeting-time');
         if (gEl) {
             var h = new Date().getHours();
-            var salam = h < 11 ? 'Selamat Pagi ☀️' : h < 15 ? 'Selamat Siang 🌤️' : h < 18 ? 'Selamat Sore 🌇' : 'Selamat Malam 🌙';
-            gEl.textContent = salam + ' · ' + new Date().toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+            var salam = h < 11 ? 'Selamat Pagi Ã¢Ëœâ‚¬Ã¯Â¸Â' : h < 15 ? 'Selamat Siang Ã°Å¸Å’Â¤Ã¯Â¸Â' : h < 18 ? 'Selamat Sore Ã°Å¸Å’â€¡' : 'Selamat Malam Ã°Å¸Å’â„¢';
+            gEl.textContent = salam + ' Ã‚Â· ' + new Date().toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
         }
 
         if (el('warga-saldo-kas')) { el('warga-saldo-kas').textContent = fmt(saldo); el('warga-saldo-kas').style.cssText = ''; }
@@ -9705,7 +9701,7 @@ loadDashboardWarga = function() {
     if (typeof window.gtRefreshDashboard === 'function') window.gtRefreshDashboard();
     try{ patchRekapArisan(); }catch(e){}
 };
-window.loadDashboardWarga.__gtV12 = true;  // ← cegah patch lama override
+window.loadDashboardWarga.__gtV12 = true;  // Ã¢â€ Â cegah patch lama override
 
 window.loadQuickAccessPanel = function() {
     try {
@@ -9713,7 +9709,7 @@ window.loadQuickAccessPanel = function() {
         if (!el('qa-iuran-status')) return;
         var warga = window.loggedInWarga;
 
-        // ── Iuran Bulan Ini ──────────────────────────────────────────────
+        // Ã¢â€â‚¬Ã¢â€â‚¬ Iuran Bulan Ini Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
         var bulan = new Date().toLocaleString('id-ID', { month: 'long', year: 'numeric' });
         var lunas = false;
         if (warga) {
@@ -9734,7 +9730,7 @@ window.loadQuickAccessPanel = function() {
             el('qa-iuran-sub').textContent = bulan;
         }
 
-        // ── Surat Terakhir ────────────────────────────────────────────────
+        // Ã¢â€â‚¬Ã¢â€â‚¬ Surat Terakhir Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
         var suratDb = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
         var suratKu = warga ? suratDb.filter(function(s){ return String(s.idWarga) === String(warga.id) || String(s.wargaId) === String(warga.id); }) : [];
         if (el('qa-surat-status')) {
@@ -9744,14 +9740,14 @@ window.loadQuickAccessPanel = function() {
                 var stColor = stMap[last.status] || '#94a3b8';
                 el('qa-surat-status').innerHTML = '<span style="color:'+stColor+';">'+last.status+'</span>';
                 var suratLabel = (last.keperluan || last.jenis || 'Surat Pengantar');
-                el('qa-surat-sub').textContent = suratLabel.length > 30 ? suratLabel.substring(0,30)+'…' : suratLabel;
+                el('qa-surat-sub').textContent = suratLabel.length > 30 ? suratLabel.substring(0,30)+'Ã¢â‚¬Â¦' : suratLabel;
             } else {
                 el('qa-surat-status').textContent = 'Belum ada';
                 el('qa-surat-sub').textContent = 'Ajukan surat pertama Anda';
             }
         }
 
-        // ── Pengumuman RT ─────────────────────────────────────────────────
+        // Ã¢â€â‚¬Ã¢â€â‚¬ Pengumuman RT Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
         var beritaDb = JSON.parse(localStorage.getItem('db_berita') || '[]');
         var readHash = localStorage.getItem('gt_local_berita_read') || '';
         var unread = beritaDb.filter(function(b){ return readHash.indexOf(String(b.id)) === -1; }).length;
@@ -9768,7 +9764,7 @@ window.loadQuickAccessPanel = function() {
             }
         }
 
-        // ── Aduan Saya ────────────────────────────────────────────────────
+        // Ã¢â€â‚¬Ã¢â€â‚¬ Aduan Saya Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
         var aduanDb = JSON.parse(localStorage.getItem('db_aduan') || '[]');
         var aduanKu = warga ? aduanDb.filter(function(a){ return String(a.wargaId) === String(warga.id); }) : [];
         if (el('qa-aduan-status')) {
@@ -9790,7 +9786,7 @@ window.loadQuickAccessPanel = function() {
         }
     } catch(e){ console.warn('[loadQuickAccessPanel]', e); }
 };
-// ── 3. loadKoperasiData ──────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ 3. loadKoperasiData Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.loadKoperasiData = function() {
     try {
         var db       = JSON.parse(localStorage.getItem('db_koperasi') || '{}');
@@ -9860,9 +9856,9 @@ window.loadKoperasiData = function() {
         if (typeof loadKopLaporan === 'function') loadKopLaporan();
     } catch(e){ console.warn('[loadKoperasiData]', e); }
 };
-// ── 4. loadKopLaporan (sudah ada, skip) ─────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ 4. loadKopLaporan (sudah ada, skip) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
-// ── 5. loadAdminDashboard ────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ 5. loadAdminDashboard Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.loadAdminDashboard = function() {
     try {
         var warga   = JSON.parse(localStorage.getItem('db_warga')  || '[]');
@@ -9882,7 +9878,7 @@ window.loadAdminDashboard = function() {
     } catch(e){ console.warn('[loadAdminDashboard]', e); }
 };
 
-// ── 6. loadNotulenAdmin ──────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ 6. loadNotulenAdmin Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.loadNotulenAdmin = function() {
     try {
         var data = JSON.parse(localStorage.getItem('db_notulen') || '[]');
@@ -9913,7 +9909,7 @@ window.hapusNotulen = window.hapusNotulen || function(id) {
     localStorage.setItem('db_notulen', JSON.stringify(data));
     window.loadNotulenAdmin();
 };
-// ── NOTULEN: simpanNotulen ──────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ NOTULEN: simpanNotulen Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.simpanNotulen = function(e) {
     e.preventDefault();
     var tgl   = document.getElementById('inp_notul_tgl').value.trim();
@@ -9929,7 +9925,7 @@ window.simpanNotulen = function(e) {
     Swal.fire({icon:'success', title:'Tersimpan!', text:'Notulen rapat berhasil diarsipkan.', timer:2000, showConfirmButton:false});
 };
 
-// ── ARISAN: simpanInfoArisan ─────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ ARISAN: simpanInfoArisan Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.simpanInfoArisan = function(e) {
     e.preventDefault();
     var data = {
@@ -9946,7 +9942,7 @@ window.simpanInfoArisan = function(e) {
     Swal.fire({icon:'success', title:'Berhasil!', text:'Info arisan diperbarui di dasbor warga.', timer:2000, showConfirmButton:false});
 };
 
-// ── NOTULEN AI: susunNotulenAI ──────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ NOTULEN AI: susunNotulenAI Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.susunNotulenAI = function() {
     var ta = document.getElementById('inp_notul_isi');
     if (!ta) return;
@@ -9981,7 +9977,7 @@ window.susunNotulenAI = function() {
     })).map(function(p, i){ return (i+1) + '. ' + p; }).join('\n');
 
     Swal.fire({
-        title: '<i class="fa-solid fa-wand-magic-sparkles" style="color:#6366f1"></i> Hasil — Rapikan Notulen',
+        title: '<i class="fa-solid fa-wand-magic-sparkles" style="color:#6366f1"></i> Hasil Ã¢â‚¬â€ Rapikan Notulen',
         html: '<div style="text-align:left;max-height:340px;overflow-y:auto;padding:12px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:0.9rem;white-space:pre-wrap;font-family:inherit;line-height:1.8;">' + formatted.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div><p style="font-size:0.78rem;color:#64748b;margin-top:10px;margin-bottom:0;">Klik <b>Terapkan</b> untuk mengganti isi textarea dengan teks di atas.</p>',
         showCancelButton: true,
         confirmButtonText: '<i class="fa-solid fa-check"></i> Terapkan',
@@ -9993,7 +9989,7 @@ window.susunNotulenAI = function() {
     });
 };
 
-// ── NOTULEN PDF: cetakNotulenPDF ─────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ NOTULEN PDF: cetakNotulenPDF Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.cetakNotulenPDF = function(id) {
     var db = JSON.parse(localStorage.getItem('db_notulen') || '[]');
     var n  = db.find(function(x){ return x.id === id; });
@@ -10042,7 +10038,7 @@ window.cetakNotulenPDF = function(id) {
         '<div style="flex:1;text-align:center;">' +
         '<div style="font-size:16px;font-weight:bold;">PEMERINTAH KOTA SEMARANG</div>' +
         '<div style="font-size:16px;font-weight:bold;margin-top:2px;">KECAMATAN ' + kecamatan + '</div>' +
-        '<div style="font-size:14px;font-weight:bold;margin-top:2px;">KELURAHAN ' + kelurahan + ' — ' + esc(namaRT) + ' / ' + esc(namaRW) + '</div>' +
+        '<div style="font-size:14px;font-weight:bold;margin-top:2px;">KELURAHAN ' + kelurahan + ' Ã¢â‚¬â€ ' + esc(namaRT) + ' / ' + esc(namaRW) + '</div>' +
         '<div style="font-size:12px;font-weight:normal;margin-top:2px;">' + esc(alamatRT) + '</div>' +
         '</div></div>' +
 
@@ -10090,7 +10086,7 @@ window.cetakNotulenPDF = function(id) {
         'Notulen dibuat oleh Smart Portal ' + esc(namaRT) + ' &bull; Dicetak: ' + tglCetak +
         '</div></div>';
 
-    var title = 'Notulen Rapat — ' + (n.judul||'Rapat Warga') + ' — ' + tglLong;
+    var title = 'Notulen Rapat Ã¢â‚¬â€ ' + (n.judul||'Rapat Warga') + ' Ã¢â‚¬â€ ' + tglLong;
     if (typeof downloadPdfFromHtml === 'function') {
         downloadPdfFromHtml(htmlCetak, title);
     } else {
@@ -10098,7 +10094,7 @@ window.cetakNotulenPDF = function(id) {
     }
 };
 
-// ── 7. loadPengaturan ────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ 7. loadPengaturan Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.loadPengaturan = function() {
     try {
         var s = JSON.parse(localStorage.getItem('db_settings') || '{}');
@@ -10139,7 +10135,7 @@ window.simpanPengaturanSistem = window.simpanPengaturanSistem || function() {
     } catch(e){ console.warn('[simpanPengaturanSistem]', e); }
 };
 
-// ── 8. loadDaruratWarga ──────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ 8. loadDaruratWarga Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.exportExcelIuran = function() {
     try {
         if (typeof XLSX === 'undefined') { Swal.fire('Error', 'Library XLSX belum tersedia.', 'error'); return; }
@@ -10161,9 +10157,9 @@ window.exportExcelIuran = function() {
     } catch(e) { console.error('[exportExcelIuran]', e); Swal.fire('Gagal', 'Gagal mengekspor data: '+e.message, 'error'); }
 };
 
-// ═══════════════════════════════════════════════════════════════
-// BANTUAN SOSIAL — loadBantuanSosial, simpanCatatanBantuan, dll
-// ═══════════════════════════════════════════════════════════════
+// Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+// BANTUAN SOSIAL Ã¢â‚¬â€ loadBantuanSosial, simpanCatatanBantuan, dll
+// Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 
 // Helper label & warna status sosial
 function _ssBadgeHtml(ss) {
@@ -10174,7 +10170,7 @@ function _ssBadgeHtml(ss) {
 }
 
 function _ssHakHtml(ss) {
-    if (!ss || ss === 'Umum') return '<small style="color:#94a3b8;">–</small>';
+    if (!ss || ss === 'Umum') return '<small style="color:#94a3b8;">Ã¢â‚¬â€œ</small>';
     var hak = [];
     if (ss.includes('Janda') || ss.includes('Duda')) hak.push('<span style="color:#7c3aed;font-size:0.8rem;"><i class="fa-solid fa-circle-xmark"></i> Bebas Iuran</span>');
     hak.push('<span style="color:#e11d48;font-size:0.8rem;"><i class="fa-solid fa-star"></i> Prioritas Bantuan</span>');
@@ -10236,7 +10232,7 @@ window.loadBantuanSosial = function() {
                         if (w.pendapatan === 'Di Bawah UMR') parts.push('Di Bawah UMR');
                         ekoBadge = '<span class="badge" style="background:#fff7ed;color:#f97316;border:1px solid #fdba7433;">' + parts.join(' + ') + '</span>';
                     }
-                    var pkrInfo = (w.pekerjaan||'') + (w.pendapatan ? ' · ' + w.pendapatan : '');
+                    var pkrInfo = (w.pekerjaan||'') + (w.pendapatan ? ' Ã‚Â· ' + w.pendapatan : '');
                     tbPrioritas.innerHTML += '<tr><td><b>' + (i+1) + '</b></td>' +
                         '<td><b>' + escapeHtml(w.nama) + '</b><br><small>' + escapeHtml(w.alamat||'-') + '</small>' + (pkrInfo ? '<br><small style="color:#7c3aed;">' + escapeHtml(pkrInfo) + '</small>' : '') + '</td>' +
                         '<td>' + escapeHtml(w.alamat||'-') + '</td>' +
@@ -10282,7 +10278,7 @@ window.loadBantuanSosial = function() {
             } else {
                 tbRiwayat.innerHTML = '';
                 dbBantuan.slice().reverse().forEach(function(b) {
-                    var nomStr = b.nominal ? 'Rp ' + Number(b.nominal).toLocaleString('id-ID') : '–';
+                    var nomStr = b.nominal ? 'Rp ' + Number(b.nominal).toLocaleString('id-ID') : 'Ã¢â‚¬â€œ';
                     tbRiwayat.innerHTML += '<tr>' +
                         '<td>' + (b.tgl||'-') + '</td>' +
                         '<td><b>' + escapeHtml(b.namaWarga||'-') + '</b></td>' +
@@ -10372,13 +10368,13 @@ window.eksporExcelBantuan = function() {
     } catch(e) { console.error('[eksporExcelBantuan]', e); Swal.fire('Gagal', e.message, 'error'); }
 };
 
-// ── Tambah db_bantuan ke runRefreshers auto-sync scope ──
+// Ã¢â€â‚¬Ã¢â€â‚¬ Tambah db_bantuan ke runRefreshers auto-sync scope Ã¢â€â‚¬Ã¢â€â‚¬
 // (bantuan-sosial dimuat via openAdminTab loader, tidak perlu runRefreshers tambahan)
 
 
-// ═══════════════════════════════════════════════════════════════
+// Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 // FITUR BARU: togglePendapatanField, toggleDataSensitif, loadNewsTicker
-// ═══════════════════════════════════════════════════════════════
+// Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 
 // [3+4] Toggle visibilitas dropdown Pendapatan berdasarkan pilihan Pekerjaan
 window.togglePendapatanField = function(prefix) {
@@ -10400,7 +10396,7 @@ window._gtMaskData = function(val, last) {
     if (!val) return '-';
     var s = String(val);
     if (window._GT_SHOW_SENSITIVE) return s;
-    return '•'.repeat(Math.max(0, s.length - last)) + s.slice(-last);
+    return 'Ã¢â‚¬Â¢'.repeat(Math.max(0, s.length - last)) + s.slice(-last);
 };
 window.toggleDataSensitif = function() {
     window._GT_SHOW_SENSITIVE = !window._GT_SHOW_SENSITIVE;
@@ -10418,9 +10414,9 @@ window.toggleDataSensitif = function() {
 
 
 
-// ═══════════════════════════════════════════════════════════════
-// GT PORTAL BERITA — PREMIUM NEWS ENGINE
-// ═══════════════════════════════════════════════════════════════
+// Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+// GT PORTAL BERITA Ã¢â‚¬â€ PREMIUM NEWS ENGINE
+// Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 (function() {
 
 var _state = {
@@ -10436,7 +10432,7 @@ var _state = {
     bookmarks: []
 };
 
-// Sumber RSS — diambil langsung via CORS proxy + DOMParser (tanpa rss2json)
+// Sumber RSS Ã¢â‚¬â€ diambil langsung via CORS proxy + DOMParser (tanpa rss2json)
 var SOURCES = [
     { name:'Detik',       cls:'src-detik',   url:'https://rss.detik.com/index.php/detikcom' },
     { name:'Kompas',      cls:'src-kompas',  url:'https://rss.kompas.com/robotic-with-cors/kompas-news/index.xml' },
@@ -10445,7 +10441,7 @@ var SOURCES = [
     { name:'Tribun',      cls:'src-default', url:'https://www.tribunnews.com/rss' }
 ];
 
-// CORS proxy — tidak perlu API key, baca RSS secara langsung
+// CORS proxy Ã¢â‚¬â€ tidak perlu API key, baca RSS secara langsung
 var CORS_PROXY = 'https://corsproxy.io/?';
 
 // Kategori keyword map
@@ -10795,7 +10791,7 @@ window.gtNewsRefresh = function(force) {
     if (_state.loading && !force) return;
     _state.loading = true;
     _state.loaded = false;
-    setStatus('Memuat berita…', false);
+    setStatus('Memuat beritaÃ¢â‚¬Â¦', false);
     var grid = document.getElementById('gt-news-grid');
     if (grid) grid.innerHTML = [1,2,3,4,5,6].map(function() { return '<div class="gt-skel" style="height:240px;border-radius:14px;"></div>'; }).join('');
 
@@ -10835,7 +10831,7 @@ window.gtNewsRefresh = function(force) {
             if (cnt) cnt.textContent = all.length + ' artikel dari ' + SOURCES.length + ' sumber';
         } else {
             if (grid) grid.innerHTML = '<div class="gt-news-empty" style="grid-column:1/-1;"><i class="fa-solid fa-wifi-slash"></i><p>Gagal memuat berita. Periksa koneksi internet Anda.</p><button class="gt-load-more-btn" style="margin-top:12px;" onclick="window.gtNewsRefresh(true)"><i class="fa-solid fa-rotate"></i> Coba Lagi</button></div>';
-            setStatus('Gagal memuat — coba lagi', false);
+            setStatus('Gagal memuat Ã¢â‚¬â€ coba lagi', false);
         }
         // Reset auto-refresh timer
         if (_state.refreshTimer) clearTimeout(_state.refreshTimer);
@@ -10852,7 +10848,7 @@ window.gtNewsInit = function() {
 
 })(); // end news IIFE
 
-// ─── Berita Lokal RT 005 ───────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Berita Lokal RT 005 Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.gtNewsBeritaLokal = function() {
     var wrap = document.getElementById('gt-berita-lokal-wrap');
     var grid = document.getElementById('gt-berita-lokal-grid');
@@ -10868,7 +10864,7 @@ window.gtNewsBeritaLokal = function() {
     grid.innerHTML = db.map(function(b) {
         var c = catColors[b.kategori] || '#3b82f6';
         var imgHtml = b.foto ? '<div style="height:120px;overflow:hidden;border-radius:10px 10px 0 0;"><img src="' + b.foto + '" style="width:100%;height:100%;object-fit:cover;" loading="lazy"></div>' : '';
-        var isiSingkat = (b.isi || '').length > 100 ? b.isi.substring(0,100) + '…' : (b.isi || '');
+        var isiSingkat = (b.isi || '').length > 100 ? b.isi.substring(0,100) + 'Ã¢â‚¬Â¦' : (b.isi || '');
         return '<div onclick="bukaDetailBerita(' + b.id + ')" style="background:#1e293b;border:1px solid #334155;border-radius:12px;overflow:hidden;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform=\'translateY(-3px)\';this.style.boxShadow=\'0 8px 20px rgba(0,0,0,0.3)\'" onmouseout="this.style.transform=\'\';this.style.boxShadow=\'\'">' +
             imgHtml +
             '<div style="padding:12px 14px;">' +
@@ -10907,7 +10903,7 @@ window.loadDaruratWarga = function() {
         }).join('');
     } catch(e){ console.warn('[loadDaruratWarga]', e); }
 };
-// ── 9. loadArsipBA (stub aman) ───────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ 9. loadArsipBA (stub aman) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 window.loadArsipBA = window.loadArsipBA || function() {
     try {
         var el = document.getElementById('tbody-arsip-ba') || document.getElementById('arsip-ba-list');
@@ -10974,7 +10970,7 @@ window.loadArsipBA = window.loadArsipBA || function() {
 })();
 </script>
 
-<!-- ═══════════════════ GT CHAT AI ═══════════════════ -->
+<!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â GT CHAT AI Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 <button id="gt-chat-fab" onclick="window.openGtChat()" title="TANYA BENNY Asisten RT" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);overflow:hidden;padding:0 !important;">
     <img src="/benny-avatar.png" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;border-radius:50%;" onerror="this.style.display='none'">
     <span class="gt-chat-badge" id="gt-chat-fab-badge"></span>
@@ -10984,7 +10980,7 @@ window.loadArsipBA = window.loadArsipBA || function() {
     <div id="gt-chat-header">
         <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,0.3);"><img src="/benny-avatar.png" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;" onerror="this.style.display='none'"></div>
         <div style="flex:1;">
-            <div style="font-weight:800;color:#fff;font-size:0.95rem;">BENNY — Asisten RT 005</div>
+            <div style="font-weight:800;color:#fff;font-size:0.95rem;">BENNY Ã¢â‚¬â€ Asisten RT 005</div>
             <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);">Siap membantu 24 jam</div>
         </div>
         <button onclick="window.closeGtChat()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;"><i class="fa-solid fa-xmark"></i></button>
@@ -10992,15 +10988,15 @@ window.loadArsipBA = window.loadArsipBA || function() {
     <div id="gt-chat-messages"></div>
     <div class="gt-chat-quick-wrap" id="gt-chat-quick-wrap"></div>
     <div id="gt-chat-input-wrap">
-        <input id="gt-chat-input" type="text" placeholder="Ketik pertanyaan Anda…" onkeydown="if(event.key==='Enter') window.gtChatSend()">
+        <input id="gt-chat-input" type="text" placeholder="Ketik pertanyaan AndaÃ¢â‚¬Â¦" onkeydown="if(event.key==='Enter') window.gtChatSend()">
         <button id="gt-chat-send" onclick="window.gtChatSend()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
+// Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 //  Dashboard Tab Switcher
-// ═══════════════════════════════════════════════════════
+// Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 window.dshTab = function(tab) {
     var info   = document.getElementById('dsh-tab-info');
     var agenda = document.getElementById('dsh-tab-agenda');
@@ -11025,14 +11021,14 @@ window.dshTab = function(tab) {
     var el = document.getElementById('warga-greeting-time');
     if (!el) return;
     var h = new Date().getHours();
-    var salam = h < 11 ? 'Selamat Pagi ☀️' : h < 15 ? 'Selamat Siang 🌤️' : h < 18 ? 'Selamat Sore 🌇' : 'Selamat Malam 🌙';
-    el.textContent = salam + ' · ' + new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    var salam = h < 11 ? 'Selamat Pagi Ã¢Ëœâ‚¬Ã¯Â¸Â' : h < 15 ? 'Selamat Siang Ã°Å¸Å’Â¤Ã¯Â¸Â' : h < 18 ? 'Selamat Sore Ã°Å¸Å’â€¡' : 'Selamat Malam Ã°Å¸Å’â„¢';
+    el.textContent = salam + ' Ã‚Â· ' + new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
     setTimeout(updateGreeting, 60000);
 })();
 
-// ═══════════════════════════════════════════════════════
+// Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 //  GT CHAT AI ENGINE
-// ═══════════════════════════════════════════════════════
+// Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 (function() {
     var _open   = false;
     var _msgs   = [];
@@ -11041,52 +11037,52 @@ window.dshTab = function(tab) {
     var KB = [
         {
             keys: ['surat','pengantar','permohonan','ajukan','bikin surat','buat surat'],
-            answer: '📄 <b>Cara Ajukan Surat Pengantar:</b><br>1. Buka tab <b>Layanan Surat</b> di menu navigasi.<br>2. Isi form: Nama, NIK, Alamat, dan Keperluan surat.<br>3. Klik <b>Ajukan Permohonan</b>.<br>4. Tunggu konfirmasi dari sekretaris (biasanya 1–2 hari kerja).<br>5. Setelah status <b>Selesai</b>, unduh PDF di tab Surat.<br><br>💡 Status bisa Anda pantau dari kartu <b>Surat</b> di beranda.',
+            answer: 'Ã°Å¸â€œâ€ž <b>Cara Ajukan Surat Pengantar:</b><br>1. Buka tab <b>Layanan Surat</b> di menu navigasi.<br>2. Isi form: Nama, NIK, Alamat, dan Keperluan surat.<br>3. Klik <b>Ajukan Permohonan</b>.<br>4. Tunggu konfirmasi dari sekretaris (biasanya 1Ã¢â‚¬â€œ2 hari kerja).<br>5. Setelah status <b>Selesai</b>, unduh PDF di tab Surat.<br><br>Ã°Å¸â€™Â¡ Status bisa Anda pantau dari kartu <b>Surat</b> di beranda.',
             quick: ['Status surat saya','Berapa lama prosesnya?','Surat sudah jadi?']
         },
         {
             keys: ['iuran','bayar','bulanan','tagihan','tunggakan'],
-            answer: '💰 <b>Informasi Iuran RT:</b><br>Iuran bulanan dicatat oleh bendahara setelah Anda menyetor langsung ke pengurus.<br><br>• Status iuran bulan ini bisa dilihat di kartu <b>Iuran</b> di beranda.<br>• Riwayat lengkap ada di tab <b>Keuangan</b>.<br>• Jika ada ketidaksesuaian, silakan hubungi bendahara RT.',
+            answer: 'Ã°Å¸â€™Â° <b>Informasi Iuran RT:</b><br>Iuran bulanan dicatat oleh bendahara setelah Anda menyetor langsung ke pengurus.<br><br>Ã¢â‚¬Â¢ Status iuran bulan ini bisa dilihat di kartu <b>Iuran</b> di beranda.<br>Ã¢â‚¬Â¢ Riwayat lengkap ada di tab <b>Keuangan</b>.<br>Ã¢â‚¬Â¢ Jika ada ketidaksesuaian, silakan hubungi bendahara RT.',
             quick: ['Cek status iuran','Hubungi bendahara','Cara bayar iuran']
         },
         {
             keys: ['aduan','laporan','kerusakan','masalah','keluhan','komplain'],
-            answer: '📢 <b>Cara Kirim Aduan/Laporan:</b><br>1. Buka tab <b>Kotak Aduan</b> di menu navigasi.<br>2. Pilih kategori (Infrastruktur, Keamanan, Kebersihan, dll).<br>3. Isi deskripsi masalah dan unggah foto jika ada.<br>4. Klik <b>Kirim Laporan</b>.<br><br>Tim RT akan menindaklanjuti dalam 1–3 hari kerja.',
+            answer: 'Ã°Å¸â€œÂ¢ <b>Cara Kirim Aduan/Laporan:</b><br>1. Buka tab <b>Kotak Aduan</b> di menu navigasi.<br>2. Pilih kategori (Infrastruktur, Keamanan, Kebersihan, dll).<br>3. Isi deskripsi masalah dan unggah foto jika ada.<br>4. Klik <b>Kirim Laporan</b>.<br><br>Tim RT akan menindaklanjuti dalam 1Ã¢â‚¬â€œ3 hari kerja.',
             quick: ['Cek status aduan','Kategori aduan apa saja?']
         },
         {
             keys: ['arisan','giliran','pemenang','undian'],
-            answer: '🎁 <b>Informasi Arisan RT:</b><br>Jadwal dan pemenang arisan ditentukan pengurus dan diumumkan di beranda.<br><br>• Penerima arisan bulan ini terlihat di kartu <b>Penerima Arisan</b>.<br>• Tuan rumah arisan berikutnya juga ditampilkan di beranda.<br>• Untuk info lebih lanjut, hubungi ketua RT.',
+            answer: 'Ã°Å¸Å½Â <b>Informasi Arisan RT:</b><br>Jadwal dan pemenang arisan ditentukan pengurus dan diumumkan di beranda.<br><br>Ã¢â‚¬Â¢ Penerima arisan bulan ini terlihat di kartu <b>Penerima Arisan</b>.<br>Ã¢â‚¬Â¢ Tuan rumah arisan berikutnya juga ditampilkan di beranda.<br>Ã¢â‚¬Â¢ Untuk info lebih lanjut, hubungi ketua RT.',
             quick: ['Siapa pemenang arisan?','Kapan arisan berikutnya?']
         },
         {
             keys: ['profil','data','kk','kartu keluarga','nik','alamat','update data'],
-            answer: '👤 <b>Update Data Profil:</b><br>1. Buka tab <b>Profil Saya</b> di menu navigasi.<br>2. Klik tombol <b>Edit</b> pada baris data Anda.<br>3. Perbarui informasi yang diperlukan.<br>4. Klik <b>Simpan Perubahan</b>.<br><br>Data akan otomatis tersinkron ke server.',
+            answer: 'Ã°Å¸â€˜Â¤ <b>Update Data Profil:</b><br>1. Buka tab <b>Profil Saya</b> di menu navigasi.<br>2. Klik tombol <b>Edit</b> pada baris data Anda.<br>3. Perbarui informasi yang diperlukan.<br>4. Klik <b>Simpan Perubahan</b>.<br><br>Data akan otomatis tersinkron ke server.',
             quick: ['Cara tambah anggota keluarga','Lupa password']
         },
         {
             keys: ['password','lupa password','reset','login gagal'],
-            answer: '🔐 <b>Ganti Password:</b><br>1. Buka tab <b>Profil Saya</b>.<br>2. Gulir ke bawah ke bagian <b>Pengaturan Keamanan</b>.<br>3. Isi Password Lama dan Password Baru.<br>4. Klik <b>Update Password</b>.<br><br>Jika lupa password lama, hubungi admin/sekretaris RT untuk reset.',
+            answer: 'Ã°Å¸â€Â <b>Ganti Password:</b><br>1. Buka tab <b>Profil Saya</b>.<br>2. Gulir ke bawah ke bagian <b>Pengaturan Keamanan</b>.<br>3. Isi Password Lama dan Password Baru.<br>4. Klik <b>Update Password</b>.<br><br>Jika lupa password lama, hubungi admin/sekretaris RT untuk reset.',
             quick: ['Hubungi admin RT']
         },
         {
             keys: ['darurat','emergency','polisi','ambulans','pemadam','kebakaran','bpbd'],
-            answer: '🚨 <b>Kontak Darurat Kota Semarang:</b><br>• 🚓 Polisi: <b>110</b><br>• 🚑 Ambulans: <b>118 / 119</b><br>• 🚒 Pemadam: <b>113</b><br>• 🏥 BPBD: <b>024-3584946</b><br><br>Daftar lengkap ada di tombol <b>Call Darurat</b> di menu atas.',
+            answer: 'Ã°Å¸Å¡Â¨ <b>Kontak Darurat Kota Semarang:</b><br>Ã¢â‚¬Â¢ Ã°Å¸Å¡â€œ Polisi: <b>110</b><br>Ã¢â‚¬Â¢ Ã°Å¸Å¡â€˜ Ambulans: <b>118 / 119</b><br>Ã¢â‚¬Â¢ Ã°Å¸Å¡â€™ Pemadam: <b>113</b><br>Ã¢â‚¬Â¢ Ã°Å¸ÂÂ¥ BPBD: <b>024-3584946</b><br><br>Daftar lengkap ada di tombol <b>Call Darurat</b> di menu atas.',
             quick: ['Nomor RT setempat','Nomor pengurus RT']
         },
         {
             keys: ['pengumuman','berita','informasi','acara','kegiatan','jadwal'],
-            answer: '📰 <b>Melihat Pengumuman & Berita:</b><br>• <b>Pengumuman RT</b> (dari pengurus) ada di tab <b>Portal Berita</b> bagian atas.<br>• <b>Berita Nasional</b> dari berbagai sumber media ada di bawahnya.<br>• <b>Agenda kegiatan</b> RT bisa dilihat di tab <b>Agenda</b> di beranda.<br><br>Anda juga bisa klik kartu <b>Pengumuman</b> di beranda.',
+            answer: 'Ã°Å¸â€œÂ° <b>Melihat Pengumuman & Berita:</b><br>Ã¢â‚¬Â¢ <b>Pengumuman RT</b> (dari pengurus) ada di tab <b>Portal Berita</b> bagian atas.<br>Ã¢â‚¬Â¢ <b>Berita Nasional</b> dari berbagai sumber media ada di bawahnya.<br>Ã¢â‚¬Â¢ <b>Agenda kegiatan</b> RT bisa dilihat di tab <b>Agenda</b> di beranda.<br><br>Anda juga bisa klik kartu <b>Pengumuman</b> di beranda.',
             quick: ['Ada kegiatan apa?','Pengumuman terbaru']
         },
         {
             keys: ['biometrik','sidik jari','face id','fingerprint'],
-            answer: '🔏 <b>Login Biometrik (Sidik Jari / Face ID):</b><br>Setelah melengkapi profil untuk pertama kali, portal akan menawarkan aktivasi biometrik.<br><br>Untuk mengaktifkan manual:<br>1. Buka <b>Profil Saya</b>.<br>2. Simpan perubahan data.<br>3. Ikuti instruksi yang muncul untuk daftarkan biometrik perangkat Anda.',
+            answer: 'Ã°Å¸â€Â <b>Login Biometrik (Sidik Jari / Face ID):</b><br>Setelah melengkapi profil untuk pertama kali, portal akan menawarkan aktivasi biometrik.<br><br>Untuk mengaktifkan manual:<br>1. Buka <b>Profil Saya</b>.<br>2. Simpan perubahan data.<br>3. Ikuti instruksi yang muncul untuk daftarkan biometrik perangkat Anda.',
             quick: ['Cara login biometrik']
         },
         {
             keys: ['halo','hai','hi','hello','selamat','pagi','siang','sore','malam','apa kabar'],
-            answer: '👋 Halo! Saya AI Asisten RT 005 Tegalsari.<br><br>Saya bisa membantu Anda dengan:<br>• Pengajuan dan status <b>Surat</b><br>• Info <b>Iuran</b> dan Kas RT<br>• Kirim <b>Aduan/Laporan</b><br>• Info <b>Arisan</b><br>• Update <b>Profil & Data KK</b><br>• Kontak <b>Darurat</b><br><br>Silakan ketik pertanyaan Anda! 😊',
+            answer: 'Ã°Å¸â€˜â€¹ Halo! Saya AI Asisten RT 005 Tegalsari.<br><br>Saya bisa membantu Anda dengan:<br>Ã¢â‚¬Â¢ Pengajuan dan status <b>Surat</b><br>Ã¢â‚¬Â¢ Info <b>Iuran</b> dan Kas RT<br>Ã¢â‚¬Â¢ Kirim <b>Aduan/Laporan</b><br>Ã¢â‚¬Â¢ Info <b>Arisan</b><br>Ã¢â‚¬Â¢ Update <b>Profil & Data KK</b><br>Ã¢â‚¬Â¢ Kontak <b>Darurat</b><br><br>Silakan ketik pertanyaan Anda! Ã°Å¸ËœÅ ',
             quick: ['Ajukan surat','Cek iuran','Kirim aduan','Kontak darurat']
         }
     ];
@@ -11145,7 +11141,7 @@ window.dshTab = function(tab) {
                 addMsg('ai', match.answer);
                 setQuick(match.quick);
             } else {
-                addMsg('ai', '🤔 Maaf, saya belum punya jawaban untuk itu.<br><br>Silakan hubungi pengurus RT secara langsung, atau pilih topik di bawah:');
+                addMsg('ai', 'Ã°Å¸Â¤â€ Maaf, saya belum punya jawaban untuk itu.<br><br>Silakan hubungi pengurus RT secara langsung, atau pilih topik di bawah:');
                 setQuick(['Ajukan surat','Cek iuran','Kirim aduan','Kontak darurat']);
             }
         }, 420);
@@ -11154,7 +11150,7 @@ window.dshTab = function(tab) {
     function initChat() {
         var el = document.getElementById('gt-chat-messages');
         if (!el || el.children.length > 0) return;
-        addMsg('ai', '👋 Halo! Saya AI Asisten RT 005.<br>Ada yang bisa saya bantu?');
+        addMsg('ai', 'Ã°Å¸â€˜â€¹ Halo! Saya AI Asisten RT 005.<br>Ada yang bisa saya bantu?');
         setQuick(['Ajukan surat','Cek iuran','Kirim aduan','Kontak darurat','Info arisan','Pengumuman RT']);
     }
 
@@ -11195,9 +11191,9 @@ window.dshTab = function(tab) {
 })();
 </script>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     PORTAL WARGA FACEBOOK STYLE — JS
-═══════════════════════════════════════════════════════════════ -->
+<!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+     PORTAL WARGA FACEBOOK STYLE Ã¢â‚¬â€ JS
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 <div class="wfb-mobile-nav no-print" id="wfb-mobile-nav">
     <button class="wfb-mob-btn active" data-tab="warga-dashboard" onclick="openWargaTab('warga-dashboard')">
         <i class="fa-solid fa-house"></i><span>Beranda</span>
@@ -11227,9 +11223,9 @@ window.dshTab = function(tab) {
 
 <script>
 (function(){
-    /* ──────────────────────────────────────────────────────
+    /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
        1. Update active state di left sidebar & bottom nav
-    ────────────────────────────────────────────────────── */
+    Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
     window.updateWargaFbNav = function(tabId) {
         // Left sidebar items
         document.querySelectorAll('#view-warga .wfb-nav-item[data-tab]').forEach(function(btn){
@@ -11241,9 +11237,9 @@ window.dshTab = function(tab) {
         });
     };
 
-    /* ──────────────────────────────────────────────────────
+    /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
        2. Patch openWargaTab untuk update FB nav
-    ────────────────────────────────────────────────────── */
+    Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
     var __wfbPatchAttempts = 0;
     var __wfbPatchInterval = setInterval(function(){
         __wfbPatchAttempts++;
@@ -11260,9 +11256,9 @@ window.dshTab = function(tab) {
         if (__wfbPatchAttempts > 100) clearInterval(__wfbPatchInterval);
     }, 200);
 
-    /* ──────────────────────────────────────────────────────
+    /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
        3. Update user card di left sidebar
-    ────────────────────────────────────────────────────── */
+    Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
     window.updateWargaFbUserCard = function() {
         var warga = window.loggedInWarga;
         if (!warga) return;
@@ -11282,9 +11278,9 @@ window.dshTab = function(tab) {
         }
     };
 
-    /* ──────────────────────────────────────────────────────
+    /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
        4. Load Right Sidebar Data
-    ────────────────────────────────────────────────────── */
+    Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
     window.loadWargaFbRight = function() {
         try {
             var fmt = function(n) {
@@ -11292,7 +11288,7 @@ window.dshTab = function(tab) {
                 return 'Rp ' + Math.round(n).toLocaleString('id-ID');
             };
 
-            // ── Saldo Kas ──
+            // Ã¢â€â‚¬Ã¢â€â‚¬ Saldo Kas Ã¢â€â‚¬Ã¢â€â‚¬
             var kas = JSON.parse(localStorage.getItem('db_kas') || '[]');
             var saldoAwal = parseFloat(localStorage.getItem('db_saldo_awal') || '0');
             var masuk = 0, keluar = 0;
@@ -11301,32 +11297,32 @@ window.dshTab = function(tab) {
             var elKas = document.getElementById('wfb-saldo-kas');
             if (elKas) elKas.textContent = fmt(saldo);
 
-            // ── Total KK ──
+            // Ã¢â€â‚¬Ã¢â€â‚¬ Total KK Ã¢â€â‚¬Ã¢â€â‚¬
             var wargaDb = JSON.parse(localStorage.getItem('db_warga') || '[]');
             var elKK = document.getElementById('wfb-total-kk');
             if (elKK) elKK.textContent = wargaDb.length + ' KK';
 
-            // ── Arisan & Tuan Rumah ──
+            // Ã¢â€â‚¬Ã¢â€â‚¬ Arisan & Tuan Rumah Ã¢â€â‚¬Ã¢â€â‚¬
             var arisanDb = JSON.parse(localStorage.getItem('db_arisan') || '[]');
             var elArisan = document.getElementById('wfb-arisan');
             var elHost = document.getElementById('wfb-host');
             if (arisanDb.length > 0) {
                 var last = arisanDb[arisanDb.length - 1];
                 if (elArisan) {
-                    var namaPemenang = last.pemenang || last.nama || '—';
+                    var namaPemenang = last.pemenang || last.nama || 'Ã¢â‚¬â€';
                     elArisan.textContent = namaPemenang.split(/\s+/).slice(0,2).join(' ');
                 }
                 // Host berikutnya: cari yang belum menang
                 var sudahMenang = arisanDb.map(function(a){ return a.pemenang || a.nama || ''; });
                 var allWarga = wargaDb.map(function(w){ return w.namaKK || w.nama || ''; });
                 var belumMenang = allWarga.filter(function(n){ return n && sudahMenang.indexOf(n) === -1; });
-                if (elHost) elHost.textContent = belumMenang.length > 0 ? belumMenang[0].split(/\s+/).slice(0,2).join(' ') : (last.host || '—');
+                if (elHost) elHost.textContent = belumMenang.length > 0 ? belumMenang[0].split(/\s+/).slice(0,2).join(' ') : (last.host || 'Ã¢â‚¬â€');
             } else {
-                if (elArisan) elArisan.textContent = '—';
-                if (elHost) elHost.textContent = '—';
+                if (elArisan) elArisan.textContent = 'Ã¢â‚¬â€';
+                if (elHost) elHost.textContent = 'Ã¢â‚¬â€';
             }
 
-            // ── Iuran Status ──
+            // Ã¢â€â‚¬Ã¢â€â‚¬ Iuran Status Ã¢â€â‚¬Ã¢â€â‚¬
             var iuranDb = JSON.parse(localStorage.getItem('db_iuran') || '[]');
             var settings = JSON.parse(localStorage.getItem('db_settings') || '{}');
             var nominalIuran = parseFloat(settings.nominalIuran || 30000);
@@ -11359,11 +11355,11 @@ window.dshTab = function(tab) {
                 if (elIuranStatus && iuranPribadi.length > 0) {
                     var status = iuranPribadi[0].status;
                     var isLunas = status === 'posted' || status === 'Lunas';
-                    elIuranStatus.innerHTML += '<br><span style="margin-top:6px;display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:' + (isLunas ? '#dcfce7;color:#166534' : '#fee2e2;color:#991b1b') + '">' + (isLunas ? '✓ Anda Sudah Lunas' : '✗ Anda Belum Bayar') + '</span>';
+                    elIuranStatus.innerHTML += '<br><span style="margin-top:6px;display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:' + (isLunas ? '#dcfce7;color:#166534' : '#fee2e2;color:#991b1b') + '">' + (isLunas ? 'Ã¢Å“â€œ Anda Sudah Lunas' : 'Ã¢Å“â€” Anda Belum Bayar') + '</span>';
                 }
             }
 
-            // ── Pengurus RT ──
+            // Ã¢â€â‚¬Ã¢â€â‚¬ Pengurus RT Ã¢â€â‚¬Ã¢â€â‚¬
             var pengurusDb = JSON.parse(localStorage.getItem('db_pengurus') || '[]');
             var elPengurus = document.getElementById('wfb-pengurus');
             if (elPengurus) {
@@ -11371,7 +11367,7 @@ window.dshTab = function(tab) {
                     elPengurus.innerHTML = '<div style="font-size:12px;color:#94a3b8;text-align:center;padding:8px;">Belum ada data pengurus</div>';
                 } else {
                     elPengurus.innerHTML = pengurusDb.slice(0, 5).map(function(p){
-                        var nama = p.nama || p.namaKK || '—';
+                        var nama = p.nama || p.namaKK || 'Ã¢â‚¬â€';
                         var jabatan = p.jabatan || p.peran || '';
                         var inisial = nama.split(/\s+/).slice(0,2).map(function(w){ return w[0] ? w[0].toUpperCase() : ''; }).join('');
                         return '<div class="wfb-pengurus-item">'
@@ -11383,7 +11379,7 @@ window.dshTab = function(tab) {
                 }
             }
 
-            // ── Kontak Darurat ──
+            // Ã¢â€â‚¬Ã¢â€â‚¬ Kontak Darurat Ã¢â€â‚¬Ã¢â€â‚¬
             var daruratDb = JSON.parse(localStorage.getItem('db_darurat') || '[]');
             var elDarurat = document.getElementById('wfb-darurat-list');
             if (elDarurat) {
@@ -11391,7 +11387,7 @@ window.dshTab = function(tab) {
                     elDarurat.innerHTML = '<div style="font-size:12px;color:#94a3b8;">Belum ada kontak darurat</div>';
                 } else {
                     elDarurat.innerHTML = daruratDb.slice(0, 5).map(function(d){
-                        var nama = d.nama || d.label || d.layanan || '—';
+                        var nama = d.nama || d.label || d.layanan || 'Ã¢â‚¬â€';
                         var telp = d.telp || d.no || d.nomor || '';
                         return '<div class="wfb-darurat-row">'
                             + '<span style="color:#374151;font-weight:600;font-size:12px;">' + nama + '</span>'
@@ -11401,7 +11397,7 @@ window.dshTab = function(tab) {
                 }
             }
 
-            // ── Update user card ──
+            // Ã¢â€â‚¬Ã¢â€â‚¬ Update user card Ã¢â€â‚¬Ã¢â€â‚¬
             window.updateWargaFbUserCard();
 
         } catch(e) {
@@ -11409,9 +11405,9 @@ window.dshTab = function(tab) {
         }
     };
 
-    /* ──────────────────────────────────────────────────────
+    /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
        5. Hook ke runRefreshers / polling
-    ────────────────────────────────────────────────────── */
+    Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
     // Tambahkan ke runRefreshers jika sudah ada
     var __origRunRefreshers = window.runRefreshers;
     if (typeof __origRunRefreshers === 'function') {
@@ -11471,10 +11467,10 @@ window.dshTab = function(tab) {
         if (__wfbBukaAttempts > 80) clearInterval(__wfbBukaInterval);
     }, 250);
 
-    /* ──────────────────────────────────────────────────────
+    /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
        6. Swipe gesture: swipe down to hide, swipe up to show
           Auto-scroll active button into view
-    ────────────────────────────────────────────────────── */
+    Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
     (function initWfbSwipe() {
         var nav = document.getElementById('wfb-mobile-nav');
         if (!nav) { setTimeout(initWfbSwipe, 500); return; }
@@ -11514,9 +11510,9 @@ window.dshTab = function(tab) {
         nav.addEventListener('touchend', function(e) {
             var dy = e.changedTouches[0].clientY - touchStartY;
             var dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
-            if (dx > 40) return; /* horizontal scroll — ignore */
-            if (dy < -30) showNav();   /* swipe up on nav — ensure visible */
-            if (dy > 30) hideNav();    /* swipe down on nav — hide */
+            if (dx > 40) return; /* horizontal scroll Ã¢â‚¬â€ ignore */
+            if (dy < -30) showNav();   /* swipe up on nav Ã¢â‚¬â€ ensure visible */
+            if (dy > 30) hideNav();    /* swipe down on nav Ã¢â‚¬â€ hide */
         }, { passive: true });
 
         /* Track page content scroll to auto-hide/show nav */
@@ -11570,7 +11566,7 @@ window.dshTab = function(tab) {
   function safeJ(k,fb){try{var v=JSON.parse(localStorage.getItem(k)||"null");return v==null?fb:v;}catch(_){return fb;}}
   function el(id){return document.getElementById(id);}
 
-  /* ── (1) FAB label permanen ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ (1) FAB label permanen Ã¢â€â‚¬Ã¢â€â‚¬ */
   function addBennyLabel() {
     if (el('gt-benny-label')) return;
     var fab = el('gt-benny-fab');
@@ -11586,7 +11582,7 @@ window.dshTab = function(tab) {
     }
   }
 
-  /* ── (3) loadDaruratWarga: grid cards + phone links ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ (3) loadDaruratWarga: grid cards + phone links Ã¢â€â‚¬Ã¢â€â‚¬ */
   function patchDarurat() {
     if (window.__gtV12DaruratPatched) return;
     window.__gtV12DaruratPatched = true;
@@ -11618,7 +11614,7 @@ window.dshTab = function(tab) {
     window.loadDaruratWarga = renderDarurat;
   }
 
-  /* ── (4) Arisan datalist dari db_warga ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ (4) Arisan datalist dari db_warga Ã¢â€â‚¬Ã¢â€â‚¬ */
   function rebuildArisanDL() {
     var dbW = safeJ('db_warga', []);
     if (!dbW.length) return false;
@@ -11638,7 +11634,7 @@ window.dshTab = function(tab) {
   var _dlTimer = setInterval(function(){ if(rebuildArisanDL()) clearInterval(_dlTimer); }, 800);
   setTimeout(function(){ clearInterval(_dlTimer); }, 25000);
 
-  /* ── (5) Sidebar toggle fix ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ (5) Sidebar toggle fix Ã¢â€â‚¬Ã¢â€â‚¬ */
   function fixSidebarToggle() {
     try{
       if (localStorage.getItem('sidebar_state') === 'hidden') {
@@ -11654,7 +11650,7 @@ window.dshTab = function(tab) {
     });
   }
 
-  /* ── (6) Dashboard: hero foto & nama RT ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ (6) Dashboard: hero foto & nama RT Ã¢â€â‚¬Ã¢â€â‚¬ */
   function injectHeroRingkasan() {
     var hero = document.querySelector('.gt-hero');
     if (!hero || hero.dataset.gtV12) return;
@@ -11675,18 +11671,18 @@ window.dshTab = function(tab) {
     hero.insertBefore(ring, hero.firstChild);
   }
 
-  /* ── (6) Rekap RT 005 — pastikan arisan & tuan rumah tampil ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ (6) Rekap RT 005 Ã¢â‚¬â€ pastikan arisan & tuan rumah tampil Ã¢â€â‚¬Ã¢â€â‚¬ */
   function patchRekapArisan() {
     var infoArisan = safeJ('db_info_arisan', null);
     if (!infoArisan) return;
     // warga dashboard ringkasan
-    if (el('warga-arisan-nama') && el('warga-arisan-nama').textContent === '—') {
+    if (el('warga-arisan-nama') && el('warga-arisan-nama').textContent === 'Ã¢â‚¬â€') {
       el('warga-arisan-nama').textContent = infoArisan.arisanNama || '-';
     }
     if (el('warga-arisan-tgl') && !el('warga-arisan-tgl').textContent) {
       el('warga-arisan-tgl').textContent = infoArisan.arisanTgl || '';
     }
-    if (el('warga-host-nama') && el('warga-host-nama').textContent === '—') {
+    if (el('warga-host-nama') && el('warga-host-nama').textContent === 'Ã¢â‚¬â€') {
       el('warga-host-nama').textContent = infoArisan.hostNama || '-';
     }
     if (el('warga-host-tgl') && !el('warga-host-tgl').textContent) {
@@ -11694,7 +11690,7 @@ window.dshTab = function(tab) {
     }
   }
 
-  /* ── (8) Berita slider ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ (8) Berita slider Ã¢â€â‚¬Ã¢â€â‚¬ */
   function ensureBeritaSlider() {
     var container = el('warga-berita-list');
     if (!container) return;
@@ -11708,7 +11704,7 @@ window.dshTab = function(tab) {
     var wrap = document.createElement('div'); wrap.className = 'gt-berita-slider-wrap';
     var track = document.createElement('div'); track.className = 'gt-berita-track';
     items.forEach(function(b) {
-      var isi = String(b.isi||'').substring(0,130) + (String(b.isi||'').length>130?'…':'');
+      var isi = String(b.isi||'').substring(0,130) + (String(b.isi||'').length>130?'Ã¢â‚¬Â¦':'');
       var imgH = b.foto ? '<img src="'+b.foto+'" style="width:100%;height:130px;object-fit:cover;border-radius:10px;margin-bottom:10px;">' : '';
       var slide = document.createElement('div');
       slide.className = 'gt-berita-slide';
@@ -11757,7 +11753,7 @@ window.dshTab = function(tab) {
     container.appendChild(ctrl);
   }
 
-  /* ── (9) SOS Sidebar Kanan — tabel rapi ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ (9) SOS Sidebar Kanan Ã¢â‚¬â€ tabel rapi Ã¢â€â‚¬Ã¢â€â‚¬ */
   function rebuildSosSidebar() {
     var old = el('gt-sos-panel');
     if (old) old.remove();
@@ -11796,7 +11792,7 @@ window.dshTab = function(tab) {
     tab.addEventListener('click', function(){ open = !open; inner.classList.toggle('open', open); });
   }
 
-  /* ── BOOT v12 ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ BOOT v12 Ã¢â€â‚¬Ã¢â€â‚¬ */
   function bootV12() {
     try{ addBennyLabel(); }catch(e){}
     try{ patchDarurat(); }catch(e){}
@@ -11843,7 +11839,7 @@ window.dshTab = function(tab) {
     if (_wt > 80) clearInterval(_wi);
   }, 300);
 
-  /* Also patch loadDashboardWarga to ensure arisan names ─ */
+  /* Also patch loadDashboardWarga to ensure arisan names Ã¢â€â‚¬ */
   var _dw = 0, _dwi = setInterval(function(){
     _dw++;
 
@@ -11855,25 +11851,25 @@ window.dshTab = function(tab) {
 </script>
 
 
-<!-- ═══ GT-v13 Extra Fixes ═══ -->
+<!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â GT-v13 Extra Fixes Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 <style>
-/* ════════════════════════════════════════════════════════
-   DARK MODE — PANEL KIRI & KANAN (fix scroll area putih)
-   ════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   DARK MODE Ã¢â‚¬â€ PANEL KIRI & KANAN (fix scroll area putih)
+   Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 
-/* 1. Layout container utama warga — hardcoded #f0f2f5 harus di-override */
+/* 1. Layout container utama warga Ã¢â‚¬â€ hardcoded #f0f2f5 harus di-override */
 html[data-theme="dark"] #view-warga.warga-fb-layout {
   background: #0b1220 !important;
 }
 
-/* 2. Panel kiri — full coverage termasuk area kosong saat scroll */
+/* 2. Panel kiri Ã¢â‚¬â€ full coverage termasuk area kosong saat scroll */
 html[data-theme="dark"] .warga-fb-left {
   background: #111a2e !important;
   border-right-color: #1e3154 !important;
   scrollbar-color: #233152 transparent !important;
 }
 
-/* 3. Panel kanan — full coverage */
+/* 3. Panel kanan Ã¢â‚¬â€ full coverage */
 html[data-theme="dark"] .warga-fb-right {
   background: #111a2e !important;
   scrollbar-color: #233152 transparent !important;
@@ -11925,10 +11921,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
   background: #0f172a !important;
 }
 
-/* FIX 3 Sidebar toggle — make btn visible always on desktop */
-@media (min-width: 769px) {
-
-}
+/* FIX 3 Sidebar toggle Ã¢â‚¬â€ make btn visible always on desktop */
 
 /* FIX 4 News hero auto-slide overlay styles */
 #gt-hero-slider-wrap {
@@ -12001,13 +11994,13 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
 </style>
 
 <script>
-/* ─── GT-v13 BOOT ─── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ GT-v13 BOOT Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 (function(){
   'use strict';
 
-  /* ── FIX 7 already done in HTML ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ FIX 7 already done in HTML Ã¢â€â‚¬Ã¢â€â‚¬ */
 
-  /* ── FIX 3: Sidebar toggle (v10 — mobile-aware) ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ FIX 3: Sidebar toggle (v10 Ã¢â‚¬â€ mobile-aware) Ã¢â€â‚¬Ã¢â€â‚¬ */
   function fixSidebar() {
     if (window.__gtV13Sidebar) return; window.__gtV13Sidebar = true;
 
@@ -12026,7 +12019,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
       });
     }
 
-    // Fungsi utama toggle — mobile vs desktop
+    // Fungsi utama toggle Ã¢â‚¬â€ mobile vs desktop
     window.toggleSidebar = window.toggleSidebar || function() {
       var isMobile = window.innerWidth <= 768;
       if (isMobile) {
@@ -12085,7 +12078,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
             if (Math.abs(delta) > THRESHOLD) {
               var navs = document.querySelectorAll('.admin-nav-tabs, .nav-tabs');
               if (delta > 0) {
-                // Scroll ke bawah → sembunyikan
+                // Scroll ke bawah Ã¢â€ â€™ sembunyikan
                 navs.forEach(function(n){
                   n.classList.add('gt-nav-hidden');
                   n.classList.add('hidden-footer');
@@ -12094,7 +12087,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
                 var btn = document.getElementById('gt-sidebar-toggle-btn');
                 if (btn) { var ic = btn.querySelector('i'); if(ic) ic.className = 'fa-solid fa-xmark'; }
               } else {
-                // Scroll ke atas → tampilkan
+                // Scroll ke atas Ã¢â€ â€™ tampilkan
                 navs.forEach(function(n){
                   n.classList.remove('gt-nav-hidden');
                   n.classList.remove('hidden-footer');
@@ -12128,7 +12121,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
       attachTabScrollListeners();
       setTimeout(attachTabScrollListeners, 1500);
 
-      // Tap pada konten → tampilkan nav lagi
+      // Tap pada konten Ã¢â€ â€™ tampilkan nav lagi
       document.addEventListener('touchend', function(e) {
         if (!e.target.closest('.admin-nav-tabs') && !e.target.closest('.nav-tabs')) {
           // Jika tap di konten, tampilkan nav setelah 300ms
@@ -12148,7 +12141,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
     })();
   }
 
-  /* ── FIX 4: News hero auto-slider ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ FIX 4: News hero auto-slider Ã¢â€â‚¬Ã¢â€â‚¬ */
   var _sliderTimer = null;
 
   function buildHeroSlider(articles) {
@@ -12263,14 +12256,14 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
     return Math.floor(s/86400)+' hari lalu';
   }
 
-  /* ── FIX 6: Ensure loadWargaFbRight runs after login ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ FIX 6: Ensure loadWargaFbRight runs after login Ã¢â€â‚¬Ã¢â€â‚¬ */
   function ensureRightPanel(){
     if(typeof window.loadWargaFbRight === 'function'){
       try{ window.loadWargaFbRight(); }catch(e){}
     }
   }
 
-  /* ── FIX 1+7: Ensure benny fab has correct image ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ FIX 1+7: Ensure benny fab has correct image Ã¢â€â‚¬Ã¢â€â‚¬ */
   function fixBennyFab(){
     var fab = document.getElementById('gt-benny-fab');
     if(!fab) return;
@@ -12290,7 +12283,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
     }
   }
 
-  /* ── BOOT ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ BOOT Ã¢â€â‚¬Ã¢â€â‚¬ */
   function boot(){
     try{ fixSidebar(); }catch(e){}
     try{ fixBennyFab(); }catch(e){}
@@ -12300,7 +12293,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
   /* Intercept gtNewsRender / news data to build hero slider */
   var _ni = 0, _nt = setInterval(function(){
     _ni++;
-    // Hook into the news system — watch for articles being stored
+    // Hook into the news system Ã¢â‚¬â€ watch for articles being stored
     if(window.__gtNewsAllArticles && !window.__gtHeroSliderBuilt){
       window.__gtHeroSliderBuilt = true;
       buildHeroSlider(window.__gtNewsAllArticles);
@@ -12348,13 +12341,13 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
   setTimeout(boot, 4000);
 
 })();
-/* ─── END GT-v13 ─── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ END GT-v13 Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 </script>
-<!-- ═══ END GT-v13 ═══ -->
+<!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â END GT-v13 Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 
 <style id="gt-mobile-nav-v10">
 /* ============================================================
-   MOBILE NAV v10 — Hamburger visible + Hide & Seek bottom nav
+   MOBILE NAV v10 Ã¢â‚¬â€ Hamburger visible + Hide & Seek bottom nav
    ============================================================ */
 
 /* Hamburger button: tampil di semua ukuran layar */
@@ -12376,7 +12369,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
     overflow: visible !important;
   }
 
-  /* State hidden — slide ke bawah */
+  /* State hidden Ã¢â‚¬â€ slide ke bawah */
   .admin-nav-tabs.gt-nav-hidden,
   .nav-tabs.gt-nav-hidden {
     transform: translateY(calc(100% - 22px)) !important;
@@ -12432,13 +12425,13 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
 }
 </style>
 
-<!-- ═══════════════════════════════════════════════════════════
-     GT FINTECH REDESIGN v1 — Premium Mobile Banking UI
+<!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+     GT FINTECH REDESIGN v1 Ã¢â‚¬â€ Premium Mobile Banking UI
      Smart Portal RT 005 Tegalsari
      Scope: #view-warga + mobile nav. NO feature/JS changes.
-     ═══════════════════════════════════════════════════════════ -->
+     Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 <style>
-/* ── Design tokens (light + dark) ─────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Design tokens (light + dark) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 :root {
   --ft-grad:         linear-gradient(135deg,#1e3a8a 0%,#2d3282 55%,#4338ca 100%);
   --ft-grad-em:      linear-gradient(135deg,#059669 0%,#0d9488 100%);
@@ -12455,9 +12448,9 @@ html[data-theme="dark"] {
   --ft-shadow-hero:  0 12px 40px rgba(0,0,0,.5), 0 4px 12px rgba(0,0,0,.3);
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
    GLOBAL WARGA LAYOUT
-══════════════════════════════════════════════════════════════ */
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga.warga-fb-layout {
   background: var(--gt-bg, #f0f4f8) !important;
 }
@@ -12465,9 +12458,9 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   background: #0b1220 !important;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   LEFT SIDEBAR — FINTECH NAV
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   LEFT SIDEBAR Ã¢â‚¬â€ FINTECH NAV
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga .warga-fb-left {
   background: var(--gt-surface, #fff) !important;
   border-right: 1px solid var(--gt-border, #e8edf3) !important;
@@ -12475,7 +12468,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   box-shadow: 2px 0 12px rgba(15,23,42,.05) !important;
 }
 
-/* User card → gradient fintech card */
+/* User card Ã¢â€ â€™ gradient fintech card */
 #view-warga .wfb-user-card {
   background: var(--ft-grad) !important;
   border-radius: 16px !important;
@@ -12543,10 +12536,10 @@ html[data-theme="dark"] #view-warga .wfb-nav-item.active {
 }
 html[data-theme="dark"] #view-warga .wfb-nav-icon { background: #1e293b !important; }
 
-/* ══════════════════════════════════════════════════════════════
-   MOBILE BOTTOM NAV WARGA — DISAMAKAN DENGAN ADMIN NAV
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   MOBILE BOTTOM NAV WARGA Ã¢â‚¬â€ DISAMAKAN DENGAN ADMIN NAV
    Menggunakan Navy Dark + Gold Luxury seperti admin-nav-tabs
-══════════════════════════════════════════════════════════════ */
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 .wfb-mobile-nav {
   background: var(--navy-dark, #001f5b) !important;
   backdrop-filter: none !important;
@@ -12575,7 +12568,7 @@ html[data-theme="dark"] .wfb-mobile-nav {
   box-shadow: 0 -5px 20px rgba(0,0,0,0.5) !important;
 }
 
-/* Mobile nav buttons — scrollable row, fixed min-width per item */
+/* Mobile nav buttons Ã¢â‚¬â€ scrollable row, fixed min-width per item */
 .wfb-mob-btn {
   flex: 0 0 auto !important;
   min-width: 64px !important;
@@ -12635,9 +12628,9 @@ html[data-theme="dark"] .wfb-mob-btn.active span {
 .wfb-mob-btn.active i { transform: none !important; }
 .wfb-mob-btn.active::after { display: none !important; }
 
-/* ══════════════════════════════════════════════════════════════
-   DASHBOARD — GREETING HERO CARD (fintech balance-card feel)
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   DASHBOARD Ã¢â‚¬â€ GREETING HERO CARD (fintech balance-card feel)
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga .dsh-greeting {
   background: var(--ft-grad) !important;
   border-radius: var(--ft-rl) !important;
@@ -12676,9 +12669,9 @@ html[data-theme="dark"] .wfb-mob-btn.active span {
 }
 #view-warga .dsh-ai-btn:hover { background: rgba(255,255,255,.28) !important; }
 
-/* ══════════════════════════════════════════════════════════════
-   STATS RING CARDS — Premium floating fintech cards
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   STATS RING CARDS Ã¢â‚¬â€ Premium floating fintech cards
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga .dsh-ring-grid {
   gap: 12px !important;
   margin-bottom: 22px !important;
@@ -12729,9 +12722,9 @@ html[data-theme="dark"] #view-warga .dsh-ring-card:hover {
 }
 #view-warga .dsh-ring-upd { font-size: .62rem !important; color: #94a3b8 !important; }
 
-/* ══════════════════════════════════════════════════════════════
-   QUICK ACTIONS — 4-column icon-top fintech buttons
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   QUICK ACTIONS Ã¢â‚¬â€ 4-column icon-top fintech buttons
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga .dsh-quick-grid {
   grid-template-columns: repeat(4,1fr) !important;
   gap: 10px !important;
@@ -12782,9 +12775,9 @@ html[data-theme="dark"] #view-warga .gt-qa-card:hover {
 }
 #view-warga .gt-qa-sub { font-size: .62rem !important; color: #94a3b8 !important; }
 
-/* ══════════════════════════════════════════════════════════════
-   SECTION HEADERS — clean fintech label style
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   SECTION HEADERS Ã¢â‚¬â€ clean fintech label style
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga .dsh-section-hd {
   font-size: .7rem !important;
   font-weight: 800 !important;
@@ -12812,9 +12805,9 @@ html[data-theme="dark"] #view-warga .gt-qa-card:hover {
 }
 #view-warga .dsh-refresh-btn:hover { background: rgba(59,130,246,.16) !important; }
 
-/* ══════════════════════════════════════════════════════════════
-   STATUS CARDS — modern fintech style
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   STATUS CARDS Ã¢â‚¬â€ modern fintech style
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga .gt-status-grid {
   gap: 12px !important;
 }
@@ -12830,9 +12823,9 @@ html[data-theme="dark"] #view-warga .gt-status-card {
   box-shadow: 0 2px 14px rgba(0,0,0,.3) !important;
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
    INFO / AGENDA SECTION CARD
-══════════════════════════════════════════════════════════════ */
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga #warga-dashboard > div:last-child {
   border-radius: var(--ft-r) !important;
   border: none !important;
@@ -12853,9 +12846,9 @@ html[data-theme="dark"] #view-warga #warga-dashboard > div:last-child {
   transition: all .2s !important;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   TAB CONTENT PAGES — unified fintech card container
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   TAB CONTENT PAGES Ã¢â‚¬â€ unified fintech card container
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga .warga-tab-content.active {
   padding: 18px 18px 110px !important;
 }
@@ -12873,9 +12866,9 @@ html[data-theme="dark"] #view-warga .card-title-header {
   box-shadow: 0 2px 14px rgba(0,0,0,.3) !important;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   RIGHT PANEL — premium fintech info cards
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   RIGHT PANEL Ã¢â‚¬â€ premium fintech info cards
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga .wfb-card {
   border-radius: var(--ft-r) !important;
   border: none !important;
@@ -12903,9 +12896,9 @@ html[data-theme="dark"] #view-warga .wfb-card:hover {
   letter-spacing: .5px !important;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   BUTTONS — fintech rounded premium style
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   BUTTONS Ã¢â‚¬â€ fintech rounded premium style
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #view-warga .btn-action,
 #view-warga .btn-submit {
   border-radius: 20px !important;
@@ -12938,9 +12931,9 @@ html[data-theme="dark"] #view-warga .wfb-card:hover {
   box-shadow: 0 4px 14px rgba(0,0,0,.2) !important;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   ANIMATIONS — smooth entrance on tab switch
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   ANIMATIONS Ã¢â‚¬â€ smooth entrance on tab switch
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 @keyframes ftFadeUp {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -12959,9 +12952,9 @@ html[data-theme="dark"] #view-warga .wfb-card:hover {
 #view-warga .gt-qa-card:nth-child(3) { animation-delay: .14s; }
 #view-warga .gt-qa-card:nth-child(4) { animation-delay: .18s; }
 
-/* ══════════════════════════════════════════════════════════════
-   RESPONSIVE — Mobile-first fintech
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   RESPONSIVE Ã¢â‚¬â€ Mobile-first fintech
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 @media (max-width: 480px) {
   #view-warga .warga-tab-content.active { padding: 14px 14px 100px !important; }
   #view-warga .dsh-greeting { padding: 18px 16px !important; border-radius: 18px !important; }
@@ -12978,9 +12971,9 @@ html[data-theme="dark"] #view-warga .wfb-card:hover {
   #view-warga .gt-qa-label { font-size: .58rem !important; }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   DARK MODE OVERRIDES — ensure fintech dark feel everywhere
-══════════════════════════════════════════════════════════════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   DARK MODE OVERRIDES Ã¢â‚¬â€ ensure fintech dark feel everywhere
+Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 html[data-theme="dark"] #view-warga .dsh-section-hd { color: #64748b !important; }
 html[data-theme="dark"] #view-warga .gt-qa-label { color: #cbd5e1 !important; }
 html[data-theme="dark"] #view-warga .gt-qa-val   { color: #94a3b8 !important; }
@@ -12988,12 +12981,12 @@ html[data-theme="dark"] #view-warga .dsh-ring-val { color: #f1f5f9 !important; }
 html[data-theme="dark"] #view-warga .dsh-ring-lbl { color: #64748b !important; }
 </style>
 
-<!-- ═══════════════════════════════════════════════════════════
-     GT PWA NATIVE v1 — Android-quality app experience
-     Safe-area · Splash screen · Install prompt · SW reg
-     ═══════════════════════════════════════════════════════════ -->
+<!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+     GT PWA NATIVE v1 Ã¢â‚¬â€ Android-quality app experience
+     Safe-area Ã‚Â· Splash screen Ã‚Â· Install prompt Ã‚Â· SW reg
+     Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 <style>
-/* ─── Full native viewport (no browser chrome bleed) ─────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Full native viewport (no browser chrome bleed) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 html {
   height: 100%;
   height: -webkit-fill-available;
@@ -13012,7 +13005,7 @@ body {
 }
 html[data-theme="dark"] body { background: #0b1220; }
 
-/* ─── Safe area insets (Android notch / nav bar) ─────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Safe area insets (Android notch / nav bar) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 
 .wfb-mobile-nav,
 .gt-bottom-nav,
@@ -13021,10 +13014,10 @@ html[data-theme="dark"] body { background: #0b1220; }
   height: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
 }
 
-/* ─── PWA Splash Screen ───────────────────────────────────── */
-/* ═══════════════════════════════════════════════════════════
-   PREMIUM SPLASH — TegalsariOneApp
-   ═══════════════════════════════════════════════════════════ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PWA Splash Screen Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+   PREMIUM SPLASH Ã¢â‚¬â€ TegalsariOneApp
+   Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 #t1-splash {
   position: fixed; inset: 0; z-index: 2147483647;
   display: flex; flex-direction: column; align-items: center;
@@ -13052,7 +13045,7 @@ html[data-theme="dark"] body { background: #0b1220; }
 }
 @keyframes t1sFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-18px) scale(1.1)} }
 
-/* ── Logo hero ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Logo hero Ã¢â€â‚¬Ã¢â€â‚¬ */
 .t1s-logo-wrap {
   position: relative; margin-top: max(env(safe-area-inset-top,0px), 28px);
   display: flex; flex-direction: column; align-items: center; gap: 10px;
@@ -13078,14 +13071,14 @@ html[data-theme="dark"] body { background: #0b1220; }
 .t1s-brand-b { color:#4cf; }
 .t1s-tagline { font-size:.78rem; color:rgba(255,255,255,.7); font-weight:500; letter-spacing:.5px; animation: t1sPop .7s .35s cubic-bezier(.34,1.56,.64,1) both; }
 
-/* ── Landmark scene ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Landmark scene Ã¢â€â‚¬Ã¢â€â‚¬ */
 .t1s-scene { width:100%; position:relative; flex:1; min-height:100px; max-height:140px; animation: t1sFadeUp .8s .5s both; }
 .t1s-landmark-svg { width:100%; height:100%; position:absolute; bottom:0; left:0; }
 .t1s-scene-labels { position:absolute; bottom:6px; left:0; right:0; display:flex; justify-content:space-around; }
 .t1s-slabel { display:flex; flex-direction:column; align-items:center; gap:2px; color:rgba(255,255,255,.75); font-size:.62rem; font-weight:700; }
 .t1s-slabel i { font-size:.75rem; }
 
-/* ── Value cards ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Value cards Ã¢â€â‚¬Ã¢â€â‚¬ */
 .t1s-values {
   display:flex; gap:8px; padding:0 16px; width:100%; box-sizing:border-box;
   animation: t1sFadeUp .8s .65s both;
@@ -13100,22 +13093,22 @@ html[data-theme="dark"] body { background: #0b1220; }
 .t1s-val b { color:#fff; font-size:.65rem; font-weight:800; }
 .t1s-val small { color:rgba(255,255,255,.55); font-size:.55rem; text-align:center; line-height:1.2; }
 
-/* ── Loading bar ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Loading bar Ã¢â€â‚¬Ã¢â€â‚¬ */
 .t1s-load-wrap { width:100%; padding:8px 20px 6px; box-sizing:border-box; animation: t1sFadeUp .8s .8s both; }
 .t1s-load-text { color:rgba(255,255,255,.6); font-size:.72rem; font-weight:600; text-align:center; margin-bottom:6px; font-family:'Plus Jakarta Sans','Inter',sans-serif; }
 .t1s-load-bar { width:100%; height:4px; background:rgba(255,255,255,.15); border-radius:99px; overflow:hidden; }
 .t1s-load-fill { height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,#4cf,#fff,#4cf); background-size:200% 100%; transition:width 9.5s cubic-bezier(.4,0,.2,1); animation:t1sBarShimmer 1.5s linear infinite; }
 @keyframes t1sBarShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-/* ── Bottom wave ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Bottom wave Ã¢â€â‚¬Ã¢â€â‚¬ */
 .t1s-bottom { width:100%; position:relative; flex-shrink:0; }
 .t1s-wave-svg { width:100%; display:block; }
 .t1s-people { position:absolute; bottom:22px; left:0; right:0; display:flex; justify-content:center; gap:14px; color:rgba(255,255,255,.5); font-size:1.3rem; }
 .t1s-footer { position:absolute; bottom:6px; left:0; right:0; text-align:center; color:rgba(255,255,255,.65); font-size:.68rem; font-weight:700; font-family:'Plus Jakarta Sans','Inter',sans-serif; letter-spacing:.3px; }
 
-/* @keyframes t1sPop and t1sFadeUp already defined inline in splash block above — no duplicate needed */
+/* @keyframes t1sPop and t1sFadeUp already defined inline in splash block above Ã¢â‚¬â€ no duplicate needed */
 
-/* ─── Install Banner (Android-quality) ───────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Install Banner (Android-quality) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #ft-install-banner {
   position: fixed;
   bottom: calc(72px + env(safe-area-inset-bottom, 0px) + 10px);
@@ -13190,7 +13183,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
   color: #94a3b8; font-size: .85rem; padding: 4px;
 }
 
-/* ─── Offline indicator ───────────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Offline indicator Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #ft-offline-bar {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -13207,10 +13200,10 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
 }
 #ft-offline-bar.ft-offline-show { transform: translateY(0); }
 
-/* ─── Theme-color slot (overridden by JS) ────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Theme-color slot (overridden by JS) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #ft-theme-meta { }
 
-/* ─── Network status ring on avatar ─────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Network status ring on avatar Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 .ft-online  .wfb-avatar-sm::after,
 .ft-online  #wfb-avatar-side::after {
   content: '';
@@ -13222,7 +13215,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
   border: 2px solid #fff;
 }
 
-/* ─── Prevent overscroll rubber-band showing white ───────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Prevent overscroll rubber-band showing white Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga.warga-fb-layout {
   overscroll-behavior: none;
 }
@@ -13230,7 +13223,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
   overscroll-behavior: none;
 }
 
-/* ─── Android-optimized smooth scroll containers ─────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Android-optimized smooth scroll containers Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .warga-fb-main,
 #view-warga .warga-tab-content.active,
 #view-warga .warga-fb-right {
@@ -13240,7 +13233,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
   will-change: scroll-position;
 }
 
-/* ─── Touch action tuning for swipe performance ──────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Touch action tuning for swipe performance Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .gt-qa-card,
 #view-warga .dsh-ring-card,
 .wfb-mob-btn,
@@ -13249,7 +13242,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
   touch-action: manipulation;
 }
 
-/* ─── Update available toast ─────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Update available toast Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #ft-update-toast {
   position: fixed;
   bottom: calc(80px + env(safe-area-inset-bottom,0px));
@@ -13289,14 +13282,14 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
 </style>
 
 <script>
-/* ═══════════════════════════════════════════════════════════
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
    GT PWA NATIVE v1
-   SW registration · Splash · Install prompt · Offline · Theme
-   ═══════════════════════════════════════════════════════════ */
+   SW registration Ã‚Â· Splash Ã‚Â· Install prompt Ã‚Â· Offline Ã‚Â· Theme
+   Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 (function () {
   'use strict';
 
-  /* ── 1. SPLASH SCREEN — inline at top of body (no injection needed) */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ 1. SPLASH SCREEN Ã¢â‚¬â€ inline at top of body (no injection needed) */
   function injectSplash() {
     /* Splash is baked into HTML at top of <body> for immediate render.
        This function is kept as a stub to avoid reference errors. */
@@ -13454,7 +13447,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
   if (document.body) injectSplash();
   else document.addEventListener('DOMContentLoaded', injectSplash);
 
-  /* ── 2. SERVICE WORKER REGISTRATION ──────────────────── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ 2. SERVICE WORKER REGISTRATION Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
       navigator.serviceWorker.register('/sw.js', { scope: '/' })
@@ -13484,13 +13477,13 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
     });
   }
 
-  /* ── 3. UPDATE TOAST ─────────────────────────────────── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ 3. UPDATE TOAST Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
   function showUpdateToast(newSW) {
     var t = document.getElementById('ft-update-toast');
     if (!t) {
       t = document.createElement('div');
       t.id = 'ft-update-toast';
-      t.innerHTML = '<span>✨ Versi baru tersedia</span><button id="ft-update-reload">Perbarui</button>';
+      t.innerHTML = '<span>Ã¢Å“Â¨ Versi baru tersedia</span><button id="ft-update-reload">Perbarui</button>';
       document.body.appendChild(t);
     }
     t.classList.add('show');
@@ -13502,7 +13495,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
     setTimeout(function () { t.classList.remove('show'); }, 8000);
   }
 
-  /* ── 4. INSTALL PROMPT (Android A2HS) ─── satu handler terpusat ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ 4. INSTALL PROMPT (Android A2HS) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ satu handler terpusat Ã¢â€â‚¬Ã¢â€â‚¬ */
 
   /* Cek cooldown 24 jam (bukan permanent dismiss) */
   function _gtInstallDismissed() {
@@ -13538,7 +13531,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
       '</div>',
       '<div id="ft-install-text">',
         '<div id="ft-install-title">Pasang di HP Anda</div>',
-        '<div id="ft-install-sub">Smart Portal RT 005 — akses offline, lebih cepat</div>',
+        '<div id="ft-install-sub">Smart Portal RT 005 Ã¢â‚¬â€ akses offline, lebih cepat</div>',
       '</div>',
       '<button id="ft-install-btn">Pasang</button>'
     ].join('');
@@ -13568,13 +13561,13 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
   /* Hapus key lama (permanent dismiss) agar tidak menghalangi */
   try { localStorage.removeItem('ft-install-dismissed'); } catch {}
 
-  /* ── 5. OFFLINE INDICATOR ────────────────────────────── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ 5. OFFLINE INDICATOR Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
   function updateOnlineStatus() {
     var bar = document.getElementById('ft-offline-bar');
     if (!bar) {
       bar = document.createElement('div');
       bar.id = 'ft-offline-bar';
-      bar.textContent = '⚡ Tidak ada koneksi — mode offline';
+      bar.textContent = 'Ã¢Å¡Â¡ Tidak ada koneksi Ã¢â‚¬â€ mode offline';
       document.body.appendChild(bar);
     }
     if (!navigator.onLine) {
@@ -13588,7 +13581,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
   window.addEventListener('offline', updateOnlineStatus);
   setTimeout(updateOnlineStatus, 1000);
 
-  /* ── 6. DYNAMIC THEME-COLOR (matches dark mode toggle) ─ */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ 6. DYNAMIC THEME-COLOR (matches dark mode toggle) Ã¢â€â‚¬ */
   function syncThemeColor() {
     var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     var color  = isDark ? '#0b1220' : '#1e3a8a';
@@ -13617,7 +13610,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
 
   setTimeout(syncThemeColor, 300);
 
-  /* ── 7. ANDROID HARDWARE BACK BUTTON (PWA) ───────────── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ 7. ANDROID HARDWARE BACK BUTTON (PWA) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
   window.addEventListener('popstate', function () {
     // If inside warga view, go back to dashboard on back button
     var activeTab = document.querySelector('#view-warga .warga-tab-content.active');
@@ -13650,7 +13643,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
     }, 400);
   }
 
-  /* ── 8. PREVENT DOUBLE-TAP ZOOM (Android) ────────────── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ 8. PREVENT DOUBLE-TAP ZOOM (Android) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
   var lastTouch = 0;
   document.addEventListener('touchend', function (e) {
     var now = Date.now();
@@ -13658,7 +13651,7 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
     lastTouch = now;
   }, { passive: false });
 
-  /* ── 9. MOMENTUM SCROLL OPTIMIZATION ────────────────── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ 9. MOMENTUM SCROLL OPTIMIZATION Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
   document.addEventListener('DOMContentLoaded', function () {
     var scrollEls = document.querySelectorAll(
       '#view-warga .warga-tab-content, #view-warga .warga-fb-main, #view-warga .warga-fb-right'
@@ -13672,13 +13665,13 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
 })();
 </script>
 
-<!-- ═══════════════════════════════════════════════════════════
+<!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
      GT FINTECH MICRO-INTERACTIONS v1
-     Spring physics · Shimmer · Ripple · Animated counters
-     · Touch feedback · Page transitions · Premium shadows
-     ═══════════════════════════════════════════════════════════ -->
+     Spring physics Ã‚Â· Shimmer Ã‚Â· Ripple Ã‚Â· Animated counters
+     Ã‚Â· Touch feedback Ã‚Â· Page transitions Ã‚Â· Premium shadows
+     Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 <style>
-/* ─── Spring & easing tokens ──────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Spring & easing tokens Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 :root {
   --spring:  cubic-bezier(.34,1.56,.64,1);
   --snap:    cubic-bezier(.4,0,.2,1);
@@ -13705,11 +13698,11 @@ html[data-theme="dark"] {
   --sh-hero:0 16px 48px rgba(0,0,0,.6),  0 6px 18px rgba(0,0,0,.35);
 }
 
-/* ─── Remove all tap highlights (native feel) ────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Remove all tap highlights (native feel) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 * { -webkit-tap-highlight-color: transparent; user-select: none; }
 input, textarea, select { user-select: text; }
 
-/* ─── Shimmer keyframe ───────────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Shimmer keyframe Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 @keyframes ftShimmer {
   0%   { background-position: -600px 0; }
   100% { background-position: 600px 0; }
@@ -13740,7 +13733,7 @@ input, textarea, select { user-select: text; }
   50%      { transform: translateX(-50%) scale(1.4); }
 }
 
-/* ─── Skeleton / shimmer classes ────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Skeleton / shimmer classes Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 .ft-skel {
   background: linear-gradient(90deg,
     #eef1f6 25%, #e4e8f0 50%, #eef1f6 75%);
@@ -13764,7 +13757,7 @@ html[data-theme="dark"] .ft-skel {
   border-radius: 6px;
 }
 
-/* ─── Page transition (spring enter) ───────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Page transition (spring enter) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .warga-tab-content.active {
   animation: ftSlideUp .38s var(--spring) both !important;
 }
@@ -13779,7 +13772,7 @@ html[data-theme="dark"] .ft-skel {
 #view-warga #warga-dashboard > *:nth-child(5) { animation-delay: .23s; }
 #view-warga #warga-dashboard > *:nth-child(6) { animation-delay: .28s; }
 
-/* ─── Spring card hover / press ─────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Spring card hover / press Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .dsh-ring-card {
   transition: transform .38s var(--spring),
               box-shadow .28s var(--snap) !important;
@@ -13824,7 +13817,7 @@ html[data-theme="dark"] .ft-skel {
   transition: transform .1s !important;
 }
 
-/* ─── Nav item spring ───────────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Nav item spring Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .wfb-nav-item {
   transition: all .25s var(--spring) !important;
 }
@@ -13833,21 +13826,21 @@ html[data-theme="dark"] .ft-skel {
   transition: transform .08s !important;
 }
 
-/* ─── Mobile bottom nav spring ──────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Mobile bottom nav spring Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 .wfb-mob-btn {
   transition: background .2s ease, transform .3s var(--spring) !important;
 }
-/* Keep gold active — do NOT override with blue here */
+/* Keep gold active Ã¢â‚¬â€ do NOT override with blue here */
 .wfb-mob-btn:active {
   transform: scale(.82) !important;
   transition: transform .09s var(--snap-in) !important;
 }
-/* Active dot — animated pulse */
+/* Active dot Ã¢â‚¬â€ animated pulse */
 .wfb-mob-btn.active::after {
   animation: ftDotPulse 1.8s ease-in-out infinite !important;
 }
 
-/* ─── Ripple ink ────────────────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Ripple ink Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 .ft-ripple-ink {
   position: absolute;
   border-radius: 50%;
@@ -13862,7 +13855,7 @@ html[data-theme="dark"] .ft-skel {
   background: rgba(30,58,138,.12);
 }
 
-/* ─── Greeting hero — premium upgrade ───────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Greeting hero Ã¢â‚¬â€ premium upgrade Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .dsh-greeting {
   box-shadow: var(--sh-hero) !important;
   transition: box-shadow .3s var(--snap) !important;
@@ -13880,7 +13873,7 @@ html[data-theme="dark"] .ft-skel {
   transition: transform .09s !important;
 }
 
-/* ─── Buttons — iPhone-quality press ───────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Buttons Ã¢â‚¬â€ iPhone-quality press Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .btn-action,
 #view-warga .wfb-btn-full {
   transition: all .3s var(--spring) !important;
@@ -13889,7 +13882,7 @@ html[data-theme="dark"] .ft-skel {
 #view-warga .btn-action:active { transform: scale(.92) !important; transition: transform .08s !important; }
 #view-warga .wfb-btn-full:active { transform: scale(.94) !important; transition: transform .08s !important; }
 
-/* ─── Premium input focus ring (iOS style) ──────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Premium input focus ring (iOS style) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga input:focus,
 #view-warga select:focus,
 #view-warga textarea:focus {
@@ -13899,19 +13892,19 @@ html[data-theme="dark"] .ft-skel {
   transition: box-shadow .2s var(--snap), border-color .2s var(--snap) !important;
 }
 
-/* ─── Smooth momentum scroll (iOS rubber-band feel) ─────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Smooth momentum scroll (iOS rubber-band feel) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .warga-fb-main,
 #view-warga .warga-tab-content.active {
   -webkit-overflow-scrolling: touch !important;
   scroll-behavior: smooth !important;
 }
 
-/* ─── Section headers — micro spring on load ────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Section headers Ã¢â‚¬â€ micro spring on load Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .dsh-section-hd {
   transition: opacity .2s var(--snap) !important;
 }
 
-/* ─── Status card press ─────────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Status card press Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .gt-status-card {
   transition: transform .32s var(--spring),
               box-shadow .25s var(--snap) !important;
@@ -13921,13 +13914,13 @@ html[data-theme="dark"] .ft-skel {
   box-shadow: var(--sh-md) !important;
 }
 
-/* ─── Animated counter font ─────────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Animated counter font Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 .ft-counter {
   font-variant-numeric: tabular-nums !important;
   font-feature-settings: "tnum" !important;
 }
 
-/* ─── Card shadow upgrade (replace previous) ────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Card shadow upgrade (replace previous) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga .dsh-ring-card { box-shadow: var(--sh-sm) !important; }
 #view-warga .gt-qa-card    { box-shadow: var(--sh-sm) !important; }
 #view-warga .gt-status-card{ box-shadow: var(--sh-sm) !important; }
@@ -13935,7 +13928,7 @@ html[data-theme="dark"] .ft-skel {
 html[data-theme="dark"] #view-warga .dsh-ring-card { box-shadow: var(--sh-md) !important; }
 html[data-theme="dark"] #view-warga .gt-qa-card    { box-shadow: var(--sh-md) !important; }
 
-/* ─── Warga layout background — premium gradient ────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Warga layout background Ã¢â‚¬â€ premium gradient Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 #view-warga.warga-fb-layout {
   background: linear-gradient(180deg, #eef2ff 0%, #f0f4f8 40%) !important;
 }
@@ -13943,7 +13936,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   background: linear-gradient(180deg, #0e1830 0%, #0b1220 40%) !important;
 }
 
-/* ─── Responsive iPhone spacing ─────────────────────────── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Responsive iPhone spacing Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 @media (max-width: 480px) {
   #view-warga .warga-tab-content.active { padding: 16px 14px 110px !important; }
   .wfb-mobile-nav { height: auto !important; }
@@ -13965,14 +13958,14 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 </style>
 
 <script>
-/* ═══════════════════════════════════════════════════════════
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
    GT FINTECH MICRO-INTERACTIONS v1
-   Ripple · AnimatedCounter · SkeletonLoading · SpringFeedback
-   ═══════════════════════════════════════════════════════════ */
+   Ripple Ã‚Â· AnimatedCounter Ã‚Â· SkeletonLoading Ã‚Â· SpringFeedback
+   Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 (function () {
   'use strict';
 
-  /* ── Util ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ Util Ã¢â€â‚¬Ã¢â€â‚¬ */
   function qs(sel, root) { return (root || document).querySelector(sel); }
   function qsa(sel, root) { return Array.from((root || document).querySelectorAll(sel)); }
   function clamp(v, lo, hi) { return Math.min(Math.max(v, lo), hi); }
@@ -13983,9 +13976,9 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
       Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
   }
 
-  /* ══════════════════════════════════════════════════════════
-     1. RIPPLE EFFECT — touch-accurate, spring-fade out
-  ══════════════════════════════════════════════════════════ */
+  /* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+     1. RIPPLE EFFECT Ã¢â‚¬â€ touch-accurate, spring-fade out
+  Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
   function createRipple(el, clientX, clientY, dark) {
     var rect = el.getBoundingClientRect();
     var x = clientX - rect.left;
@@ -14028,9 +14021,9 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
     qsa(sels.join(',')).forEach(function (el) { bindRipple(el); });
   }
 
-  /* ══════════════════════════════════════════════════════════
-     2. ANIMATED COUNTER — spring ease-out, locale-aware
-  ══════════════════════════════════════════════════════════ */
+  /* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+     2. ANIMATED COUNTER Ã¢â‚¬â€ spring ease-out, locale-aware
+  Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
   function animateValue(el, finalStr, duration) {
     duration = duration || 1100;
     var txt = (finalStr || '').trim();
@@ -14061,9 +14054,9 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
     requestAnimationFrame(tick);
   }
 
-  /* ══════════════════════════════════════════════════════════
+  /* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
      3. SKELETON SHIMMER on stat cards while data loads
-  ══════════════════════════════════════════════════════════ */
+  Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
   var SKEL_DARK = 'background:linear-gradient(90deg,#1a2744 25%,#233152 50%,#1a2744 75%);background-size:600px 100%;animation:ftShimmer 1.5s ease-in-out infinite;border-radius:6px;color:transparent!important;min-height:1em;display:inline-block;width:75%;';
   var SKEL_LIGHT= 'background:linear-gradient(90deg,#eef1f6 25%,#e4e8f0 50%,#eef1f6 75%);background-size:600px 100%;animation:ftShimmer 1.5s ease-in-out infinite;border-radius:6px;color:transparent!important;min-height:1em;display:inline-block;width:75%;';
 
@@ -14080,7 +14073,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
       if (!el || el.__ftSkel) return;
       el.__ftSkel = true;
 
-      var empty = ['—', '', 'Rp 0', '0'];
+      var empty = ['Ã¢â‚¬â€', '', 'Rp 0', '0'];
       if (empty.indexOf((el.textContent || '').trim()) !== -1) {
         skelOn(el);
       }
@@ -14100,9 +14093,9 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
     });
   }
 
-  /* ══════════════════════════════════════════════════════════
-     4. TOUCH FEEDBACK — haptic-like visual spring on nav
-  ══════════════════════════════════════════════════════════ */
+  /* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+     4. TOUCH FEEDBACK Ã¢â‚¬â€ haptic-like visual spring on nav
+  Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
   function initTouchFeedback() {
     qsa('#view-warga .wfb-nav-item').forEach(function (btn) {
       if (btn.__ftTF) return;
@@ -14133,9 +14126,9 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
     });
   }
 
-  /* ══════════════════════════════════════════════════════════
-     5. SMOOTH PAGE TRANSITION — re-trigger on tab switch
-  ══════════════════════════════════════════════════════════ */
+  /* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+     5. SMOOTH PAGE TRANSITION Ã¢â‚¬â€ re-trigger on tab switch
+  Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
   function triggerTransition(tabId) {
     var el = document.getElementById(tabId);
     if (!el) return;
@@ -14144,9 +14137,9 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
     el.style.animation = '';
   }
 
-  /* ══════════════════════════════════════════════════════════
-     6. PATCH openWargaTab — inject all enhancements on switch
-  ══════════════════════════════════════════════════════════ */
+  /* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+     6. PATCH openWargaTab Ã¢â‚¬â€ inject all enhancements on switch
+  Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
   function patchOpenWargaTab() {
     if (!window.openWargaTab || window.openWargaTab.__ftMicro) return;
     var orig = window.openWargaTab;
@@ -14163,9 +14156,9 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
     window.openWargaTab.__ftMicro = true;
   }
 
-  /* ══════════════════════════════════════════════════════════
+  /* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
      7. COUNTER for QA status values (animate on dashboard load)
-  ══════════════════════════════════════════════════════════ */
+  Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
   function setupQACounters() {
     ['qa-iuran-status','qa-surat-status','qa-berita-status','qa-aduan-status'].forEach(function(id) {
       var el = document.getElementById(id);
@@ -14173,7 +14166,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
       el.__ftQA = true;
       var obs = new MutationObserver(function() {
         var txt = (el.textContent||'').trim();
-        if (txt && txt !== '—') {
+        if (txt && txt !== 'Ã¢â‚¬â€') {
           obs.disconnect();
           if (/[0-9]/.test(txt)) {
             setTimeout(function(){ animateValue(el, txt, 900); }, 150);
@@ -14184,9 +14177,9 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
     });
   }
 
-  /* ══════════════════════════════════════════════════════════
+  /* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
      8. INIT
-  ══════════════════════════════════════════════════════════ */
+  Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
   function init() {
     initRipples();
     initTouchFeedback();
@@ -14255,7 +14248,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
   <div class="sp-list" id="gt-sp-list"></div>
 
 
-  <!-- ══ TOMBOL KELUAR MOBILE ══ -->
+  <!-- Ã¢â€¢ÂÃ¢â€¢Â TOMBOL KELUAR MOBILE Ã¢â€¢ÂÃ¢â€¢Â -->
   <div style="padding:10px 10px 4px;">
     <button class="sp-keluar-btn" onclick="gtSpClose(); setTimeout(gtKeluar, 200);">
       <i class="fa-solid fa-right-from-bracket"></i>
