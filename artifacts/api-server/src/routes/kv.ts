@@ -1,5 +1,5 @@
 import { Router, type IRouter, type Response } from "express";
-import { db, kvStoreTable } from "@workspace/db";
+import { db, kvStoreTable } from "../db/index.js";
 import { gt, inArray, isNotNull, sql } from "drizzle-orm";
 
 const router: IRouter = Router();

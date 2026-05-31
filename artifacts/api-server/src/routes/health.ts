@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from "express";
-import { pool } from "@workspace/db";
+import { pool } from "../db/index.js";
 
 const router = Router();
 const startedAt = Date.now();

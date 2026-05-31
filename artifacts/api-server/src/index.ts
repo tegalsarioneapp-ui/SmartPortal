@@ -1,6 +1,6 @@
 import app from "./app.js";
 import { logger } from "./lib/logger.js";
-import { pool, ensureSchema } from "@workspace/db";
+import { pool, ensureSchema } from "./db/index.js";
 import type { AddressInfo } from "net";
 
 process.on("unhandledRejection", (reason) => {

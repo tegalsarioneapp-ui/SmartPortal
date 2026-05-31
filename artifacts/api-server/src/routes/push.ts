@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import webpush from "web-push";
-import { db, kvStoreTable } from "@workspace/db";
+import { db, kvStoreTable } from "../db/index.js";
 import { eq } from "drizzle-orm";
 
 const router: IRouter = Router();
