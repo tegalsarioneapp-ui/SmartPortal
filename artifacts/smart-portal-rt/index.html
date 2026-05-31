@@ -5323,7 +5323,7 @@ html:not([data-theme="dark"]) .text-secondary {
         </div>
     </div>
 
-    <div id="view-warga" class="tab-view warga-fb-layout">
+    <div id="view-warga" class="tab-view warga-fb-layout" style="display:none;">
 
         <!-- ══════════════════════════════════════════════
              LEFT SIDEBAR — FACEBOOK STYLE
@@ -5823,7 +5823,7 @@ html:not([data-theme="dark"]) .text-secondary {
 </aside><!-- /.warga-fb-right -->
 
     </div><!-- /#view-warga -->
-        <div id="view-bendahara" class="tab-view">
+        <div id="view-bendahara" class="tab-view" style="display:none;">
         <div class="admin-nav-tabs no-print" style="display:flex;align-items:center;gap:10px;">
             <button class="admin-tab-btn active" onclick="openBenTab('ben-input')"><i class="fa-solid fa-cash-register"></i><span>Input Data</span></button>
             <button class="admin-tab-btn" onclick="openBenTab('ben-laporan')"><i class="fa-solid fa-file-invoice-dollar"></i><span>Laporan BA Kas</span></button>
@@ -5896,7 +5896,7 @@ html:not([data-theme="dark"]) .text-secondary {
         </div>
 
 
-    </div> <div id="view-koperasi" class="tab-view">
+    </div> <div id="view-koperasi" class="tab-view" style="display:none;">
         <div class="admin-nav-tabs no-print">
             <button class="admin-tab-btn active" onclick="openKopTab('kop-simpanan')"><i class="fa-solid fa-coins"></i><span>Buku Tabungan</span></button>
             <button class="admin-tab-btn" onclick="openKopTab('kop-pinjaman')"><i class="fa-solid fa-handshake-angle"></i><span>Pinjaman Pintar</span></button>
@@ -5973,7 +5973,7 @@ html:not([data-theme="dark"]) .text-secondary {
                 <button onclick="hitungSHUMassal()" class="btn-submit bg-gold" style="max-width:400px; margin:auto;"><i class="fa-solid fa-gift"></i> Tinjau Detail & Bagikan SHU</button>
             </div>
         </div>
-    </div> <div id="view-admin" class="tab-view">
+    </div> <div id="view-admin" class="tab-view" style="display:none;">
         <div class="admin-nav-tabs no-print">
             <button class="admin-tab-btn active" onclick="openAdminTab('admin-datakk'); loadTabelKKAdmin();"><i class="fa-solid fa-users-rectangle"></i><span>Data Keluarga (KK)</span></button>
             <button class="admin-tab-btn" onclick="openAdminTab('mutasi')"><i class="fa-solid fa-truck-moving"></i><span>Mutasi Warga</span></button>
@@ -8171,7 +8171,7 @@ window.bukaFormLogin = function() {
             document.getElementById('user-name').innerText = loggedInWarga.nama; document.getElementById('user-role').innerText = loggedInWarga.isGuest ? "Akses Publik Terbatas" : "Anggota Warga RT 005";
             document.getElementById('user-avatar').style.background = loggedInWarga.isGuest ? "linear-gradient(135deg, #10b981, #059669)" : "linear-gradient(135deg, #3b82f6, #2563eb)"; document.getElementById('user-avatar').innerHTML = loggedInWarga.isGuest ? "<i class='fa-solid fa-eye'></i>" : "<i class='fa-solid fa-user'></i>";
             document.body.classList.add('warga-portal-aktif');
-            let v = document.getElementById('view-warga'); v.style.display = ''; v.classList.add('active-grid'); let navTabs = document.querySelector('#view-warga .admin-nav-tabs');
+            let v = document.getElementById('view-warga'); v.style.display = 'block'; v.classList.add('active-grid'); let navTabs = document.querySelector('#view-warga .admin-nav-tabs');
 
             if(loggedInWarga.isGuest) {
                 if(navTabs) navTabs.style.display = ''; 
@@ -8191,8 +8191,8 @@ window.bukaFormLogin = function() {
             }
         } 
         else if(role === 'bendahara') { window.location.href = 'bendahara.html'; return; } 
-        else if(role === 'koperasi') { document.getElementById('user-name').innerText = "Pengurus Koperasi"; document.getElementById('user-role').innerText = "Simpan Pinjam RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #8b5cf6, #6d28d9)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-handshake-angle'></i>"; let v = document.getElementById('view-koperasi'); v.style.display = ''; v.classList.add('active-grid'); openKopTab('kop-simpanan'); } 
-        else if(role === 'admin') { document.getElementById('user-name').innerText = "Christian Eka"; document.getElementById('user-role').innerText = "Otoritas Sekretaris RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #f59e0b, #b45309)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-user-tie'></i>"; let v = document.getElementById('view-admin'); v.style.display = ''; v.classList.add('active-grid'); openAdminTab('admin-datakk'); let _pno = document.getElementById('p_no'); if(_pno) _pno.value = getNextSuratNumber(); let _ptgl = document.getElementById('p_tgl_manual'); if(_ptgl) _ptgl.innerText = new Date().toLocaleDateString('id-ID'); }
+        else if(role === 'koperasi') { document.getElementById('user-name').innerText = "Pengurus Koperasi"; document.getElementById('user-role').innerText = "Simpan Pinjam RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #8b5cf6, #6d28d9)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-handshake-angle'></i>"; let v = document.getElementById('view-koperasi'); v.style.display = 'block'; v.classList.add('active-grid'); openKopTab('kop-simpanan'); } 
+        else if(role === 'admin') { document.getElementById('user-name').innerText = "Christian Eka"; document.getElementById('user-role').innerText = "Otoritas Sekretaris RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #f59e0b, #b45309)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-user-tie'></i>"; let v = document.getElementById('view-admin'); v.style.display = 'block'; v.classList.add('active-grid'); openAdminTab('admin-datakk'); let _pno = document.getElementById('p_no'); if(_pno) _pno.value = getNextSuratNumber(); let _ptgl = document.getElementById('p_tgl_manual'); if(_ptgl) _ptgl.innerText = new Date().toLocaleDateString('id-ID'); }
         syncSemuaData();
     };
     // === FUNGSI SUB-TAB PUBLIKASI ===
