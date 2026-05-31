@@ -53,13 +53,15 @@ self.addEventListener('fetch', (e) => {
   // 1. API -- network only, never cache, always use relative URL
   if (url.pathname.startsWith('/api')) {
     const relativeUrl = url.pathname + url.search;
+    const hasBody = req.method !== 'GET' && req.method !== 'HEAD';
     const relativeReq = new Request(relativeUrl, {
       method: req.method,
       headers: req.headers,
-      body: req.method !== 'GET' && req.method !== 'HEAD' ? req.body : undefined,
+      body: hasBody ? req.body : undefined,
       mode: 'same-origin',
       credentials: 'same-origin',
       redirect: req.redirect,
+      ...(hasBody ? { duplex: 'half' } : {}),
     });
     e.respondWith(fetch(relativeReq).catch(() =>
       new Response(JSON.stringify({ error: 'offline' }), {
