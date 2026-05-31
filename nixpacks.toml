@@ -3,12 +3,12 @@ nixPkgs = ["nodejs_20"]
 
 [phases.install]
 cmds = [
-  "npm install -g pnpm@8.15.9 && pnpm install --no-frozen-lockfile --ignore-scripts"
+  "npm install -g pnpm@8.15.9 && /root/.npm-global/bin/pnpm install --no-frozen-lockfile --ignore-scripts || $(npm root -g)/../bin/pnpm install --no-frozen-lockfile --ignore-scripts"
 ]
 
 [phases.build]
 cmds = [
-  "npm run -g pnpm -- --filter @workspace/api-server run build || $(npm root -g)/.bin/pnpm --filter @workspace/api-server run build"
+  "$(npm root -g)/../bin/pnpm --filter @workspace/api-server run build"
 ]
 
 [start]
