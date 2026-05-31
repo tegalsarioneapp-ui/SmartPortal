@@ -15171,8 +15171,17 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
   }
 
   window.sccRefresh = sccInit;
-  window.sccInitRoleBased = sccInitRoleBased;
-  window.sccInitRoleBase  = sccInitRoleBased;
+  // Expose role-based init secara safe (fungsi mungkin di script lain)
+  window.sccInitRoleBased = function() {
+    if (typeof sccInitRoleBased === 'function') {
+      return sccInitRoleBased();
+    }
+    // Fallback: jalankan komponen individual
+    if (typeof sccLoadAksiCepat    === 'function') sccLoadAksiCepat();
+    if (typeof sccGuardAdminAccess === 'function') sccGuardAdminAccess();
+    if (typeof sccLoadInsight      === 'function') sccLoadInsight();
+  };
+  window.sccInitRoleBase = window.sccInitRoleBased;
 })();
 </script>
 
