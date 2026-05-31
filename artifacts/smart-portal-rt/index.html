@@ -1328,7 +1328,7 @@ html[data-theme="dark"] .gt-service-card:hover { border-color: #1e3a8a; }
 .gt-notif-mark { background: none; border: 0; color: var(--gt-primary-600); font-size: 0.82rem; font-weight: 600; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
 .gt-notif-mark:hover { background: var(--gt-primary-50); }
 html[data-theme="dark"] .gt-notif-mark:hover { background: rgba(37,99,235,0.18); }
-.gt-notif-body { max-height: 460px; overflow-y: auto; }
+.gt-notif-
 .gt-notif-item {
   display: flex; gap: 12px; align-items: flex-start;
   padding: 14px 18px;
@@ -3055,13 +3055,7 @@ html[data-theme="dark"] select option {
 .mtrx-row-header.open { background:linear-gradient(135deg,#eef2ff,#f5f3ff); border-color:#6366f1; box-shadow:0 2px 12px rgba(99,102,241,0.15); }
 .mtrx-chevron { transition:transform 0.3s; color:#6366f1; font-size:0.85rem; margin-left:auto; flex-shrink:0; }
 .mtrx-row-header.open .mtrx-chevron { transform:rotate(180deg); }
-.mtrx-row-body {
-    display:none; overflow:hidden;
-    background:#fafbff; border:1px solid #e2e8f0;
-    border-top:none; border-radius:0 0 12px 12px;
-    margin-top:-6px; padding:0;
-    transition:all 0.3s;
-}
+.mtrx-row-
 .mtrx-row-body.open { display:block; }
 .mtrx-bulan-grid {
     display:grid; grid-template-columns:repeat(6,1fr);
@@ -3176,7 +3170,7 @@ html[data-theme="dark"] select option {
 .acc-header:hover { background:#f1f5f9; }
 .acc-chevron { transition:transform 0.3s; color:#94a3b8; }
 .acc-header.open .acc-chevron { transform:rotate(180deg); }
-.acc-body { max-height:0; overflow:hidden; transition:max-height 0.35s ease; }
+.acc-
 .acc-body.open { max-height:9999px; }
 .acc-body-inner { padding:16px; }
 
@@ -4541,6 +4535,63 @@ window.logout = window.gtKeluar;
     });
 })();
 </script>
+<style id="gt-scroll-fix-final">
+/* ═══════════════════════════════════════════
+   SCROLL FIX FINAL — Global
+   ═══════════════════════════════════════════ */
+
+/* HTML & Body: selalu bisa scroll */
+html {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    height: auto !important;
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    touch-action: pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* Main app wrapper */
+#main-app {
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    height: auto !important;
+    min-height: 100vh !important;
+}
+
+/* Warga layout: scroll bebas */
+.warga-fb-main {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+}
+
+/* Tab content: scroll bebas */
+.warga-tab-content {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* Admin view */
+.admin-tab-content {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* Fix touch scroll di semua device */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+</style>
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════════
@@ -13169,7 +13220,8 @@ html[data-theme="dark"] #view-warga .dsh-ring-lbl { color: #64748b !important; }
 html {
   height: 100%;
   height: -webkit-fill-available;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: #1e3a8a;
 }
 body {
