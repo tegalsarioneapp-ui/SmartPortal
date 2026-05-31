@@ -4755,6 +4755,163 @@ body {
 }
 </style>
 
+
+<style id="gt-light-mode-polish">
+/* ── LIGHT MODE POLISH ─────────────────────── */
+/* Hanya aktif jika TIDAK ada data-theme=dark  */
+html:not([data-theme="dark"]) body {
+  background: #f0f4f8 !important;
+  color: #1e293b !important;
+}
+
+/* Header light */
+html:not([data-theme="dark"]) .main-header {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important;
+}
+html:not([data-theme="dark"]) .main-header .logo-text,
+html:not([data-theme="dark"]) .main-header h1,
+html:not([data-theme="dark"]) .main-header span {
+  color: #1e293b !important;
+}
+
+/* Sidebar kiri light */
+html:not([data-theme="dark"]) .warga-fb-left,
+html:not([data-theme="dark"]) #warga-fb-left {
+  background: #ffffff !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+html:not([data-theme="dark"]) .wfb-nav-btn,
+html:not([data-theme="dark"]) .nav-btn {
+  color: #374151 !important;
+}
+html:not([data-theme="dark"]) .wfb-nav-btn:hover,
+html:not([data-theme="dark"]) .nav-btn:hover {
+  background: #f1f5f9 !important;
+  color: #0ea5e9 !important;
+}
+
+/* Card utama light */
+html:not([data-theme="dark"]) .card,
+html:not([data-theme="dark"]) .dashboard-card,
+html:not([data-theme="dark"]) .info-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e293b !important;
+}
+html:not([data-theme="dark"]) .card h3,
+html:not([data-theme="dark"]) .card h4,
+html:not([data-theme="dark"]) .card p,
+html:not([data-theme="dark"]) .card span,
+html:not([data-theme="dark"]) .card label {
+  color: #1e293b !important;
+}
+
+/* Konten utama area light */
+html:not([data-theme="dark"]) .warga-tab-content,
+html:not([data-theme="dark"]) .admin-tab-content,
+html:not([data-theme="dark"]) .tab-content {
+  background: #f0f4f8 !important;
+}
+
+/* Search bar light */
+html:not([data-theme="dark"]) .gt-search-input,
+html:not([data-theme="dark"]) #gt-search-input {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+}
+html:not([data-theme="dark"]) .gt-search-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Input & select light */
+html:not([data-theme="dark"]) input:not([type="button"]):not([type="submit"]):not([type="reset"]),
+html:not([data-theme="dark"]) select,
+html:not([data-theme="dark"]) textarea {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+
+/* Table light */
+html:not([data-theme="dark"]) table {
+  background: #ffffff !important;
+}
+html:not([data-theme="dark"]) th {
+  background: #f1f5f9 !important;
+  color: #374151 !important;
+}
+html:not([data-theme="dark"]) td {
+  color: #1e293b !important;
+  border-color: #e2e8f0 !important;
+}
+html:not([data-theme="dark"]) tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+/* Panel kanan TETAP dark meski light mode */
+html:not([data-theme="dark"]) .warga-fb-right,
+html:not([data-theme="dark"]) #warga-fb-right {
+  background: linear-gradient(180deg,#0f172a 0%,#111827 100%) !important;
+  color: #f1f5f9 !important;
+}
+
+/* FAB/Benny - safe positioning */
+.fab {
+  z-index: 999 !important;
+  bottom: 80px !important;
+  right: 20px !important;
+  transition: right 0.3s ease !important;
+}
+@media (min-width: 1024px) {
+  .fab {
+    right: 24px !important;
+    bottom: 90px !important;
+  }
+  /* Geser FAB jika panel kanan terbuka */
+  body.gt-right-panel-open .fab {
+    right: 316px !important;
+  }
+}
+@media (max-width: 1023px) {
+  .fab {
+    right: 16px !important;
+    bottom: 72px !important;
+  }
+}
+
+/* Active nav - pastikan benar */
+html:not([data-theme="dark"]) .admin-tab-btn.active,
+html:not([data-theme="dark"]) .nav-btn.active,
+html:not([data-theme="dark"]) .wfb-nav-btn.active {
+  background: #0ea5e9 !important;
+  color: #ffffff !important;
+}
+html:not([data-theme="dark"]) .admin-tab-btn.active i,
+html:not([data-theme="dark"]) .nav-btn.active i,
+html:not([data-theme="dark"]) .wfb-nav-btn.active i {
+  color: #ffffff !important;
+}
+
+/* Stat box light */
+html:not([data-theme="dark"]) .stat-box,
+html:not([data-theme="dark"]) .stat-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+html:not([data-theme="dark"]) .stat-box h2,
+html:not([data-theme="dark"]) .stat-box h4 {
+  color: #1e293b !important;
+}
+
+/* Text muted light */
+html:not([data-theme="dark"]) .text-muted,
+html:not([data-theme="dark"]) .text-secondary {
+  color: #64748b !important;
+}
+</style>
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════════
@@ -6973,7 +7130,7 @@ body {
             var wrap = document.createElement('div');
             wrap.className = 'gt-search-wrap no-print';
             wrap.innerHTML = '<i class="fa-solid fa-magnifying-glass gt-search-icon"></i>'
-                + '<input id="gt-search-input" class="gt-search-input" type="search" autocomplete="off" placeholder="Cari warga (nama, NIK, KK, alamat...)" />'
+                + '<input id="gt-search-input" class="gt-search-input" type="search" autocomplete="off" placeholder="Cari warga (nama, NIK, KK, alamat)" />'
                 + '<button type="button" class="gt-search-clear" aria-label="Clear" title="Bersihkan"><i class="fa-solid fa-xmark"></i></button>'
                 + '<div id="gt-search-results" class="gt-search-results"></div>';
             // Insert before the action-btns (right cluster) so it sits in the middle/right
@@ -15181,5 +15338,70 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
 })();
 </script>
 
+
+<script id="gt-fab-panel-sync">
+(function(){
+  // Sync body class saat panel kanan toggle
+  function syncFabPosition() {
+    var rightPanel = document.querySelector('.warga-fb-right, #warga-fb-right, #gt-right-panel');
+    if (!rightPanel) return;
+    var isVisible = rightPanel.offsetWidth > 0 && rightPanel.offsetParent !== null;
+    var isHidden  = rightPanel.style.display === 'none' || rightPanel.classList.contains('hidden');
+    if (isVisible && !isHidden) {
+      document.body.classList.add('gt-right-panel-open');
+    } else {
+      document.body.classList.remove('gt-right-panel-open');
+    }
+  }
+
+  // Observasi perubahan panel kanan
+  var obs = new MutationObserver(syncFabPosition);
+  function startObs() {
+    var el = document.querySelector('.warga-fb-right, #warga-fb-right, #gt-right-panel');
+    if (el) {
+      obs.observe(el, { attributes: true, attributeFilter: ['style','class'] });
+      syncFabPosition();
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){
+      setTimeout(startObs, 1000);
+    });
+  } else {
+    setTimeout(startObs, 1000);
+  }
+  // Periodic sync
+  setInterval(syncFabPosition, 2000);
+})();
+</script>
+
+<script id="gt-nav-active-sync">
+(function(){
+  // Patch updateWargaFbNav agar sync active class
+  function patchNavSync() {
+    if (window.__gtNavSyncPatched) return;
+    if (typeof window.updateWargaFbNav !== 'function') return;
+    var orig = window.updateWargaFbNav;
+    window.updateWargaFbNav = function(tabId) {
+      try { orig.apply(this, arguments); } catch(e) {}
+      // Pastikan active class benar
+      document.querySelectorAll('[data-tab]').forEach(function(btn) {
+        if (btn.dataset.tab === tabId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    };
+    window.__gtNavSyncPatched = true;
+  }
+  var _t = 0;
+  var _i = setInterval(function(){
+    _t++;
+    patchNavSync();
+    if (window.__gtNavSyncPatched || _t > 20) clearInterval(_i);
+  }, 500);
+})();
+</script>
 </body>
 </html>
