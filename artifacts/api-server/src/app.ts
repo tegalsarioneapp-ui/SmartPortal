@@ -17,6 +17,22 @@ const app: Express = express();
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
+// Force CORS headers - bypass Railway Edge stripping
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,PATCH");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Requested-With");
+  }
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
+  next();
+});
+
 app.use(pinoHttp({
   logger,
   serializers: {
