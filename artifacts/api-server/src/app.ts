@@ -34,7 +34,12 @@ const corsOptions: CorsOptions = {
   origin: (origin, cb) => {
     if (!origin) return cb(null, true);
     if (!allowedOrigins) return cb(null, true);
-    return cb(null, allowedOrigins.includes(origin));
+    // Allow exact match OR *.vercel.app OR localhost
+    const allowed = allowedOrigins.includes(origin)
+      || (origin?.endsWith('.vercel.app') ?? false)
+      || (origin?.includes('localhost') ?? false)
+      || (origin?.includes('replit') ?? false);
+    return cb(null, allowed);
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],

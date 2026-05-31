@@ -404,8 +404,12 @@
             console.warn('[sync] PUT error:', err && err.message);
             setPill({ mode:'offline' });
             notifyFlushResolvers();
+            // Stop flush loop - server down, jangan spam
+            flushing = false;
+            pendingWrites = {};
+            return;
         })
-        .finally(function(){ flushing = false; if(pendingCount()) setTimeout(flush, 500); });
+        .finally(function(){ flushing = false; });
     }
 
     function flushViaBeacon(){
