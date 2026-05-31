@@ -236,16 +236,7 @@
 }
 
 /* === PANEL KANAN: hide/show toggle === */
-.right-panel-collapsed .warga-fb-right {
-    width: 0 !important;
-    min-width: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    border: none !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transition: width 0.4s ease, opacity 0.3s ease, padding 0.3s ease !important;
-}
+.right-panel-collapsed 
 .warga-fb-right {
     transition: width 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
 }
@@ -3449,9 +3440,7 @@ html[data-theme="dark"] select option {
     .warga-fb-left {
         display: none !important;
     }
-    .warga-fb-right {
-        display: none !important;
-    }
+    
     .warga-fb-layout .warga-tab-content.active {
         padding: 16px !important;
     }
@@ -3459,7 +3448,7 @@ html[data-theme="dark"] select option {
 
 /* ── MEDIUM (tablet: hide right sidebar) ── */
 @media (min-width: 769px) and (max-width: 1100px) {
-    .warga-fb-right { display: none; }
+    
     .warga-fb-layout .warga-tab-content.active {
         max-width: 100% !important;
         width: 100% !important;
@@ -4501,6 +4490,57 @@ window.logout = window.gtKeluar;
   font-size: 0.9rem !important;
 }
 </style>
+<style id="gt-panel-kanan-final">
+/* ═══════════════════════════════════════════
+   PANEL KANAN WARGA — FINAL
+   ═══════════════════════════════════════════ */
+
+/* Default: tampil */
+.warga-fb-right {
+    width: 280px !important;
+    min-width: 280px !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 12px 8px 20px 8px !important;
+    box-sizing: border-box !important;
+    position: sticky !important;
+    top: 60px !important;
+    height: calc(100vh - 60px) !important;
+    flex-shrink: 0 !important;
+    transition: width 0.4s ease, opacity 0.3s ease, padding 0.3s ease !important;
+}
+
+/* Saat collapsed */
+.right-panel-collapsed .warga-fb-right {
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Mobile: sembunyikan panel kanan */
+@media (max-width: 768px) {
+    .warga-fb-right {
+        display: none !important;
+    }
+}
+</style>
+<script id="gt-panel-kanan-reset">
+(function(){
+    // Reset right panel state supaya tampil default
+    try { localStorage.removeItem('right_panel_state'); } catch(_){}
+    // Pastikan view-warga tidak punya class right-panel-collapsed saat load
+    window.addEventListener('DOMContentLoaded', function(){
+        var view = document.getElementById('view-warga');
+        if(view) view.classList.remove('right-panel-collapsed');
+    });
+})();
+</script>
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════════
