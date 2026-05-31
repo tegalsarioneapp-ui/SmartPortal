@@ -10937,14 +10937,9 @@ var SOURCES = [
     { name:'Radar Semarang', cls:'src-radar',   url:'https://radarsemarang.jawapos.com/feed' }
 ];
 
-// CORS proxy — tidak perlu API key, baca RSS secara langsung
-var CORS_PROXIES = [
-    'https://api.allorigins.win/raw?url=',
-    'https://corsproxy.io/?url=',
-    'https://api.codetabs.com/v1/proxy?quest=',
-    'https://thingproxy.freeboard.io/fetch/'
-];
-var CORS_PROXY = CORS_PROXIES[0];
+// RSS proxy - gunakan backend sendiri, tidak bergantung pihak ketiga
+var CORS_PROXY = '/api/rss?url=';
+var CORS_PROXIES = [CORS_PROXY];
 
 // Kategori keyword map
 var CAT_KEYS = {
