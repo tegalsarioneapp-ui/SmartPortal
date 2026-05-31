@@ -7,12 +7,13 @@ export interface AuthUser {
   name: string;
   role: UserRole;
   token: string;
+  expiresAt: number;
 }
 
 interface AuthContextValue {
   user: AuthUser | null;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (username: string, password: string) => Promise<{ success: boolean; user?: AuthUser; error?: string }>;
   logout: () => void;
 }
 
@@ -24,9 +25,6 @@ const STORAGE_KEY = "smartportal_auth";
 const DEMO_USERS: Array<{ username: string; password: string; name: string; role: UserRole }> = [
   { username: "admin", password: "admin123", name: "Administrator RT", role: "admin" },
   { username: "warga", password: "warga123", name: "Ahmad Suherman", role: "warga" },
-  // Allow simple "admin"/"admin" and "warga"/"warga" for convenience
-  { username: "admin", password: "admin", name: "Administrator RT", role: "admin" },
-  { username: "warga", password: "warga", name: "Ahmad Suherman", role: "warga" },
 ];
 
 function findUser(username: string, password: string) {
@@ -45,8 +43,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed: AuthUser = JSON.parse(stored);
-        if (parsed?.token && parsed?.role) {
+        const validRoles: UserRole[] = ["admin", "warga"];
+        if (
+          parsed?.token &&
+          parsed.token.length > 10 &&
+          validRoles.includes(parsed.role) &&
+          parsed.expiresAt > Date.now()
+        ) {
           setUser(parsed);
+        } else {
+          localStorage.removeItem(STORAGE_KEY);
         }
       }
     } catch {
@@ -66,10 +72,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       name: match.name,
       role: match.role,
       token: `demo-token-${match.role}-${Date.now()}`,
+      expiresAt: Date.now() + 28800000,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
     setUser(authUser);
-    return { success: true };
+    return { success: true, user: authUser };
   };
 
   const logout = () => {

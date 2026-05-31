@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Redirect } from "wouter";
 import { useAuth, UserRole } from "@/contexts/auth-context";
+import { LoadingScreen } from "@/components/loading-screen";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -18,13 +19,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   const { user, isLoading } = useAuth();
 
   // Still restoring session from localStorage
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-gray-500 text-sm">Memuat...</div>
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingScreen />;
 
   // Not authenticated at all
   if (!user) {

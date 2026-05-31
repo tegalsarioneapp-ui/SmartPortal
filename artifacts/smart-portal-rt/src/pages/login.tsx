@@ -29,17 +29,8 @@ export default function LoginPage() {
     const result = await login(username, password);
     setIsSubmitting(false);
 
-    if (result.success) {
-      // The AuthProvider will update `user` state; the `if (user)` guard above
-      // will then trigger a <Redirect> on next render. Forcing an explicit
-      // navigation ensures immediate navigation without waiting for a re-render.
-      try {
-        const stored = localStorage.getItem("smartportal_auth");
-        const parsed = stored ? JSON.parse(stored) : null;
-        setLocation(parsed?.role === "admin" ? "/portal/admin" : "/portal/warga");
-      } catch {
-        setLocation("/portal/warga");
-      }
+    if (result.success && result.user) {
+      setLocation(result.user.role === "admin" ? "/portal/admin" : "/portal/warga");
     } else {
       setError(result.error ?? "Login gagal.");
     }
@@ -72,7 +63,8 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Masukkan username"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
               />
             </div>
 
@@ -87,7 +79,8 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Masukkan password"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
               />
             </div>
 
