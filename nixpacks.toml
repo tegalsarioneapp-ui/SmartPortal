@@ -1,14 +1,16 @@
 [phases.setup]
-nixPkgs = ["nodejs_20", "nodePackages.pnpm"]
+nixPkgs = ["nodejs_20"]
 
 [phases.install]
 cmds = [
-  "pnpm install --no-frozen-lockfile"
+  "npm install -g pnpm@8.15.9",
+  "export PATH=$PATH:$(npm root -g)/.bin",
+  "pnpm install --no-frozen-lockfile --ignore-scripts"
 ]
 
 [phases.build]
 cmds = [
-  "pnpm --filter @workspace/api-server run build"
+  "$(npm root -g)/.bin/pnpm --filter @workspace/api-server run build"
 ]
 
 [start]
