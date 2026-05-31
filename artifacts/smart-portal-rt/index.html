@@ -3687,9 +3687,12 @@ html[data-theme="dark"] select option {
 .src-detik { background: #e11d48; color: #fff; }
 .src-cnn { background: #cc0000; color: #fff; }
 .src-tempo { background: #1d4ed8; color: #fff; }
-.src-antara { background: #059669; color: #fff; }
 .src-google { background: #4285f4; color: #fff; }
-.src-default { background: #475569; color: #fff; }
+.src-default  { background: #475569; color: #fff; }
+.src-antara   { background: #dc2626; color: #fff; }
+.src-suara    { background: #0369a1; color: #fff; }
+.src-tribun   { background: #7c3aed; color: #fff; }
+.src-radar    { background: #059669; color: #fff; }
 
 /* ===================================================================
    GT-v12: 9 Perbaikan User (24 Mei 2026) — VERSI FINAL
@@ -5744,6 +5747,7 @@ html:not([data-theme="dark"]) .text-secondary {
               <button class="gt-cat-btn" data-cat="Teknologi" onclick="window.gtNewsSetCat(this,'Teknologi')">Teknologi</button>
               <button class="gt-cat-btn" data-cat="Olahraga" onclick="window.gtNewsSetCat(this,'Olahraga')">Olahraga</button>
               <button class="gt-cat-btn" data-cat="Gaya Hidup" onclick="window.gtNewsSetCat(this,'Gaya Hidup')">Gaya Hidup</button>
+              <button class="gt-cat-btn" data-cat="Lokal Jateng" onclick="window.gtNewsSetCat(this,'Lokal Jateng')" style="border-color:#16a34a;color:#16a34a;"><i class="fa-solid fa-location-dot"></i> Lokal Jateng</button>
               <button class="gt-cat-btn" data-cat="Bookmark" onclick="window.gtNewsSetCat(this,'Bookmark')" style="margin-left:4px;border-color:#f59e0b;color:#f59e0b;"><i class="fa-solid fa-bookmark"></i> Tersimpan</button>
             </div>
             <!-- Search bar — baris terpisah, rapi dan menarik -->
@@ -10922,11 +10926,15 @@ var _state = {
 
 // Sumber RSS — diambil langsung via CORS proxy + DOMParser (tanpa rss2json)
 var SOURCES = [
-    { name:'Detik',       cls:'src-detik',   url:'https://rss.detik.com/index.php/detikcom' },
-    { name:'Kompas',      cls:'src-kompas',  url:'https://rss.kompas.com/robotic-with-cors/kompas-news/index.xml' },
-    { name:'Google News', cls:'src-google',  url:'https://news.google.com/rss?hl=id&gl=ID&ceid=ID:id' },
-    { name:'CNBC Ind',    cls:'src-detik',   url:'https://www.cnbcindonesia.com/rss' },
-    { name:'Tribun',      cls:'src-default', url:'https://www.tribunnews.com/rss' }
+    { name:'Detik',          cls:'src-detik',   url:'https://rss.detik.com/index.php/detikcom' },
+    { name:'Kompas',         cls:'src-kompas',  url:'https://rss.kompas.com/robotic-with-cors/kompas-news/index.xml' },
+    { name:'Google News',    cls:'src-google',  url:'https://news.google.com/rss?hl=id&gl=ID&ceid=ID:id' },
+    { name:'CNBC Ind',       cls:'src-detik',   url:'https://www.cnbcindonesia.com/rss' },
+    { name:'Tribun',         cls:'src-default', url:'https://www.tribunnews.com/rss' },
+    { name:'Antara Jateng',  cls:'src-antara',  url:'https://www.antaranews.com/rss/berita/jawa-tengah' },
+    { name:'Suara Merdeka',  cls:'src-suara',   url:'https://www.suaramerdeka.com/rss' },
+    { name:'Tribun Jateng',  cls:'src-tribun',  url:'https://jateng.tribunnews.com/rss' },
+    { name:'Radar Semarang', cls:'src-radar',   url:'https://radarsemarang.jawapos.com/feed' }
 ];
 
 // CORS proxy — tidak perlu API key, baca RSS secara langsung
@@ -10940,6 +10948,7 @@ var CORS_PROXY = CORS_PROXIES[0];
 
 // Kategori keyword map
 var CAT_KEYS = {
+        'Lokal Jateng': ['semarang','jateng','jawa tengah','solo','kudus','demak','kendal','batang','pekalongan','tegal','brebes','salatiga','magelang','boyolali','klaten','wonogiri','sragen','karanganyar','purwodadi','blora','rembang','pati','jepara','grobogan','ungaran'],
     'Nasional':   ['nasional','politik','pemerintah','dpr','presiden','menteri','indonesia'],
     'Ekonomi':    ['ekonomi','bisnis','keuangan','pasar','saham','rupiah','inflasi','pajak','perdagangan','ihsg'],
     'Teknologi':  ['teknologi','digital','ai','internet','gadget','aplikasi','startup','inovasi','software'],
@@ -10948,6 +10957,8 @@ var CAT_KEYS = {
 };
 
 function detectCat(item) {
+        var lokalSrc = ['Antara Jateng','Suara Merdeka','Tribun Jateng','Radar Semarang'];
+        if (item.source && lokalSrc.indexOf(item.source) > -1) return 'Lokal Jateng';
     var text = ((item.title||'') + ' ' + (item.description||'') + ' ' + (item.categories||[]).join(' ')).toLowerCase();
     for (var cat in CAT_KEYS) {
         var keys = CAT_KEYS[cat];
@@ -10974,8 +10985,13 @@ function srcCls(name) {
     if (n.includes('detik')) return 'src-detik';
     if (n.includes('cnn')) return 'src-cnn';
     if (n.includes('tempo')) return 'src-tempo';
-    if (n.includes('antara')) return 'src-antara';
-    if (n.includes('google')) return 'src-google';
+    if (n.includes('antara'))         return 'src-antara';
+    if (n.includes('suara merdeka'))  return 'src-suara';
+    if (n.includes('suara'))          return 'src-suara';
+    if (n.includes('tribun jateng'))  return 'src-tribun';
+    if (n.includes('radar semarang')) return 'src-radar';
+    if (n.includes('radar'))          return 'src-radar';
+    if (n.includes('google'))         return 'src-google';
     return 'src-default';
 }
 
