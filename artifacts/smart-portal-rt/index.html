@@ -5807,13 +5807,13 @@ html:not([data-theme="dark"]) .text-secondary {
         ══════════════════════════════════════════════ -->
         <aside class="warga-fb-right no-print" id="warga-fb-right">
 <div class="scc-close-row"><span class="scc-label-top">COMMAND CENTER</span><button class="scc-close-btn" onclick="toggleRightPanel()"><i class="fa-solid fa-chevron-right"></i></button></div>
-<div class="scc-card scc-card-status" id="scc-status-card"><div class="scc-status-header"><div><div class="scc-rt-title">SMART RT 005</div><div class="scc-status-badge" id="scc-status-badge"><span class="scc-dot scc-dot-green"></span><span id="scc-status-text">AMAN</span></div></div><div class="scc-online-pill"><span class="scc-pulse"></span> ONLINE</div></div><div class="scc-update-time" id="scc-update-time">Update --:--</div></div>
+<div class="scc-card scc-card-status" id="scc-status-card"><div class="scc-status-header"><div><div class="scc-rt-title">SMART RT 005</div><div class="scc-status-badge" id="scc-status-badge"><span class="scc-dot scc-dot-green"></span><span id="scc-status-text">AMAN</span></div></div>
+<div class="scc-card" id="scc-aksi-card"><div class="scc-card-title"><i class="fa-solid fa-bolt"></i> AKSI CEPAT</div><div class="scc-grid2" id="scc-aksi-grid"></div></div><div class="scc-online-pill"><span class="scc-pulse"></span> ONLINE</div></div><div class="scc-update-time" id="scc-update-time">Update --:--</div></div>
 <div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-signal"></i> LIVE RINGKASAN RT</div><div class="scc-grid2"><div class="scc-mini-stat" onclick="openWargaTab('warga-keuangan')"><div class="scc-mini-icon scc-blue"><i class="fa-solid fa-wallet"></i></div><div class="scc-mini-val" id="scc-kas">Rp 0</div><div class="scc-mini-lbl">Kas RT</div></div><div class="scc-mini-stat" onclick="openWargaTab('warga-profil')"><div class="scc-mini-icon scc-violet"><i class="fa-solid fa-house-chimney-user"></i></div><div class="scc-mini-val" id="scc-kk">0 KK</div><div class="scc-mini-lbl">KK Aktif</div></div><div class="scc-mini-stat" onclick="openWargaTab('warga-keuangan')"><div class="scc-mini-icon scc-green"><i class="fa-solid fa-circle-check"></i></div><div class="scc-mini-val" id="scc-lunas">0/0</div><div class="scc-mini-lbl">Iuran Lunas</div></div><div class="scc-mini-stat" onclick="openWargaTab('warga-berita-portal')"><div class="scc-mini-icon scc-orange"><i class="fa-solid fa-bullhorn"></i></div><div class="scc-mini-val" id="scc-pengumuman">0</div><div class="scc-mini-lbl">Pengumuman</div></div></div></div>
 <div class="scc-card scc-card-ai"><div class="scc-card-title"><i class="fa-solid fa-brain"></i> AI INSIGHT HARI INI</div><div id="scc-insight-list" class="scc-insight-list"><div class="scc-insight-item"><i class="fa-solid fa-circle-info" style="color:#818cf8;"></i><span>Memuat data...</span></div></div></div>
 <div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-receipt"></i> IURAN BULAN INI</div><div class="scc-iuran-pct" id="scc-iuran-pct">0%</div><div class="scc-progress-wrap"><div class="scc-progress-bar" id="scc-iuran-bar" style="width:0%"></div></div><div class="scc-iuran-sub" id="scc-iuran-sub">0 dari 0 KK sudah membayar</div><div class="scc-iuran-nominal" id="scc-iuran-nominal"></div><button class="scc-btn scc-btn-blue" onclick="openWargaTab('warga-keuangan')"><i class="fa-solid fa-chart-line"></i> Lihat Detail Iuran</button></div>
 <div class="scc-card scc-card-danger"><div class="scc-card-title"><i class="fa-solid fa-triangle-exclamation"></i> QUICK EMERGENCY</div><div class="scc-grid2"><button class="scc-emergency-btn" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-phone-volume"></i><span>Call Darurat</span></button><button class="scc-emergency-btn" id="scc-ambulans" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-truck-medical"></i><span>Ambulans</span></button><button class="scc-emergency-btn" id="scc-damkar" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-fire-extinguisher"></i><span>Damkar</span></button><button class="scc-emergency-btn" id="scc-polisi" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-shield-halved"></i><span>Polisi</span></button></div></div>
 <div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-users-gear"></i> PENGURUS AKTIF</div><div id="scc-pengurus-list" class="scc-pengurus-list"><div class="scc-loading">Memuat...</div></div><button class="scc-btn scc-btn-violet" onclick="openWargaTab('warga-struktur')"><i class="fa-solid fa-sitemap"></i> Lihat Struktur RT</button></div>
-<div class="scc-card" id="scc-aksi-card"><div class="scc-card-title"><i class="fa-solid fa-bolt"></i> AKSI CEPAT</div><div class="scc-grid2" id="scc-aksi-grid"></div></div>
 </aside><!-- /.warga-fb-right -->
 
     </div><!-- /#view-warga -->
@@ -12292,34 +12292,57 @@ window.dshTab = function(tab) {
 
   function sccLoadAksiCepat() {
     try {
-      var role = (window.loggedInAs || window.__GT_AUTHENTICATED_ROLE__ || '').toLowerCase();
-      var isWarga = (role === 'warga' || role === '');
-      var grid = document.getElementById('scc-aksi-grid');
-      if (!grid) return;
-      if (isWarga) {
-        grid.innerHTML = [
-          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-keuangan&quot;)">',
-          '<i class="fa-solid fa-receipt"></i><span>Status Iuran</span></button>',
-          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-surat&quot;)">',
-          '<i class="fa-solid fa-file-lines"></i><span>Riwayat Surat</span></button>',
-          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-berita-portal&quot;)">',
-          '<i class="fa-solid fa-newspaper"></i><span>Pengumuman</span></button>',
-          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-aduan&quot;)">',
-          '<i class="fa-solid fa-comment-dots"></i><span>Aduan Saya</span></button>'
-        ].join('');
-      } else {
-        grid.innerHTML = [
-          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-profil&quot;)">',
-          '<i class="fa-solid fa-user-plus"></i><span>Tambah Warga</span></button>',
-          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-keuangan&quot;)">',
-          '<i class="fa-solid fa-coins"></i><span>Catat Kas</span></button>',
-          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-surat&quot;)">',
-          '<i class="fa-solid fa-file-signature"></i><span>Buat Surat</span></button>',
-          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-berita-portal&quot;)">',
-          '<i class="fa-solid fa-bullhorn"></i><span>Pengumuman</span></button>'
-        ].join('');
+      var role = (
+        window.loggedInAs ||
+        window.__GT_AUTHENTICATED_ROLE__ ||
+        localStorage.getItem("loggedInAs") ||
+        ""
+      ).toLowerCase().trim();
+      var isAdmin = (role === "admin" || role === "pengurus" ||
+                     role === "bendahara" || role === "koperasi" ||
+                     role === "ketua" || role === "rw");
+      var grid = document.getElementById("scc-aksi-grid");
+      if (!grid) { console.warn("scc-aksi-grid tidak ditemukan"); return; }
+
+      var color = isAdmin ? "#f59e0b" : "#0ea5e9";
+
+      var wargaBtns = [
+        { icon:"fa-receipt",       label:"Status Iuran",  action:'openWargaTab("warga-keuangan")' },
+        { icon:"fa-newspaper",     label:"Pengumuman",    action:'openWargaTab("warga-berita-portal")' },
+        { icon:"fa-file-lines",    label:"Layanan Surat", action:'openWargaTab("warga-surat")' },
+        { icon:"fa-sitemap",       label:"Struktur RT",   action:'openWargaTab("warga-struktur")' },
+        { icon:"fa-phone-volume",  label:"Darurat",       action:'openWargaTab("warga-darurat")' },
+        { icon:"fa-circle-user",   label:"Profil Saya",   action:'openWargaTab("warga-profil")' }
+      ];
+      var adminBtns = [
+        { icon:"fa-user-plus",     label:"Tambah Warga",  action:'openAdminTab("admin-datakk")' },
+        { icon:"fa-coins",         label:"Catat Kas",     action:'openAdminTab("pengaturan")' },
+        { icon:"fa-file-signature",label:"Buat Surat",    action:'openAdminTab("surat")' },
+        { icon:"fa-bullhorn",      label:"Pengumuman",    action:'openAdminTab("admin-publikasi")' },
+        { icon:"fa-hand-holding-dollar",label:"Kelola Iuran",action:'openAdminTab("pengaturan")' },
+        { icon:"fa-users",         label:"Data Warga",    action:'openAdminTab("admin-datakk")' }
+      ];
+
+      var btns = isAdmin ? adminBtns : wargaBtns;
+      grid.innerHTML = btns.map(function(b){
+        return "<button class=\"scc-action-btn\" onclick=\"" + b.action + "\" style=\""
+          + "display:flex;flex-direction:column;align-items:center;justify-content:center;"
+          + "gap:4px;padding:10px 6px;border:none;border-radius:10px;cursor:pointer;"
+          + "background:rgba(255,255,255,0.07);color:#f1f5f9;font-size:0.72rem;"
+          + "font-weight:600;transition:background 0.2s;width:100%;"
+          + "\">"
+          + "<i class=\"fa-solid " + b.icon + "\" style=\"font-size:1.1rem;color:" + color + ";\"></i>"
+          + "<span>" + b.label + "</span>"
+          + "</button>";
+      }).join("");
+
+      var titleEl = document.querySelector("#scc-aksi-card .scc-card-title");
+      if (titleEl) {
+        titleEl.innerHTML = "<i class=\"fa-solid fa-bolt\" style=\"color:" + color + ";\"></i> "
+          + (isAdmin ? "AKSES CEPAT ADMIN" : "AKSES CEPAT");
       }
-    } catch(e) { console.error('sccLoadAksiCepat:', e); }
+      console.log("[sccLoadAksiCepat] role=" + role + " isAdmin=" + isAdmin + " btns=" + btns.length);
+    } catch(e) { console.error("sccLoadAksiCepat:", e); }
   }
 
   function sccGuardAdminAccess() {
@@ -14936,6 +14959,7 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
     sccLoadIuran();
     sccLoadPengurus();
     sccLoadEmergency();
+    if(typeof sccLoadAksiCepat==='function') sccLoadAksiCepat();
     if(typeof sccInitRoleBased==='function') sccInitRoleBased();
     setInterval(sccUpdateTime, 60000);
     setInterval(sccLoadRingkasan, 30000);
