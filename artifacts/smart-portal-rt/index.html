@@ -4650,7 +4650,7 @@ window.logout = window.gtKeluar;
 <div id="gt-progress-bar"></div>
 
 
-<div id="login-screen">
+<div id="login-screen" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh;">
     <div id="splash-view" onclick="bukaFormLogin()" style="cursor: pointer; text-align: center; width: 100%; min-height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center;">
         <!-- 3D rotating T1 logo -->
         <div style="perspective:380px;width:118px;height:118px;margin-bottom:18px;">
@@ -14393,5 +14393,14 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
 
 
 
+
+<script>
+(function(){
+  var splash = document.getElementById('splash-view');
+  var loginForm = document.getElementById('login-form-view');
+  if(splash) splash.style.display = 'none';
+  if(loginForm) loginForm.style.display = 'block';
+})();
+</script>
 </body>
 </html>
