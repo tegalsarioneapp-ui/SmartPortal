@@ -4725,6 +4725,34 @@ body {
 .scc-loading{font-size:0.72rem;color:#64748b;text-align:center;padding:8px;}
 .right-panel-collapsed .warga-fb-right{width:0 !important;min-width:0 !important;padding:0 !important;overflow:hidden !important;opacity:0 !important;pointer-events:none !important;}
 @media(max-width:768px){.warga-fb-right{display:none !important;}}
+
+.scc-action-btn {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    padding:10px 6px;
+    border-radius:10px;
+    border:1px solid rgba(99,102,241,0.25);
+    background:rgba(99,102,241,0.08);
+    color:#a5b4fc;
+    cursor:pointer;
+    font-size:0.68rem;
+    font-weight:700;
+    transition:all 0.2s;
+    width:100%;
+}
+.scc-action-btn:hover {
+    background:rgba(99,102,241,0.2);
+    border-color:rgba(99,102,241,0.5);
+    color:#fff;
+    transform:translateY(-1px);
+}
+.scc-action-btn i {
+    font-size:1rem;
+    margin-bottom:2px;
+}
 </style>
 
 </head>
@@ -5628,7 +5656,7 @@ body {
 <div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-receipt"></i> IURAN BULAN INI</div><div class="scc-iuran-pct" id="scc-iuran-pct">0%</div><div class="scc-progress-wrap"><div class="scc-progress-bar" id="scc-iuran-bar" style="width:0%"></div></div><div class="scc-iuran-sub" id="scc-iuran-sub">0 dari 0 KK sudah membayar</div><div class="scc-iuran-nominal" id="scc-iuran-nominal"></div><button class="scc-btn scc-btn-blue" onclick="openWargaTab('warga-keuangan')"><i class="fa-solid fa-chart-line"></i> Lihat Detail Iuran</button></div>
 <div class="scc-card scc-card-danger"><div class="scc-card-title"><i class="fa-solid fa-triangle-exclamation"></i> QUICK EMERGENCY</div><div class="scc-grid2"><button class="scc-emergency-btn" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-phone-volume"></i><span>Call Darurat</span></button><button class="scc-emergency-btn" id="scc-ambulans" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-truck-medical"></i><span>Ambulans</span></button><button class="scc-emergency-btn" id="scc-damkar" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-fire-extinguisher"></i><span>Damkar</span></button><button class="scc-emergency-btn" id="scc-polisi" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-shield-halved"></i><span>Polisi</span></button></div></div>
 <div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-users-gear"></i> PENGURUS AKTIF</div><div id="scc-pengurus-list" class="scc-pengurus-list"><div class="scc-loading">Memuat...</div></div><button class="scc-btn scc-btn-violet" onclick="openWargaTab('warga-struktur')"><i class="fa-solid fa-sitemap"></i> Lihat Struktur RT</button></div>
-<div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-bolt"></i> AKSI CEPAT</div><div class="scc-grid2"><button class="scc-action-btn" onclick="openWargaTab('warga-profil')"><i class="fa-solid fa-user-plus"></i><span>Tambah Warga</span></button><button class="scc-action-btn" onclick="openWargaTab('warga-keuangan')"><i class="fa-solid fa-coins"></i><span>Catat Kas</span></button><button class="scc-action-btn" onclick="openWargaTab('warga-surat')"><i class="fa-solid fa-file-signature"></i><span>Buat Surat</span></button><button class="scc-action-btn" onclick="openWargaTab('warga-berita-portal')"><i class="fa-solid fa-bullhorn"></i><span>Pengumuman</span></button></div></div>
+<div class="scc-card" id="scc-aksi-card"><div class="scc-card-title"><i class="fa-solid fa-bolt"></i> AKSI CEPAT</div><div class="scc-grid2" id="scc-aksi-grid"></div></div>
 </aside><!-- /.warga-fb-right -->
 
     </div><!-- /#view-warga -->
@@ -12105,6 +12133,55 @@ window.dshTab = function(tab) {
     try{ if(!sosOk) rebuildSosSidebar(); }catch(e){}
   }
 
+  function sccLoadAksiCepat() {
+    try {
+      var role = (window.loggedInAs || '').toLowerCase();
+      var isWarga = (role === 'warga' || role === '');
+      var grid = document.getElementById('scc-aksi-grid');
+      if (!grid) return;
+      if (isWarga) {
+        // Warga: hanya navigasi read-only
+        grid.innerHTML =
+          '<button class="scc-action-btn" onclick="openWargaTab('warga-keuangan')">'
+          +'<i class="fa-solid fa-receipt"></i><span>Status Iuran</span></button>'
+          +'<button class="scc-action-btn" onclick="openWargaTab('warga-surat')">'
+          +'<i class="fa-solid fa-file-lines"></i><span>Riwayat Surat</span></button>'
+          +'<button class="scc-action-btn" onclick="openWargaTab('warga-berita-portal')">'
+          +'<i class="fa-solid fa-newspaper"></i><span>Pengumuman</span></button>'
+          +'<button class="scc-action-btn" onclick="openWargaTab('warga-aduan')">'
+          +'<i class="fa-solid fa-comment-dots"></i><span>Aduan Saya</span></button>';
+      } else {
+        // Admin/pengurus: aksi penuh
+        grid.innerHTML =
+          '<button class="scc-action-btn" onclick="openWargaTab('warga-profil')">'
+          +'<i class="fa-solid fa-user-plus"></i><span>Tambah Warga</span></button>'
+          +'<button class="scc-action-btn" onclick="openWargaTab('warga-keuangan')">'
+          +'<i class="fa-solid fa-coins"></i><span>Catat Kas</span></button>'
+          +'<button class="scc-action-btn" onclick="openWargaTab('warga-surat')">'
+          +'<i class="fa-solid fa-file-signature"></i><span>Buat Surat</span></button>'
+          +'<button class="scc-action-btn" onclick="openWargaTab('warga-berita-portal')">'
+          +'<i class="fa-solid fa-bullhorn"></i><span>Pengumuman</span></button>';
+      }
+    } catch(e) { console.error('sccLoadAksiCepat:', e); }
+  }
+
+  function sccGuardAdminAccess() {
+    try {
+      var role = (window.loggedInAs || '').toLowerCase();
+      var isWarga = (role === 'warga' || role === '');
+      if (!isWarga) return;
+      // Sembunyikan elemen admin dari panel kanan jika warga
+      var adminEls = document.querySelectorAll('[data-role="admin"]');
+      adminEls.forEach(function(el){ el.style.display = 'none'; });
+    } catch(e) {}
+  }
+
+  function sccInitRoleBased() {
+    sccLoadAksiCepat();
+    sccGuardAdminAccess();
+    sccLoadInsight();
+  }
+
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', bootV12); }
   else { bootV12(); }
   setTimeout(bootV12, 600);
@@ -14702,10 +14779,11 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
     sccLoadIuran();
     sccLoadPengurus();
     sccLoadEmergency();
-    sccLoadInsight();
+    sccInitRoleBased();
     setInterval(sccUpdateTime, 60000);
     setInterval(sccLoadRingkasan, 30000);
     setInterval(sccLoadIuran, 30000);
+    setInterval(sccInitRoleBased, 5000);
   }
 
   function sccUpdateTime() {
@@ -14723,21 +14801,49 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
 
   function sccLoadRingkasan() {
     try {
-      var kas = JSON.parse(localStorage.getItem('db_kas') || '[]');
-      var warga = JSON.parse(localStorage.getItem('db_warga') || '[]');
-      var berita = JSON.parse(localStorage.getItem('db_berita') || '[]');
+      var kasArr  = JSON.parse(localStorage.getItem('db_kas') || '[]');
+      var warga   = JSON.parse(localStorage.getItem('db_warga') || '[]');
+      var berita  = JSON.parse(localStorage.getItem('db_berita') || '[]');
+      var pengArr = JSON.parse(localStorage.getItem('db_pengumuman') || '[]');
 
-      var saldo = kas.reduce(function(a,b){ return a + (b.jenis==='masuk' ? +b.nominal : -b.nominal); }, 0);
-      var totalKK = warga.length;
-      var pengumuman = berita.filter(function(b){ return b.aktif !== false; }).length;
+      // Hitung saldo sama persis dengan loadDashboardWarga
+      var benSaldoAwal = parseFloat(localStorage.getItem('ben_saldo_awal') || '0');
+      var saldoAwal    = benSaldoAwal > 0
+                         ? benSaldoAwal
+                         : parseFloat(localStorage.getItem('db_saldo_awal') || '0');
+      var saldo = saldoAwal;
+      kasArr.forEach(function(k) {
+        if ((k.tipe||'').toLowerCase() === 'masuk') saldo += Number(k.nominal||0);
+        else saldo -= Number(k.nominal||0);
+      });
+      // Fallback: jika db_kas kosong, coba ben_iuran
+      if (kasArr.length === 0) {
+        var benIuran = JSON.parse(localStorage.getItem('ben_iuran') || '[]');
+        var benKomp  = JSON.parse(localStorage.getItem('ben_komponen') || '[]');
+        benIuran.forEach(function(b) {
+          var total = 0;
+          benKomp.forEach(function(k) {
+            if (b[k.id] === true) total += Number(k.nominal||0);
+          });
+          saldo += total;
+        });
+      }
 
-      var elKas = document.getElementById('scc-kas');
-      var elKK = document.getElementById('scc-kk');
-      var elPengumuman = document.getElementById('scc-pengumuman');
-      if (elKas) elKas.textContent = sccFmt(saldo);
-      if (elKK) elKK.textContent = totalKK + ' KK';
-      if (elPengumuman) elPengumuman.textContent = pengumuman;
-    } catch(e) {}
+      var totalKK    = warga.length;
+      // Cek pengumuman dari 2 kemungkinan key
+      var pengCount  = pengArr.filter(function(b){ return b.aktif !== false; }).length;
+      if (pengCount === 0) {
+        var beritaArr = JSON.parse(localStorage.getItem('db_berita') || '[]');
+        pengCount = beritaArr.filter(function(b){ return b.aktif !== false; }).length;
+      }
+
+      var elKas  = document.getElementById('scc-kas');
+      var elKK   = document.getElementById('scc-kk');
+      var elPeng = document.getElementById('scc-pengumuman');
+      if (elKas)  elKas.textContent  = sccFmt(saldo);
+      if (elKK)   elKK.textContent   = totalKK + ' KK';
+      if (elPeng) elPeng.textContent = pengCount;
+    } catch(e) { console.error('sccLoadRingkasan error:', e); }
   }
 
   function sccLoadIuran() {
@@ -14848,45 +14954,171 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
 
   function sccLoadInsight() {
     try {
-      var iuran = JSON.parse(localStorage.getItem('db_iuran') || '[]');
-      var warga = JSON.parse(localStorage.getItem('db_warga') || '[]');
-      var settings = JSON.parse(localStorage.getItem('db_settings') || '{}');
-      var berita = JSON.parse(localStorage.getItem('db_berita') || '[]');
-      var surat = JSON.parse(localStorage.getItem('db_surat') || '[]');
+      var role = (window.loggedInAs || '').toLowerCase();
+      var isWarga = (role === 'warga' || role === '');
 
-      var now = new Date();
+      if (isWarga) {
+        sccLoadInsightWarga();
+      } else {
+        sccLoadInsightAdmin();
+      }
+    } catch(e) { console.error('sccLoadInsight:', e); }
+  }
+
+  function sccLoadInsightWarga() {
+    try {
+      var warga     = window.loggedInWarga || {};
+      var iuranArr  = JSON.parse(localStorage.getItem('db_iuran') || '[]');
+      var beritaArr = JSON.parse(localStorage.getItem('db_berita') || '[]');
+      var pengArr   = JSON.parse(localStorage.getItem('db_pengumuman') || '[]');
+      var suratArr  = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+      if (!suratArr.length) suratArr = JSON.parse(localStorage.getItem('db_req_surat') || '[]');
+      var settings  = JSON.parse(localStorage.getItem('db_settings') || '{}');
+
+      var now    = new Date();
+      var bulan  = now.toLocaleString('id-ID',{month:'long'});
+      var tahun  = now.getFullYear();
+      var items  = [];
+
+      // 1. Status iuran warga ini
+      var myIuran = iuranArr.filter(function(x){
+        return String(x.idWarga||x.wargaId) === String(warga.id||'')
+          && x.bulan && x.bulan.toLowerCase().includes(bulan.toLowerCase())
+          && String(x.tahun||tahun) === String(tahun);
+      });
+      var sudahLunas = myIuran.some(function(x){ return x.posted||x.lunas||x.status==='lunas'; });
+      items.push({
+        icon: sudahLunas ? 'fa-circle-check' : 'fa-circle-exclamation',
+        color: sudahLunas ? '#4ade80' : '#fbbf24',
+        text: sudahLunas
+          ? 'Iuran Anda bulan ' + bulan + ' sudah lunas'
+          : 'Iuran Anda bulan ' + bulan + ' belum lunas',
+        btn: 'Lihat Status Iuran',
+        action: "openWargaTab('warga-keuangan')"
+      });
+
+      // 2. Pengumuman terbaru
+      var aktif = pengArr.filter(function(b){ return b.aktif!==false; });
+      if (!aktif.length) aktif = beritaArr.filter(function(b){ return b.aktif!==false; });
+      if (aktif.length > 0) {
+        var latest = aktif[aktif.length-1];
+        var judul  = latest.judul || latest.title || 'Ada pengumuman baru';
+        items.push({
+          icon:'fa-bullhorn', color:'#60a5fa',
+          text: judul.length > 50 ? judul.substring(0,47)+'...' : judul,
+          btn:'Lihat Pengumuman',
+          action:"openWargaTab('warga-berita-portal')"
+        });
+      } else {
+        items.push({
+          icon:'fa-bullhorn', color:'#64748b',
+          text:'Belum ada pengumuman aktif',
+          btn:'Lihat Pengumuman',
+          action:"openWargaTab('warga-berita-portal')"
+        });
+      }
+
+      // 3. Status surat milik warga ini
+      var mySurat = suratArr.filter(function(s){
+        return String(s.idWarga||s.wargaId||s.userId) === String(warga.id||'');
+      });
+      var suratAktif = mySurat.filter(function(s){
+        return s.status==='pending'||s.status==='menunggu'||s.status==='diproses';
+      });
+      if (suratAktif.length > 0) {
+        items.push({
+          icon:'fa-envelope-open-text', color:'#f87171',
+          text: suratAktif.length + ' pengajuan surat Anda sedang diproses',
+          btn:'Lihat Riwayat Surat',
+          action:"openWargaTab('warga-surat')"
+        });
+      } else {
+        items.push({
+          icon:'fa-envelope', color:'#94a3b8',
+          text:'Belum ada pengajuan surat aktif',
+          btn:'Lihat Layanan Surat',
+          action:"openWargaTab('warga-surat')"
+        });
+      }
+
+      // 4. Pengurus RT
+      var ketua = settings.namaKetua || '';
+      items.push({
+        icon:'fa-users-gear', color:'#a78bfa',
+        text: ketua ? 'Ketua RT: ' + ketua : 'Data pengurus RT sedang dilengkapi',
+        btn:'Lihat Struktur RT',
+        action:"openWargaTab('warga-struktur')"
+      });
+
+      var el = document.getElementById('scc-insight-list');
+      if (!el) return;
+      var title = document.querySelector('.scc-card-ai .scc-card-title');
+      if (title) title.innerHTML = '<i class="fa-solid fa-circle-info"></i> INFO RT HARI INI';
+
+      el.innerHTML = items.map(function(ins){
+        return '<div class="scc-insight-item">'
+          +'<i class="fa-solid '+ins.icon+'" style="color:'+ins.color+';flex-shrink:0;margin-top:2px;"></i>'
+          +'<div style="min-width:0;flex:1;">'
+          +'<span style="display:block;">'+ins.text+'</span>'
+          +(ins.btn
+            ? '<button class="scc-insight-btn" onclick="'+ins.action+'" style="margin-top:5px;">'
+              +'<i class="fa-solid fa-arrow-right"></i> '+ins.btn+'</button>'
+            : '')
+          +'</div></div>';
+      }).join('');
+    } catch(e) { console.error('sccLoadInsightWarga:', e); }
+  }
+
+  function sccLoadInsightAdmin() {
+    try {
+      var wargaArr  = JSON.parse(localStorage.getItem('db_warga') || '[]');
+      var iuranArr  = JSON.parse(localStorage.getItem('db_iuran') || '[]');
+      var beritaArr = JSON.parse(localStorage.getItem('db_berita') || '[]');
+      var pengArr   = JSON.parse(localStorage.getItem('db_pengumuman') || '[]');
+      var suratArr  = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+      if (!suratArr.length) suratArr = JSON.parse(localStorage.getItem('db_req_surat') || '[]');
+      var settings  = JSON.parse(localStorage.getItem('db_settings') || '{}');
+
+      var now   = new Date();
       var bulan = now.toLocaleString('id-ID',{month:'long'});
       var tahun = now.getFullYear();
-      var totalKK = warga.length;
-      var lunas = iuran.filter(function(x){
-        return x.bulan && x.bulan.toLowerCase().includes(bulan.toLowerCase()) && String(x.tahun||tahun)===String(tahun);
-      }).length;
-      var belum = totalKK - lunas;
-
       var insights = [];
 
+      var totalKK = wargaArr.length;
+      var lunas = iuranArr.filter(function(x){
+        return x.bulan && x.bulan.toLowerCase().includes(bulan.toLowerCase())
+          && String(x.tahun||tahun)===String(tahun) && (x.posted||x.lunas||x.status==='lunas');
+      }).length;
+      var belum = totalKK - lunas;
       if (belum > 0) {
         insights.push({icon:'fa-triangle-exclamation',color:'#fbbf24',
-          text: belum+' KK belum membayar iuran bulan '+bulan,
-          btn:'Kirim Reminder', action:"openWargaTab('warga-keuangan')"});
+          text: belum+' KK belum membayar iuran '+bulan,
+          btn:'Kirim Reminder', action:"openAdminTab('admin-aduan')"});
       }
-      if (!settings.namaKetua && !settings.namaSekretaris) {
+
+      if (!settings.namaKetua || !settings.namaBendahara) {
         insights.push({icon:'fa-circle-info',color:'#60a5fa',
           text:'Data pengurus RT belum lengkap',
-          btn:'Lengkapi Data', action:"openWargaTab('warga-pengaturan')"});
+          btn:'Lengkapi Data', action:"openAdminTab('pengaturan')"});
       }
-      var pengumuman = berita.filter(function(b){ return b.aktif !== false; }).length;
-      if (pengumuman === 0) {
+
+      var aktif = pengArr.filter(function(b){return b.aktif!==false;});
+      if (!aktif.length) aktif = beritaArr.filter(function(b){return b.aktif!==false;});
+      if (aktif.length === 0) {
         insights.push({icon:'fa-bullhorn',color:'#94a3b8',
           text:'Belum ada pengumuman aktif',
-          btn:'Buat Pengumuman', action:"openWargaTab('warga-berita-portal')"});
+          btn:'Buat Pengumuman', action:"openAdminTab('admin-publikasi')"});
       }
-      var suratPending = surat.filter(function(s){ return s.status==='pending'||s.status==='menunggu'; }).length;
+
+      var suratPending = suratArr.filter(function(s){
+        return s.status==='pending'||s.status==='menunggu';
+      }).length;
       if (suratPending > 0) {
         insights.push({icon:'fa-envelope-open-text',color:'#f87171',
           text: suratPending+' surat warga perlu diproses',
-          btn:'Lihat Surat', action:"openWargaTab('warga-surat')"});
+          btn:'Lihat Surat', action:"openAdminTab('surat')"});
       }
+
       if (insights.length === 0) {
         insights.push({icon:'fa-circle-check',color:'#4ade80',
           text:'Semua data RT dalam kondisi baik', btn:null});
@@ -14894,14 +15126,21 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
 
       var el = document.getElementById('scc-insight-list');
       if (!el) return;
+      var title = document.querySelector('.scc-card-ai .scc-card-title');
+      if (title) title.innerHTML = '<i class="fa-solid fa-brain"></i> AI INSIGHT HARI INI';
+
       el.innerHTML = insights.map(function(ins){
         return '<div class="scc-insight-item">'
-          +'<i class="fa-solid '+ins.icon+'" style="color:'+ins.color+';"></i>'
-          +'<div><span>'+ins.text+'</span>'
-          +(ins.btn ? '<br><button class="scc-insight-btn" onclick="'+ins.action+'" style="margin-top:5px;"><i class=\"fa-solid fa-arrow-right\"></i> '+ins.btn+'</button>' : '')
+          +'<i class="fa-solid '+ins.icon+'" style="color:'+ins.color+';flex-shrink:0;margin-top:2px;"></i>'
+          +'<div style="min-width:0;flex:1;">'
+          +'<span style="display:block;">'+ins.text+'</span>'
+          +(ins.btn
+            ? '<button class="scc-insight-btn" onclick="'+ins.action+'" style="margin-top:5px;">'
+              +'<i class="fa-solid fa-arrow-right"></i> '+ins.btn+'</button>'
+            : '')
           +'</div></div>';
       }).join('');
-    } catch(e) {}
+    } catch(e) { console.error('sccLoadInsightAdmin:', e); }
   }
 
   if (document.readyState === 'loading') {
