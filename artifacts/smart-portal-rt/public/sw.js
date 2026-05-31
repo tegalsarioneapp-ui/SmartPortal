@@ -1,7 +1,7 @@
-// Smart Portal RT 005 — Service Worker v3
+// Smart Portal RT 005 — Service Worker v4
 // Stale-while-revalidate · App shell · Push · Background sync · Native Android PWA
 
-const CACHE_VER  = 'v3';
+const CACHE_VER  = 'v4';
 const SHELL_CACHE = `rt005-shell-${CACHE_VER}`;
 const DATA_CACHE  = `rt005-data-${CACHE_VER}`;
 const IMG_CACHE   = `rt005-img-${CACHE_VER}`;
