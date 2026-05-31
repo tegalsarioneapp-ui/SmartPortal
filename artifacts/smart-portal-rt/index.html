@@ -4915,6 +4915,21 @@ html:not([data-theme="dark"]) .text-secondary {
   color: #64748b !important;
 }
 </style>
+
+<style id="gt-view-fix">
+/* Semua tab-view tersembunyi by default */
+.tab-view {
+  display: none !important;
+}
+/* Hanya yang active-grid yang tampil */
+.tab-view.active-grid {
+  display: block !important;
+}
+#view-warga.active-grid {
+  display: flex !important;
+  flex-direction: row !important;
+}
+</style>
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════════
