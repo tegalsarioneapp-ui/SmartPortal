@@ -4479,7 +4479,7 @@ window.logout = window.gtKeluar;
     min-width: 280px !important;
     opacity: 1 !important;
     pointer-events: auto !important;
-    overflow-y: auto !important;
+    
     display: flex !important;
     flex-direction: column !important;
     padding: 12px 8px 20px 8px !important;
@@ -4519,63 +4519,7 @@ window.logout = window.gtKeluar;
     });
 })();
 </script>
-<style id="gt-scroll-fix-final">
-/* ═══════════════════════════════════════════
-   SCROLL FIX FINAL — Global
-   ═══════════════════════════════════════════ */
 
-/* HTML & Body: selalu bisa scroll */
-html {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    height: auto !important;
-    scroll-behavior: smooth;
-}
-
-body {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    min-height: 100vh !important;
-    height: auto !important;
-    touch-action: pan-y !important;
-    -webkit-overflow-scrolling: touch !important;
-}
-
-/* Main app wrapper */
-#main-app {
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
-    height: auto !important;
-    min-height: 100vh !important;
-}
-
-/* Warga layout: scroll bebas */
-.warga-fb-main {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    flex: 1 !important;
-    min-height: 0 !important;
-    -webkit-overflow-scrolling: touch !important;
-    overscroll-behavior-y: contain !important;
-}
-
-/* Tab content: scroll bebas */
-.warga-tab-content {
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-}
-
-/* Admin view */
-.admin-tab-content {
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-}
-
-/* Fix touch scroll di semua device */
-* {
-    -webkit-tap-highlight-color: transparent;
-}
-</style>
 <style id="gt-panel-toggle-modern">
 /* ═══════════════════════════════════════════
    TOMBOL PANEL KANAN MODERN
@@ -4658,6 +4602,60 @@ body {
 }
 .wfb-right-close-modern button:active {
     transform: scale(0.9) rotate(180deg);
+}
+</style>
+<style id="gt-scroll-global-fix">
+html {
+    height: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scroll-behavior: smooth !important;
+}
+body {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    touch-action: pan-y pinch-zoom !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: auto !important;
+}
+#main-app,
+#view-warga,
+.app-container,
+.warga-fb-layout {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+}
+.warga-fb-main {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    flex: 1 !important;
+}
+.warga-tab-content,
+.warga-tab-content.active,
+.admin-tab-content,
+.tab-view,
+.tab-view.active {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+}
+.warga-fb-right {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+#view-warga *, #view-admin * {
+    touch-action: auto !important;
+}
+.main-header,
+#gt-sp-overlay,
+#gt-sp-drawer,
+#gt-sp-hamburger {
+    touch-action: none !important;
 }
 </style>
 </head>
