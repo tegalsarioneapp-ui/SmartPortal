@@ -12135,32 +12135,32 @@ window.dshTab = function(tab) {
 
   function sccLoadAksiCepat() {
     try {
-      var role = (window.loggedInAs || '').toLowerCase();
+      var role = (window.loggedInAs || window.__GT_AUTHENTICATED_ROLE__ || '').toLowerCase();
       var isWarga = (role === 'warga' || role === '');
       var grid = document.getElementById('scc-aksi-grid');
       if (!grid) return;
       if (isWarga) {
-        // Warga: hanya navigasi read-only
-        grid.innerHTML =
-          '<button class="scc-action-btn" onclick="openWargaTab('warga-keuangan')">'
-          +'<i class="fa-solid fa-receipt"></i><span>Status Iuran</span></button>'
-          +'<button class="scc-action-btn" onclick="openWargaTab('warga-surat')">'
-          +'<i class="fa-solid fa-file-lines"></i><span>Riwayat Surat</span></button>'
-          +'<button class="scc-action-btn" onclick="openWargaTab('warga-berita-portal')">'
-          +'<i class="fa-solid fa-newspaper"></i><span>Pengumuman</span></button>'
-          +'<button class="scc-action-btn" onclick="openWargaTab('warga-aduan')">'
-          +'<i class="fa-solid fa-comment-dots"></i><span>Aduan Saya</span></button>';
+        grid.innerHTML = [
+          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-keuangan&quot;)">',
+          '<i class="fa-solid fa-receipt"></i><span>Status Iuran</span></button>',
+          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-surat&quot;)">',
+          '<i class="fa-solid fa-file-lines"></i><span>Riwayat Surat</span></button>',
+          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-berita-portal&quot;)">',
+          '<i class="fa-solid fa-newspaper"></i><span>Pengumuman</span></button>',
+          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-aduan&quot;)">',
+          '<i class="fa-solid fa-comment-dots"></i><span>Aduan Saya</span></button>'
+        ].join('');
       } else {
-        // Admin/pengurus: aksi penuh
-        grid.innerHTML =
-          '<button class="scc-action-btn" onclick="openWargaTab('warga-profil')">'
-          +'<i class="fa-solid fa-user-plus"></i><span>Tambah Warga</span></button>'
-          +'<button class="scc-action-btn" onclick="openWargaTab('warga-keuangan')">'
-          +'<i class="fa-solid fa-coins"></i><span>Catat Kas</span></button>'
-          +'<button class="scc-action-btn" onclick="openWargaTab('warga-surat')">'
-          +'<i class="fa-solid fa-file-signature"></i><span>Buat Surat</span></button>'
-          +'<button class="scc-action-btn" onclick="openWargaTab('warga-berita-portal')">'
-          +'<i class="fa-solid fa-bullhorn"></i><span>Pengumuman</span></button>';
+        grid.innerHTML = [
+          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-profil&quot;)">',
+          '<i class="fa-solid fa-user-plus"></i><span>Tambah Warga</span></button>',
+          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-keuangan&quot;)">',
+          '<i class="fa-solid fa-coins"></i><span>Catat Kas</span></button>',
+          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-surat&quot;)">',
+          '<i class="fa-solid fa-file-signature"></i><span>Buat Surat</span></button>',
+          '<button class="scc-action-btn" onclick="openWargaTab(&quot;warga-berita-portal&quot;)">',
+          '<i class="fa-solid fa-bullhorn"></i><span>Pengumuman</span></button>'
+        ].join('');
       }
     } catch(e) { console.error('sccLoadAksiCepat:', e); }
   }
@@ -15171,12 +15171,8 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
   }
 
   window.sccRefresh = sccInit;
-  // Expose role-based init secara safe (fungsi mungkin di script lain)
+  // Expose via window - tidak ada self-call, langsung pakai komponen
   window.sccInitRoleBased = function() {
-    if (typeof sccInitRoleBased === 'function') {
-      return sccInitRoleBased();
-    }
-    // Fallback: jalankan komponen individual
     if (typeof sccLoadAksiCepat    === 'function') sccLoadAksiCepat();
     if (typeof sccGuardAdminAccess === 'function') sccGuardAdminAccess();
     if (typeof sccLoadInsight      === 'function') sccLoadInsight();
