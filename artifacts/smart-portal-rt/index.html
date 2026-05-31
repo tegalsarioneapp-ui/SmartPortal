@@ -2272,7 +2272,7 @@ table td b, table td small { word-break: break-word; overflow-wrap: anywhere; }
 .gt-qa-sub { font-size:0.66rem;color:#64748b;margin-top:1px; }
 
 /* ── GT Chat AI ─────────────────────────────────────── */
-#gt-chat-fab { position:fixed;bottom:72px;right:18px;z-index:9000;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 4px 16px rgba(124,58,237,0.5);transition:transform 0.2s; }
+#gt-chat-fab { position:fixed;bottom:72px;right:18px;z-index:1000;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 4px 16px rgba(124,58,237,0.5);transition:transform 0.2s; }
 #gt-chat-fab:hover { transform:scale(1.1); }
 #gt-chat-fab .gt-chat-badge { position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:0.6rem;font-weight:800;display:none;align-items:center;justify-content:center; }
 #gt-chat-panel { position:fixed;bottom:0;right:0;z-index:9001;width:100%;max-width:400px;height:0;overflow:hidden;border-radius:20px 20px 0 0;background:#0f172a;box-shadow:0 -8px 32px rgba(0,0,0,0.4);transition:height 0.3s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column; }
@@ -4659,7 +4659,7 @@ body {
 }
 </style>
 ﻿<style id="gt-scc-style">
-.warga-fb-right{background:linear-gradient(180deg,#0f172a 0%,#111827 100%) !important;border-left:1px solid rgba(99,102,241,0.2) !important;padding:10px 10px 80px 10px !important;display:flex !important;flex-direction:column !important;gap:10px !important;width:280px !important;min-width:280px !important;overflow-y:auto !important;overflow-x:hidden !important;scrollbar-width:thin !important;scrollbar-color:#1e3a5f transparent !important;}
+.warga-fb-right{background:linear-gradient(180deg,#0f172a 0%,#111827 100%) !important;border-left:1px solid rgba(99,102,241,0.2) !important;padding:10px 10px 100px 10px !important;display:flex !important;flex-direction:column !important;gap:10px !important;width:280px !important;min-width:280px !important;overflow-y:auto !important;overflow-x:hidden !important;scrollbar-width:thin !important;scrollbar-color:#1e3a5f transparent !important;}
 .scc-close-row{display:flex;align-items:center;justify-content:space-between;padding:4px 2px 6px 2px;border-bottom:1px solid rgba(99,102,241,0.15);margin-bottom:2px;}
 .scc-label-top{font-size:0.6rem;font-weight:800;letter-spacing:2px;color:#6366f1;text-transform:uppercase;}
 .scc-close-btn{width:28px;height:28px;border:1px solid rgba(99,102,241,0.3);border-radius:8px;background:rgba(99,102,241,0.1);color:#818cf8;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.75rem;transition:all 0.2s;}
@@ -5652,7 +5652,7 @@ body {
 <div class="scc-close-row"><span class="scc-label-top">COMMAND CENTER</span><button class="scc-close-btn" onclick="toggleRightPanel()"><i class="fa-solid fa-chevron-right"></i></button></div>
 <div class="scc-card scc-card-status" id="scc-status-card"><div class="scc-status-header"><div><div class="scc-rt-title">SMART RT 005</div><div class="scc-status-badge" id="scc-status-badge"><span class="scc-dot scc-dot-green"></span><span id="scc-status-text">AMAN</span></div></div><div class="scc-online-pill"><span class="scc-pulse"></span> ONLINE</div></div><div class="scc-update-time" id="scc-update-time">Update --:--</div></div>
 <div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-signal"></i> LIVE RINGKASAN RT</div><div class="scc-grid2"><div class="scc-mini-stat" onclick="openWargaTab('warga-keuangan')"><div class="scc-mini-icon scc-blue"><i class="fa-solid fa-wallet"></i></div><div class="scc-mini-val" id="scc-kas">Rp 0</div><div class="scc-mini-lbl">Kas RT</div></div><div class="scc-mini-stat" onclick="openWargaTab('warga-profil')"><div class="scc-mini-icon scc-violet"><i class="fa-solid fa-house-chimney-user"></i></div><div class="scc-mini-val" id="scc-kk">0 KK</div><div class="scc-mini-lbl">KK Aktif</div></div><div class="scc-mini-stat" onclick="openWargaTab('warga-keuangan')"><div class="scc-mini-icon scc-green"><i class="fa-solid fa-circle-check"></i></div><div class="scc-mini-val" id="scc-lunas">0/0</div><div class="scc-mini-lbl">Iuran Lunas</div></div><div class="scc-mini-stat" onclick="openWargaTab('warga-berita-portal')"><div class="scc-mini-icon scc-orange"><i class="fa-solid fa-bullhorn"></i></div><div class="scc-mini-val" id="scc-pengumuman">0</div><div class="scc-mini-lbl">Pengumuman</div></div></div></div>
-<div class="scc-card scc-card-ai"><div class="scc-card-title"><i class="fa-solid fa-brain"></i> AI INSIGHT HARI INI</div><div id="scc-insight-list" class="scc-insight-list"><div class="scc-insight-item"><i class="fa-solid fa-spinner fa-spin" style="color:#818cf8;"></i><span>Menganalisa data...</span></div></div></div>
+<div class="scc-card scc-card-ai"><div class="scc-card-title"><i class="fa-solid fa-brain"></i> AI INSIGHT HARI INI</div><div id="scc-insight-list" class="scc-insight-list"><div class="scc-insight-item"><i class="fa-solid fa-circle-info" style="color:#818cf8;"></i><span>Memuat data...</span></div></div></div>
 <div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-receipt"></i> IURAN BULAN INI</div><div class="scc-iuran-pct" id="scc-iuran-pct">0%</div><div class="scc-progress-wrap"><div class="scc-progress-bar" id="scc-iuran-bar" style="width:0%"></div></div><div class="scc-iuran-sub" id="scc-iuran-sub">0 dari 0 KK sudah membayar</div><div class="scc-iuran-nominal" id="scc-iuran-nominal"></div><button class="scc-btn scc-btn-blue" onclick="openWargaTab('warga-keuangan')"><i class="fa-solid fa-chart-line"></i> Lihat Detail Iuran</button></div>
 <div class="scc-card scc-card-danger"><div class="scc-card-title"><i class="fa-solid fa-triangle-exclamation"></i> QUICK EMERGENCY</div><div class="scc-grid2"><button class="scc-emergency-btn" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-phone-volume"></i><span>Call Darurat</span></button><button class="scc-emergency-btn" id="scc-ambulans" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-truck-medical"></i><span>Ambulans</span></button><button class="scc-emergency-btn" id="scc-damkar" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-fire-extinguisher"></i><span>Damkar</span></button><button class="scc-emergency-btn" id="scc-polisi" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-shield-halved"></i><span>Polisi</span></button></div></div>
 <div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-users-gear"></i> PENGURUS AKTIF</div><div id="scc-pengurus-list" class="scc-pengurus-list"><div class="scc-loading">Memuat...</div></div><button class="scc-btn scc-btn-violet" onclick="openWargaTab('warga-struktur')"><i class="fa-solid fa-sitemap"></i> Lihat Struktur RT</button></div>
@@ -14779,11 +14779,11 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
     sccLoadIuran();
     sccLoadPengurus();
     sccLoadEmergency();
-    sccInitRoleBased();
+    if(typeof sccInitRoleBased==='function') sccInitRoleBased();
     setInterval(sccUpdateTime, 60000);
     setInterval(sccLoadRingkasan, 30000);
     setInterval(sccLoadIuran, 30000);
-    setInterval(sccInitRoleBased, 5000);
+    setInterval(function(){ if(typeof sccInitRoleBased==='function') sccInitRoleBased(); }, 5000);
   }
 
   function sccUpdateTime() {
@@ -14954,15 +14954,34 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
 
   function sccLoadInsight() {
     try {
-      var role = (window.loggedInAs || '').toLowerCase();
+      // Tunggu sampai loggedInAs tersedia
+      var role = (window.loggedInAs || window.__GT_AUTHENTICATED_ROLE__ || '').toLowerCase();
       var isWarga = (role === 'warga' || role === '');
+      var isAdmin = (role === 'admin' || role === 'pengurus' || role === 'bendahara');
+
+      // Jika belum login sama sekali, tampilkan fallback
+      if (!role) {
+        var el = document.getElementById('scc-insight-list');
+        if (el) el.innerHTML = '<div class="scc-insight-item">'
+          +'<i class="fa-solid fa-circle-info" style="color:#818cf8;"></i>'
+          +'<span>Silakan login untuk melihat informasi RT</span>'
+          +'</div>';
+        return;
+      }
 
       if (isWarga) {
         sccLoadInsightWarga();
       } else {
         sccLoadInsightAdmin();
       }
-    } catch(e) { console.error('sccLoadInsight:', e); }
+    } catch(e) {
+      console.error('sccLoadInsight:', e);
+      var el = document.getElementById('scc-insight-list');
+      if (el) el.innerHTML = '<div class="scc-insight-item">'
+        +'<i class="fa-solid fa-triangle-exclamation" style="color:#fbbf24;"></i>'
+        +'<span>Gagal memuat data. Coba refresh.</span>'
+        +'</div>';
+    }
   }
 
   function sccLoadInsightWarga() {
@@ -15152,6 +15171,8 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
   }
 
   window.sccRefresh = sccInit;
+  window.sccInitRoleBased = sccInitRoleBased;
+  window.sccInitRoleBase  = sccInitRoleBased;
 })();
 </script>
 
