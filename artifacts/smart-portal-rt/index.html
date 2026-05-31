@@ -10930,7 +10930,13 @@ var SOURCES = [
 ];
 
 // CORS proxy — tidak perlu API key, baca RSS secara langsung
-var CORS_PROXY = 'https://corsproxy.io/?';
+var CORS_PROXIES = [
+    'https://api.allorigins.win/raw?url=',
+    'https://corsproxy.io/?',
+    'https://thingproxy.freeboard.io/fetch/',
+    'https://api.codetabs.com/v1/proxy?quest='
+];
+var CORS_PROXY = CORS_PROXIES[0];
 
 // Kategori keyword map
 var CAT_KEYS = {
@@ -11265,14 +11271,26 @@ function parseRssXml(xmlText, src) {
 }
 
 function fetchSource(src) {
-    var url = CORS_PROXY + encodeURIComponent(src.url);
-    return fetch(url)
-        .then(function(r) {
-            if (!r.ok) throw new Error('HTTP ' + r.status);
-            return r.text();
-        })
-        .then(function(text) { return parseRssXml(text, src); })
-        .catch(function() { return []; });
+    function tryProxy(idx) {
+        if (idx >= CORS_PROXIES.length) return Promise.resolve([]);
+        var url = CORS_PROXIES[idx] + encodeURIComponent(src.url);
+        return fetch(url, { signal: AbortSignal.timeout(8000) })
+            .then(function(r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.text();
+            })
+            .then(function(text) {
+                var items = parseRssXml(text, src);
+                if (!items || items.length === 0) throw new Error('empty');
+                console.log('[gtNews] proxy[' + idx + '] OK: ' + src.url + ' -> ' + items.length + ' items');
+                return items;
+            })
+            .catch(function(e) {
+                console.warn('[gtNews] proxy[' + idx + '] FAIL: ' + src.url + ' err=' + e.message);
+                return tryProxy(idx + 1);
+            });
+    }
+    return tryProxy(0);
 }
 
 window.gtNewsRefresh = function(force) {
