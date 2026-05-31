@@ -110,9 +110,11 @@ export default function LoginPage() {
 
           {/* Demo hint */}
           <div className="mt-6 bg-gray-50 rounded-lg px-4 py-3 text-xs text-gray-500">
-            <p className="font-semibold text-gray-600 mb-1">Demo login:</p>
-            <p>Admin: <span className="font-mono">admin</span> / <span className="font-mono">admin123</span></p>
-            <p>Warga: <span className="font-mono">warga</span> / <span className="font-mono">warga123</span></p>
+            <p className="font-semibold text-gray-600 mb-1">Info login:</p>
+            <p>Admin: <span className="font-mono">admin</span> / <span className="font-mono">admin005</span></p>
+            <p>Bendahara: <span className="font-mono">bendahara</span> / <span className="font-mono">benda005</span></p>
+            <p>Koperasi: <span className="font-mono">koperasi</span> / <span className="font-mono">koperasi005</span></p>
+            <p>Warga: <span className="font-mono">warga</span> / <span className="font-mono">rt005</span></p>
           </div>
         </div>
       </div>
