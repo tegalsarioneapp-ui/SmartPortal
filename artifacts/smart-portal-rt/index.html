@@ -102,8 +102,8 @@
         .univ-input:focus { border-color: var(--gold-luxury); background: rgba(0,0,0,0.6); box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
         .input-group-premium i.icon-left { top: 16px; color: var(--gold-luxury); position: absolute; left: 18px; font-size: 1.1rem; }
 
-        .btn-ultra { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg, var(--gold-luxury), #d97706); font-size: 1rem; font-weight: 800; letter-spacing: 1px; color: white; border: none; cursor: pointer; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3); transition: 0.3s; text-transform: uppercase; margin-top: 10px; }
-        .btn-ultra:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(245, 158, 11, 0.4); }
+        
+        
         .hint-badge { background: rgba(255,255,255,0.05); color: #cbd5e1; padding: 6px 12px; border-radius: 30px; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: inline-flex; align-items: center; margin: 3px; transition: 0.3s; }
 
         /* Mode HP */
@@ -943,7 +943,7 @@ label { color: var(--gt-text-2) !important; font-weight: 600 !important; font-si
   padding: 13px 16px !important;
 }
 .univ-input:focus { border-color: var(--gt-warning-500) !important; box-shadow: 0 0 0 3px rgba(245,158,11,0.25) !important; }
-.btn-ultra { border-radius: var(--gt-radius) !important; box-shadow: 0 12px 28px -8px rgba(245,158,11,0.45) !important; }
+
 
 /* ---- Empty states & skeletons ---- */
 .gt-empty {
@@ -1600,25 +1600,9 @@ input.univ-input[type="password"] {
 }
 
 /* Login premium polish */
-.btn-ultra {
-  width: 100%;
-  min-height: 52px !important;
-  border-radius: 14px !important;
-  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
-  color: #fff !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.06em;
-  border: 0;
-  cursor: pointer;
-  font-family: var(--gt-font) !important;
-  font-size: 0.98rem !important;
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  box-shadow: 0 12px 24px -8px rgba(245,158,11,0.45) !important;
-  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
-  text-transform: uppercase;
-}
-.btn-ultra:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 16px 32px -10px rgba(245,158,11,0.55) !important; }
-.btn-ultra:active { transform: translateY(0); filter: brightness(0.95); }
+
+
+
 
 /* Trust badges row at the bottom of login */
 #login-form-view::after {
@@ -2927,10 +2911,7 @@ html[data-theme="dark"] .swal2-popup.swal2-toast .swal2-title { color: #f1f5f9 !
   transition: opacity 0s, transform 0s;
 }
 @media (hover: hover) {
-  .btn-action:hover, .btn-submit:hover, .btn-ultra:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.04);
-  }
+  .btn-action:hover, .btn-submit:hover, 
 }
 @media (prefers-reduced-motion: reduce) {
   .btn-action, .btn-submit, .btn-ultra, .btn-logout,
@@ -4020,6 +4001,126 @@ html[data-theme="dark"] .gt-sos-td-name { color: #e2e8f0 !important; }
 }
 /* === END GT-v12 CSS === */
 
+
+/* ═══════════════════════════════════════════
+   TOMBOL LOGIN BARU — Animasi Premium
+   ═══════════════════════════════════════════ */
+.btn-login-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* Tombol Buka Portal */
+.btn-portal-main {
+    flex: 2;
+    position: relative;
+    overflow: hidden;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(245,158,11,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: transform 0.18s ease,
+                box-shadow 0.18s ease,
+                background 0.18s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 1;
+}
+.btn-portal-main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+        rgba(255,255,255,0.15) 0%,
+        rgba(255,255,255,0) 60%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 0;
+    pointer-events: none;
+}
+.btn-portal-main:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(245,158,11,0.55),
+                inset 0 1px 0 rgba(255,255,255,0.25);
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+}
+.btn-portal-main:hover::before { opacity: 1; }
+.btn-portal-main:active {
+    transform: translateY(0px) scale(0.97);
+    box-shadow: 0 4px 12px rgba(245,158,11,0.3);
+}
+/* Ripple effect saat klik */
+.btn-portal-main .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    transform: scale(0);
+    animation: rippleAnim 0.5s linear;
+    pointer-events: none;
+    z-index: 2;
+}
+@keyframes rippleAnim {
+    to { transform: scale(4); opacity: 0; }
+}
+
+/* Tombol Biometrik */
+.btn-biometrik-side {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    padding: 15px 12px;
+    border: 1.5px solid rgba(16,185,129,0.5);
+    border-radius: 14px;
+    background: rgba(16,185,129,0.1);
+    backdrop-filter: blur(10px);
+    color: #10b981;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(16,185,129,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+    transition: transform 0.18s ease,
+                box-shadow 0.18s ease,
+                background 0.18s ease,
+                border-color 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    line-height: 1.2;
+}
+.btn-biometrik-side i {
+    font-size: 1.3rem;
+    display: block;
+    transition: transform 0.3s ease;
+}
+.btn-biometrik-side:hover {
+    transform: translateY(-3px);
+    background: rgba(16,185,129,0.2);
+    border-color: rgba(16,185,129,0.8);
+    box-shadow: 0 10px 28px rgba(16,185,129,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+    color: #34d399;
+}
+.btn-biometrik-side:hover i {
+    transform: scale(1.2) rotate(-5deg);
+}
+.btn-biometrik-side:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 8px rgba(16,185,129,0.2);
+}
 </style>
 
 
@@ -4705,10 +4806,41 @@ window.logout = window.gtKeluar;
                         <span style="font-size: 0.7rem; color: #475569;">AES 256-bit Encrypted</span>
                         <a href="#" onclick="lupaPassword()" style="color:var(--gold-luxury); font-size:0.75rem; text-decoration:none; font-weight:600;">Lupa Sandi?</a>
                     </div>
-                    <button type="submit" class="btn-ultra"><i class="fa-solid fa-key"></i> Buka Portal</button>
-                    <button type="button" id="btn-login-biometrik" class="btn-ultra" onclick="loginBiometrik()" style="display:none; margin-top:10px; background:linear-gradient(135deg,#10b981,#047857); align-items:center; justify-content:center; gap:10px;">
-                        <i class="fa-solid fa-fingerprint"></i> Login Biometrik (Sidik Jari / Face ID)
-                    </button>
+                    <div class="btn-login-row">
+                        <!-- Tombol Utama: Buka Portal -->
+                        <button
+                            type="submit"
+                            id="btn-masuk-portal"
+                            class="btn-portal-main"
+                            onclick="
+                                var btn=this;
+                                var circle=document.createElement('span');
+                                var d=Math.max(btn.clientWidth,btn.clientHeight);
+                                circle.style.width=circle.style.height=d+'px';
+                                circle.style.left=(event.clientX-btn.getBoundingClientRect().left-d/2)+'px';
+                                circle.style.top=(event.clientY-btn.getBoundingClientRect().top-d/2)+'px';
+                                circle.classList.add('ripple');
+                                var old=btn.querySelector('.ripple');
+                                if(old) old.remove();
+                                btn.appendChild(circle);
+                            "
+                        >
+                            <i class="fa-solid fa-key"></i>
+                            <span>Buka Portal</span>
+                        </button>
+
+                        <!-- Tombol Biometrik -->
+                        <button
+                            type="button"
+                            id="btn-login-biometrik"
+                            class="btn-biometrik-side"
+                            onclick="loginBiometrik()"
+                            title="Login Biometrik (Sidik Jari / Face ID)"
+                        >
+                            <i class="fa-solid fa-fingerprint"></i>
+                            <span>Biometrik</span>
+                        </button>
+                    </div>
                 </form>
 
                 <div style="margin-top: 25px; text-align: center;">
