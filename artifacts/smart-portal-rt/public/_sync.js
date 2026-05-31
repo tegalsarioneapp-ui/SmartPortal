@@ -298,6 +298,11 @@
             BOOT_TIMEOUT_MS
         )
         .then(function(r){
+            if(r.status === 403 || r.status === 401){
+                console.warn('[boot] ' + r.status + ' - lanjut dengan data lokal');
+                hideBootOverlay();
+                return null;
+            }
             if(!r.ok) throw new Error('HTTP ' + r.status);
             return r.json();
         })
@@ -375,15 +380,32 @@
             headers: { 'Content-Type':'application/json' },
             body:    JSON.stringify({ writes:writes, deletes:deletes, originId:ORIGIN_ID })
         })
-        .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+        .then(function(r){
+            if(r.status === 403 || r.status === 401){
+                // Stop semua retry - auth error
+                pendingWrites = {};
+                setPill({ mode:'online' });
+                notifyFlushResolvers();
+                flushing = false;
+                console.warn('[sync] PUT ' + r.status + ' - writes discarded');
+                return null;
+            }
+            if(!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
         .then(function(resp){
+            if(!resp) return;
             if(resp.serverTime) serverTime = resp.serverTime;
             for(var i=0; i<keys.length; i++) delete pendingWrites[keys[i]];
             setPill({ mode:'online' });
             notifyFlushResolvers();
         })
-        .catch(function(){ setPill({ mode:'offline' }); notifyFlushResolvers(); })
-        .finally(function(){ flushing = false; if(pendingCount()) setTimeout(flush, 200); });
+        .catch(function(err){
+            console.warn('[sync] PUT error:', err && err.message);
+            setPill({ mode:'offline' });
+            notifyFlushResolvers();
+        })
+        .finally(function(){ flushing = false; if(pendingCount()) setTimeout(flush, 500); });
     }
 
     function flushViaBeacon(){
@@ -483,7 +505,13 @@
             url = API_BASE + '?since=' + encodeURIComponent(t.toISOString());
         }
         return fetch(url, { cache:'no-store' })
-        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(r){
+            if(r.status === 403 || r.status === 401){
+                console.warn('[sync] poll ' + r.status + ' - skip');
+                return null;
+            }
+            return r.ok ? r.json() : null;
+        })
         .then(function(data){
             if(data && data.serverTime) serverTime = data.serverTime;
             if(data && data.entries)    applyRemote(data.entries);
