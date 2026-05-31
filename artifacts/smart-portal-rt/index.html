@@ -10932,7 +10932,7 @@ var SOURCES = [
     { name:'CNBC Ind',       cls:'src-detik',   url:'https://www.cnbcindonesia.com/rss' },
     { name:'Tribun',         cls:'src-default', url:'https://www.tribunnews.com/rss' },
     { name:'Antara Jateng',  cls:'src-antara',  url:'https://www.antaranews.com/rss/berita/jawa-tengah' },
-    { name:'Suara Merdeka',  cls:'src-suara',   url:'https://www.suaramerdeka.com/rss' },
+    { name:'Suara Merdeka',  cls:'src-suara',   url:'https://www.suaramerdeka.com/rss/index/news' },
     { name:'Tribun Jateng',  cls:'src-tribun',  url:'https://jateng.tribunnews.com/rss' },
     { name:'Radar Semarang', cls:'src-radar',   url:'https://radarsemarang.jawapos.com/feed' }
 ];
@@ -10940,9 +10940,9 @@ var SOURCES = [
 // CORS proxy — tidak perlu API key, baca RSS secara langsung
 var CORS_PROXIES = [
     'https://api.allorigins.win/raw?url=',
-    'https://corsproxy.io/?',
-    'https://thingproxy.freeboard.io/fetch/',
-    'https://api.codetabs.com/v1/proxy?quest='
+    'https://corsproxy.io/?url=',
+    'https://api.codetabs.com/v1/proxy?quest=',
+    'https://thingproxy.freeboard.io/fetch/'
 ];
 var CORS_PROXY = CORS_PROXIES[0];
 
