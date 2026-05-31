@@ -258,25 +258,9 @@
     color: var(--gold-luxury, #f59e0b) !important;
 }
 /* Tombol close kecil di dalam panel kanan */
-.wfb-right-close-btn {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 6px;
-}
-.wfb-right-close-btn button {
-    background: rgba(0,0,0,0.06);
-    border: none;
-    color: var(--gt-text-muted, #64748b);
-    cursor: pointer;
-    border-radius: 8px;
-    padding: 4px 10px;
-    font-size: 0.8rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.2s;
-}
-.wfb-right-close-btn button:hover { background: rgba(0,0,0,0.12); }
+
+
+
 @media (max-width: 1100px) {
     .btn-toggle-right-panel { display: none !important; }
 }
@@ -4592,6 +4576,90 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 </style>
+<style id="gt-panel-toggle-modern">
+/* ═══════════════════════════════════════════
+   TOMBOL PANEL KANAN MODERN
+   ═══════════════════════════════════════════ */
+
+/* Tombol toggle di header */
+#btn-toggle-right-panel {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(99,102,241,0.12);
+    color: #6366f1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+#btn-toggle-right-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center,
+        rgba(99,102,241,0.3) 0%,
+        transparent 70%);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+#btn-toggle-right-panel:hover {
+    background: rgba(99,102,241,0.22);
+    color: #818cf8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+}
+#btn-toggle-right-panel:hover::before { opacity: 1; }
+#btn-toggle-right-panel:active {
+    transform: scale(0.93);
+    box-shadow: none;
+}
+/* Saat panel collapsed - warna berbeda */
+.right-panel-collapsed #btn-toggle-right-panel {
+    background: rgba(99,102,241,0.08);
+    color: #94a3b8;
+}
+.right-panel-collapsed #btn-toggle-right-panel:hover {
+    background: rgba(99,102,241,0.18);
+    color: #6366f1;
+}
+
+/* Tombol close di dalam panel kanan */
+.wfb-right-close-modern {
+    display: flex;
+    justify-content: flex-end;
+    padding: 4px 4px 8px 4px;
+}
+.wfb-right-close-modern button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(99,102,241,0.1);
+    color: #6366f1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+.wfb-right-close-modern button:hover {
+    background: rgba(99,102,241,0.2);
+    color: #818cf8;
+    transform: rotate(180deg);
+    box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+}
+.wfb-right-close-modern button:active {
+    transform: scale(0.9) rotate(180deg);
+}
+</style>
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════════
@@ -4979,6 +5047,12 @@ body {
 
         <!-- KANAN: Notif + Logout -->
         <div style="display:flex;align-items:center;gap:10px;">
+            <!-- Tombol Toggle Panel Kanan -->
+            <button id="btn-toggle-right-panel"
+                onclick="if(typeof toggleRightPanel==='function') toggleRightPanel()"
+                title="Toggle Panel Info">
+                <i class="fa-solid fa-table-columns"></i>
+            </button>
             <div class="notif-bell"
                  onclick="Swal.fire('Notifikasi','Tidak ada pembaruan data saat ini.','info')"
                  style="position:relative;cursor:pointer;font-size:1.3rem;
@@ -5480,13 +5554,16 @@ body {
              RIGHT SIDEBAR — Statistik & Info RT
         ══════════════════════════════════════════════ -->
         <aside class="warga-fb-right no-print" id="warga-fb-right">
-
-            <!-- Tombol tutup panel kanan -->
-            <div class="wfb-right-close-btn">
-                <button onclick="toggleRightPanel()" title="Sembunyikan panel info">
-                    <i class="fa-solid fa-chevron-right"></i> Sembunyikan
+            <!-- Tombol close panel kanan modern -->
+            <div class="wfb-right-close-modern">
+                <button onclick="toggleRightPanel()" title="Sembunyikan panel">
+                    <i class="fa-solid fa-chevron-right"></i>
                 </button>
             </div>
+
+
+            <!-- Tombol tutup panel kanan -->
+            
 
             <!-- Rekap RT -->
             <div class="wfb-card">
@@ -12129,14 +12206,8 @@ html[data-theme="dark"] .wfb-divider { border-color: #1e3154 !important; backgro
 html[data-theme="dark"] .warga-fb-aside { background: #111a2e !important; }
 
 /* 9. Tombol close di panel kanan */
-html[data-theme="dark"] .wfb-right-close-btn button {
-  background: rgba(255,255,255,0.06) !important;
-  color: #94a3b8 !important;
-}
-html[data-theme="dark"] .wfb-right-close-btn button:hover {
-  background: rgba(255,255,255,0.12) !important;
-  color: #e2e8f0 !important;
-}
+html[data-theme="dark"] 
+html[data-theme="dark"] 
 
 /* 10. Tombol-tombol di panel kanan */
 html[data-theme="dark"] .wfb-btn-full {
