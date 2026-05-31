@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/auth-context";
 import { ProtectedRoute } from "@/components/protected-route";
+import { LoadingScreen } from "@/components/loading-screen";
 import LoginPage from "@/pages/login";
 import PortalWargaPage from "@/pages/portal-warga/index";
 import PortalAdminPage from "@/pages/portal-admin/index";
@@ -15,13 +16,7 @@ const queryClient = new QueryClient();
 function HomeRedirect() {
   const { user, isLoading } = useAuth();
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-gray-500 text-sm">Memuat...</div>
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingScreen />;
 
   if (!user) return <Redirect to="/login" />;
   return <Redirect to={user.role === "admin" ? "/portal/admin" : "/portal/warga"} />;

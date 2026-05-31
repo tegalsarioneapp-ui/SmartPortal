@@ -30,7 +30,7 @@ const RECENT_ACTIVITIES = [
 export default function PortalAdminPage() {
   const { user, logout } = useAuth();
   const [, setLocation] = useLocation();
-  const [activeNav, setActiveNav] = useState("Dashboard");
+  const [activeNav, setActiveNav] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = () => {
@@ -38,8 +38,8 @@ export default function PortalAdminPage() {
     setLocation("/login");
   };
 
-  const handleNavClick = (label: string) => {
-    setActiveNav(label);
+  const handleNavClick = (id: string) => {
+    setActiveNav(id);
     setSidebarOpen(false);
   };
 
@@ -94,9 +94,9 @@ export default function PortalAdminPage() {
           {ADMIN_NAV_ITEMS.map((item) => (
             <button
               key={item.id}
-              onClick={() => handleNavClick(item.label)}
+              onClick={() => handleNavClick(item.id)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors mb-0.5 ${
-                activeNav === item.label
+                activeNav === item.id
                   ? "bg-indigo-50 text-indigo-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
@@ -191,20 +191,20 @@ export default function PortalAdminPage() {
           {ADMIN_NAV_ITEMS.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveNav(item.label)}
+              onClick={() => setActiveNav(item.id)}
               className={`w-full flex items-center gap-3 px-2 py-2.5 rounded-lg text-sm font-medium transition-colors mb-0.5 ${
-                activeNav === item.label
+                activeNav === item.id
                   ? "bg-indigo-50 text-indigo-700"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <span className="text-xl w-7 text-center">{item.icon}</span>
               <span>{item.label}</span>
-              {activeNav === item.label && (
+              {activeNav === item.id && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600" />
               )}
             </button>
-          ))}
+
 
           <div className="mt-auto border-t border-gray-200 pt-3">
             <button
