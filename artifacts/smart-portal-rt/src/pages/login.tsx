@@ -94,17 +94,25 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors text-sm"
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors text-sm mt-2 shadow-md"
             >
-              {isSubmitting ? "Memproses..." : "Masuk"}
+              {isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                  </svg>
+                  Memproses...
+                </span>
+              ) : "Masuk"}
             </button>
           </form>
 
           {/* Demo hint */}
           <div className="mt-6 bg-gray-50 rounded-lg px-4 py-3 text-xs text-gray-500">
             <p className="font-semibold text-gray-600 mb-1">Demo login:</p>
-            <p>Admin: <span className="font-mono">admin</span> / <span className="font-mono">admin</span></p>
-            <p>Warga: <span className="font-mono">warga</span> / <span className="font-mono">warga</span></p>
+            <p>Admin: <span className="font-mono">admin</span> / <span className="font-mono">admin123</span></p>
+            <p>Warga: <span className="font-mono">warga</span> / <span className="font-mono">warga123</span></p>
           </div>
         </div>
       </div>
