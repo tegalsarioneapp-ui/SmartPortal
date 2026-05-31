@@ -4917,53 +4917,73 @@ html:not([data-theme="dark"]) .text-secondary {
 </style>
 
 
+
 <style id="gt-view-fix">
-/* ── Default: semua view tersembunyi ── */
+/* ════════════════════════════════════════
+   GT-VIEW-FIX: Layout Portal Admin & Warga
+   ════════════════════════════════════════ */
+
+/* 1. Semua tab-view tersembunyi by default */
 .tab-view {
   display: none !important;
 }
 
-/* ── view-warga: flex row (sidebar kiri + konten kanan) ── */
+/* 2. view-warga: flex row */
 #view-warga.active-grid {
   display: flex !important;
   flex-direction: row !important;
   align-items: stretch !important;
   width: 100% !important;
+  min-height: calc(100vh - 60px) !important;
 }
 
-/* ── view-admin: block (nav tabs atas + konten bawah) ── */
+/* 3. view-admin: block normal flow */
 #view-admin.active-grid {
   display: block !important;
   width: 100% !important;
+  min-height: calc(100vh - 60px) !important;
 }
 
-/* ── view-bendahara: block ── */
-#view-bendahara.active-grid {
-  display: block !important;
-  width: 100% !important;
-}
-
-/* ── view-koperasi: block ── */
+/* 4. view-bendahara & view-koperasi: block */
+#view-bendahara.active-grid,
 #view-koperasi.active-grid {
   display: block !important;
   width: 100% !important;
+  min-height: calc(100vh - 60px) !important;
 }
 
-/* ── Admin/Ben/Kop tab content ── */
-.admin-tab-content,
-.ben-tab-content,
-.kop-tab-content {
-  display: none !important;
-}
-.admin-tab-content.active,
-.ben-tab-content.active,
-.kop-tab-content.active {
-  display: block !important;
+/* 5. Admin nav tabs - sticky di atas */
+#view-admin .admin-nav-tabs {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+  background: var(--bg-panel, #fff) !important;
+  border-bottom: 1px solid var(--border-light, #e2e8f0) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  overflow-x: auto !important;
+  flex-wrap: nowrap !important;
   width: 100% !important;
   box-sizing: border-box !important;
+  padding: 0 8px !important;
 }
 
-/* ── Warga tab content ── */
+/* 6. Admin tab content - HIDDEN by default */
+.admin-tab-content {
+  display: none !important;
+}
+
+/* 7. Admin tab content - VISIBLE saat active */
+.admin-tab-content.active {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 16px !important;
+  overflow-x: hidden !important;
+}
+
+/* 8. Warga tab content */
 .warga-tab-content {
   display: none !important;
 }
@@ -4971,6 +4991,39 @@ html:not([data-theme="dark"]) .text-secondary {
   display: block !important;
   width: 100% !important;
   box-sizing: border-box !important;
+  padding: 16px !important;
+}
+
+/* 9. Bendahara & Koperasi tab content */
+.ben-tab-content,
+.kop-tab-content {
+  display: none !important;
+}
+.ben-tab-content.active,
+.kop-tab-content.active {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 16px !important;
+}
+
+/* 10. Pastikan search/filter tidak terdorong */
+#admin-datakk > div:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  #view-warga.active-grid {
+    flex-direction: column !important;
+  }
+  .admin-tab-content.active,
+  .warga-tab-content.active,
+  .ben-tab-content.active,
+  .kop-tab-content.active {
+    padding: 10px !important;
+  }
 }
 </style>
 </head>
