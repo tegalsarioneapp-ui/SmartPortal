@@ -204,11 +204,11 @@ export default function PortalAdminPage() {
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600" />
               )}
             </button>
-
+          ))}
 
           <div className="mt-auto border-t border-gray-200 pt-3">
             <button
-              onClick={handleLogout}
+
               className="w-full flex items-center gap-2 px-2 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
             >
               <span>🚪</span> Keluar
