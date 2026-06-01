@@ -17125,6 +17125,7 @@ body.mobile-right-open #gt-warga-shell-overlay {
   body.warga-portal-aktif #view-warga .warga-fb-left,
   body.warga-portal-aktif #view-warga .warga-fb-right {
     display: flex !important;
+    flex-direction: column !important;
     position: fixed !important;
     top: 0 !important;
     bottom: 0 !important;
@@ -17666,53 +17667,52 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
 
 
 
+
 <style id="gt-mobile-right-fix">
 /* ══════════════════════════════════════════════
-   MOBILE RIGHT PANEL — LAYOUT ONLY
-   display:flex sudah di-handle L17130
-   di sini hanya tambah flex-direction & gap
+   MOBILE RIGHT PANEL — GAP & CARD FIX
+   flex-direction sudah di-fix di block utama
    ══════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* Pastikan panel tertata kolom + ada jarak antar card */
+  /* Gap antar card */
   body.warga-portal-aktif #view-warga .warga-fb-right {
-    flex-direction  : column !important;
     gap             : 10px !important;
     padding         : 12px 10px 80px !important;
     box-sizing      : border-box !important;
     z-index         : 8500 !important;
-    background      : linear-gradient(180deg,#0f172a 0%,#111827 100%) !important;
   }
 
-  /* Card full width & rapi */
+  /* Setiap card full width */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-card {
     flex-shrink     : 0 !important;
     width           : 100% !important;
     box-sizing      : border-box !important;
     margin-bottom   : 0 !important;
-    padding         : 10px 10px !important;
+    padding         : 10px !important;
     border-radius   : 12px !important;
   }
 
-  /* Close row */
+  /* Close row full width */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-close-row {
     flex-shrink     : 0 !important;
     width           : 100% !important;
     box-sizing      : border-box !important;
     padding-bottom  : 8px !important;
-    margin-bottom   : 2px !important;
   }
 
-  /* Tombol close lebih besar di mobile */
+  /* Tombol close touch-friendly */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-close-btn {
     width           : 36px !important;
     height          : 36px !important;
-    font-size       : 0.9rem !important;
+    min-width       : 36px !important;
+    font-size       : 1rem !important;
   }
 
-  /* Grid 2 kolom untuk stat & aksi */
+  /* Grid stat & aksi — 2 kolom */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-grid2,
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-aksi-grid {
+    display               : grid !important;
     grid-template-columns : repeat(2, 1fr) !important;
     gap                   : 6px !important;
   }
@@ -17724,9 +17724,9 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
     font-size       : 0.72rem !important;
     border-radius   : 10px !important;
     min-height      : 44px !important;
+    width           : 100% !important;
+    box-sizing      : border-box !important;
   }
-
-  /* Overlay tetap handled oleh L17137 */
 }
 </style>
 
