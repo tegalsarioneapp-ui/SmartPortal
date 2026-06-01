@@ -4413,7 +4413,7 @@ window.gtKeluar = function() {
   }).then(function(result) {
     if (!result.isConfirmed) return;
     try { loggedInWarga = null; window.loggedInWarga = null; loggedInAs = null; window.loggedInAs = null; window.__GT_AUTHENTICATED_ROLE__ = null; window.__GT_ALLOWED_PORTAL_ROLES__ = []; } catch(_) {}
-    try { document.body.classList.remove('warga-portal-aktif'); } catch(_) {}
+    try { document.body.classList.remove('warga-portal-aktif','admin-portal-aktif','bendahara-portal-aktif','koperasi-portal-aktif'); } catch(_) {}
     try { window.__GT_PORTAL_ACTIVE__ = false; } catch(_) {}
     try { localStorage.removeItem('gt_local_session'); } catch(_) {}
     try { localStorage.removeItem('gt_local_lastView'); } catch(_) {}
@@ -4919,325 +4919,917 @@ html:not([data-theme="dark"]) .text-secondary {
 
 
 
-<style id="gt-view-fix">
-/* ════════════════════════════════════════════════════
-   GT-VIEW-FIX v3 — MASTER LAYOUT (highest specificity)
-   ════════════════════════════════════════════════════ */
 
-/* 1. Semua tab-view tersembunyi by default */
-.tab-view { display: none !important; }
 
-/* 2. view-warga aktif: flex row */
-#view-warga.active-grid {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: stretch !important;
-  width: 100% !important;
-  min-height: calc(100vh - 60px) !important;
-}
+<!-- GT-FINAL-ADMIN-CHUNK-2 -->
+<style id="gt-final-admin-fix">
 
-/* 3. view-admin aktif: flex row (sidebar kiri + konten kanan) */
-#view-admin.active-grid {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: stretch !important;
-  width: 100% !important;
-  min-height: calc(100vh - 60px) !important;
+/* =========================================================
+   FINAL FIX - PREMIUM ADMIN COMMAND CENTER
+   Source : docs/octopus/PORTAL_ADMIN_REDESIGN_RULES.txt
+   Chunk  : 2 - Desktop wrapper + sidebar
+   ========================================================= */
+
+/* 0. Cegah horizontal overflow global */
+html, body {
   overflow-x: hidden !important;
+  max-width: 100vw !important;
 }
 
-/* 4. view-bendahara & view-koperasi aktif */
-#view-bendahara.active-grid,
-#view-koperasi.active-grid {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: stretch !important;
-  width: 100% !important;
-  min-height: calc(100vh - 60px) !important;
+/* 1. view-admin hidden default */
+#view-admin {
+  display: none !important;
 }
 
-/* ════════════════════════════════════════════════════
-   DESKTOP >= 769px: SIDEBAR KIRI VERTIKAL
-   ════════════════════════════════════════════════════ */
+/* 2. view-admin aktif = flex row */
+#view-admin.active-grid {
+  display         : flex !important;
+  flex-direction  : row !important;
+  align-items     : stretch !important;
+  width           : 100% !important;
+  max-width       : 100% !important;
+  min-height      : calc(100vh - 90px) !important;
+  overflow-x      : hidden !important;
+  background      : #07111f !important;
+  position        : relative !important;
+  box-sizing      : border-box !important;
+}
+
+/* 3. Sidebar kiri vertikal - DESKTOP ONLY */
 @media (min-width: 769px) {
 
-  /* Sidebar kiri vertikal */
-  body:not(.sidebar-collapsed) #view-admin .admin-nav-tabs,
-  body:not(.sidebar-collapsed) #view-bendahara .admin-nav-tabs,
-  body:not(.sidebar-collapsed) #view-koperasi .admin-nav-tabs,
-  body:not(.sidebar-collapsed) .nav-tabs {
-    position: relative !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    top: auto !important;
-    width: 260px !important;
-    min-width: 260px !important;
-    max-width: 260px !important;
-    flex: 0 0 260px !important;
-    height: calc(100vh - 60px) !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    display: flex !important;
-    flex-direction: column !important;
-    flex-wrap: nowrap !important;
-    transform: none !important;
-    border-right: 1px solid var(--border-light, #e2e8f0) !important;
-    border-top: none !important;
-    border-bottom: none !important;
-    padding: 12px 8px !important;
-    box-sizing: border-box !important;
-    z-index: 10 !important;
+  #view-admin .admin-nav-tabs {
+    flex            : 0 0 260px !important;
+    width           : 260px !important;
+    min-width       : 260px !important;
+    max-width       : 260px !important;
+    height          : calc(100vh - 90px) !important;
+    min-height      : calc(100vh - 90px) !important;
+    max-height      : calc(100vh - 90px) !important;
+    display         : flex !important;
+    flex-direction  : column !important;
+    align-items     : stretch !important;
+    justify-content : flex-start !important;
+    flex-wrap       : nowrap !important;
+    position        : sticky !important;
+    top             : 0 !important;
+    bottom          : auto !important;
+    left            : auto !important;
+    right           : auto !important;
+    overflow-x      : hidden !important;
+    overflow-y      : auto !important;
+    padding         : 18px 12px !important;
+    gap             : 4px !important;
+    background      : linear-gradient(180deg,#08162a 0%,#0b1f3a 100%) !important;
+    border-right    : 1px solid rgba(148,163,184,0.15) !important;
+    border-bottom   : none !important;
+    border-top      : none !important;
+    box-shadow      : 4px 0 24px rgba(0,0,0,0.28) !important;
+    box-sizing      : border-box !important;
+    z-index         : 20 !important;
   }
 
-  /* Sidebar collapsed */
-  body.sidebar-collapsed #view-admin .admin-nav-tabs,
-  body.sidebar-collapsed #view-bendahara .admin-nav-tabs,
-  body.sidebar-collapsed #view-koperasi .admin-nav-tabs,
-  body.sidebar-collapsed .nav-tabs {
-    width: 0 !important;
-    min-width: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    border: none !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    flex: 0 0 0 !important;
+  /* Label header sidebar */
+  #view-admin .admin-nav-tabs::before {
+    content        : "RT Command Center" !important;
+    display        : block !important;
+    color          : #f8fafc !important;
+    font-size      : 0.78rem !important;
+    font-weight    : 800 !important;
+    letter-spacing : 0.08em !important;
+    text-transform : uppercase !important;
+    padding        : 0 4px 12px 4px !important;
+    margin-bottom  : 6px !important;
+    border-bottom  : 1px solid rgba(148,163,184,0.12) !important;
+    white-space    : nowrap !important;
+    overflow       : hidden !important;
+    text-overflow  : ellipsis !important;
   }
 
-  /* Tombol menu sidebar desktop */
-  body:not(.sidebar-collapsed) #view-admin .admin-tab-btn,
-  body:not(.sidebar-collapsed) #view-bendahara .admin-tab-btn,
-  body:not(.sidebar-collapsed) #view-koperasi .admin-tab-btn,
-  body:not(.sidebar-collapsed) .admin-nav-tabs > button,
-  body:not(.sidebar-collapsed) .nav-tabs > button {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    width: 100% !important;
-    padding: 10px 14px !important;
-    margin-bottom: 2px !important;
-    border-radius: 8px !important;
-    text-align: left !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    flex: 0 0 auto !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    font-size: 0.88rem !important;
+  /* Tombol menu - ROW (icon kiri, teks kanan) */
+  #view-admin .admin-tab-btn,
+  #view-admin .admin-nav-tabs > button {
+    display         : flex !important;
+    flex-direction  : row !important;
+    align-items     : center !important;
+    justify-content : flex-start !important;
+    width           : 100% !important;
+    min-width       : 0 !important;
+    max-width       : 100% !important;
+    min-height      : 44px !important;
+    height          : auto !important;
+    padding         : 10px 12px !important;
+    margin          : 0 !important;
+    gap             : 10px !important;
+    border          : 1px solid transparent !important;
+    border-radius   : 10px !important;
+    background      : transparent !important;
+    color           : #94a3b8 !important;
+    font-size       : 0.875rem !important;
+    font-weight     : 600 !important;
+    line-height     : 1.3 !important;
+    text-align      : left !important;
+    white-space     : normal !important;
+    overflow        : visible !important;
+    cursor          : pointer !important;
+    transition      : background 0.18s, color 0.18s, border-color 0.18s !important;
+    box-sizing      : border-box !important;
+    box-shadow      : none !important;
+    transform       : none !important;
+    position        : static !important;
   }
 
-  /* Icon di dalam tombol sidebar */
-  body:not(.sidebar-collapsed) #view-admin .admin-tab-btn i,
-  body:not(.sidebar-collapsed) .admin-nav-tabs > button i,
-  body:not(.sidebar-collapsed) .nav-tabs > button i {
-    width: 20px !important;
-    min-width: 20px !important;
-    margin-right: 10px !important;
-    font-size: 0.9rem !important;
-    text-align: center !important;
-    flex-shrink: 0 !important;
+  /* Icon */
+  #view-admin .admin-tab-btn i,
+  #view-admin .admin-nav-tabs > button i {
+    flex        : 0 0 20px !important;
+    width       : 20px !important;
+    min-width   : 20px !important;
+    max-width   : 20px !important;
+    font-size   : 0.95rem !important;
+    line-height : 1 !important;
+    text-align  : center !important;
+    color       : #7dd3fc !important;
+    margin      : 0 !important;
+    padding     : 0 !important;
+    transform   : none !important;
+    display     : inline-block !important;
   }
 
-  /* Teks di dalam tombol sidebar */
-  body:not(.sidebar-collapsed) #view-admin .admin-tab-btn span,
-  body:not(.sidebar-collapsed) .admin-nav-tabs > button span,
-  body:not(.sidebar-collapsed) .nav-tabs > button span {
-    display: inline !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+  /* Teks label - WAJIB tampil */
+  #view-admin .admin-tab-btn span,
+  #view-admin .admin-nav-tabs > button span {
+    display        : inline !important;
+    visibility     : visible !important;
+    opacity        : 1 !important;
+    flex           : 1 1 auto !important;
+    min-width      : 0 !important;
+    font-size      : 0.875rem !important;
+    font-weight    : 600 !important;
+    line-height    : 1.3 !important;
+    text-align     : left !important;
+    white-space    : normal !important;
+    overflow       : visible !important;
+    text-overflow  : clip !important;
+    color          : inherit !important;
+    position       : static !important;
+    transform      : none !important;
+    pointer-events : auto !important;
   }
 
-  /* Konten kanan admin */
-  #view-admin.active-grid .admin-tab-content,
-  #view-bendahara.active-grid .ben-tab-content,
-  #view-koperasi.active-grid .kop-tab-content {
-    display: none !important;
+  /* Hover state */
+  #view-admin .admin-tab-btn:hover,
+  #view-admin .admin-nav-tabs > button:hover {
+    background   : rgba(255,255,255,0.06) !important;
+    border-color : rgba(125,211,252,0.2) !important;
+    color        : #e2e8f0 !important;
   }
 
-  #view-admin.active-grid .admin-tab-content.active,
-  #view-bendahara.active-grid .ben-tab-content.active,
-  #view-koperasi.active-grid .kop-tab-content.active {
-    display: block !important;
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    width: auto !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    padding: 20px !important;
-    box-sizing: border-box !important;
-    height: calc(100vh - 60px) !important;
+  #view-admin .admin-tab-btn:hover i,
+  #view-admin .admin-nav-tabs > button:hover i {
+    color: #38bdf8 !important;
   }
-}
 
-/* ════════════════════════════════════════════════════
-   MOBILE <= 768px: BOTTOM NAV
-   ════════════════════════════════════════════════════ */
+  /* Active state */
+  #view-admin .admin-tab-btn.active,
+  #view-admin .admin-nav-tabs > button.active {
+    background   : linear-gradient(135deg,rgba(37,99,235,0.28),rgba(245,158,11,0.10)) !important;
+    border-color : rgba(245,158,11,0.40) !important;
+    color        : #ffffff !important;
+    box-shadow   : inset 3px 0 0 #f59e0b !important;
+  }
+
+  #view-admin .admin-tab-btn.active i,
+  #view-admin .admin-nav-tabs > button.active i {
+    color: #fbbf24 !important;
+  }
+
+  #view-admin .admin-tab-btn.active span,
+  #view-admin .admin-nav-tabs > button.active span {
+    color       : #ffffff !important;
+    font-weight : 700 !important;
+  }
+
+  /* Hapus ::before pseudo yg mungkin inject icon lama */
+  #view-admin .admin-tab-btn::before,
+  #view-admin .admin-nav-tabs > button::before {
+    display : none !important;
+    content : none !important;
+  }
+
+} /* end @media (min-width: 769px) */
+
+
+/* =========================================================
+   FINAL FIX - CHUNK 3
+   Admin content area + Data KK + table responsive
+   ========================================================= */
+
+@media (min-width: 769px) {
+
+  /* 1. Area konten kanan */
+  #view-admin .admin-tab-content {
+    display    : none !important;
+    flex       : 1 1 auto !important;
+    min-width  : 0 !important;
+    max-width  : 100% !important;
+    min-height : calc(100vh - 90px) !important;
+    overflow-x : hidden !important;
+    overflow-y : auto !important;
+    padding    : 28px 32px !important;
+    background : #07111f !important;
+    box-sizing : border-box !important;
+  }
+
+  #view-admin .admin-tab-content.active {
+    display : block !important;
+  }
+
+  /* 2. Judul section konten */
+  #view-admin .admin-tab-content h2,
+  #view-admin .admin-tab-content h3 {
+    color       : #f1f5f9 !important;
+    font-weight : 800 !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* 3. Card / stat-box di dalam admin */
+  #view-admin .stat-box,
+  #view-admin .card,
+  #view-admin .admin-card {
+    background    : #0f2035 !important;
+    border        : 1px solid rgba(148,163,184,0.12) !important;
+    border-radius : 14px !important;
+    padding       : 20px 22px !important;
+    color         : #e2e8f0 !important;
+    box-shadow    : 0 4px 16px rgba(0,0,0,0.22) !important;
+    box-sizing    : border-box !important;
+  }
+
+  /* 4. Grid stat cards */
+  #view-admin .stats-grid,
+  #view-admin .stat-grid,
+  #view-admin .admin-stats {
+    display               : grid !important;
+    grid-template-columns : repeat(auto-fit, minmax(200px,1fr)) !important;
+    gap                   : 16px !important;
+    margin-bottom         : 24px !important;
+  }
+
+  /* 5. Search & filter bar */
+  #view-admin .search-bar,
+  #view-admin .filter-bar,
+  #view-admin input[type="search"],
+  #view-admin input[type="text"].search-input,
+  #admin-datakk input[type="text"],
+  #admin-datakk input[type="search"] {
+    width            : 100% !important;
+    max-width        : 420px !important;
+    padding          : 10px 16px !important;
+    border-radius    : 10px !important;
+    border           : 1px solid rgba(148,163,184,0.2) !important;
+    background       : #0f2035 !important;
+    color            : #f1f5f9 !important;
+    font-size        : 0.9rem !important;
+    margin-bottom    : 16px !important;
+    box-sizing       : border-box !important;
+    outline          : none !important;
+  }
+
+  #view-admin input[type="text"]:focus,
+  #view-admin input[type="search"]:focus,
+  #admin-datakk input:focus {
+    border-color : rgba(245,158,11,0.5) !important;
+    box-shadow   : 0 0 0 3px rgba(245,158,11,0.12) !important;
+  }
+
+  /* 6. Toolbar atas Data KK */
+  #admin-datakk .toolbar,
+  #admin-datakk .top-bar,
+  #admin-datakk .action-bar {
+    display         : flex !important;
+    flex-wrap       : wrap !important;
+    align-items     : center !important;
+    gap             : 10px !important;
+    margin-bottom   : 20px !important;
+  }
+
+  /* 7. Tabel responsif */
+  #view-admin table,
+  #admin-datakk table {
+    width           : 100% !important;
+    border-collapse : collapse !important;
+    font-size       : 0.875rem !important;
+    color           : #e2e8f0 !important;
+    overflow-x      : hidden !important;
+  }
+
+  #view-admin table thead th,
+  #admin-datakk table thead th {
+    background     : #0b1f3a !important;
+    color          : #7dd3fc !important;
+    font-weight    : 700 !important;
+    padding        : 12px 14px !important;
+    text-align     : left !important;
+    border-bottom  : 1px solid rgba(148,163,184,0.15) !important;
+    white-space    : nowrap !important;
+  }
+
+  #view-admin table tbody tr,
+  #admin-datakk table tbody tr {
+    border-bottom : 1px solid rgba(148,163,184,0.08) !important;
+    transition    : background 0.15s !important;
+  }
+
+  #view-admin table tbody tr:hover,
+  #admin-datakk table tbody tr:hover {
+    background : rgba(125,211,252,0.05) !important;
+  }
+
+  #view-admin table tbody td,
+  #admin-datakk table tbody td {
+    padding    : 11px 14px !important;
+    color      : #cbd5e1 !important;
+    word-break : break-word !important;
+  }
+
+  /* 8. Tombol aksi di dalam tabel */
+  #view-admin .btn-action,
+  #view-admin table .btn,
+  #admin-datakk .btn-action {
+    padding       : 6px 14px !important;
+    border-radius : 8px !important;
+    font-size     : 0.8rem !important;
+    font-weight   : 700 !important;
+    border        : none !important;
+    cursor        : pointer !important;
+    transition    : opacity 0.18s !important;
+  }
+
+  #view-admin .btn-action:hover,
+  #admin-datakk .btn-action:hover {
+    opacity : 0.82 !important;
+  }
+
+  /* 9. Wrapper tabel agar tidak overflow body */
+  #view-admin .table-wrapper,
+  #admin-datakk .table-wrapper,
+  #view-admin .tabel-wrapper {
+    width      : 100% !important;
+    max-width  : 100% !important;
+    overflow-x : auto !important;
+    overflow-y : visible !important;
+    box-sizing : border-box !important;
+  }
+
+  /* 10. Form group di dalam admin */
+  #view-admin .form-group {
+    margin-bottom : 16px !important;
+  }
+
+  #view-admin .form-group label {
+    display       : block !important;
+    color         : #94a3b8 !important;
+    font-size     : 0.82rem !important;
+    font-weight   : 700 !important;
+    margin-bottom : 6px !important;
+  }
+
+  #view-admin .form-group input,
+  #view-admin .form-group select,
+  #view-admin .form-group textarea {
+    width         : 100% !important;
+    padding       : 10px 14px !important;
+    border-radius : 10px !important;
+    border        : 1px solid rgba(148,163,184,0.2) !important;
+    background    : #0f2035 !important;
+    color         : #f1f5f9 !important;
+    font-size     : 0.9rem !important;
+    box-sizing    : border-box !important;
+  }
+
+} /* end @media min-width 769px */
+
+/* ── CHUNK-3-MARKER ── */
+
+/* =========================================================
+   FINAL FIX - CHUNK 4
+   Mobile scoped + dark/light mode
+   ========================================================= */
+
+/* ── MOBILE <= 768px — semua rule admin di-scope ketat ── */
 @media (max-width: 768px) {
 
-  /* view-admin mobile: column */
-  #view-admin.active-grid,
-  #view-bendahara.active-grid,
-  #view-koperasi.active-grid {
-    flex-direction: column !important;
-    min-height: 100vh !important;
+  #view-admin.active-grid {
+    display        : flex !important;
+    flex-direction : column !important;
+    min-height     : 100vh !important;
+    background     : #07111f !important;
   }
 
-  /* Bottom nav mobile */
-  #view-admin .admin-nav-tabs,
-  #view-bendahara .admin-nav-tabs,
-  #view-koperasi .admin-nav-tabs,
-  .nav-tabs {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    height: auto !important;
-    flex-direction: row !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    flex-wrap: nowrap !important;
-    z-index: 999 !important;
-    transform: none !important;
-    border-top: 1px solid var(--border-light, #e2e8f0) !important;
-    border-right: none !important;
-    padding: 4px !important;
+  /* Sidebar mobile = bottom nav horizontal */
+  #view-admin .admin-nav-tabs {
+    position        : fixed !important;
+    bottom          : 0 !important;
+    left            : 0 !important;
+    right           : 0 !important;
+    top             : auto !important;
+    width           : 100vw !important;
+    max-width       : 100vw !important;
+    height          : 62px !important;
+    min-height      : 62px !important;
+    max-height      : 62px !important;
+    flex            : 0 0 62px !important;
+    display         : flex !important;
+    flex-direction  : row !important;
+    align-items     : center !important;
+    justify-content : space-around !important;
+    overflow-x      : auto !important;
+    overflow-y      : hidden !important;
+    padding         : 0 4px !important;
+    gap             : 0 !important;
+    background      : #08162a !important;
+    border-top      : 1px solid rgba(148,163,184,0.15) !important;
+    border-right    : none !important;
+    box-shadow      : 0 -4px 16px rgba(0,0,0,0.3) !important;
+    z-index         : 9990 !important;
+    box-sizing      : border-box !important;
   }
 
-  /* Tombol bottom nav mobile */
+  /* Sembunyikan label header sidebar di mobile */
+  #view-admin .admin-nav-tabs::before {
+    display : none !important;
+  }
+
+  /* Tombol menu mobile = column (icon atas, teks bawah kecil) */
   #view-admin .admin-tab-btn,
-  #view-bendahara .admin-tab-btn,
-  #view-koperasi .admin-tab-btn,
-  .admin-nav-tabs > button,
-  .nav-tabs > button {
-    flex: 1 1 0 !important;
-    min-width: 56px !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 6px 4px !important;
-    font-size: 0.7rem !important;
-  }
-
-  /* Mobile: sembunyikan teks, tampilkan icon */
-  #view-admin .admin-tab-btn span,
-  .admin-nav-tabs > button span,
-  .nav-tabs > button span {
-    display: none !important;
+  #view-admin .admin-nav-tabs > button {
+    display         : flex !important;
+    flex-direction  : column !important;
+    align-items     : center !important;
+    justify-content : center !important;
+    flex            : 1 1 0 !important;
+    min-width       : 48px !important;
+    max-width       : 80px !important;
+    height          : 62px !important;
+    padding         : 8px 4px !important;
+    gap             : 3px !important;
+    border          : none !important;
+    border-radius   : 0 !important;
+    background      : transparent !important;
+    color           : #64748b !important;
+    font-size       : 0.65rem !important;
+    font-weight     : 600 !important;
+    cursor          : pointer !important;
+    transition      : color 0.15s !important;
+    box-shadow      : none !important;
+    transform       : none !important;
   }
 
   #view-admin .admin-tab-btn i,
-  .admin-nav-tabs > button i,
-  .nav-tabs > button i {
-    margin: 0 0 2px 0 !important;
-    font-size: 1.1rem !important;
-    width: auto !important;
+  #view-admin .admin-nav-tabs > button i {
+    font-size   : 1.1rem !important;
+    line-height : 1 !important;
+    color       : inherit !important;
+    margin      : 0 !important;
+    width       : auto !important;
+    flex        : none !important;
   }
 
-  /* Konten mobile: padding bawah agar tidak tertutup nav */
-  .admin-tab-content.active,
-  .ben-tab-content.active,
-  .kop-tab-content.active {
-    padding-bottom: 80px !important;
+  #view-admin .admin-tab-btn span,
+  #view-admin .admin-nav-tabs > button span {
+    display     : block !important;
+    visibility  : visible !important;
+    opacity     : 1 !important;
+    font-size   : 0.62rem !important;
+    font-weight : 600 !important;
+    line-height : 1.2 !important;
+    text-align  : center !important;
+    color       : inherit !important;
+    white-space : nowrap !important;
+    overflow    : hidden !important;
+    text-overflow: ellipsis !important;
+    max-width   : 72px !important;
+  }
+
+  #view-admin .admin-tab-btn.active,
+  #view-admin .admin-nav-tabs > button.active {
+    color      : #f59e0b !important;
+    background : transparent !important;
+    box-shadow : none !important;
+    border     : none !important;
+  }
+
+  #view-admin .admin-tab-btn:hover,
+  #view-admin .admin-nav-tabs > button:hover {
+    color      : #7dd3fc !important;
+    background : transparent !important;
+  }
+
+  /* Konten mobile — beri padding bawah agar tidak ketutup bottom nav */
+  #view-admin .admin-tab-content {
+    display    : none !important;
+    padding    : 16px 14px 80px 14px !important;
+    background : #07111f !important;
+    min-height : calc(100vh - 62px) !important;
+    overflow-x : hidden !important;
+    overflow-y : auto !important;
+    box-sizing : border-box !important;
+    width      : 100% !important;
+  }
+
+  #view-admin .admin-tab-content.active {
+    display : block !important;
+  }
+
+  /* Tabel mobile — scroll horizontal hanya di dalam wrapper */
+  #view-admin .table-wrapper,
+  #admin-datakk .table-wrapper,
+  #view-admin .tabel-wrapper {
+    overflow-x : auto !important;
+    overflow-y : visible !important;
+    width      : 100% !important;
+    max-width  : 100% !important;
+  }
+
+  #view-admin table,
+  #admin-datakk table {
+    min-width : 520px !important;
   }
 }
 
-/* ════════════════════════════════════════════════════
-   TAB CONTENT SHOW/HIDE (berlaku semua breakpoint)
-   ════════════════════════════════════════════════════ */
-.admin-tab-content,
-.ben-tab-content,
-.kop-tab-content {
-  display: none !important;
+/* ── LIGHT MODE — jika body punya class light atau data-theme="light" ── */
+body.light #view-admin.active-grid,
+[data-theme="light"] #view-admin.active-grid {
+  background : #f1f5f9 !important;
 }
 
-.warga-tab-content {
-  display: none !important;
+body.light #view-admin .admin-nav-tabs,
+[data-theme="light"] #view-admin .admin-nav-tabs {
+  background   : linear-gradient(180deg,#1e3a5f 0%,#1e40af 100%) !important;
+  border-right : 1px solid rgba(30,58,95,0.25) !important;
 }
 
-.warga-tab-content.active {
-  display: block !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  padding: 16px !important;
+body.light #view-admin .admin-tab-content,
+[data-theme="light"] #view-admin .admin-tab-content {
+  background : #f1f5f9 !important;
+  color      : #1e293b !important;
 }
 
-/* ════════════════════════════════════════════════════
-   TAB CONTENT SHOW/HIDE — semua portal
-   ════════════════════════════════════════════════════ */
-
-/* Admin tab content */
-.admin-tab-content {
-  display: none !important;
-}
-.admin-tab-content.active {
-  display: block !important;
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  width: auto !important;
-  max-width: 100% !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  padding: 20px !important;
-  box-sizing: border-box !important;
+body.light #view-admin .admin-tab-content h2,
+body.light #view-admin .admin-tab-content h3,
+[data-theme="light"] #view-admin .admin-tab-content h2,
+[data-theme="light"] #view-admin .admin-tab-content h3 {
+  color : #0f172a !important;
 }
 
-/* Warga tab content */
-.warga-tab-content {
-  display: none !important;
-}
-.warga-tab-content.active {
-  display: block !important;
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  width: auto !important;
-  overflow-x: hidden !important;
-  padding: 16px !important;
-  box-sizing: border-box !important;
+body.light #view-admin .stat-box,
+body.light #view-admin .card,
+body.light #view-admin .admin-card,
+[data-theme="light"] #view-admin .stat-box,
+[data-theme="light"] #view-admin .card,
+[data-theme="light"] #view-admin .admin-card {
+  background : #ffffff !important;
+  border     : 1px solid #e2e8f0 !important;
+  color      : #1e293b !important;
 }
 
-/* Bendahara tab content */
-.ben-tab-content {
-  display: none !important;
-}
-.ben-tab-content.active {
-  display: block !important;
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  overflow-x: hidden !important;
-  padding: 16px !important;
-  box-sizing: border-box !important;
+body.light #view-admin table tbody td,
+[data-theme="light"] #view-admin table tbody td {
+  color : #334155 !important;
 }
 
-/* Koperasi tab content */
-.kop-tab-content {
-  display: none !important;
-}
-.kop-tab-content.active {
-  display: block !important;
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  overflow-x: hidden !important;
-  padding: 16px !important;
-  box-sizing: border-box !important;
+body.light #view-admin table thead th,
+[data-theme="light"] #view-admin table thead th {
+  background : #1e3a5f !important;
+  color      : #f8fafc !important;
 }
 
+body.light #view-admin input,
+body.light #view-admin select,
+body.light #view-admin textarea,
+[data-theme="light"] #view-admin input,
+[data-theme="light"] #view-admin select,
+[data-theme="light"] #view-admin textarea {
+  background : #ffffff !important;
+  color      : #1e293b !important;
+  border     : 1px solid #cbd5e1 !important;
+}
+
+/* ── END CHUNK 4 MARKER ── */
+
+</style>
+<script id="gt-portal-isolation-helper">
+window.activatePortalView = function(targetId) {
+    var views = ['view-warga','view-admin','view-bendahara','view-koperasi'];
+    views.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (id === targetId) {
+            el.classList.add('active-grid');
+            el.style.display = (id === 'view-admin') ? 'flex' : 'block';
+        } else {
+            el.classList.remove('active-grid');
+            el.style.display = 'none';
+        }
+    });
+    document.body.classList.remove(
+        'warga-portal-aktif','admin-portal-aktif',
+        'bendahara-portal-aktif','koperasi-portal-aktif'
+    );
+    var classMap = {
+        'view-admin'     : 'admin-portal-aktif',
+        'view-warga'     : 'warga-portal-aktif',
+        'view-bendahara' : 'bendahara-portal-aktif',
+        'view-koperasi'  : 'koperasi-portal-aktif'
+    };
+    if (classMap[targetId]) document.body.classList.add(classMap[targetId]);
+};
+</script>
+<style id="gt-portal-body-isolation">
+/* Portal isolation — hanya satu view aktif */
+#view-warga     { display: none !important; }
+#view-admin     { display: none !important; }
+#view-bendahara { display: none !important; }
+#view-koperasi  { display: none !important; }
+
+body.warga-portal-aktif     #view-warga     { display: block !important; }
+body.admin-portal-aktif     #view-admin     { display: flex  !important; }
+body.bendahara-portal-aktif #view-bendahara { display: block !important; }
+body.koperasi-portal-aktif  #view-koperasi  { display: block !important; }
+
+body.admin-portal-aktif     #view-warga,
+body.admin-portal-aktif     #view-bendahara,
+body.admin-portal-aktif     #view-koperasi  { display: none !important; }
+
+body.warga-portal-aktif     #view-admin,
+body.warga-portal-aktif     #view-bendahara,
+body.warga-portal-aktif     #view-koperasi  { display: none !important; }
+
+body.bendahara-portal-aktif #view-warga,
+body.bendahara-portal-aktif #view-admin,
+body.bendahara-portal-aktif #view-koperasi  { display: none !important; }
+
+body.koperasi-portal-aktif  #view-warga,
+body.koperasi-portal-aktif  #view-admin,
+body.koperasi-portal-aktif  #view-bendahara { display: none !important; }
+</style>
+<style id="gt-premium-admin-v1">
+/* CHUNK 2 - Sidebar Admin Premium Desktop */
+@media (min-width: 769px) {
+  #view-admin.active-grid {
+    display:flex !important; flex-direction:row !important;
+    min-height:100vh !important; width:100% !important;
+    overflow-x:hidden !important; background:#07111f !important;
+  }
+  #view-admin .admin-nav-tabs.no-print {
+    display:flex !important; flex-direction:column !important;
+    flex:0 0 264px !important; width:264px !important;
+    min-width:264px !important; max-width:264px !important;
+    min-height:100vh !important; height:100vh !important;
+    position:sticky !important; top:0 !important;
+    overflow-y:auto !important; overflow-x:hidden !important;
+    background:linear-gradient(180deg,#0b1f3a 0%,#091929 100%) !important;
+    border-right:1px solid rgba(245,158,11,0.15) !important;
+    padding:0 0 32px 0 !important; gap:0 !important;
+    z-index:100 !important;
+  }
+  #view-admin .admin-nav-tabs.no-print::before {
+    content:"RT COMMAND CENTER" !important;
+    display:block !important; padding:22px 20px 14px !important;
+    font-size:0.68rem !important; font-weight:800 !important;
+    letter-spacing:0.15em !important;
+    color:rgba(245,158,11,0.7) !important;
+    border-bottom:1px solid rgba(245,158,11,0.12) !important;
+    margin-bottom:8px !important;
+  }
+  #view-admin .admin-tab-btn {
+    display:flex !important; flex-direction:row !important;
+    align-items:center !important; gap:11px !important;
+    width:100% !important; padding:11px 20px !important;
+    border:none !important; border-left:3px solid transparent !important;
+    border-radius:0 !important; background:transparent !important;
+    color:#94a3b8 !important; font-size:0.875rem !important;
+    font-weight:500 !important; text-align:left !important;
+    cursor:pointer !important; transition:all 0.18s !important;
+    white-space:nowrap !important; overflow:hidden !important;
+  }
+  #view-admin .admin-tab-btn:hover {
+    background:rgba(245,158,11,0.07) !important;
+    color:#e2e8f0 !important;
+    border-left:3px solid rgba(245,158,11,0.4) !important;
+  }
+  #view-admin .admin-tab-btn.active {
+    background:rgba(245,158,11,0.13) !important;
+    color:#f59e0b !important;
+    border-left:3px solid #f59e0b !important;
+    font-weight:700 !important;
+  }
+  #view-admin .admin-tab-btn i {
+    width:18px !important; text-align:center !important;
+    flex-shrink:0 !important; font-size:0.95rem !important;
+    color:inherit !important;
+  }
+  #view-admin .admin-tab-btn span {
+    display:inline !important; visibility:visible !important;
+    opacity:1 !important; font-size:0.875rem !important;
+    color:inherit !important; overflow:hidden !important;
+    text-overflow:ellipsis !important; max-width:185px !important;
+  }
+}
+</style>
+<style id="gt-premium-admin-v2">
+/* CHUNK 3 - Konten Kanan Admin + Toolbar Data KK */
+@media (min-width: 769px) {
+  #view-admin .admin-tab-content {
+    display:none !important;
+  }
+  #view-admin .admin-tab-content.active {
+    display:block !important; flex:1 1 auto !important;
+    min-width:0 !important; padding:28px 32px !important;
+    overflow-y:auto !important; background:#07111f !important;
+    color:#e2e8f0 !important; min-height:100vh !important;
+  }
+  #admin-datakk.admin-tab-content.active {
+    display:block !important;
+  }
+}
+
+/* Section header Data KK */
+#admin-datakk > div:first-child {
+  background:rgba(255,255,255,0.03) !important;
+  border:1px solid rgba(245,158,11,0.15) !important;
+  border-radius:16px !important; padding:20px 24px !important;
+  margin-bottom:20px !important;
+}
+
+/* Toolbar search+filter */
+#admin-datakk input[type="search"],
+#admin-datakk select {
+  background:#0d2545 !important;
+  border:1px solid rgba(245,158,11,0.2) !important;
+  border-radius:10px !important; color:#e2e8f0 !important;
+  padding:9px 14px !important; font-size:0.875rem !important;
+  outline:none !important;
+}
+#admin-datakk input[type="search"]::placeholder {
+  color:#64748b !important;
+}
+#admin-datakk input[type="search"]:focus,
+#admin-datakk select:focus {
+  border-color:#f59e0b !important;
+  box-shadow:0 0 0 2px rgba(245,158,11,0.15) !important;
+}
+
+/* Tombol aksi toolbar */
+#admin-datakk button[onclick*="tampilFormKK"],
+#admin-datakk button[onclick*="tambah"],
+#admin-datakk .btn-action {
+  background:linear-gradient(135deg,#f59e0b,#b45309) !important;
+  color:#fff !important; border:none !important;
+  border-radius:10px !important; padding:9px 18px !important;
+  font-weight:700 !important; cursor:pointer !important;
+  font-size:0.875rem !important; transition:opacity 0.15s !important;
+}
+#admin-datakk button[onclick*="tampilFormKK"]:hover,
+#admin-datakk .btn-action:hover {
+  opacity:0.85 !important;
+}
+</style>
+<style id="gt-premium-admin-v3">
+/* CHUNK 4 - Tabel Data KK Premium */
+#view-admin .data-table,
+#admin-datakk .data-table {
+  width:100% !important; border-collapse:collapse !important;
+  background:transparent !important; font-size:0.875rem !important;
+}
+#view-admin .data-table thead th,
+#admin-datakk .data-table thead th {
+  background:#0d2545 !important; color:#f59e0b !important;
+  font-weight:700 !important; font-size:0.78rem !important;
+  letter-spacing:0.05em !important; padding:12px 14px !important;
+  border-bottom:2px solid rgba(245,158,11,0.25) !important;
+  text-transform:uppercase !important; white-space:nowrap !important;
+}
+#view-admin .data-table tbody tr,
+#admin-datakk .data-table tbody tr {
+  border-bottom:1px solid rgba(255,255,255,0.05) !important;
+  transition:background 0.15s !important;
+}
+#view-admin .data-table tbody tr:hover,
+#admin-datakk .data-table tbody tr:hover {
+  background:rgba(245,158,11,0.06) !important;
+}
+#view-admin .data-table tbody td,
+#admin-datakk .data-table tbody td {
+  padding:11px 14px !important; color:#cbd5e1 !important;
+  vertical-align:middle !important;
+}
+
+/* Badge status */
+#admin-datakk .badge-aktif,
+#admin-datakk .status-aktif {
+  background:rgba(16,185,129,0.15) !important;
+  color:#10b981 !important; border:1px solid rgba(16,185,129,0.3) !important;
+  border-radius:20px !important; padding:3px 10px !important;
+  font-size:0.75rem !important; font-weight:700 !important;
+}
+#admin-datakk .badge-nonaktif,
+#admin-datakk .status-nonaktif {
+  background:rgba(239,68,68,0.12) !important;
+  color:#ef4444 !important; border:1px solid rgba(239,68,68,0.25) !important;
+  border-radius:20px !important; padding:3px 10px !important;
+  font-size:0.75rem !important; font-weight:700 !important;
+}
+
+/* Tombol aksi tabel eye/edit/delete */
+#admin-datakk .btn-icon,
+#admin-datakk button[onclick*="lihatKK"],
+#admin-datakk button[onclick*="editKK"],
+#admin-datakk button[onclick*="hapusKK"] {
+  background:rgba(255,255,255,0.05) !important;
+  border:1px solid rgba(255,255,255,0.1) !important;
+  border-radius:8px !important; padding:6px 10px !important;
+  color:#94a3b8 !important; cursor:pointer !important;
+  font-size:0.85rem !important; transition:all 0.15s !important;
+  margin:0 2px !important;
+}
+#admin-datakk button[onclick*="lihatKK"]:hover { color:#38bdf8 !important; border-color:#38bdf8 !important; }
+#admin-datakk button[onclick*="editKK"]:hover  { color:#f59e0b !important; border-color:#f59e0b !important; }
+#admin-datakk button[onclick*="hapusKK"]:hover { color:#ef4444 !important; border-color:#ef4444 !important; }
+</style>
+<style id="gt-premium-admin-v4">
+/* CHUNK 5 - Mobile + Light Mode */
+
+/* Mobile: sidebar jadi bottom nav */
 @media (max-width: 768px) {
-  .admin-tab-content.active,
-  .warga-tab-content.active,
-  .ben-tab-content.active,
-  .kop-tab-content.active {
-    padding: 10px 8px 100px 8px !important;
-    height: auto !important;
+  #view-admin.active-grid {
+    flex-direction:column !important;
+    background:#07111f !important;
   }
+  #view-admin .admin-nav-tabs.no-print {
+    display:flex !important; flex-direction:row !important;
+    flex-wrap:nowrap !important; overflow-x:auto !important;
+    width:100% !important; min-width:unset !important;
+    max-width:100vw !important; height:auto !important;
+    min-height:unset !important; position:sticky !important;
+    top:0 !important; z-index:200 !important;
+    background:#0b1f3a !important;
+    border-right:none !important;
+    border-bottom:1px solid rgba(245,158,11,0.2) !important;
+    padding:4px 6px !important; gap:2px !important;
+  }
+  #view-admin .admin-nav-tabs.no-print::before {
+    display:none !important;
+  }
+  #view-admin .admin-tab-btn {
+    flex-direction:column !important; gap:4px !important;
+    padding:8px 10px !important; min-width:60px !important;
+    font-size:0.7rem !important; border-left:none !important;
+    border-bottom:3px solid transparent !important;
+    white-space:nowrap !important;
+  }
+  #view-admin .admin-tab-btn.active {
+    border-left:none !important;
+    border-bottom:3px solid #f59e0b !important;
+  }
+  #view-admin .admin-tab-btn span {
+    font-size:0.65rem !important; max-width:70px !important;
+  }
+  #view-admin .admin-tab-content.active {
+    padding:16px !important; min-height:unset !important;
+  }
+  #admin-datakk .data-table thead th {
+    font-size:0.72rem !important; padding:9px 8px !important;
+  }
+  #admin-datakk .data-table tbody td {
+    padding:9px 8px !important; font-size:0.8rem !important;
+  }
+}
+
+/* Light mode */
+body.light #view-admin.active-grid,
+[data-theme="light"] #view-admin.active-grid {
+  background:#f1f5f9 !important;
+}
+body.light #view-admin .admin-nav-tabs.no-print,
+[data-theme="light"] #view-admin .admin-nav-tabs.no-print {
+  background:linear-gradient(180deg,#1e3a5f 0%,#0f2540 100%) !important;
+}
+body.light #view-admin .admin-tab-content.active,
+[data-theme="light"] #view-admin .admin-tab-content.active {
+  background:#f1f5f9 !important; color:#1e293b !important;
+}
+body.light #admin-datakk .data-table tbody td,
+[data-theme="light"] #admin-datakk .data-table tbody td {
+  color:#334155 !important;
+}
+body.light #admin-datakk input[type="search"],
+body.light #admin-datakk select,
+[data-theme="light"] #admin-datakk input[type="search"],
+[data-theme="light"] #admin-datakk select {
+  background:#fff !important; color:#1e293b !important;
+  border-color:#cbd5e1 !important;
 }
 </style>
 </head>
@@ -8495,7 +9087,7 @@ window.bukaFormLogin = function() {
         if (typeof window.gtSpClose === 'function') { try { window.gtSpClose(); } catch(_) {} }
         document.getElementById('login-screen').style.display = 'none'; document.getElementById('main-app').style.display = 'block';
         ['warga', 'bendahara', 'koperasi', 'admin'].forEach(r => { let v = document.getElementById('view-' + r); if(v) { v.style.display = 'none'; v.classList.remove('active-grid'); } });
-        document.body.classList.remove('warga-portal-aktif');
+        document.body.classList.remove('warga-portal-aktif','admin-portal-aktif','bendahara-portal-aktif','koperasi-portal-aktif');
 
         if(role === 'warga' && loggedInWarga) {
             document.getElementById('user-name').innerText = loggedInWarga.nama; document.getElementById('user-role').innerText = loggedInWarga.isGuest ? "Akses Publik Terbatas" : "Anggota Warga RT 005";
@@ -8521,8 +9113,8 @@ window.bukaFormLogin = function() {
             }
         } 
         else if(role === 'bendahara') { window.location.href = 'bendahara.html'; return; } 
-        else if(role === 'koperasi') { document.getElementById('user-name').innerText = "Pengurus Koperasi"; document.getElementById('user-role').innerText = "Simpan Pinjam RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #8b5cf6, #6d28d9)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-handshake-angle'></i>"; let v = document.getElementById('view-koperasi'); v.style.display = 'block'; v.classList.add('active-grid'); openKopTab('kop-simpanan'); } 
-        else if(role === 'admin') { document.getElementById('user-name').innerText = "Christian Eka"; document.getElementById('user-role').innerText = "Otoritas Sekretaris RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #f59e0b, #b45309)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-user-tie'></i>"; let v = document.getElementById('view-admin'); v.style.display = 'block'; v.classList.add('active-grid'); openAdminTab('admin-datakk'); let _pno = document.getElementById('p_no'); if(_pno) _pno.value = getNextSuratNumber(); let _ptgl = document.getElementById('p_tgl_manual'); if(_ptgl) _ptgl.innerText = new Date().toLocaleDateString('id-ID'); }
+        else if(role === 'koperasi') { document.getElementById('user-name').innerText = "Pengurus Koperasi"; document.getElementById('user-role').innerText = "Simpan Pinjam RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #8b5cf6, #6d28d9)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-handshake-angle'></i>"; let v = document.getElementById('view-koperasi'); v.style.display = 'block'; v.classList.add('active-grid'); document.body.classList.remove('warga-portal-aktif','admin-portal-aktif','bendahara-portal-aktif'); document.body.classList.add('koperasi-portal-aktif'); openKopTab('kop-simpanan'); } 
+        else if(role === 'admin') { document.getElementById('user-name').innerText = "Christian Eka"; document.getElementById('user-role').innerText = "Otoritas Sekretaris RT 005"; document.getElementById('user-avatar').style.background = "linear-gradient(135deg, #f59e0b, #b45309)"; document.getElementById('user-avatar').innerHTML = "<i class='fa-solid fa-user-tie'></i>"; let v = document.getElementById('view-admin'); v.style.display = 'flex'; v.classList.add('active-grid'); document.body.classList.remove('warga-portal-aktif','bendahara-portal-aktif','koperasi-portal-aktif'); document.body.classList.add('admin-portal-aktif'); openAdminTab('admin-datakk'); let _pno = document.getElementById('p_no'); if(_pno) _pno.value = getNextSuratNumber(); let _ptgl = document.getElementById('p_tgl_manual'); if(_ptgl) _ptgl.innerText = new Date().toLocaleDateString('id-ID'); }
         syncSemuaData();
     };
     // === FUNGSI SUB-TAB PUBLIKASI ===
@@ -15790,5 +16382,35 @@ console.log("[gtSidebar] Mobile sidebar final loaded OK");
   }, 500);
 })();
 </script>
+<style id="gt-nav-position-override">
+/* OVERRIDE: paksa sidebar admin desktop tidak fixed-bottom */
+@media (min-width: 769px) {
+  #view-admin .admin-nav-tabs,
+  #view-admin .admin-nav-tabs.no-print {
+    position   : sticky !important;
+    bottom     : auto !important;
+    left       : auto !important;
+    top        : 0 !important;
+    right      : auto !important;
+    transform  : none !important;
+    width      : 264px !important;
+    min-width  : 264px !important;
+    max-width  : 264px !important;
+    height     : 100vh !important;
+    min-height : 100vh !important;
+    flex-direction : column !important;
+    flex       : 0 0 264px !important;
+    z-index    : 100 !important;
+    overflow-y : auto !important;
+    overflow-x : hidden !important;
+    display    : flex !important;
+    background : linear-gradient(180deg,#0b1f3a 0%,#091929 100%) !important;
+    border-right  : 1px solid rgba(245,158,11,0.15) !important;
+    border-bottom : none !important;
+    border-top    : none !important;
+    padding    : 0 0 32px 0 !important;
+  }
+}
+</style>
 </body>
 </html>
