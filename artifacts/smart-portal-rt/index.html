@@ -17668,63 +17668,127 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
 </script>
 <!-- GT_ADMIN_FINAL_V6_END -->
 
+
 <style id="gt-mobile-right-fix">
 /* ══════════════════════════════════════════════════════
-   MOBILE RIGHT PANEL — SATU SUMBER KEBENARAN
-   Posisi inject: setelah semua CSS lain
+   MOBILE RIGHT PANEL — LAYOUT FIX
    ══════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* DEFAULT: panel kanan tersembunyi di mobile */
+  /* DEFAULT: siap slide, tersembunyi ke kanan */
   body.warga-portal-aktif #view-warga .warga-fb-right {
-    display    : flex !important;
-    transform  : translateX(105%) !important;
-    position   : fixed !important;
-    top        : 0 !important;
-    right      : 0 !important;
-    bottom     : 0 !important;
-    height     : 100dvh !important;
-    width      : min(86vw, 320px) !important;
-    max-width  : min(86vw, 320px) !important;
-    min-width  : 0 !important;
-    z-index    : 8500 !important;
-    opacity    : 1 !important;
-    pointer-events : none !important;
-    overflow-y : auto !important;
-    overflow-x : hidden !important;
-    padding    : 16px 12px 80px !important;
-    flex-direction : column !important;
-    transition : transform .28s cubic-bezier(.2,.8,.2,1),
-                 pointer-events 0s .28s !important;
-    background : linear-gradient(180deg,#0f172a 0%,#111827 100%) !important;
-    border-left: 1px solid rgba(99,102,241,0.2) !important;
-    box-shadow : -8px 0 40px rgba(0,0,0,0.5) !important;
+    display         : flex !important;
+    flex-direction  : column !important;
+    gap             : 10px !important;
+    position        : fixed !important;
+    top             : 0 !important;
+    right           : 0 !important;
+    bottom          : 0 !important;
+    height          : 100dvh !important;
+    max-height      : 100dvh !important;
+    width           : min(86vw, 300px) !important;
+    max-width       : min(86vw, 300px) !important;
+    min-width       : 0 !important;
+    z-index         : 8500 !important;
+    opacity         : 1 !important;
+    pointer-events  : none !important;
+    overflow-y      : auto !important;
+    overflow-x      : hidden !important;
+    padding         : 12px 10px 80px !important;
+    box-sizing      : border-box !important;
+    transform       : translateX(105%) !important;
+    transition      : transform .28s cubic-bezier(.2,.8,.2,1) !important;
+    background      : linear-gradient(180deg,#0f172a 0%,#111827 100%) !important;
+    border-left     : 1px solid rgba(99,102,241,0.2) !important;
+    box-shadow      : -8px 0 40px rgba(0,0,0,0.5) !important;
+    scrollbar-width : thin !important;
   }
 
-  /* SAAT DIBUKA: slide masuk dari kanan */
+  /* SAAT DIBUKA: slide masuk */
   body.mobile-right-open.warga-portal-aktif #view-warga .warga-fb-right {
-    transform      : translateX(0) !important;
-    pointer-events : auto !important;
-    transition     : transform .28s cubic-bezier(.2,.8,.2,1) !important;
+    transform       : translateX(0) !important;
+    pointer-events  : auto !important;
+  }
+
+  /* Card di dalam panel — mobile friendly */
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-card {
+    flex-shrink     : 0 !important;
+    width           : 100% !important;
+    box-sizing      : border-box !important;
+    margin-bottom   : 0 !important;
+    padding         : 10px !important;
+    border-radius   : 12px !important;
+  }
+
+  /* Close row */
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-close-row {
+    flex-shrink     : 0 !important;
+    width           : 100% !important;
+    box-sizing      : border-box !important;
+    margin-bottom   : 4px !important;
+    padding-bottom  : 8px !important;
+  }
+
+  /* Tombol close lebih mudah diklik di mobile */
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-close-btn {
+    width           : 36px !important;
+    height          : 36px !important;
+    font-size       : 0.9rem !important;
+  }
+
+  /* Mini stat grid — 2 kolom di mobile */
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-grid2 {
+    grid-template-columns : repeat(2, 1fr) !important;
+    gap                   : 6px !important;
+  }
+
+  /* Mini stat card */
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-mini-stat {
+    padding         : 8px 6px !important;
+    border-radius   : 10px !important;
+  }
+
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-mini-val {
+    font-size       : 0.82rem !important;
+  }
+
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-mini-lbl {
+    font-size       : 0.62rem !important;
+  }
+
+  /* Aksi cepat grid — 2 kolom */
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-aksi-grid {
+    grid-template-columns : repeat(2, 1fr) !important;
+    gap                   : 6px !important;
+  }
+
+  /* Button aksi */
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-btn,
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-action-btn {
+    padding         : 8px 6px !important;
+    font-size       : 0.72rem !important;
+    border-radius   : 10px !important;
+    min-height      : 44px !important;
   }
 
   /* Overlay */
   body.mobile-right-open #gt-warga-shell-overlay {
-    display          : block !important;
-    position         : fixed !important;
-    inset            : 0 !important;
-    z-index          : 8400 !important;
-    background       : rgba(2,6,23,0.55) !important;
-    backdrop-filter  : blur(3px) !important;
-    opacity          : 1 !important;
-    pointer-events   : auto !important;
-    cursor           : pointer !important;
+    display             : block !important;
+    position            : fixed !important;
+    inset               : 0 !important;
+    z-index             : 8400 !important;
+    background          : rgba(2,6,23,0.55) !important;
+    backdrop-filter     : blur(3px) !important;
+    -webkit-backdrop-filter : blur(3px) !important;
+    opacity             : 1 !important;
+    pointer-events      : auto !important;
+    cursor              : pointer !important;
   }
 
   /* Cegah scroll body */
   body.mobile-right-open {
-    overflow     : hidden !important;
-    touch-action : none !important;
+    overflow            : hidden !important;
+    touch-action        : none !important;
   }
 }
 </style>
