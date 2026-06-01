@@ -5860,138 +5860,131 @@ body.light #admin-datakk select,
   /* END CRASH GUARD */
 </script>
 <style id="gt-wfb-gold">
-/* ══════════════════════════════════════════════════
-   WFB USER CARD — GOLD GLOW
-   Spesifisitas tinggi untuk override semua konflik
-   ══════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   WFB USER CARD — Slate Glass + Blue Accent
+   Clean, minimal, konsisten dengan tema app
+   ══════════════════════════════════════════════ */
 
-/* ── LIGHT MODE ─────────────────────────────────── */
+/* ── LIGHT MODE ─────────────────────────────── */
 body #view-warga .wfb-user-card,
 body.warga-portal-aktif #view-warga .wfb-user-card {
-  background  : linear-gradient(135deg,#fffbeb 0%,#fef3c7 55%,#fde68a 100%) !important;
-  border      : 1.5px solid #f59e0b !important;
-  border-radius: 14px !important;
-  box-shadow  : 0 0 8px 2px rgba(245,158,11,0.3),
-                0 2px 10px rgba(245,158,11,0.2) !important;
-  animation   : goldPulse 3s ease-in-out infinite !important;
-  transition  : transform 0.2s ease !important;
-  padding     : 13px 14px !important;
-  margin-bottom: 10px !important;
+  background    : #ffffff !important;
+  border        : 1px solid #e2e8f0 !important;
+  border-left   : 3px solid #0ea5e9 !important;
+  border-radius : 12px !important;
+  box-shadow    : 0 1px 4px rgba(14,165,233,0.08),
+                  0 1px 2px rgba(0,0,0,0.04) !important;
+  animation     : none !important;
+  transition    : box-shadow 0.25s ease,
+                  transform 0.25s ease,
+                  border-color 0.25s ease !important;
+  padding       : 13px 14px !important;
+  margin-bottom : 10px !important;
 }
 
 body #view-warga .wfb-user-card:hover,
 body.warga-portal-aktif #view-warga .wfb-user-card:hover {
-  background  : linear-gradient(135deg,#fef3c7 0%,#fde68a 55%,#fcd34d 100%) !important;
-  box-shadow  : 0 0 18px 5px rgba(245,158,11,0.55),
-                0 4px 16px rgba(245,158,11,0.35) !important;
-  transform   : translateY(-2px) !important;
-  animation   : none !important;
-  opacity     : 1 !important;
+  background    : #f8fafc !important;
+  border-color  : #cbd5e1 !important;
+  border-left   : 3px solid #0369a1 !important;
+  box-shadow    : 0 4px 12px rgba(14,165,233,0.15),
+                  0 1px 4px rgba(0,0,0,0.06) !important;
+  transform     : translateY(-1px) !important;
+  animation     : none !important;
+  opacity       : 1 !important;
 }
 
 /* Avatar — light */
 body #view-warga .wfb-user-card .wfb-avatar-sm,
 body.warga-portal-aktif #view-warga .wfb-user-card .wfb-avatar-sm {
-  background  : linear-gradient(135deg,#f59e0b,#d97706) !important;
-  color       : #fff !important;
-  border      : 2px solid #fbbf24 !important;
-  box-shadow  : 0 0 0 2px #fef3c7,
-                0 0 10px rgba(245,158,11,0.5) !important;
-  width       : 38px !important;
-  height      : 38px !important;
-  font-size   : 14px !important;
-  font-weight : 800 !important;
-  border-radius: 50% !important;
+  background    : linear-gradient(135deg, #0ea5e9, #0369a1) !important;
+  color         : #ffffff !important;
+  border        : 2px solid #e0f2fe !important;
+  box-shadow    : 0 0 0 2px rgba(14,165,233,0.15) !important;
+  width         : 38px !important;
+  height        : 38px !important;
+  font-size     : 14px !important;
+  font-weight   : 800 !important;
+  border-radius : 50% !important;
 }
 
-/* Nama — light: coklat tua supaya kontras di background kuning */
+/* Nama — light */
 body #view-warga .wfb-user-name,
 body.warga-portal-aktif #view-warga .wfb-user-name {
-  color       : #78350f !important;
-  font-size   : .88rem !important;
-  font-weight : 800 !important;
-  text-shadow : 0 1px 2px rgba(245,158,11,0.15) !important;
+  color         : #1e293b !important;
+  font-size     : .88rem !important;
+  font-weight   : 700 !important;
+  text-shadow   : none !important;
 }
 
 /* Sub text — light */
 body #view-warga .wfb-user-sub,
 body.warga-portal-aktif #view-warga .wfb-user-sub {
-  color       : #b45309 !important;
-  font-size   : .72rem !important;
-  font-weight : 600 !important;
-  opacity     : 1 !important;
+  color         : #64748b !important;
+  font-size     : .72rem !important;
+  font-weight   : 500 !important;
+  opacity       : 1 !important;
 }
 
-/* ── DARK MODE ───────────────────────────────────── */
+/* ── DARK MODE ───────────────────────────────── */
 html[data-theme="dark"] body #view-warga .wfb-user-card,
 html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-card {
-  background  : linear-gradient(135deg,#1c1400 0%,#2d1f00 55%,#3d2900 100%) !important;
-  border      : 1.5px solid #d97706 !important;
-  box-shadow  : 0 0 10px 2px rgba(217,119,6,0.4),
-                0 2px 12px rgba(217,119,6,0.25) !important;
-  animation   : goldPulseDark 3s ease-in-out infinite !important;
+  background    : rgba(255,255,255,0.04) !important;
+  border        : 1px solid rgba(148,163,184,0.15) !important;
+  border-left   : 3px solid #0ea5e9 !important;
+  border-radius : 12px !important;
+  box-shadow    : 0 1px 4px rgba(0,0,0,0.2),
+                  inset 0 1px 0 rgba(255,255,255,0.04) !important;
+  animation     : none !important;
+  backdrop-filter: blur(8px) !important;
+  transition    : box-shadow 0.25s ease,
+                  transform 0.25s ease,
+                  background 0.25s ease !important;
 }
 
 html[data-theme="dark"] body #view-warga .wfb-user-card:hover,
 html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-card:hover {
-  background  : linear-gradient(135deg,#2d1f00 0%,#3d2900 55%,#4d3300 100%) !important;
-  box-shadow  : 0 0 20px 6px rgba(217,119,6,0.65),
-                0 4px 20px rgba(217,119,6,0.4) !important;
-  transform   : translateY(-2px) !important;
-  animation   : none !important;
-  opacity     : 1 !important;
+  background    : rgba(255,255,255,0.07) !important;
+  border        : 1px solid rgba(148,163,184,0.25) !important;
+  border-left   : 3px solid #38bdf8 !important;
+  box-shadow    : 0 4px 16px rgba(14,165,233,0.15),
+                  0 1px 4px rgba(0,0,0,0.3),
+                  inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  transform     : translateY(-1px) !important;
+  animation     : none !important;
+  opacity       : 1 !important;
 }
 
 /* Avatar — dark */
 html[data-theme="dark"] body #view-warga .wfb-user-card .wfb-avatar-sm,
 html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-card .wfb-avatar-sm {
-  background  : linear-gradient(135deg,#d97706,#92400e) !important;
-  color       : #fff !important;
-  border      : 2px solid #d97706 !important;
-  box-shadow  : 0 0 0 2px #3d2900,
-                0 0 12px rgba(217,119,6,0.65) !important;
-  width       : 38px !important;
-  height      : 38px !important;
-  font-size   : 14px !important;
-  font-weight : 800 !important;
-  border-radius: 50% !important;
+  background    : linear-gradient(135deg, #0369a1, #1e3a5f) !important;
+  color         : #ffffff !important;
+  border        : 2px solid rgba(14,165,233,0.3) !important;
+  box-shadow    : 0 0 0 2px rgba(14,165,233,0.1) !important;
+  width         : 38px !important;
+  height        : 38px !important;
+  font-size     : 14px !important;
+  font-weight   : 800 !important;
+  border-radius : 50% !important;
 }
 
-/* Nama — dark: kuning emas terang */
+/* Nama — dark */
 html[data-theme="dark"] body #view-warga .wfb-user-name,
 html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-name {
-  color       : #fcd34d !important;
-  font-size   : .88rem !important;
-  font-weight : 800 !important;
-  text-shadow : 0 0 10px rgba(251,191,36,0.7),
-                0 1px 3px rgba(0,0,0,0.6) !important;
+  color         : #f1f5f9 !important;
+  font-size     : .88rem !important;
+  font-weight   : 700 !important;
+  text-shadow   : none !important;
 }
 
 /* Sub text — dark */
 html[data-theme="dark"] body #view-warga .wfb-user-sub,
 html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-sub {
-  color       : #fbbf24 !important;
-  font-size   : .72rem !important;
-  font-weight : 600 !important;
-  opacity     : 0.9 !important;
-}
-
-/* ── ANIMASI ─────────────────────────────────────── */
-@keyframes goldPulse {
-  0%  { box-shadow: 0 0 5px 1px rgba(245,158,11,0.25),
-                    0 2px 8px rgba(245,158,11,0.15); }
-  50% { box-shadow: 0 0 14px 4px rgba(245,158,11,0.5),
-                    0 2px 14px rgba(245,158,11,0.3); }
-  100%{ box-shadow: 0 0 5px 1px rgba(245,158,11,0.25),
-                    0 2px 8px rgba(245,158,11,0.15); }
-}
-@keyframes goldPulseDark {
-  0%  { box-shadow: 0 0 8px 2px rgba(217,119,6,0.35),
-                    0 2px 10px rgba(217,119,6,0.2); }
-  50% { box-shadow: 0 0 20px 6px rgba(217,119,6,0.65),
-                    0 2px 16px rgba(217,119,6,0.4); }
-  100%{ box-shadow: 0 0 8px 2px rgba(217,119,6,0.35),
-                    0 2px 10px rgba(217,119,6,0.2); }
+  color         : #94a3b8 !important;
+  font-size     : .72rem !important;
+  font-weight   : 500 !important;
+  opacity       : 1 !important;
 }
 </style>
 </head>
