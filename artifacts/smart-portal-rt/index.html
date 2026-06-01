@@ -5859,6 +5859,115 @@ body.light #admin-datakk select,
   };
   /* END CRASH GUARD */
 </script>
+<style id="gt-wfb-gold">
+/* ══════════════════════════════════════════════
+   WFB USER CARD — GOLD + GLOW EFFECT
+   Light mode & Dark mode
+   ══════════════════════════════════════════════ */
+
+/* ── LIGHT MODE ── */
+.wfb-user-card {
+  background    : linear-gradient(135deg, #fffbeb 0%, #fef3c7 60%, #fde68a 100%) !important;
+  border        : 1.5px solid #f59e0b !important;
+  border-radius : 14px !important;
+  box-shadow    : 0 0 0px 0px rgba(245,158,11,0),
+                  0 2px 8px rgba(245,158,11,0.25) !important;
+  transition    : box-shadow 0.3s ease, transform 0.2s ease, background 0.3s !important;
+}
+
+.wfb-user-card:hover {
+  background    : linear-gradient(135deg, #fef3c7 0%, #fde68a 60%, #fcd34d 100%) !important;
+  box-shadow    : 0 0 12px 3px rgba(245,158,11,0.45),
+                  0 0 28px 6px rgba(251,191,36,0.25),
+                  0 4px 16px rgba(245,158,11,0.3) !important;
+  transform     : translateY(-1px) !important;
+}
+
+/* Avatar ring gold */
+.wfb-user-card .wfb-avatar-sm {
+  background    : linear-gradient(135deg, #f59e0b, #d97706) !important;
+  box-shadow    : 0 0 0 2px #fbbf24,
+                  0 0 8px rgba(245,158,11,0.5) !important;
+}
+
+/* Nama warga — gold gelap */
+.wfb-user-card .wfb-user-name {
+  color         : #92400e !important;
+  font-weight   : 800 !important;
+  text-shadow   : 0 1px 2px rgba(245,158,11,0.2) !important;
+}
+
+/* Sub text */
+.wfb-user-card .wfb-user-sub {
+  color         : #b45309 !important;
+  font-weight   : 600 !important;
+}
+
+/* ── DARK MODE ── */
+html[data-theme="dark"] .wfb-user-card {
+  background    : linear-gradient(135deg, #1c1400 0%, #2d1f00 60%, #3d2900 100%) !important;
+  border        : 1.5px solid #d97706 !important;
+  box-shadow    : 0 0 0px 0px rgba(217,119,6,0),
+                  0 2px 10px rgba(217,119,6,0.3) !important;
+}
+
+html[data-theme="dark"] .wfb-user-card:hover {
+  background    : linear-gradient(135deg, #2d1f00 0%, #3d2900 60%, #4d3300 100%) !important;
+  box-shadow    : 0 0 14px 4px rgba(217,119,6,0.55),
+                  0 0 32px 8px rgba(251,191,36,0.2),
+                  0 4px 18px rgba(217,119,6,0.35) !important;
+  transform     : translateY(-1px) !important;
+}
+
+/* Avatar ring dark */
+html[data-theme="dark"] .wfb-user-card .wfb-avatar-sm {
+  background    : linear-gradient(135deg, #d97706, #92400e) !important;
+  box-shadow    : 0 0 0 2px #d97706,
+                  0 0 10px rgba(217,119,6,0.6) !important;
+}
+
+/* Nama — emas terang di dark mode */
+html[data-theme="dark"] .wfb-user-card .wfb-user-name {
+  color         : #fcd34d !important;
+  font-weight   : 800 !important;
+  text-shadow   : 0 0 8px rgba(251,191,36,0.6),
+                  0 1px 3px rgba(0,0,0,0.5) !important;
+}
+
+/* Sub text dark */
+html[data-theme="dark"] .wfb-user-card .wfb-user-sub {
+  color         : #fbbf24 !important;
+  font-weight   : 600 !important;
+  opacity       : 0.85 !important;
+}
+
+/* ── ANIMASI GLOW PULSE (opsional, halus) ── */
+@keyframes goldPulse {
+  0%   { box-shadow: 0 0 6px 1px rgba(245,158,11,0.3),  0 2px 8px rgba(245,158,11,0.2); }
+  50%  { box-shadow: 0 0 14px 4px rgba(245,158,11,0.5), 0 2px 12px rgba(245,158,11,0.3); }
+  100% { box-shadow: 0 0 6px 1px rgba(245,158,11,0.3),  0 2px 8px rgba(245,158,11,0.2); }
+}
+
+@keyframes goldPulseDark {
+  0%   { box-shadow: 0 0 8px 2px rgba(217,119,6,0.4),  0 2px 10px rgba(217,119,6,0.25); }
+  50%  { box-shadow: 0 0 18px 5px rgba(217,119,6,0.65), 0 2px 14px rgba(217,119,6,0.4); }
+  100% { box-shadow: 0 0 8px 2px rgba(217,119,6,0.4),  0 2px 10px rgba(217,119,6,0.25); }
+}
+
+.wfb-user-card {
+  animation: goldPulse 3s ease-in-out infinite !important;
+}
+
+html[data-theme="dark"] .wfb-user-card {
+  animation: goldPulseDark 3s ease-in-out infinite !important;
+}
+
+/* Hentikan animasi saat hover (glow statik) */
+.wfb-user-card:hover,
+html[data-theme="dark"] .wfb-user-card:hover {
+  animation: none !important;
+}
+</style>
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════════
