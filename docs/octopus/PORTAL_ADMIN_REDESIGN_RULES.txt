@@ -1,0 +1,2096 @@
+PROMPT MASTER UNTUK OCTOPUS.AI
+REDESIGN PORTAL ADMIN PREMIUM - SMART PORTAL RT 005 TEGALSARI
+Versi: 1.0
+Tujuan: Membuat Portal Admin seperti visual "RT Command Center" yang premium, rapi, mudah dipakai admin untuk cek data warga dan laporan.
+
+================================================================================
+BAGIAN 1 - INSTRUKSI UTAMA UNTUK OCTOPUS.AI
+================================================================================
+
+Kamu adalah senior frontend engineer dan UI/UX engineer. Tugasmu adalah memperbaiki sekaligus meredesign PORTAL ADMIN Smart Portal RT 005 Tegalsari menjadi tampilan premium seperti "RT Command Center".
+
+PENTING:
+Gunakan visual dashboard yang saya lampirkan sebagai REFERENSI UTAMA desain.
+Target visual:
+- Dark navy premium.
+- Sidebar kiri vertikal di desktop.
+- Topbar modern.
+- Dashboard ringkasan angka.
+- Data warga mudah dicek.
+- Laporan mudah dibuat/diakses.
+- Tidak ada layout rusak, tidak ada horizontal scrollbar.
+- Console browser harus bersih.
+
+MASALAH SAAT INI:
+1. Portal Admin pernah rusak karena sidebar berubah menjadi menu horizontal.
+2. Menu icon dan teks bertabrakan.
+3. Search/filter pernah jatuh ke bawah.
+4. Konten utama pernah kosong.
+5. Layout desktop tidak stabil.
+
+TUGAS UTAMA:
+Redesign Portal Admin menjadi:
+1. Dashboard RT / Command Center.
+2. Data Center Warga.
+3. Layanan Administrasi.
+4. Laporan RT.
+5. Pengaturan Sistem.
+
+================================================================================
+BAGIAN 2 - RULES WAJIB, TIDAK BOLEH DILANGGAR
+================================================================================
+
+RULES KERJA:
+1. WAJIB cek struktur repo terlebih dahulu sebelum mengubah kode.
+2. WAJIB cari file utama Portal Admin sebelum edit.
+3. WAJIB gunakan git diff sebelum dan sesudah perubahan.
+4. WAJIB jalankan build setelah selesai.
+5. WAJIB pastikan console browser bersih dari error JavaScript.
+6. WAJIB pastikan desktop dan mobile sama-sama rapi.
+7. WAJIB laporkan file yang diubah dan alasan perubahan.
+
+LARANGAN KERAS:
+1. JANGAN mengubah backend.
+2. JANGAN mengubah database.
+3. JANGAN mengubah sistem login/auth.
+4. JANGAN menghapus fitur lama yang masih dipakai.
+5. JANGAN membuat duplicate function kalau fungsi lama bisa diperbaiki.
+6. JANGAN menumpuk CSS baru tanpa menghapus konflik lama.
+7. JANGAN menjadikan sidebar desktop sebagai horizontal menu.
+8. JANGAN membuat body atau container memiliki horizontal scrollbar.
+9. JANGAN menggunakan position fixed/absolute secara berlebihan untuk layout utama.
+10. JANGAN mengubah nama route utama kalau tidak perlu.
+11. JANGAN membuat desain yang hanya bagus di screenshot tapi rusak ketika data banyak.
+12. JANGAN menghilangkan tombol login, menu admin, mode dark/light, atau navigasi mobile yang sudah baik.
+
+WAJIB DIPERTAHANKAN:
+1. Login dan role user.
+2. Menu Portal Admin.
+3. Data warga/KK yang sudah ada.
+4. Fitur Surat & Acc.
+5. Fitur Mutasi Warga.
+6. Fitur Aduan.
+7. Fitur Publikasi Info Warga.
+8. Fitur Susunan Pengurus.
+9. Fitur Bantuan Sosial.
+10. Fitur Call Darurat.
+11. Fitur Pengaturan Sistem.
+12. Mode dark/light jika sudah ada.
+13. Mobile view yang sudah baik, cukup distabilkan.
+
+================================================================================
+BAGIAN 3 - STRUKTUR LAYOUT YANG WAJIB
+================================================================================
+
+Desktop >= 1024px:
+- Topbar di atas.
+- Sidebar kiri vertikal.
+- Main content di kanan sidebar.
+- Right insight panel opsional di kanan dashboard.
+- Tidak boleh horizontal nav.
+- Tidak boleh horizontal scrollbar.
+
+Struktur yang benar:
+
+.admin-page
+  .admin-topbar
+  .admin-shell
+    .admin-sidebar
+    .admin-main
+      .admin-view.active
+    .admin-insight-panel  OPTIONAL khusus dashboard
+
+CSS layout wajib:
+- body overflow-x hidden.
+- admin-shell display grid/flex.
+- sidebar flex: 0 0 280px atau width: 280px.
+- main min-width: 0.
+- semua card max-width mengikuti container.
+- tabel dibungkus .table-wrap overflow-x auto hanya pada tabel, bukan body.
+
+Mobile < 768px:
+- Sidebar menjadi drawer.
+- Topbar tetap ringkas.
+- Card KPI menjadi 1 kolom.
+- Tabel data berubah menjadi card/list atau tabel scroll di dalam container saja.
+- Tidak boleh body horizontal scroll.
+
+================================================================================
+BAGIAN 4 - MENU SIDEBAR PREMIUM YANG DIINGINKAN
+================================================================================
+
+Sidebar harus dikelompokkan:
+
+DASHBOARD
+- Dashboard
+
+DATA WARGA
+- Data Keluarga (KK)
+- Mutasi Warga
+
+LAYANAN ADMINISTRASI
+- Surat & Acc
+- Kotak Aduan Warga
+- Publikasi Info Warga
+
+ORGANISASI
+- Susunan Pengurus
+- Bantuan Sosial
+- Call Darurat
+
+SISTEM
+- Laporan RT
+- Pengaturan Sistem
+
+Style active menu:
+- background biru transparan.
+- border-left emas/kuning.
+- teks active warna kuning.
+- icon active warna kuning.
+- tinggi menu stabil, jangan membesar berlebihan.
+
+================================================================================
+BAGIAN 5 - DASHBOARD RT COMMAND CENTER
+================================================================================
+
+Dashboard awal setelah admin login harus menampilkan:
+
+Header:
+- "Selamat datang kembali, [Nama Admin]"
+- Jabatan admin, contoh: Sekretaris RT 005 Tegalsari
+- Tanggal dan jam.
+- Search global: "Cari warga, NIK, alamat, surat, aduan, info..."
+
+KPI Cards:
+1. Total KK
+2. Total Warga
+3. Laki-laki
+4. Perempuan
+5. Surat Menunggu
+6. Aduan Aktif
+7. Info Dipublikasi
+8. Mutasi Bulan Ini
+
+Panel:
+1. Aktivitas Terbaru
+2. Akses Cepat
+3. Data Keluarga Terbaru
+4. Ringkasan Bulan Ini
+5. Grafik Kependudukan
+6. Informasi Penting
+
+Akses Cepat:
+- Tambah KK
+- Tambah Warga
+- Buat Surat
+- Buat Laporan
+- Publikasi Info
+- Kotak Aduan
+
+================================================================================
+BAGIAN 6 - DATA CENTER WARGA
+================================================================================
+
+Menu Data Keluarga (KK) harus menjadi Data Center.
+
+Struktur:
+- Judul: Data Keluarga & Warga RT 005
+- Deskripsi singkat.
+- Search/filter:
+  - Cari nama/NIK/alamat.
+  - Status.
+  - Wilayah/blok/alamat.
+  - Tombol Reset.
+- Ringkasan:
+  - Total KK
+  - Total Jiwa
+  - Laki-laki
+  - Perempuan
+  - Lansia
+  - Anak-anak
+- Tabel:
+  - No KK
+  - Kepala Keluarga
+  - Alamat
+  - Anggota
+  - Status
+  - Aksi
+- Aksi:
+  - Lihat Detail
+  - Edit
+  - Cetak
+  - Riwayat
+
+Jika data kosong:
+- Jangan tampil blank.
+- Tampilkan empty state:
+  "Belum ada data keluarga. Silakan tambahkan KK baru."
+
+================================================================================
+BAGIAN 7 - LAPORAN RT
+================================================================================
+
+Buat/rapikan menu "Laporan RT".
+
+Jenis laporan:
+1. Laporan Data Warga
+2. Laporan Mutasi Warga
+3. Laporan Surat Pengantar
+4. Laporan Aduan Warga
+5. Laporan Publikasi Info
+6. Laporan Bantuan Sosial
+7. Laporan Kas RT
+
+UI laporan:
+- Filter periode bulan/tahun.
+- Pilihan jenis laporan.
+- Tombol Generate.
+- Preview laporan.
+- Tombol Export PDF.
+- Tombol Print.
+- Tombol Download Excel/CSV jika sudah ada dukungan.
+
+Jangan implementasi backend baru jika belum ada. Untuk tahap ini cukup UI dan wiring ke fungsi/export yang sudah ada. Jika belum ada fungsi export, buat placeholder aman yang tidak error dan beri TODO jelas.
+
+================================================================================
+BAGIAN 8 - STRATEGI IMPLEMENTASI WAJIB
+================================================================================
+
+Sebelum coding:
+1. Jalankan:
+   git status
+   npm run build
+
+2. Cari file admin:
+   - src
+   - client/src
+   - app
+   - pages
+   - components
+   - index.html
+   - public
+   - assets
+
+3. Cari keyword:
+   - admin
+   - portal admin
+   - data keluarga
+   - Data Keluarga
+   - KK
+   - sidebar
+   - admin-sidebar
+   - showAdminSection
+   - renderAdmin
+   - renderDataKeluarga
+   - activeMenu
+   - Pengaturan Sistem
+
+4. Identifikasi:
+   - File layout admin.
+   - File CSS admin.
+   - Fungsi switch menu.
+   - Container render content.
+   - Sumber data warga/KK.
+
+5. Setelah tahu struktur, baru ubah kode.
+
+Urutan kerja:
+1. Stabilkan layout admin dulu.
+2. Kembalikan sidebar desktop menjadi vertikal.
+3. Pastikan menu klik menampilkan panel.
+4. Buat dashboard command center.
+5. Rapikan Data Center Warga.
+6. Tambahkan/rapikan Laporan RT.
+7. Responsif mobile.
+8. Clean up CSS konflik.
+9. Build dan verifikasi.
+
+================================================================================
+BAGIAN 9 - ACCEPTANCE CRITERIA
+================================================================================
+
+Hasil dianggap benar jika:
+
+1. npm run build berhasil.
+2. Tidak ada error console.
+3. Tidak ada horizontal scrollbar di desktop.
+4. Sidebar desktop tetap kiri vertikal.
+5. Topbar rapi.
+6. Dashboard tampil premium seperti visual referensi.
+7. Data Keluarga menampilkan search/filter di atas konten, bukan jatuh ke bawah.
+8. Semua menu sidebar bisa diklik.
+9. Panel aktif sesuai menu.
+10. Empty state tampil jika data kosong.
+11. Mobile tidak pecah.
+12. Mode dark/light tidak rusak.
+13. Login tidak hilang.
+14. Backend/database/auth tidak berubah.
+15. File lama yang konflik dibersihkan, bukan ditumpuk.
+
+================================================================================
+BAGIAN 10 - KODE CSS PREMIUM DROP-IN
+================================================================================
+
+CATATAN:
+Gunakan CSS ini sebagai basis. Sesuaikan nama class dengan struktur repo. Jika sudah ada CSS lama yang konflik, hapus/replace bagian konflik secara hati-hati.
+
+```css
+/* =========================================================
+   SMART PORTAL RT 005 - PREMIUM ADMIN COMMAND CENTER
+   Gunakan untuk layout Portal Admin.
+   ========================================================= */
+
+:root {
+  --sp-bg: #070d1a;
+  --sp-bg-2: #0b1324;
+  --sp-surface: rgba(15, 27, 49, 0.92);
+  --sp-surface-2: rgba(20, 36, 65, 0.88);
+  --sp-card: rgba(18, 33, 60, 0.86);
+  --sp-card-soft: rgba(22, 42, 76, 0.72);
+  --sp-border: rgba(148, 163, 184, 0.18);
+  --sp-border-strong: rgba(250, 204, 21, 0.42);
+  --sp-text: #f8fafc;
+  --sp-muted: #94a3b8;
+  --sp-muted-2: #cbd5e1;
+  --sp-primary: #2563eb;
+  --sp-primary-2: #3b82f6;
+  --sp-gold: #facc15;
+  --sp-green: #34d399;
+  --sp-red: #ef4444;
+  --sp-purple: #8b5cf6;
+  --sp-cyan: #22d3ee;
+  --sp-orange: #fb923c;
+  --sp-radius-lg: 22px;
+  --sp-radius-md: 16px;
+  --sp-radius-sm: 12px;
+  --sp-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+  --sp-shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.22);
+  --sp-topbar-height: 76px;
+  --sp-sidebar-width: 280px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.14), transparent 34%),
+    radial-gradient(circle at top right, rgba(250, 204, 21, 0.08), transparent 32%),
+    linear-gradient(135deg, var(--sp-bg), var(--sp-bg-2));
+  color: var(--sp-text);
+}
+
+.admin-page,
+.sp-admin-page {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 20% 5%, rgba(37, 99, 235, 0.18), transparent 26%),
+    radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.11), transparent 26%),
+    linear-gradient(135deg, #07101f 0%, #08111f 52%, #06101f 100%);
+  color: var(--sp-text);
+}
+
+.admin-topbar,
+.sp-admin-topbar {
+  height: var(--sp-topbar-height);
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(260px, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--sp-border);
+  background: rgba(7, 13, 26, 0.86);
+  backdrop-filter: blur(18px);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.sp-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 250px;
+}
+
+.sp-brand-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #1d4ed8, #0f172a);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: var(--sp-shadow-soft);
+  font-weight: 900;
+  color: var(--sp-gold);
+}
+
+.sp-brand-title {
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.sp-brand-subtitle {
+  color: var(--sp-muted);
+  font-size: 0.82rem;
+  margin-top: 3px;
+}
+
+.sp-topbar-search {
+  width: min(100%, 640px);
+  justify-self: center;
+  position: relative;
+}
+
+.sp-topbar-search input {
+  width: 100%;
+  height: 46px;
+  border-radius: 15px;
+  border: 1px solid var(--sp-border);
+  background: rgba(15, 23, 42, 0.84);
+  color: var(--sp-text);
+  padding: 0 48px;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.sp-topbar-search input:focus {
+  border-color: rgba(59, 130, 246, 0.72);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+}
+
+.sp-search-icon {
+  position: absolute;
+  left: 17px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--sp-muted);
+}
+
+.sp-search-shortcut {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--sp-muted-2);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--sp-border);
+  border-radius: 9px;
+  padding: 4px 8px;
+  font-size: 0.76rem;
+}
+
+.sp-topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.sp-icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--sp-border);
+  background: rgba(15, 27, 49, 0.86);
+  color: var(--sp-text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: 0.18s ease;
+}
+
+.sp-icon-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(250, 204, 21, 0.42);
+  background: rgba(30, 41, 59, 0.92);
+}
+
+.sp-admin-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 8px;
+}
+
+.sp-user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+  color: white;
+  font-weight: 900;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+}
+
+.sp-user-name {
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.sp-user-role {
+  font-size: 0.78rem;
+  color: var(--sp-muted);
+  margin-top: 3px;
+}
+
+.admin-shell,
+.sp-admin-shell {
+  display: grid;
+  grid-template-columns: var(--sp-sidebar-width) minmax(0, 1fr);
+  min-height: calc(100vh - var(--sp-topbar-height));
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.admin-sidebar,
+.sp-admin-sidebar {
+  width: var(--sp-sidebar-width);
+  min-width: var(--sp-sidebar-width);
+  max-width: var(--sp-sidebar-width);
+  border-right: 1px solid var(--sp-border);
+  background: rgba(9, 18, 34, 0.78);
+  backdrop-filter: blur(18px);
+  padding: 18px 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sp-sidebar-section {
+  margin: 18px 0 8px;
+  padding: 0 10px;
+  color: var(--sp-muted);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.sp-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.sp-sidebar-item {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--sp-muted-2);
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  font-weight: 700;
+  transition: 0.18s ease;
+  white-space: normal;
+}
+
+.sp-sidebar-item:hover {
+  background: rgba(59, 130, 246, 0.10);
+  border-color: rgba(59, 130, 246, 0.18);
+  color: var(--sp-text);
+}
+
+.sp-sidebar-item.is-active,
+.sp-sidebar-item.active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.28), rgba(15, 23, 42, 0.76));
+  border-color: rgba(59, 130, 246, 0.36);
+  border-left: 4px solid var(--sp-gold);
+  color: var(--sp-gold);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.18);
+}
+
+.sp-sidebar-icon {
+  width: 24px;
+  min-width: 24px;
+  text-align: center;
+  font-size: 1.08rem;
+}
+
+.sp-sidebar-label {
+  line-height: 1.22;
+  overflow-wrap: anywhere;
+}
+
+.sp-sidebar-footer {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(30, 64, 175, 0.30), rgba(15, 23, 42, 0.74)),
+    radial-gradient(circle at right bottom, rgba(250, 204, 21, 0.20), transparent 42%);
+  border: 1px solid var(--sp-border);
+}
+
+.sp-admin-main {
+  min-width: 0;
+  padding: 22px;
+  overflow-x: hidden;
+}
+
+.sp-dashboard-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 22px;
+  align-items: start;
+}
+
+.sp-main-column,
+.sp-right-column {
+  min-width: 0;
+}
+
+.sp-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.sp-eyebrow {
+  color: var(--sp-muted-2);
+  font-size: 0.96rem;
+}
+
+.sp-page-title {
+  margin: 6px 0 4px;
+  font-size: clamp(1.65rem, 2.5vw, 2.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  font-weight: 950;
+}
+
+.sp-page-subtitle {
+  color: var(--sp-muted);
+  font-size: 0.95rem;
+}
+
+.sp-date-card {
+  min-width: 220px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--sp-border);
+  background: rgba(18, 33, 60, 0.74);
+  box-shadow: var(--sp-shadow-soft);
+  color: var(--sp-muted-2);
+}
+
+.sp-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.sp-kpi-card,
+.sp-panel,
+.sp-table-panel,
+.sp-report-card {
+  border: 1px solid var(--sp-border);
+  background:
+    linear-gradient(135deg, rgba(30, 41, 59, 0.68), rgba(15, 23, 42, 0.84));
+  box-shadow: var(--sp-shadow-soft);
+  border-radius: var(--sp-radius-lg);
+}
+
+.sp-kpi-card {
+  padding: 18px;
+  min-height: 148px;
+  overflow: hidden;
+  position: relative;
+}
+
+.sp-kpi-card::after {
+  content: "";
+  position: absolute;
+  right: -30px;
+  bottom: -42px;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.12);
+  pointer-events: none;
+}
+
+.sp-kpi-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sp-kpi-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  font-size: 1.35rem;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.78), rgba(30, 64, 175, 0.58));
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.22);
+}
+
+.sp-kpi-label {
+  color: var(--sp-muted-2);
+  font-size: 0.88rem;
+}
+
+.sp-kpi-value {
+  margin-top: 5px;
+  font-size: 1.75rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.sp-kpi-meta {
+  margin-top: 14px;
+  color: var(--sp-muted);
+  font-size: 0.82rem;
+}
+
+.sp-kpi-meta.positive {
+  color: var(--sp-green);
+}
+
+.sp-mini-chart {
+  margin-top: 12px;
+  height: 24px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(37, 99, 235, 0.20), rgba(34, 211, 238, 0.60), rgba(250, 204, 21, 0.42));
+  opacity: 0.86;
+  clip-path: polygon(0 75%, 10% 62%, 18% 70%, 27% 35%, 36% 64%, 45% 48%, 54% 58%, 62% 30%, 71% 52%, 82% 22%, 91% 38%, 100% 14%, 100% 100%, 0 100%);
+}
+
+.sp-panel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.sp-panel {
+  padding: 18px;
+}
+
+.sp-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.sp-panel-title {
+  font-weight: 900;
+  font-size: 1.04rem;
+}
+
+.sp-link-btn {
+  border: 1px solid var(--sp-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--sp-muted-2);
+  border-radius: 10px;
+  padding: 7px 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.sp-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sp-activity-item {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.sp-activity-item:last-child {
+  border-bottom: 0;
+}
+
+.sp-activity-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: rgba(37, 99, 235, 0.18);
+}
+
+.sp-activity-title {
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.sp-activity-desc,
+.sp-activity-time {
+  color: var(--sp-muted);
+  font-size: 0.8rem;
+}
+
+.sp-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.sp-quick-action {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 14px;
+  min-height: 58px;
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--sp-text);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.sp-quick-action:hover {
+  border-color: rgba(250, 204, 21, 0.42);
+  transform: translateY(-1px);
+}
+
+.sp-table-panel {
+  padding: 18px;
+}
+
+.sp-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.sp-data-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  background: rgba(15, 23, 42, 0.28);
+}
+
+.sp-data-table th,
+.sp-data-table td {
+  padding: 13px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  font-size: 0.88rem;
+}
+
+.sp-data-table th {
+  color: var(--sp-muted-2);
+  background: rgba(15, 23, 42, 0.55);
+  font-weight: 900;
+}
+
+.sp-data-table td {
+  color: #e5e7eb;
+}
+
+.sp-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: var(--sp-green);
+  background: rgba(52, 211, 153, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.18);
+  font-weight: 800;
+  font-size: 0.78rem;
+}
+
+.sp-action-mini {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid var(--sp-border);
+  background: rgba(255,255,255,0.04);
+  color: var(--sp-text);
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.sp-right-card {
+  border: 1px solid var(--sp-border);
+  background:
+    linear-gradient(135deg, rgba(30, 41, 59, 0.72), rgba(15, 23, 42, 0.86));
+  border-radius: var(--sp-radius-lg);
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--sp-shadow-soft);
+}
+
+.sp-month-list {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.sp-month-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+}
+
+.sp-month-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(37, 99, 235, 0.18);
+}
+
+.sp-month-value {
+  font-weight: 900;
+}
+
+.sp-donut {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  margin: 12px auto;
+  background: conic-gradient(var(--sp-primary) 0 49.9%, var(--sp-green) 49.9% 100%);
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.sp-donut::after {
+  content: "";
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  background: #0f172a;
+  position: absolute;
+}
+
+.sp-donut-center {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.sp-donut-number {
+  font-size: 1.35rem;
+  font-weight: 950;
+}
+
+.sp-donut-label {
+  color: var(--sp-muted);
+  font-size: 0.78rem;
+}
+
+.sp-info-card {
+  border: 1px solid rgba(250, 204, 21, 0.32);
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.12), rgba(15, 23, 42, 0.62));
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.sp-info-title {
+  color: var(--sp-gold);
+  font-weight: 950;
+  margin-bottom: 8px;
+}
+
+.sp-filter-bar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 180px 180px auto;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 14px;
+  border: 1px solid var(--sp-border);
+  background: rgba(15, 23, 42, 0.62);
+  border-radius: 18px;
+}
+
+.sp-input,
+.sp-select,
+.sp-btn {
+  height: 44px;
+  border-radius: 13px;
+  border: 1px solid var(--sp-border);
+  background: rgba(15, 23, 42, 0.78);
+  color: var(--sp-text);
+  padding: 0 13px;
+  outline: none;
+}
+
+.sp-btn {
+  cursor: pointer;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--sp-primary), #1d4ed8);
+  border-color: rgba(59, 130, 246, 0.44);
+}
+
+.sp-btn.secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--sp-muted-2);
+}
+
+.sp-empty-state {
+  border: 1px dashed rgba(148, 163, 184, 0.32);
+  background: rgba(15, 23, 42, 0.48);
+  border-radius: 18px;
+  padding: 32px;
+  text-align: center;
+  color: var(--sp-muted-2);
+}
+
+.sp-mobile-menu-btn {
+  display: none;
+}
+
+@media (max-width: 1200px) {
+  .sp-dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-right-column {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .sp-right-card {
+    margin-bottom: 0;
+  }
+
+  .sp-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --sp-sidebar-width: 270px;
+  }
+
+  .sp-admin-topbar {
+    grid-template-columns: auto 1fr auto;
+    padding: 0 14px;
+  }
+
+  .sp-brand {
+    min-width: auto;
+  }
+
+  .sp-brand-title,
+  .sp-brand-subtitle,
+  .sp-search-shortcut,
+  .sp-admin-user .sp-user-text {
+    display: none;
+  }
+
+  .sp-topbar-search {
+    width: 100%;
+  }
+
+  .sp-admin-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-admin-sidebar {
+    position: fixed;
+    left: 0;
+    top: var(--sp-topbar-height);
+    bottom: 0;
+    z-index: 60;
+    transform: translateX(-105%);
+    transition: 0.22s ease;
+  }
+
+  .sp-admin-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .sp-mobile-menu-btn {
+    display: grid;
+  }
+
+  .sp-admin-main {
+    padding: 16px;
+  }
+
+  .sp-panel-grid,
+  .sp-right-column {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-filter-bar {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .sp-topbar-search {
+    display: none;
+  }
+
+  .sp-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-hero {
+    flex-direction: column;
+  }
+
+  .sp-date-card {
+    width: 100%;
+  }
+
+  .sp-quick-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-data-table {
+    min-width: 680px;
+  }
+}
+```
+
+================================================================================
+BAGIAN 11 - CONTOH KOMPONEN REACT / JSX
+================================================================================
+
+CATATAN:
+Jika repo memakai React/Vite, pakai komponen ini sebagai basis lalu integrasikan dengan data dan fungsi lama.
+JANGAN asal membuat route baru kalau route admin lama sudah ada.
+JANGAN memutus fungsi lama.
+Ganti data dummy dengan data asli dari state/API/localStorage yang sudah dipakai repo.
+
+```jsx
+import React, { useMemo, useState } from "react";
+import "./admin-command-center.css";
+
+const sidebarGroups = [
+  {
+    title: "Dashboard",
+    items: [
+      { id: "dashboard", label: "Dashboard", icon: "🏠" },
+    ],
+  },
+  {
+    title: "Data Warga",
+    items: [
+      { id: "data-keluarga", label: "Data Keluarga (KK)", icon: "👨‍👩‍👧‍👦" },
+      { id: "mutasi-warga", label: "Mutasi Warga", icon: "🚚" },
+    ],
+  },
+  {
+    title: "Layanan Administrasi",
+    items: [
+      { id: "surat-acc", label: "Surat & Acc", icon: "✉️" },
+      { id: "aduan-warga", label: "Kotak Aduan Warga", icon: "📥" },
+      { id: "publikasi-info", label: "Publikasi Info Warga", icon: "📡" },
+    ],
+  },
+  {
+    title: "Organisasi",
+    items: [
+      { id: "pengurus", label: "Susunan Pengurus", icon: "🏛️" },
+      { id: "bantuan-sosial", label: "Bantuan Sosial", icon: "🤝" },
+      { id: "call-darurat", label: "Call Darurat", icon: "🚑" },
+    ],
+  },
+  {
+    title: "Sistem",
+    items: [
+      { id: "laporan-rt", label: "Laporan RT", icon: "📊" },
+      { id: "pengaturan", label: "Pengaturan Sistem", icon: "⚙️" },
+    ],
+  },
+];
+
+const fallbackFamilies = [
+  {
+    kk: "3376010101010001",
+    kepala: "Budi Santoso",
+    alamat: "Jl. Melati No. 10",
+    anggota: 4,
+    status: "Aktif",
+  },
+  {
+    kk: "3376010101010002",
+    kepala: "Siti Nurhaliza",
+    alamat: "Jl. Mawar No. 5",
+    anggota: 3,
+    status: "Aktif",
+  },
+  {
+    kk: "3376010101010003",
+    kepala: "Ahmad Wijaya",
+    alamat: "Jl. Kenanga No. 12",
+    anggota: 5,
+    status: "Aktif",
+  },
+  {
+    kk: "3376010101010004",
+    kepala: "Joko Purwanto",
+    alamat: "Jl. Anggrek No. 7",
+    anggota: 4,
+    status: "Aktif",
+  },
+];
+
+const activities = [
+  {
+    icon: "👤",
+    title: "Warga baru ditambahkan",
+    desc: "Budi Santoso - No. KK 3376xxxxxxxxxxxx",
+    time: "10 menit lalu",
+  },
+  {
+    icon: "📄",
+    title: "Surat pengantar dibuat",
+    desc: "Surat Domisili - Siti Nurhaliza",
+    time: "25 menit lalu",
+  },
+  {
+    icon: "💬",
+    title: "Aduan masuk",
+    desc: "Lampu jalan mati di Jl. Melati 3",
+    time: "1 jam lalu",
+  },
+  {
+    icon: "🚚",
+    title: "Mutasi warga",
+    desc: "Keluar - Andi Wijaya",
+    time: "2 jam lalu",
+  },
+  {
+    icon: "📢",
+    title: "Info baru dipublikasi",
+    desc: "Kerja bakti lingkungan RT 005",
+    time: "3 jam lalu",
+  },
+];
+
+function formatNumber(value) {
+  return new Intl.NumberFormat("id-ID").format(Number(value || 0));
+}
+
+function getInitials(name) {
+  return String(name || "Admin")
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+}
+
+export default function AdminCommandCenter({
+  adminName = "Christian Eka",
+  adminRole = "Sekretaris RT 005",
+  families = fallbackFamilies,
+  warga = [],
+  surat = [],
+  aduan = [],
+  mutasi = [],
+  info = [],
+  onQuickAction,
+}) {
+  const [activeMenu, setActiveMenu] = useState("dashboard");
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [globalSearch, setGlobalSearch] = useState("");
+  const [familySearch, setFamilySearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("semua");
+
+  const stats = useMemo(() => {
+    const totalKK = families.length || 0;
+    const totalWarga =
+      warga.length ||
+      families.reduce((sum, item) => sum + Number(item.anggota || 0), 0) ||
+      0;
+
+    return {
+      totalKK,
+      totalWarga,
+      laki: Math.round(totalWarga * 0.499),
+      perempuan: totalWarga - Math.round(totalWarga * 0.499),
+      suratMenunggu: surat.filter((item) => item.status === "menunggu").length || 7,
+      aduanAktif: aduan.filter((item) => item.status !== "selesai").length || 3,
+      infoDipublikasi: info.length || 12,
+      mutasiBulanIni: mutasi.length || 5,
+    };
+  }, [families, warga, surat, aduan, mutasi, info]);
+
+  const filteredFamilies = useMemo(() => {
+    const keyword = familySearch.trim().toLowerCase();
+
+    return families.filter((item) => {
+      const matchKeyword =
+        !keyword ||
+        String(item.kk || "").toLowerCase().includes(keyword) ||
+        String(item.kepala || "").toLowerCase().includes(keyword) ||
+        String(item.alamat || "").toLowerCase().includes(keyword);
+
+      const matchStatus =
+        statusFilter === "semua" ||
+        String(item.status || "").toLowerCase() === statusFilter;
+
+      return matchKeyword && matchStatus;
+    });
+  }, [families, familySearch, statusFilter]);
+
+  const kpis = [
+    { label: "Total KK", value: stats.totalKK, icon: "👨‍👩‍👧‍👦", meta: "+4 dari bulan lalu" },
+    { label: "Total Warga", value: stats.totalWarga, icon: "👤", meta: "+12 dari bulan lalu" },
+    { label: "Laki-laki", value: stats.laki, icon: "🚹", meta: "49.9% dari total" },
+    { label: "Perempuan", value: stats.perempuan, icon: "🚺", meta: "50.1% dari total" },
+    { label: "Surat Menunggu", value: stats.suratMenunggu, icon: "📄", meta: "Lihat detail →" },
+    { label: "Aduan Aktif", value: stats.aduanAktif, icon: "💬", meta: "Lihat detail →" },
+    { label: "Info Dipublikasi", value: stats.infoDipublikasi, icon: "📢", meta: "Lihat detail →" },
+    { label: "Mutasi Bulan Ini", value: stats.mutasiBulanIni, icon: "🚚", meta: "Lihat detail →" },
+  ];
+
+  const today = new Date();
+  const tanggal = today.toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+  const jam = today.toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  const handleMenuClick = (id) => {
+    setActiveMenu(id);
+    setSidebarOpen(false);
+  };
+
+  const handleQuickAction = (action) => {
+    if (typeof onQuickAction === "function") {
+      onQuickAction(action);
+      return;
+    }
+
+    const map = {
+      tambahKK: "data-keluarga",
+      tambahWarga: "data-keluarga",
+      buatSurat: "surat-acc",
+      buatLaporan: "laporan-rt",
+      publikasiInfo: "publikasi-info",
+      kotakAduan: "aduan-warga",
+    };
+
+    if (map[action]) setActiveMenu(map[action]);
+  };
+
+  return (
+    <div className="sp-admin-page">
+      <header className="sp-admin-topbar">
+        <div className="sp-brand">
+          <button
+            className="sp-icon-btn sp-mobile-menu-btn"
+            type="button"
+            aria-label="Buka menu admin"
+            onClick={() => setSidebarOpen((value) => !value)}
+          >
+            ☰
+          </button>
+
+          <div className="sp-brand-badge">S</div>
+
+          <div>
+            <div className="sp-brand-title">SMART PORTAL</div>
+            <div className="sp-brand-subtitle">RT 005 TEGALSARI</div>
+          </div>
+        </div>
+
+        <div className="sp-topbar-search">
+          <span className="sp-search-icon">🔍</span>
+          <input
+            value={globalSearch}
+            onChange={(event) => setGlobalSearch(event.target.value)}
+            placeholder="Cari warga, NIK, alamat, surat, aduan, info..."
+            aria-label="Pencarian global admin"
+          />
+          <span className="sp-search-shortcut">Ctrl + K</span>
+        </div>
+
+        <div className="sp-topbar-actions">
+          <button className="sp-icon-btn" type="button" aria-label="Notifikasi">
+            🔔
+          </button>
+          <button className="sp-icon-btn" type="button" aria-label="Mode gelap">
+            🌙
+          </button>
+
+          <div className="sp-admin-user">
+            <div className="sp-user-avatar">{getInitials(adminName)}</div>
+            <div className="sp-user-text">
+              <div className="sp-user-name">{adminName}</div>
+              <div className="sp-user-role">{adminRole}</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="sp-admin-shell">
+        <aside className={`sp-admin-sidebar ${isSidebarOpen ? "is-open" : ""}`}>
+          <nav className="sp-sidebar-nav" aria-label="Menu Portal Admin">
+            {sidebarGroups.map((group) => (
+              <div key={group.title}>
+                <div className="sp-sidebar-section">{group.title}</div>
+                {group.items.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`sp-sidebar-item ${activeMenu === item.id ? "is-active" : ""}`}
+                    onClick={() => handleMenuClick(item.id)}
+                  >
+                    <span className="sp-sidebar-icon">{item.icon}</span>
+                    <span className="sp-sidebar-label">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            ))}
+          </nav>
+
+          <div className="sp-sidebar-footer">
+            <strong>RT 005 Tegalsari</strong>
+            <div style={{ color: "var(--sp-muted)", marginTop: 8, fontSize: 13 }}>
+              Kel. Tegalsari, Kota Semarang
+            </div>
+          </div>
+        </aside>
+
+        <main className="sp-admin-main">
+          {activeMenu === "dashboard" && (
+            <DashboardView
+              adminName={adminName}
+              adminRole={adminRole}
+              tanggal={tanggal}
+              jam={jam}
+              kpis={kpis}
+              stats={stats}
+              families={families}
+              onQuickAction={handleQuickAction}
+            />
+          )}
+
+          {activeMenu === "data-keluarga" && (
+            <DataKeluargaView
+              familySearch={familySearch}
+              setFamilySearch={setFamilySearch}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              filteredFamilies={filteredFamilies}
+              families={families}
+              stats={stats}
+            />
+          )}
+
+          {activeMenu === "laporan-rt" && <LaporanRTView />}
+
+          {!["dashboard", "data-keluarga", "laporan-rt"].includes(activeMenu) && (
+            <PlaceholderView activeMenu={activeMenu} />
+          )}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+function DashboardView({ adminName, adminRole, tanggal, jam, kpis, stats, families, onQuickAction }) {
+  return (
+    <div className="sp-dashboard-layout">
+      <section className="sp-main-column">
+        <div className="sp-hero">
+          <div>
+            <div className="sp-eyebrow">Selamat datang kembali,</div>
+            <h1 className="sp-page-title">{adminName} 👋</h1>
+            <div className="sp-page-subtitle">{adminRole} Tegalsari</div>
+          </div>
+
+          <div className="sp-date-card">
+            <div>📅 {tanggal}</div>
+            <div style={{ marginTop: 10 }}>🕘 {jam} WIB</div>
+          </div>
+        </div>
+
+        <div className="sp-kpi-grid">
+          {kpis.map((item) => (
+            <div key={item.label} className="sp-kpi-card">
+              <div className="sp-kpi-top">
+                <div className="sp-kpi-icon">{item.icon}</div>
+                <div>
+                  <div className="sp-kpi-label">{item.label}</div>
+                  <div className="sp-kpi-value">{formatNumber(item.value)}</div>
+                </div>
+              </div>
+              <div className="sp-kpi-meta positive">{item.meta}</div>
+              <div className="sp-mini-chart" />
+            </div>
+          ))}
+        </div>
+
+        <div className="sp-panel-grid">
+          <div className="sp-panel">
+            <div className="sp-panel-header">
+              <div className="sp-panel-title">Aktivitas Terbaru</div>
+              <button className="sp-link-btn" type="button">Lihat semua</button>
+            </div>
+
+            <div className="sp-activity-list">
+              {activities.map((item) => (
+                <div className="sp-activity-item" key={item.title}>
+                  <div className="sp-activity-icon">{item.icon}</div>
+                  <div>
+                    <div className="sp-activity-title">{item.title}</div>
+                    <div className="sp-activity-desc">{item.desc}</div>
+                  </div>
+                  <div className="sp-activity-time">{item.time}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="sp-panel">
+            <div className="sp-panel-header">
+              <div className="sp-panel-title">Akses Cepat</div>
+            </div>
+
+            <div className="sp-quick-grid">
+              <button className="sp-quick-action" type="button" onClick={() => onQuickAction("tambahKK")}>👨‍👩‍👧‍👦 Tambah KK</button>
+              <button className="sp-quick-action" type="button" onClick={() => onQuickAction("tambahWarga")}>👤 Tambah Warga</button>
+              <button className="sp-quick-action" type="button" onClick={() => onQuickAction("buatSurat")}>📄 Buat Surat</button>
+              <button className="sp-quick-action" type="button" onClick={() => onQuickAction("buatLaporan")}>📊 Buat Laporan</button>
+              <button className="sp-quick-action" type="button" onClick={() => onQuickAction("publikasiInfo")}>📢 Publikasi Info</button>
+              <button className="sp-quick-action" type="button" onClick={() => onQuickAction("kotakAduan")}>💬 Kotak Aduan</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="sp-table-panel">
+          <div className="sp-panel-header">
+            <div className="sp-panel-title">Data Keluarga Terbaru</div>
+            <button className="sp-link-btn" type="button">Lihat semua data KK</button>
+          </div>
+
+          <FamilyTable families={families.slice(0, 5)} />
+        </div>
+      </section>
+
+      <aside className="sp-right-column">
+        <div className="sp-right-card">
+          <div className="sp-panel-header">
+            <div className="sp-panel-title">Ringkasan Bulan Ini</div>
+            <button className="sp-link-btn" type="button">Mei 2025</button>
+          </div>
+
+          <div className="sp-month-list">
+            <MonthRow icon="🆕" label="KK Baru" value="4" />
+            <MonthRow icon="👤" label="Warga Baru" value="12" />
+            <MonthRow icon="🚚" label="Mutasi Masuk" value="3" />
+            <MonthRow icon="🚛" label="Mutasi Keluar" value="2" />
+            <MonthRow icon="📄" label="Surat Dibuat" value="18" />
+            <MonthRow icon="💬" label="Aduan Masuk" value="7" />
+          </div>
+        </div>
+
+        <div className="sp-right-card">
+          <div className="sp-panel-header">
+            <div className="sp-panel-title">Grafik Kependudukan</div>
+            <button className="sp-link-btn" type="button">2025</button>
+          </div>
+
+          <div className="sp-donut">
+            <div className="sp-donut-center">
+              <div className="sp-donut-number">{formatNumber(stats.totalWarga)}</div>
+              <div className="sp-donut-label">Total Warga</div>
+            </div>
+          </div>
+
+          <div className="sp-month-list">
+            <MonthRow icon="🔵" label="Laki-laki" value={`${formatNumber(stats.laki)} (49.9%)`} />
+            <MonthRow icon="🟢" label="Perempuan" value={`${formatNumber(stats.perempuan)} (50.1%)`} />
+          </div>
+        </div>
+
+        <div className="sp-right-card">
+          <div className="sp-panel-header">
+            <div className="sp-panel-title">Informasi Penting</div>
+            <button className="sp-link-btn" type="button">Lihat semua</button>
+          </div>
+
+          <div className="sp-info-card">
+            <div className="sp-info-title">ⓘ Kerja Bakti Lingkungan RT 005</div>
+            <div style={{ color: "var(--sp-muted-2)", lineHeight: 1.6 }}>
+              Minggu, 1 Juni 2025. Mari bersama menjaga kebersihan lingkungan RT 005 Tegalsari.
+            </div>
+            <div style={{ color: "var(--sp-muted)", marginTop: 12, fontSize: 13 }}>
+              26 Mei 2025 - Admin RT
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+function DataKeluargaView({
+  familySearch,
+  setFamilySearch,
+  statusFilter,
+  setStatusFilter,
+  filteredFamilies,
+  families,
+  stats,
+}) {
+  return (
+    <section>
+      <div className="sp-hero">
+        <div>
+          <div className="sp-eyebrow">Data Center Warga</div>
+          <h1 className="sp-page-title">Data Keluarga & Warga RT 005</h1>
+          <div className="sp-page-subtitle">
+            Kelola data KK, anggota keluarga, alamat, status domisili, dan riwayat perubahan.
+          </div>
+        </div>
+      </div>
+
+      <div className="sp-filter-bar">
+        <input
+          className="sp-input"
+          value={familySearch}
+          onChange={(event) => setFamilySearch(event.target.value)}
+          placeholder="Cari nama / NIK / No KK / alamat warga..."
+        />
+
+        <select
+          className="sp-select"
+          value={statusFilter}
+          onChange={(event) => setStatusFilter(event.target.value)}
+        >
+          <option value="semua">Semua Status</option>
+          <option value="aktif">Aktif</option>
+          <option value="pindah">Pindah</option>
+          <option value="nonaktif">Nonaktif</option>
+        </select>
+
+        <select className="sp-select" defaultValue="semua">
+          <option value="semua">Semua Wilayah</option>
+          <option value="tegalsari">Tegalsari</option>
+        </select>
+
+        <button
+          type="button"
+          className="sp-btn secondary"
+          onClick={() => {
+            setFamilySearch("");
+            setStatusFilter("semua");
+          }}
+        >
+          Reset
+        </button>
+      </div>
+
+      <div className="sp-kpi-grid">
+        <SmallStat label="Total KK" value={families.length} icon="👨‍👩‍👧‍👦" />
+        <SmallStat label="Total Jiwa" value={stats.totalWarga} icon="👤" />
+        <SmallStat label="Laki-laki" value={stats.laki} icon="🚹" />
+        <SmallStat label="Perempuan" value={stats.perempuan} icon="🚺" />
+      </div>
+
+      <div className="sp-table-panel">
+        <div className="sp-panel-header">
+          <div className="sp-panel-title">Tabel Data Keluarga</div>
+          <button className="sp-btn" type="button">+ Tambah KK</button>
+        </div>
+
+        {filteredFamilies.length > 0 ? (
+          <FamilyTable families={filteredFamilies} />
+        ) : (
+          <div className="sp-empty-state">
+            <strong>Belum ada data keluarga yang cocok.</strong>
+            <div style={{ marginTop: 8 }}>
+              Coba ubah kata kunci pencarian atau reset filter.
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function LaporanRTView() {
+  const [jenis, setJenis] = useState("data-warga");
+  const [periode, setPeriode] = useState("2025-05");
+
+  return (
+    <section>
+      <div className="sp-hero">
+        <div>
+          <div className="sp-eyebrow">Laporan & Arsip</div>
+          <h1 className="sp-page-title">Laporan RT 005</h1>
+          <div className="sp-page-subtitle">
+            Generate preview laporan bulanan, cetak, export PDF, atau arsipkan laporan administrasi.
+          </div>
+        </div>
+      </div>
+
+      <div className="sp-filter-bar">
+        <select className="sp-select" value={jenis} onChange={(event) => setJenis(event.target.value)}>
+          <option value="data-warga">Laporan Data Warga</option>
+          <option value="mutasi">Laporan Mutasi Warga</option>
+          <option value="surat">Laporan Surat Pengantar</option>
+          <option value="aduan">Laporan Aduan Warga</option>
+          <option value="info">Laporan Publikasi Info</option>
+          <option value="bansos">Laporan Bantuan Sosial</option>
+          <option value="kas">Laporan Kas RT</option>
+        </select>
+
+        <input
+          className="sp-input"
+          type="month"
+          value={periode}
+          onChange={(event) => setPeriode(event.target.value)}
+        />
+
+        <button className="sp-btn" type="button">Generate</button>
+        <button className="sp-btn secondary" type="button" onClick={() => window.print()}>Print</button>
+      </div>
+
+      <div className="sp-report-card" style={{ padding: 24 }}>
+        <div style={{ textAlign: "center", marginBottom: 22 }}>
+          <h2 style={{ margin: 0 }}>PREVIEW LAPORAN RT 005 TEGALSARI</h2>
+          <div style={{ color: "var(--sp-muted)", marginTop: 8 }}>
+            Jenis: {jenis} - Periode: {periode}
+          </div>
+        </div>
+
+        <div className="sp-kpi-grid">
+          <SmallStat label="Total Data" value="1287" icon="📊" />
+          <SmallStat label="Perubahan" value="21" icon="🔁" />
+          <SmallStat label="Menunggu" value="7" icon="⏳" />
+          <SmallStat label="Selesai" value="46" icon="✅" />
+        </div>
+
+        <div className="sp-empty-state">
+          Preview detail laporan akan mengikuti data asli aplikasi. Jangan membuat backend baru jika belum tersedia.
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PlaceholderView({ activeMenu }) {
+  return (
+    <section>
+      <div className="sp-hero">
+        <div>
+          <div className="sp-eyebrow">Portal Admin</div>
+          <h1 className="sp-page-title">{activeMenu}</h1>
+          <div className="sp-page-subtitle">
+            Panel ini harus dihubungkan ke fitur lama yang sudah ada. Jangan hapus fungsi lama.
+          </div>
+        </div>
+      </div>
+
+      <div className="sp-empty-state">
+        Konten fitur lama untuk menu ini harus dirender di sini. Jika sudah ada komponen lama,
+        pindahkan/masukkan ke panel ini tanpa merusak datanya.
+      </div>
+    </section>
+  );
+}
+
+function FamilyTable({ families }) {
+  return (
+    <div className="sp-table-wrap">
+      <table className="sp-data-table">
+        <thead>
+          <tr>
+            <th>No KK</th>
+            <th>Kepala Keluarga</th>
+            <th>Alamat</th>
+            <th>Anggota</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {families.map((item) => (
+            <tr key={item.kk}>
+              <td>{item.kk}</td>
+              <td>{item.kepala}</td>
+              <td>{item.alamat}</td>
+              <td>{item.anggota}</td>
+              <td>
+                <span className="sp-status-pill">{item.status || "Aktif"}</span>
+              </td>
+              <td>
+                <button className="sp-action-mini" type="button" title="Lihat detail">👁️</button>
+                <button className="sp-action-mini" type="button" title="Edit">✏️</button>
+                <button className="sp-action-mini" type="button" title="Lainnya">⋮</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function SmallStat({ label, value, icon }) {
+  return (
+    <div className="sp-kpi-card" style={{ minHeight: 112 }}>
+      <div className="sp-kpi-top">
+        <div className="sp-kpi-icon">{icon}</div>
+        <div>
+          <div className="sp-kpi-label">{label}</div>
+          <div className="sp-kpi-value">{formatNumber(value)}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MonthRow({ icon, label, value }) {
+  return (
+    <div className="sp-month-row">
+      <div className="sp-month-icon">{icon}</div>
+      <div style={{ color: "var(--sp-muted-2)" }}>{label}</div>
+      <div className="sp-month-value">{value}</div>
+    </div>
+  );
+}
+```
+
+================================================================================
+BAGIAN 12 - JIKA PROJECT MASIH VANILLA HTML/JS
+================================================================================
+
+Jika repo tidak memakai React, jangan paksa React. Gunakan pendekatan vanilla:
+1. Buat struktur HTML admin dengan class CSS yang sama.
+2. Buat fungsi switchAdminMenu yang mengatur active menu dan active panel.
+3. Render dashboard melalui template string.
+4. Pastikan event listener tidak duplicate.
+
+Contoh JS vanilla:
+
+```js
+const adminState = {
+  activeMenu: "dashboard",
+  sidebarOpen: false,
+  families: [
+    { kk: "3376010101010001", kepala: "Budi Santoso", alamat: "Jl. Melati No. 10", anggota: 4, status: "Aktif" },
+    { kk: "3376010101010002", kepala: "Siti Nurhaliza", alamat: "Jl. Mawar No. 5", anggota: 3, status: "Aktif" },
+  ],
+};
+
+function qs(selector, root = document) {
+  return root.querySelector(selector);
+}
+
+function qsa(selector, root = document) {
+  return Array.from(root.querySelectorAll(selector));
+}
+
+function setAdminMenu(menuId) {
+  adminState.activeMenu = menuId;
+
+  qsa("[data-admin-menu]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.adminMenu === menuId);
+  });
+
+  qsa("[data-admin-panel]").forEach((panel) => {
+    panel.hidden = panel.dataset.adminPanel !== menuId;
+    panel.classList.toggle("is-active", panel.dataset.adminPanel === menuId);
+  });
+
+  const sidebar = qs(".sp-admin-sidebar");
+  if (sidebar) sidebar.classList.remove("is-open");
+}
+
+function initAdminNavigation() {
+  qsa("[data-admin-menu]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setAdminMenu(button.dataset.adminMenu);
+    });
+  });
+
+  const mobileBtn = qs("[data-admin-mobile-menu]");
+  const sidebar = qs(".sp-admin-sidebar");
+
+  if (mobileBtn && sidebar) {
+    mobileBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("is-open");
+    });
+  }
+
+  setAdminMenu(adminState.activeMenu);
+}
+
+function renderFamilyRows(families) {
+  if (!families || families.length === 0) {
+    return `
+      <tr>
+        <td colspan="6">
+          <div class="sp-empty-state">
+            <strong>Belum ada data keluarga.</strong>
+            <div>Silakan tambahkan data KK baru.</div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+
+  return families.map((item) => `
+    <tr>
+      <td>${escapeHtml(item.kk)}</td>
+      <td>${escapeHtml(item.kepala)}</td>
+      <td>${escapeHtml(item.alamat)}</td>
+      <td>${Number(item.anggota || 0)}</td>
+      <td><span class="sp-status-pill">${escapeHtml(item.status || "Aktif")}</span></td>
+      <td>
+        <button class="sp-action-mini" type="button" title="Lihat detail">👁️</button>
+        <button class="sp-action-mini" type="button" title="Edit">✏️</button>
+        <button class="sp-action-mini" type="button" title="Lainnya">⋮</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+document.addEventListener("DOMContentLoaded", initAdminNavigation);
+```
+
+================================================================================
+BAGIAN 13 - CHECKLIST VERIFIKASI MANUAL
+================================================================================
+
+Setelah selesai coding, lakukan ini:
+
+1. Buka Portal Admin desktop.
+2. Pastikan sidebar kiri vertikal, bukan horizontal.
+3. Klik semua menu:
+   - Dashboard
+   - Data Keluarga
+   - Mutasi Warga
+   - Surat & Acc
+   - Kotak Aduan
+   - Publikasi Info
+   - Susunan Pengurus
+   - Bantuan Sosial
+   - Call Darurat
+   - Laporan RT
+   - Pengaturan Sistem
+4. Pastikan panel kanan berubah sesuai menu.
+5. Pastikan tidak ada area blank besar.
+6. Pastikan search/filter Data KK berada di atas tabel.
+7. Pastikan tabel tidak menyebabkan body horizontal scroll.
+8. Resize ke mobile.
+9. Pastikan menu menjadi drawer, bukan horizontal berantakan.
+10. Cek console:
+    - Tidak boleh ada ReferenceError.
+    - Tidak boleh ada TypeError.
+    - Tidak boleh ada duplicate function error.
+11. Jalankan:
+    npm run build
+12. Jika build gagal, perbaiki sampai berhasil.
+
+================================================================================
+BAGIAN 14 - FORMAT LAPORAN AKHIR DARI OCTOPUS
+================================================================================
+
+Setelah selesai, laporkan dengan format:
+
+1. Penyebab masalah:
+   - Jelaskan file/class/function yang menyebabkan layout rusak.
+
+2. File yang diubah:
+   - Nama file 1: perubahan apa.
+   - Nama file 2: perubahan apa.
+
+3. Perbaikan utama:
+   - Sidebar desktop kembali vertikal.
+   - Dashboard command center dibuat.
+   - Data Center Warga dirapikan.
+   - Laporan RT ditambahkan/dirapikan.
+   - Responsive mobile distabilkan.
+
+4. Hasil verifikasi:
+   - npm run build: berhasil/gagal.
+   - Console browser: bersih/tidak.
+   - Desktop: aman/tidak.
+   - Mobile: aman/tidak.
+   - Horizontal scrollbar: tidak ada/masih ada.
+
+5. Risiko:
+   - Sebutkan jika ada fitur yang belum tersambung ke data asli.
+   - Sebutkan TODO yang aman.
+
+================================================================================
+BAGIAN 15 - PERINTAH FINAL UNTUK OCTOPUS
+================================================================================
+
+Kerjakan dengan teliti. Jangan hanya mempercantik tampilan. Pastikan struktur layout benar, render panel aktif benar, menu tidak hilang, data tetap aman, dan build berhasil.
+
+Prioritas:
+1. Stabilkan struktur admin.
+2. Kembalikan sidebar desktop vertikal.
+3. Buat dashboard premium command center.
+4. Rapikan Data Center Warga.
+5. Tambahkan/rapikan Laporan RT.
+6. Pastikan mobile aman.
+7. Pastikan console dan build bersih.
+
+Jika ada konflik antara instruksi ini dan kode lama:
+- Pertahankan fungsi bisnis lama.
+- Ganti hanya layout/CSS/render yang rusak.
+- Jangan ubah backend/auth/database.
+- Jangan menghapus fitur.
+
+HASIL AKHIR HARUS SESUAI:
+Portal Admin Smart Portal RT 005 Tegalsari terlihat premium, rapi, profesional, mudah dipakai admin untuk cek data dan membuat laporan, tanpa merusak fitur yang sudah berjalan.
