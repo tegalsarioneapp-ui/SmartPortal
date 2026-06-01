@@ -17632,7 +17632,12 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
   function openRight(){ensureSide();overlay();document.body.classList.add('admin-mobile-right-open');document.body.classList.remove('admin-mobile-menu-open')}
   function setRightHidden(hidden){var v=view(); if(!v) return; ensureSide(); v.classList.toggle('right-panel-collapsed',hidden); document.body.classList.toggle('admin-right-panel-collapsed',hidden); try{localStorage.setItem('admin_right_panel_state',hidden?'hidden':'visible')}catch(_){}}
   function toggleRight(){if(!isAdmin()) return false; if(isMobile()){document.body.classList.contains('admin-mobile-right-open')?closePanels():openRight();return false} var v=view(); var hidden=!(v&&v.classList.contains('right-panel-collapsed')); setRightHidden(hidden); return false}
-  window.toggleRightPanel=toggleRight;
+  /* toggleRightPanel: jangan override versi warga */
+  var _oldToggleRight = window.toggleRightPanel;
+  window.toggleRightPanel = function(){
+    if(isAdmin()) return toggleRight();
+    if(typeof _oldToggleRight === "function") return _oldToggleRight();
+  };
   var oldSide=window.toggleSidebar; window.toggleSidebar=function(){if(isAdmin()&&isMobile()){openLeft();return false} var r=typeof oldSide==='function'?oldSide.apply(this,arguments):document.body.classList.toggle('sidebar-collapsed'); if(isAdmin())document.body.classList.toggle('admin-left-collapsed',document.body.classList.contains('sidebar-collapsed')); return r};
   var oldSp=window.gtSpOpen; window.gtSpOpen=function(){if(isAdmin()&&isMobile()){openLeft();return false} return typeof oldSp==='function'?oldSp.apply(this,arguments):window.toggleSidebar()};
   function bind(){if(!isAdmin())return; ensureSide(); overlay(); qsa('button,a').forEach(function(b){if(b.__gtAdminV6) return; var html=(b.innerHTML||'')+' '+(b.textContent||'')+' '+(b.id||'')+' '+(b.className||'')+' '+(b.title||'')+' '+(b.getAttribute('aria-label')||''); if(/fa-bars|hamburger|menu-toggle|toggle-sidebar|sidebar/i.test(html)){b.__gtAdminV6=true;b.addEventListener('click',function(e){if(isAdmin()&&isMobile()){e.preventDefault();e.stopPropagation();openLeft()}},true)} if(/right|panel|table-columns|chevron-left|columns/i.test(html)){b.__gtAdminV6=true;b.addEventListener('click',function(e){if(isAdmin()){e.preventDefault();e.stopPropagation();toggleRight()}},true)}}); qsa('#view-admin .admin-tab-btn').forEach(function(b){if(b.__gtAdminV6Nav)return;b.__gtAdminV6Nav=true;b.addEventListener('click',function(){if(isMobile())closePanels();setTimeout(function(){var a=qs('#view-admin .admin-tab-content.active');if(a)a.scrollTop=0},60)})})}
