@@ -4505,11 +4505,7 @@ window.logout = window.gtKeluar;
 }
 
 /* Mobile: sembunyikan panel kanan */
-@media (max-width: 768px) {
-    .warga-fb-right {
-        display: none !important;
-    }
-}
+/* display:none warga-fb-right REMOVED */
 </style>
 <script id="gt-panel-kanan-reset">
 (function(){
@@ -4727,7 +4723,7 @@ body {
 .scc-btn-red:hover{background:linear-gradient(135deg,#b91c1c,#dc2626);transform:translateY(-1px);}
 .scc-loading{font-size:0.72rem;color:#64748b;text-align:center;padding:8px;}
 .right-panel-collapsed .warga-fb-right{width:0 !important;min-width:0 !important;padding:0 !important;overflow:hidden !important;opacity:0 !important;pointer-events:none !important;}
-@media(max-width:768px){.warga-fb-right{display:none !important;}}
+/* display:none warga-fb-right REMOVED */
 
 .scc-action-btn {
     display:flex;
@@ -17669,54 +17665,32 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
 <!-- GT_ADMIN_FINAL_V6_END -->
 
 
+
 <style id="gt-mobile-right-fix">
-/* ══════════════════════════════════════════════════════
-   MOBILE RIGHT PANEL — LAYOUT FIX
-   ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   MOBILE RIGHT PANEL — LAYOUT ONLY
+   display:flex sudah di-handle L17130
+   di sini hanya tambah flex-direction & gap
+   ══════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* DEFAULT: siap slide, tersembunyi ke kanan */
+  /* Pastikan panel tertata kolom + ada jarak antar card */
   body.warga-portal-aktif #view-warga .warga-fb-right {
-    display         : flex !important;
     flex-direction  : column !important;
     gap             : 10px !important;
-    position        : fixed !important;
-    top             : 0 !important;
-    right           : 0 !important;
-    bottom          : 0 !important;
-    height          : 100dvh !important;
-    max-height      : 100dvh !important;
-    width           : min(86vw, 300px) !important;
-    max-width       : min(86vw, 300px) !important;
-    min-width       : 0 !important;
-    z-index         : 8500 !important;
-    opacity         : 1 !important;
-    pointer-events  : none !important;
-    overflow-y      : auto !important;
-    overflow-x      : hidden !important;
     padding         : 12px 10px 80px !important;
     box-sizing      : border-box !important;
-    transform       : translateX(105%) !important;
-    transition      : transform .28s cubic-bezier(.2,.8,.2,1) !important;
+    z-index         : 8500 !important;
     background      : linear-gradient(180deg,#0f172a 0%,#111827 100%) !important;
-    border-left     : 1px solid rgba(99,102,241,0.2) !important;
-    box-shadow      : -8px 0 40px rgba(0,0,0,0.5) !important;
-    scrollbar-width : thin !important;
   }
 
-  /* SAAT DIBUKA: slide masuk */
-  body.mobile-right-open.warga-portal-aktif #view-warga .warga-fb-right {
-    transform       : translateX(0) !important;
-    pointer-events  : auto !important;
-  }
-
-  /* Card di dalam panel — mobile friendly */
+  /* Card full width & rapi */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-card {
     flex-shrink     : 0 !important;
     width           : 100% !important;
     box-sizing      : border-box !important;
     margin-bottom   : 0 !important;
-    padding         : 10px !important;
+    padding         : 10px 10px !important;
     border-radius   : 12px !important;
   }
 
@@ -17725,44 +17699,25 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
     flex-shrink     : 0 !important;
     width           : 100% !important;
     box-sizing      : border-box !important;
-    margin-bottom   : 4px !important;
     padding-bottom  : 8px !important;
+    margin-bottom   : 2px !important;
   }
 
-  /* Tombol close lebih mudah diklik di mobile */
+  /* Tombol close lebih besar di mobile */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-close-btn {
     width           : 36px !important;
     height          : 36px !important;
     font-size       : 0.9rem !important;
   }
 
-  /* Mini stat grid — 2 kolom di mobile */
-  body.warga-portal-aktif #view-warga .warga-fb-right .scc-grid2 {
-    grid-template-columns : repeat(2, 1fr) !important;
-    gap                   : 6px !important;
-  }
-
-  /* Mini stat card */
-  body.warga-portal-aktif #view-warga .warga-fb-right .scc-mini-stat {
-    padding         : 8px 6px !important;
-    border-radius   : 10px !important;
-  }
-
-  body.warga-portal-aktif #view-warga .warga-fb-right .scc-mini-val {
-    font-size       : 0.82rem !important;
-  }
-
-  body.warga-portal-aktif #view-warga .warga-fb-right .scc-mini-lbl {
-    font-size       : 0.62rem !important;
-  }
-
-  /* Aksi cepat grid — 2 kolom */
+  /* Grid 2 kolom untuk stat & aksi */
+  body.warga-portal-aktif #view-warga .warga-fb-right .scc-grid2,
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-aksi-grid {
     grid-template-columns : repeat(2, 1fr) !important;
     gap                   : 6px !important;
   }
 
-  /* Button aksi */
+  /* Button aksi touch-friendly */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-btn,
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-action-btn {
     padding         : 8px 6px !important;
@@ -17771,25 +17726,7 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
     min-height      : 44px !important;
   }
 
-  /* Overlay */
-  body.mobile-right-open #gt-warga-shell-overlay {
-    display             : block !important;
-    position            : fixed !important;
-    inset               : 0 !important;
-    z-index             : 8400 !important;
-    background          : rgba(2,6,23,0.55) !important;
-    backdrop-filter     : blur(3px) !important;
-    -webkit-backdrop-filter : blur(3px) !important;
-    opacity             : 1 !important;
-    pointer-events      : auto !important;
-    cursor              : pointer !important;
-  }
-
-  /* Cegah scroll body */
-  body.mobile-right-open {
-    overflow            : hidden !important;
-    touch-action        : none !important;
-  }
+  /* Overlay tetap handled oleh L17137 */
 }
 </style>
 
