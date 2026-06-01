@@ -4851,11 +4851,7 @@ html:not([data-theme="dark"]) tr:nth-child(even) {
 }
 
 /* Panel kanan TETAP dark meski light mode */
-html:not([data-theme="dark"]) .warga-fb-right,
-html:not([data-theme="dark"]) #warga-fb-right {
-  background: linear-gradient(180deg,#0f172a 0%,#111827 100%) !important;
-  color: #f1f5f9 !important;
-}
+/* dark-force bg removed — handled by gt-panel-lightmode */
 
 /* FAB/Benny - safe positioning */
 .fab {
@@ -10804,24 +10800,7 @@ window.cetakPDFSurat = function(id, isSalinan) {
 
 
     // === FUNGSI HIDE & SHOW PANEL KANAN (widget info warga) ===
-    window.toggleRightPanel = function() {
-        var view = document.getElementById('view-warga');
-        if (!view) return;
-        var isCollapsed = view.classList.toggle('right-panel-collapsed');
-        // Simpan preferensi
-        try { localStorage.setItem('right_panel_state', isCollapsed ? 'hidden' : 'visible'); } catch(_){}
-        // Update ikon tombol di header
-        var btn = document.getElementById('btn-toggle-right-panel');
-        if (btn) {
-            var ic = btn.querySelector('i');
-            if (ic) {
-                ic.className = isCollapsed ? 'fa-solid fa-sidebar-flip' : 'fa-solid fa-table-columns';
-                // fallback jika icon tidak ada
-                ic.className = isCollapsed ? 'fa-solid fa-chevron-left' : 'fa-solid fa-table-columns';
-            }
-            btn.title = isCollapsed ? 'Tampilkan Panel Info Kanan' : 'Sembunyikan Panel Info Kanan';
-        }
-    };
+    /* toggleRightPanel v1 removed — v2 at L17234 handles desktop+mobile */
 
     // Restore preferensi panel kanan saat load
     window.addEventListener('DOMContentLoaded', function() {
@@ -17668,64 +17647,150 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
 
 
 
-<style id="gt-mobile-right-fix">
-/* ══════════════════════════════════════════════
-   MOBILE RIGHT PANEL — GAP & CARD FIX
-   flex-direction sudah di-fix di block utama
-   ══════════════════════════════════════════════ */
+
+<style id="gt-panel-lightmode">
+/* ══════════════════════════════════════════════════════
+   PANEL KANAN — LIGHT MODE READABLE + MOBILE GAP FIX
+   ══════════════════════════════════════════════════════ */
+
+/* ── LIGHT MODE ─────────────────────────────────────── */
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right,
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga #warga-fb-right {
+  background  : #f8fafc !important;
+  border-left : 1px solid #e2e8f0 !important;
+  color       : #0f172a !important;
+}
+
+/* Card di light mode */
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-card {
+  background    : #ffffff !important;
+  border        : 1px solid #e2e8f0 !important;
+  box-shadow    : 0 1px 3px rgba(0,0,0,0.06) !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-card:hover {
+  border-color  : #cbd5e1 !important;
+  box-shadow    : 0 2px 8px rgba(0,0,0,0.08) !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-card-status {
+  background    : linear-gradient(135deg,#eff6ff,#dbeafe) !important;
+  border        : 1px solid #bfdbfe !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-card-ai {
+  background    : linear-gradient(135deg,#f5f3ff,#ede9fe) !important;
+  border        : 1px solid #ddd6fe !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-card-danger {
+  background    : linear-gradient(135deg,#fff1f2,#ffe4e6) !important;
+  border        : 1px solid #fecdd3 !important;
+}
+
+/* Teks card title di light mode */
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-card-title {
+  color         : #475569 !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-card-title i {
+  color         : #6366f1 !important;
+}
+
+/* Label & teks umum */
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-label-top {
+  color         : #6366f1 !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-rt-title {
+  color         : #1e3a8a !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-update-time {
+  color         : #64748b !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-mini-val {
+  color         : #0f172a !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-mini-lbl {
+  color         : #64748b !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-loading {
+  color         : #94a3b8 !important;
+}
+
+/* Close row di light mode */
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-close-row {
+  border-bottom : 1px solid #e2e8f0 !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-close-btn {
+  background    : #f1f5f9 !important;
+  border        : 1px solid #e2e8f0 !important;
+  color         : #64748b !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-close-btn:hover {
+  background    : #e2e8f0 !important;
+  color         : #0f172a !important;
+}
+
+/* Online pill di light mode */
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-online-pill {
+  background    : #dcfce7 !important;
+  color         : #15803d !important;
+  border        : 1px solid #bbf7d0 !important;
+}
+
+/* Button aksi di light mode */
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-btn,
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-action-btn {
+  background    : #f1f5f9 !important;
+  border        : 1px solid #e2e8f0 !important;
+  color         : #334155 !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-btn:hover,
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-action-btn:hover {
+  background    : #e2e8f0 !important;
+  color         : #0f172a !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-btn-blue {
+  background    : linear-gradient(135deg,#3b82f6,#2563eb) !important;
+  color         : #ffffff !important;
+  border        : none !important;
+}
+html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-right .scc-btn-red {
+  background    : linear-gradient(135deg,#ef4444,#dc2626) !important;
+  color         : #ffffff !important;
+  border        : none !important;
+}
+
+/* ── MOBILE GAP FIX ─────────────────────────────────── */
 @media (max-width: 768px) {
-
-  /* Gap antar card */
   body.warga-portal-aktif #view-warga .warga-fb-right {
-    gap             : 10px !important;
-    padding         : 12px 10px 80px !important;
-    box-sizing      : border-box !important;
-    z-index         : 8500 !important;
+    gap           : 10px !important;
+    padding       : 12px 10px 80px !important;
+    box-sizing    : border-box !important;
+    z-index       : 8500 !important;
   }
-
-  /* Setiap card full width */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-card {
-    flex-shrink     : 0 !important;
-    width           : 100% !important;
-    box-sizing      : border-box !important;
-    margin-bottom   : 0 !important;
-    padding         : 10px !important;
-    border-radius   : 12px !important;
+    flex-shrink   : 0 !important;
+    width         : 100% !important;
+    box-sizing    : border-box !important;
+    margin-bottom : 0 !important;
   }
-
-  /* Close row full width */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-close-row {
-    flex-shrink     : 0 !important;
-    width           : 100% !important;
-    box-sizing      : border-box !important;
-    padding-bottom  : 8px !important;
+    flex-shrink   : 0 !important;
+    width         : 100% !important;
+    box-sizing    : border-box !important;
   }
-
-  /* Tombol close touch-friendly */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-close-btn {
-    width           : 36px !important;
-    height          : 36px !important;
-    min-width       : 36px !important;
-    font-size       : 1rem !important;
+    width         : 36px !important;
+    height        : 36px !important;
+    min-width     : 36px !important;
   }
-
-  /* Grid stat & aksi — 2 kolom */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-grid2,
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-aksi-grid {
     display               : grid !important;
-    grid-template-columns : repeat(2, 1fr) !important;
+    grid-template-columns : repeat(2,1fr) !important;
     gap                   : 6px !important;
   }
-
-  /* Button aksi touch-friendly */
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-btn,
   body.warga-portal-aktif #view-warga .warga-fb-right .scc-action-btn {
-    padding         : 8px 6px !important;
-    font-size       : 0.72rem !important;
-    border-radius   : 10px !important;
-    min-height      : 44px !important;
-    width           : 100% !important;
-    box-sizing      : border-box !important;
+    min-height    : 44px !important;
+    width         : 100% !important;
+    box-sizing    : border-box !important;
   }
 }
 </style>
