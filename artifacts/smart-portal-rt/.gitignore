@@ -1,1 +1,6 @@
 .vercel
+
+dist/
+.env.local
+*.bak
+*.bak-*

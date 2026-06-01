@@ -23,8 +23,8 @@ const STORAGE_KEY = "smartportal_auth";
 
 // Demo credentials – replace with real API call when backend auth is ready
 const DEMO_USERS: Array<{ username: string; password: string; name: string; role: UserRole }> = [
-  { username: "admin", password: "admin123", name: "Administrator RT", role: "admin" },
-  { username: "warga", password: "warga123", name: "Ahmad Suherman", role: "warga" },
+  { username: "admin", password: import.meta.env.VITE_PASSWORD_ADMIN ?? "rt005admin", name: "Administrator RT", role: "admin" },
+  { username: "warga", password: import.meta.env.VITE_PASSWORD_WARGA ?? "rt005warga", name: "Ahmad Suherman", role: "warga" },
 ];
 
 function findUser(username: string, password: string) {
