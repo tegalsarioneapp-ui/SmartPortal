@@ -6104,21 +6104,24 @@ window.downloadPdfFromHtml = function(htmlContent, filename) {
     overlay.appendChild(iframe);
     document.body.appendChild(overlay);
 
-    // Tombol print
+    // Tombol print - pakai iframe.contentWindow.print() langsung
     document.getElementById('_pdf_print_btn_').onclick = function() {
-        var blob = new Blob([fullHtml], {type: 'text/html;charset=utf-8'});
-        var url = URL.createObjectURL(blob);
-        var win = window.open(url, '_blank');
-        if (win) {
-            win.onload = function() {
-                setTimeout(function() { win.focus(); win.print(); }, 500);
-            };
+        var ifrEl = document.getElementById('_pdf_iframe_');
+        if (ifrEl && ifrEl.contentWindow) {
+            ifrEl.contentWindow.focus();
+            ifrEl.contentWindow.print();
         } else {
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = filename.replace('.pdf', '.html');
-            a.click();
-            setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);
+            var tmpIf = document.createElement('iframe');
+            tmpIf.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;height:1123px;';
+            tmpIf.srcdoc = fullHtml;
+            document.body.appendChild(tmpIf);
+            tmpIf.onload = function() {
+                setTimeout(function() {
+                    tmpIf.contentWindow.focus();
+                    tmpIf.contentWindow.print();
+                    setTimeout(function(){ tmpIf.remove(); }, 2000);
+                }, 400);
+            };
         }
     };
 
@@ -10648,13 +10651,12 @@ window.loadSuratAdmin = function() {
         var tbody = document.getElementById('tbody-surat-admin');
         if (!tbody) { console.warn('tbody-surat-admin not found'); return; }
         if (db.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#94a3b8;"><i class="fa-solid fa-inbox" style="font-size:2rem;display:block;margin-bottom:8px;"></i>Belum ada pengajuan surat.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:#94a3b8;">Belum ada pengajuan surat.</td></tr>';
             return;
         }
         db.sort(function(a,b){ return (b.id||0)-(a.id||0); });
         var rows = '';
         db.forEach(function(s) {
-            // Fix float ID — cari warga by NIK atau nama
             var wargaMatch = dbWarga.find(function(w){
                 return String(w.nik) === String(s.nik) || w.nama === s.nama;
             });
@@ -10665,13 +10667,17 @@ window.loadSuratAdmin = function() {
                 : status === 'Ditolak'
                 ? '<span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Ditolak</span>'
                 : '<span style="background:#fef9c3;color:#ca8a04;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Menunggu</span>';
-                        var aksi = '<button onclick="previewSuratAdmin('+s.id+')" style="padding:6px 12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;font-size:0.8rem;cursor:pointer;"><i class=\"fa-solid fa-eye\"></i> Lihat & Verifikasi</button>'
+            var tokenCell = status === 'Selesai' && s.token
+                ? '<button onclick="lihatTokenSurat(' + s.id + ')" style="padding:5px 10px;background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;"><i class=\'fa-solid fa-key\'></i> Token</button>'
+                : '<span style="color:#94a3b8;font-size:0.78rem;">—</span>';
+            var aksi = '<button onclick="previewSuratAdmin(' + s.id + ')" style="padding:6px 12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;font-size:0.8rem;cursor:pointer;"><i class=\'fa-solid fa-eye\'></i> Lihat</button>';
             rows += '<tr style="border-bottom:1px solid rgba(255,255,255,0.06);">'
                 + '<td style="padding:10px 12px;">' + (s.tglPengajuan||'-') + '</td>'
                 + '<td style="padding:10px 12px;font-weight:600;">' + (s.nama||'-') + '</td>'
                 + '<td style="padding:10px 12px;font-size:0.82rem;color:#64748b;">' + (s.nik||'-') + '</td>'
-                + '<td style="padding:10px 12px;">' + ((s.keperluan||'-')+'').substring(0,40) + '</td>'
+                + '<td style="padding:10px 12px;">' + ((s.keperluan||'-')+'').substring(0,35) + '</td>'
                 + '<td style="padding:10px 12px;">' + badge + '</td>'
+                + '<td style="padding:10px 12px;text-align:center;">' + tokenCell + '</td>'
                 + '<td style="padding:10px 12px;text-align:center;">' + aksi + '</td>'
                 + '</tr>';
         });
@@ -10680,8 +10686,41 @@ window.loadSuratAdmin = function() {
     } catch(e) { console.error('loadSuratAdmin:', e); }
 };
 
-
-
+window.lihatTokenSurat = function(suratId) {
+    var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+    var s = db.find(function(x){ return x.id === suratId; });
+    if (!s) return Swal.fire('Error','Data tidak ditemukan','error');
+    var token = s.token || '-';
+    var noSurat = s.noSurat || '-';
+    var nama = s.nama || '-';
+    var shareText = 'Halo ' + nama + ', surat Anda telah selesai diproses.\n'
+        + 'No. Surat: ' + noSurat + '\n'
+        + 'Token Download: *' + token + '*\n'
+        + 'Gunakan token ini untuk mengunduh surat di portal warga.';
+    Swal.fire({
+        title: '<i class="fa-solid fa-key" style="color:#0d9488;"></i> Token Surat',
+        html: '<div style="text-align:center;padding:8px 0;">'
+            + '<p style="color:#64748b;font-size:0.88rem;margin-bottom:6px;">Nama: <strong>' + nama + '</strong></p>'
+            + '<p style="color:#64748b;font-size:0.88rem;margin-bottom:16px;">No. Surat: <strong>' + noSurat + '</strong></p>'
+            + '<div style="background:#f0fdf4;border:2px dashed #0d9488;border-radius:12px;padding:16px 24px;margin-bottom:16px;">'
+            + '<div style="font-size:0.78rem;color:#64748b;margin-bottom:4px;">TOKEN</div>'
+            + '<div id="swal-token-display" style="font-size:2rem;font-weight:900;letter-spacing:8px;color:#0f766e;font-family:monospace;">' + token + '</div>'
+            + '</div>'
+            + '<div style="display:flex;gap:8px;justify-content:center;">'
+            + '<button onclick="navigator.clipboard.writeText(''+token+'').then(function(){var el=document.getElementById('swal-token-display');el.style.color='#16a34a';setTimeout(function(){el.style.color='#0f766e';},1000);})" '
+            + 'style="padding:9px 18px;background:linear-gradient(135deg,#0f766e,#0d9488);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.88rem;">'
+            + '<i class="fa-solid fa-copy"></i> Salin Token</button>'
+            + '<button onclick="if(navigator.share){navigator.share({title:'Token Surat',text:''+shareText.replace(/
+/g,'\\n')+''})}else{navigator.clipboard.writeText(''+shareText.replace(/
+/g,'\\n')+''');Swal.showValidationMessage('Teks disalin! Paste ke WhatsApp.');}" '
+            + 'style="padding:9px 18px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.88rem;">'
+            + '<i class="fa-brands fa-whatsapp"></i> Bagikan</button>'
+            + '</div></div>',
+        showConfirmButton: false,
+        showCloseButton: true,
+        width: 420
+    });
+};
 window.accSuratLangsung = function(id) {
     var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
     var i = db.findIndex(function(x){ return x.id === id; });
