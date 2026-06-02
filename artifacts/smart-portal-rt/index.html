@@ -6272,7 +6272,7 @@ html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-sub {
                     <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 10px;">Silahkan Login</p>
                 </div>
 
-                <form id="form-universal-login" onsubmit="event.preventDefault(); console.log('FORM SUBMIT TRIGGERED'); try { prosesLoginUniversal(); } catch(err) { console.error('LOGIN ERROR:', err); alert('Error: ' + err.message); }">
+                <form id="form-universal-login" onsubmit="event.preventDefault(); if(typeof window.prosesLoginUniversal==='function'){ window.prosesLoginUniversal(event); } else { console.error('prosesLoginUniversal not ready'); }">
                     <div class="input-group-premium">
                         <i class="fa-solid fa-user-shield icon-left"></i>
                         <input type="text" id="univ-id" class="univ-input" placeholder="User ID / NIK" required>
