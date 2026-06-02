@@ -10449,29 +10449,69 @@ window.verifikasiTokenSurat = function(suratId) {
     Swal.fire({
         title: '<i class="fa-solid fa-key"></i> Masukkan Token',
         html: '<p style="color:#64748b;margin-bottom:12px;font-size:0.9rem;">Masukkan token yang diberikan oleh RT untuk mengunduh surat.</p>'
-            + '<input type="text" id="swal-token-input" maxlength="10" placeholder="Contoh: 225513"'
-            + ' style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;font-size:1.1rem;text-align:center;letter-spacing:4px;font-weight:700;">',
+            + '<input type="text" id="swal-token-input" maxlength="10" placeholder="Contoh: A3KMN7PQR"'
+            + ' style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:1.2rem;'
+            + 'text-align:center;letter-spacing:6px;font-weight:800;text-transform:uppercase;">'
+            + '<p id="swal-token-hint" style="color:#94a3b8;font-size:0.78rem;margin-top:8px;text-align:center;">Ketik token untuk mengaktifkan tombol download</p>',
         showCancelButton: true,
         confirmButtonText: '<i class="fa-solid fa-unlock"></i> Verifikasi & Download',
         cancelButtonText: 'Batal',
         confirmButtonColor: '#1d4ed8',
+        didOpen: function() {
+            var btn = Swal.getConfirmButton();
+            if (btn) { btn.disabled = true; btn.style.opacity = '0.4'; }
+            var inp = document.getElementById('swal-token-input');
+            if (inp) {
+                inp.focus();
+                inp.addEventListener('input', function() {
+                    var val = this.value.trim();
+                    var btn2 = Swal.getConfirmButton();
+                    if (btn2) {
+                        btn2.disabled = val.length < 4;
+                        btn2.style.opacity = val.length < 4 ? '0.4' : '1';
+                    }
+                    var hint = document.getElementById('swal-token-hint');
+                    if (hint) {
+                        hint.textContent = val.length >= 4
+                            ? 'Token siap diverifikasi'
+                            : 'Ketik token untuk mengaktifkan tombol download';
+                        hint.style.color = val.length >= 4 ? '#16a34a' : '#94a3b8';
+                    }
+                });
+                inp.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        var btn3 = Swal.getConfirmButton();
+                        if (btn3 && !btn3.disabled) btn3.click();
+                    }
+                });
+            }
+        },
         preConfirm: function() {
-            var token = (document.getElementById('swal-token-input').value || '').trim();
+            var token = (document.getElementById('swal-token-input').value || '').trim().toUpperCase();
             if (!token) { Swal.showValidationMessage('Token tidak boleh kosong!'); return false; }
-            var validToken = String(surat.token || surat.noSurat || '').trim();
+            var validToken = String(surat.token || surat.noSurat || '').trim().toUpperCase();
             if (!validToken) { Swal.showValidationMessage('Token belum diset oleh RT!'); return false; }
-            if (token !== validToken) { Swal.showValidationMessage('Token salah! Cek kembali.'); return false; }
+            if (token !== validToken) {
+                Swal.showValidationMessage('<i class="fa-solid fa-circle-xmark"></i> Token salah! Cek kembali.');
+                return false;
+            }
             return token;
         }
     }).then(function(result) {
         if (result.isConfirmed) {
-            // Download asli + salinan
-            if (typeof cetakPDFSurat === 'function') {
-                cetakPDFSurat(suratId, false);
-                setTimeout(function(){ cetakPDFSurat(suratId, true); }, 800);
-            } else {
-                Swal.fire('Error','Fungsi cetak tidak ditemukan','error');
-            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Token Valid!',
+                text: 'Surat sedang didownload...',
+                timer: 1500,
+                showConfirmButton: false
+            }).then(function() {
+                if (typeof cetakPDFSurat === 'function') {
+                    cetakPDFSurat(suratId, false);
+                } else {
+                    Swal.fire('Error','Fungsi cetak tidak ditemukan','error');
+                }
+            });
         }
     });
 };
