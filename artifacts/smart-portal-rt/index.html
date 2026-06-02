@@ -5983,6 +5983,7 @@ html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-sub {
 
 
 
+
 <style id="gt-fix-btn-surat">
 /* ═══════════════════════════════════════
    TOMBOL KIRIM PENGAJUAN SURAT — FINAL
@@ -6013,19 +6014,22 @@ html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-sub {
     pointer-events: auto !important;
     z-index: 10 !important;
     overflow: visible !important;
+    transform: none !important;
     box-shadow: 0 6px 20px rgba(37,99,235,0.4) !important;
-    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    transition: box-shadow 0.15s ease !important;
 }
 #form-pengajuan-surat button[type="submit"]:hover,
 #form-pengajuan-surat .btn-submit:hover {
-    transform: translateY(-2px) !important;
+    transform: none !important;
     box-shadow: 0 10px 28px rgba(37,99,235,0.5) !important;
     background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%) !important;
+    opacity: 1 !important;
 }
 #form-pengajuan-surat button[type="submit"]:active,
 #form-pengajuan-surat .btn-submit:active {
-    transform: translateY(0) scale(0.98) !important;
+    transform: none !important;
     box-shadow: 0 4px 12px rgba(37,99,235,0.3) !important;
+    opacity: 1 !important;
 }
 #form-pengajuan-surat button[type="submit"]::after,
 #form-pengajuan-surat button[type="submit"]::before,
@@ -6033,6 +6037,9 @@ html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-sub {
 #form-pengajuan-surat .btn-submit::before {
     display: none !important;
     content: none !important;
+    transform: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 </style>
 </head>
