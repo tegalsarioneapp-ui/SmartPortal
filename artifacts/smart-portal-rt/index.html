@@ -5981,6 +5981,42 @@ html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-sub {
 </style>
 
 
+<style id="gt-fix-btn-surat">
+/* Fix tombol Kirim Pengajuan terlalu tinggi */
+#form-pengajuan-surat button[type="submit"],
+#form-pengajuan-surat .btn-submit {
+    position: relative !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 48px !important;
+    max-height: 60px !important;
+    padding: 13px 24px !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    border: none !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    margin-top: 16px !important;
+    background: linear-gradient(135deg, #1d4ed8, #2563eb) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.35) !important;
+}
+#form-pengajuan-surat button[type="submit"]::after,
+#form-pengajuan-surat .btn-submit::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    border-radius: inherit !important;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.18) 0%, transparent 70%) !important;
+    pointer-events: none !important;
+}
+</style>
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════════
