@@ -10778,6 +10778,20 @@ window.verifikasiTokenSurat = function(suratId) {
 window.loadSuratWarga = function() {
     try {
         // AUTOFILL dari data warga login
+        // Restore loggedInWarga jika null tapi ada session
+        if (!window.loggedInWarga) {
+            var _sess = JSON.parse(localStorage.getItem('gt_local_session') || '{}');
+            var _dbW  = JSON.parse(localStorage.getItem('db_warga') || '[]');
+            if (_sess.id && _sess.id !== 'admin') {
+                var _found = _dbW.find(function(w){ return String(w.id) === String(_sess.id); });
+                if (_found) window.loggedInWarga = _found;
+            }
+            // Juga cari by nama
+            if (!window.loggedInWarga && _sess.nama && _sess.nama !== 'admin') {
+                var _found2 = _dbW.find(function(w){ return w.nama === _sess.nama; });
+                if (_found2) window.loggedInWarga = _found2;
+            }
+        }
         var warga = window.loggedInWarga || {};
         var fieldsMap = {
             'req_nama'        : warga.nama        || '',
@@ -10889,8 +10903,9 @@ window.submitSuratWarga = function(e) {
 window.loadSuratAdmin = function() {
     try {
         var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+        var dbWarga = JSON.parse(localStorage.getItem('db_warga') || '[]');
         var tbody = document.getElementById('tbody-surat-admin');
-        if (!tbody) return;
+        if (!tbody) { console.warn('tbody-surat-admin not found'); return; }
         if (db.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#94a3b8;"><i class="fa-solid fa-inbox" style="font-size:2rem;display:block;margin-bottom:8px;"></i>Belum ada pengajuan surat.</td></tr>';
             return;
@@ -10898,6 +10913,11 @@ window.loadSuratAdmin = function() {
         db.sort(function(a,b){ return (b.id||0)-(a.id||0); });
         var rows = '';
         db.forEach(function(s) {
+            // Fix float ID — cari warga by NIK atau nama
+            var wargaMatch = dbWarga.find(function(w){
+                return String(w.nik) === String(s.nik) || w.nama === s.nama;
+            });
+            if (wargaMatch && !s.nama) s.nama = wargaMatch.nama;
             var status = s.status || 'Menunggu Acc';
             var badge = status === 'Selesai'
                 ? '<span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Selesai</span>'
