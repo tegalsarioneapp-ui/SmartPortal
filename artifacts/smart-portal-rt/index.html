@@ -9373,7 +9373,8 @@ window.bukaFormLogin = function() {
     const wLoaders = {
         'warga-dashboard':  function(){ if(typeof loadDashboardWarga==='function') loadDashboardWarga(); if(typeof loadBeritaWarga==='function') loadBeritaWarga(); if(typeof loadKegiatan==='function') loadKegiatan(); },
         'warga-profil':     function(){ if(typeof loadProfilPribadiWarga==='function') loadProfilPribadiWarga(); },
-        'warga-keuangan':   function(){ if(typeof loadIuranPribadiWarga==='function') loadIuranPribadiWarga(); },
+        'warga-keuangan':   function(){ if(typeof loadIuranPribadiWarga==='function') loadIuranPribadiWarga(); }
+            'warga-surat': function(){ if(typeof loadSuratWarga==='function') loadSuratWarga(); },,
         'warga-surat':      function(){ if(typeof loadSuratWarga==='function') loadSuratWarga(); },
         'warga-aduan':      function(){ if(typeof loadAduanWarga==='function') loadAduanWarga(); },
         'warga-koperasi':   function(){ if(typeof loadKoperasiData==='function') loadKoperasiData(); },
@@ -10704,31 +10705,52 @@ window.verifikasiTokenSurat = function(suratId) {
     });
 };
 
+
 window.loadSuratWarga = function() {
     try {
-        var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+        // AUTOFILL dari data warga login
         var warga = window.loggedInWarga || {};
-        var myId = String(warga.id || '');
+        var fieldsMap = {
+            'req_nama'        : warga.nama        || '',
+            'req_nik'         : warga.nik         || '',
+            'req_ttl'         : warga.ttl         || warga.tempatLahir || '',
+            'req_agama'       : (warga.kewarganegaraan || 'WNI') + ' / ' + (warga.agama || ''),
+            'req_status_kawin': warga.statusKawin || warga.status_kawin || '',
+            'req_pendidikan'  : warga.pendidikan  || '',
+            'req_pekerjaan'   : warga.pekerjaan   || '',
+            'req_alamat'      : warga.alamat       || ''
+        };
+        Object.keys(fieldsMap).forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el && !el.value && fieldsMap[id]) el.value = fieldsMap[id];
+        });
+
+        // LOAD TABEL RIWAYAT
+        var db    = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+        var myId  = String(warga.id  || '');
         var myNik = String(warga.nik || '');
         var tbody = document.getElementById('tbody-riwayat-warga-baru');
         if (!tbody) return;
+
         var mySurat = db.filter(function(s) {
             return String(s.idWarga||'') === myId || String(s.nik||'') === myNik;
         });
+
         if (mySurat.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:24px;">Belum ada pengajuan surat.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:24px;"><i class="fa-solid fa-inbox" style="font-size:2rem;display:block;margin-bottom:8px;"></i>Belum ada pengajuan surat.</td></tr>';
             return;
         }
+
         mySurat.sort(function(a,b){ return (b.id||0)-(a.id||0); });
         var rows = '';
         mySurat.forEach(function(s) {
-            var tgl = s.tglPengajuan || s.tglAjuan || '-';
-            var status = s.status || 'Menunggu';
-            var noSurat = s.noSurat || '-';
-            var keperluan = (s.keperluan || '-').substring(0, 40);
+            var tgl      = s.tglPengajuan || s.tglAjuan || '-';
+            var status   = s.status || 'Menunggu';
+            var noSurat  = s.noSurat || '-';
+            var keperluan = ((s.keperluan || '-') + '').substring(0, 40);
             var badge = status === 'Selesai'
-                ? '<span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Selesai</span>'
-                : '<span style="background:#fef9c3;color:#ca8a04;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Menunggu Acc</span>';
+                ? '<span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;"><i class="fa-solid fa-circle-check"></i> Selesai</span>'
+                : '<span style="background:#fef9c3;color:#ca8a04;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;"><i class="fa-solid fa-hourglass-half"></i> Menunggu Acc</span>';
             var btn = status === 'Selesai'
                 ? '<button onclick="verifikasiTokenSurat(' + s.id + ')" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:white;border:none;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;"><i class=\"fa-solid fa-file-pdf\"></i> Download Surat</button>'
                 : '<span style="color:#94a3b8;font-size:0.82rem;"><i class=\"fa-solid fa-hourglass-half\"></i> Menunggu Acc</span>';
