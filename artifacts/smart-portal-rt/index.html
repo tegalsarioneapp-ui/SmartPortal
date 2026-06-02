@@ -5979,159 +5979,7 @@ html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-sub {
   opacity       : 1 !important;
 }
 </style>
-<style id="gt-fix-warga-surat">
-/* ══════════════════════════════════════════
-   FIX PORTAL WARGA - TAB SURAT
-   Override semua konflik CSS
-   ══════════════════════════════════════════ */
 
-/* Tab surat visible & scrollable */
-#warga-surat.warga-tab-content.active {
-  display       : block !important;
-  visibility    : visible !important;
-  opacity       : 1 !important;
-  padding       : 16px 14px 120px 14px !important;
-  width         : 100% !important;
-  max-width     : 100% !important;
-  height        : auto !important;
-  min-height    : 0 !important;
-  overflow-y    : auto !important;
-  overflow-x    : hidden !important;
-  box-sizing    : border-box !important;
-}
-
-/* Card header premium visible */
-#warga-surat .card-header-premium {
-  display       : flex !important;
-  visibility    : visible !important;
-  opacity       : 1 !important;
-  margin-bottom : 16px !important;
-}
-
-/* Form pengajuan visible */
-#form-pengajuan-surat {
-  display       : block !important;
-  visibility    : visible !important;
-  opacity       : 1 !important;
-  margin-bottom : 16px !important;
-}
-
-/* Tombol kirim pengajuan */
-#form-pengajuan-surat .btn-submit {
-  display       : inline-flex !important;
-  visibility    : visible !important;
-  opacity       : 1 !important;
-  margin-top    : 16px !important;
-  cursor        : pointer !important;
-}
-
-/* Tabel riwayat surat */
-#warga-surat .card {
-  display       : block !important;
-  visibility    : visible !important;
-  opacity       : 1 !important;
-  margin-bottom : 16px !important;
-  border-radius : 12px !important;
-  overflow      : hidden !important;
-}
-
-/* Tbody riwayat */
-#tbody-riwayat-warga-baru {
-  display       : table-row-group !important;
-  visibility    : visible !important;
-}
-
-/* Tombol aksi download di tabel */
-#tbody-riwayat-warga-baru .btn-action {
-  display       : inline-flex !important;
-  visibility    : visible !important;
-  opacity       : 1 !important;
-  padding       : 6px 12px !important;
-  font-size     : 0.8rem !important;
-  cursor        : pointer !important;
-  border-radius : 8px !important;
-  border        : none !important;
-  align-items   : center !important;
-  gap           : 6px !important;
-}
-
-/* Wrapper tombol download */
-#tbody-riwayat-warga-baru div[style*="display:flex"] {
-  display       : flex !important;
-  gap           : 6px !important;
-  flex-wrap     : wrap !important;
-}
-
-/* Tracking section hidden by default */
-#tracking-surat-section {
-  display       : none !important;
-}
-#tracking-surat-section.active,
-#tracking-surat-section[style*="display:block"],
-#tracking-surat-section[style*="display: block"] {
-  display       : block !important;
-}
-
-/* Table responsive */
-#warga-surat .table-responsive {
-  display       : block !important;
-  overflow-x    : auto !important;
-  width         : 100% !important;
-}
-
-#warga-surat table {
-  width         : 100% !important;
-  border-collapse: collapse !important;
-}
-
-#warga-surat thead th {
-  background    : #f1f5f9 !important;
-  padding       : 10px 12px !important;
-  text-align    : left !important;
-  font-size     : 0.82rem !important;
-  color         : #475569 !important;
-  font-weight   : 600 !important;
-  white-space   : nowrap !important;
-}
-
-#warga-surat tbody td {
-  padding       : 10px 12px !important;
-  font-size     : 0.85rem !important;
-  border-bottom : 1px solid #f1f5f9 !important;
-  vertical-align: middle !important;
-}
-
-/* Badge status */
-#warga-surat .badge-selesai {
-  background    : #dcfce7 !important;
-  color         : #16a34a !important;
-  padding       : 3px 10px !important;
-  border-radius : 20px !important;
-  font-size     : 0.75rem !important;
-  font-weight   : 600 !important;
-}
-
-#warga-surat .badge-menunggu {
-  background    : #fef9c3 !important;
-  color         : #ca8a04 !important;
-  padding       : 3px 10px !important;
-  border-radius : 20px !important;
-  font-size     : 0.75rem !important;
-  font-weight   : 600 !important;
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-  #warga-surat.warga-tab-content.active {
-    padding : 12px 10px 120px 10px !important;
-  }
-  #warga-surat thead th,
-  #warga-surat tbody td {
-    font-size : 0.78rem !important;
-    padding   : 8px !important;
-  }
-}
-</style>
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════════
@@ -10743,7 +10591,37 @@ window.bukaFormLogin = function() {
     };
 
     // Warga Mengirim Form & Menampilkan Progress Line
-    window.submitSuratWarga = function(e) {
+    window.loadSuratWarga = function() {
+    try {
+        var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+        var warga = window.loggedInWarga || {};
+        var myNik = String(warga.nik || warga.id || '');
+        var tbody = document.getElementById('tbody-riwayat-warga-baru');
+        if (!tbody) return;
+        var mySurat = db.filter(function(s) {
+            return String(s.nik||'')===myNik || String(s.idWarga||'')===myNik || String(s.pengaju||'')===myNik;
+        });
+        if (mySurat.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:24px;">Belum ada pengajuan surat.</td></tr>';
+            return;
+        }
+        mySurat.sort(function(a,b){ return (b.id||0)-(a.id||0); });
+        var rows = '';
+        mySurat.forEach(function(s,i) {
+            var tgl = s.tglAjuan ? new Date(s.tglAjuan).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '-';
+            var status = s.status || 'Menunggu';
+            var badge = status==='Selesai'
+                ? '<span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Selesai</span>'
+                : '<span style="background:#fef9c3;color:#ca8a04;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Menunggu Acc</span>';
+            var btn = status==='Selesai'
+                ? '<div style="display:flex;gap:6px;flex-wrap:wrap;"><button onclick="cetakPDFSurat('+s.id+',false)" style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;"><i class=\"fa-solid fa-file-pdf\"></i> Asli</button><button onclick="cetakPDFSurat('+s.id+',true)" style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:#f59e0b;color:white;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;"><i class=\"fa-solid fa-copy\"></i> Salinan</button></div>'
+                : '<span style="color:#94a3b8;font-size:0.82rem;"><i class=\"fa-solid fa-hourglass-half\"></i> Menunggu Acc</span>';
+            rows += '<tr><td style="padding:10px 12px;font-size:0.85rem;">'+(i+1)+'</td><td style="padding:10px 12px;font-size:0.85rem;">'+tgl+'</td><td style="padding:10px 12px;font-size:0.85rem;">'+(s.keperluan||'-').substring(0,40)+'</td><td style="padding:10px 12px;">'+badge+'</td><td style="padding:10px 12px;">'+btn+'</td></tr>';
+        });
+        tbody.innerHTML = rows;
+    } catch(e) { console.error('loadSuratWarga error:', e); }
+};
+window.submitSuratWarga = function(e) {
         e.preventDefault();
         let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
         db.push({
