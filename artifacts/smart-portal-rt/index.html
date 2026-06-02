@@ -10591,15 +10591,17 @@ window.bukaFormLogin = function() {
     };
 
     // Warga Mengirim Form & Menampilkan Progress Line
-    window.loadSuratWarga = function() {
+    
+window.loadSuratWarga = function() {
     try {
         var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
         var warga = window.loggedInWarga || {};
-        var myNik = String(warga.nik || warga.id || '');
+        var myId = String(warga.id || '');
+        var myNik = String(warga.nik || '');
         var tbody = document.getElementById('tbody-riwayat-warga-baru');
         if (!tbody) return;
         var mySurat = db.filter(function(s) {
-            return String(s.nik||'')===myNik || String(s.idWarga||'')===myNik || String(s.pengaju||'')===myNik;
+            return String(s.idWarga||'') === myId || String(s.nik||'') === myNik;
         });
         if (mySurat.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:24px;">Belum ada pengajuan surat.</td></tr>';
@@ -10607,20 +10609,35 @@ window.bukaFormLogin = function() {
         }
         mySurat.sort(function(a,b){ return (b.id||0)-(a.id||0); });
         var rows = '';
-        mySurat.forEach(function(s,i) {
-            var tgl = s.tglAjuan ? new Date(s.tglAjuan).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '-';
+        mySurat.forEach(function(s) {
+            var tgl = s.tglPengajuan || s.tglAjuan || '-';
             var status = s.status || 'Menunggu';
-            var badge = status==='Selesai'
+            var noSurat = s.noSurat || '-';
+            var keperluan = (s.keperluan || '-').substring(0, 40);
+            var badge = status === 'Selesai'
                 ? '<span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Selesai</span>'
                 : '<span style="background:#fef9c3;color:#ca8a04;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Menunggu Acc</span>';
-            var btn = status==='Selesai'
-                ? '<div style="display:flex;gap:6px;flex-wrap:wrap;"><button onclick="cetakPDFSurat('+s.id+',false)" style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;"><i class=\"fa-solid fa-file-pdf\"></i> Asli</button><button onclick="cetakPDFSurat('+s.id+',true)" style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:#f59e0b;color:white;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;"><i class=\"fa-solid fa-copy\"></i> Salinan</button></div>'
-                : '<span style="color:#94a3b8;font-size:0.82rem;"><i class=\"fa-solid fa-hourglass-half\"></i> Menunggu Acc</span>';
-            rows += '<tr><td style="padding:10px 12px;font-size:0.85rem;">'+(i+1)+'</td><td style="padding:10px 12px;font-size:0.85rem;">'+tgl+'</td><td style="padding:10px 12px;font-size:0.85rem;">'+(s.keperluan||'-').substring(0,40)+'</td><td style="padding:10px 12px;">'+badge+'</td><td style="padding:10px 12px;">'+btn+'</td></tr>';
+            var btn = '';
+            if (status === 'Selesai') {
+                btn = '<div style="display:flex;gap:6px;flex-wrap:wrap;">'
+                    + '<button onclick="cetakPDFSurat(' + s.id + ',false)" style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;font-weight:600;"><i class="fa-solid fa-file-pdf"></i> Asli</button>'
+                    + '<button onclick="cetakPDFSurat(' + s.id + ',true)" style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:#f59e0b;color:white;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;font-weight:600;"><i class="fa-solid fa-copy"></i> Salinan</button>'
+                    + '</div>';
+            } else {
+                btn = '<span style="color:#94a3b8;font-size:0.82rem;"><i class="fa-solid fa-hourglass-half"></i> Menunggu Acc</span>';
+            }
+            rows += '<tr>'
+                + '<td style="padding:10px 12px;font-size:0.85rem;">' + tgl + '</td>'
+                + '<td style="padding:10px 12px;font-size:0.85rem;"><b style="color:var(--primary-dark);">' + keperluan + '</b></td>'
+                + '<td style="padding:10px 12px;font-size:0.85rem;">' + noSurat + '</td>'
+                + '<td style="padding:10px 12px;">' + badge + '</td>'
+                + '<td style="padding:10px 12px;">' + btn + '</td>'
+                + '</tr>';
         });
         tbody.innerHTML = rows;
     } catch(e) { console.error('loadSuratWarga error:', e); }
 };
+
 window.submitSuratWarga = function(e) {
         e.preventDefault();
         let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
@@ -10673,82 +10690,7 @@ window.submitSuratWarga = function(e) {
         document.getElementById('form-pengajuan-surat').style.display = 'block';
     };
 
-    window.loadSuratWarga = function() {
-        if(!loggedInWarga) return;
-        setTimeout(() => {
-            if(document.getElementById('req_nama') && !document.getElementById('req_nama').value) document.getElementById('req_nama').value = loggedInWarga.nama || '';
-            if(document.getElementById('req_nik') && !document.getElementById('req_nik').value) document.getElementById('req_nik').value = loggedInWarga.nik || '';
-            if(document.getElementById('req_alamat') && !document.getElementById('req_alamat').value) document.getElementById('req_alamat').value = loggedInWarga.alamat || '';
-        }, 300);
-
-        let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
-        let my = db.filter(x => String(x.idWarga) === String(loggedInWarga.id));
-        let tb = document.getElementById('tbody-riwayat-warga-baru');
-        if(tb) {
-            tb.innerHTML='';
-            if(my.length === 0) { tb.innerHTML='<tr><td colspan="5" style="text-align:center;">Belum ada pengajuan.</td></tr>'; return; }
-            my.reverse().forEach(s => {
-                let badge = s.status === 'Selesai' ? 'badge-selesai' : 'badge-menunggu';
-                let btnAction = s.status === 'Selesai' 
-                    ? `<div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn-action bg-red" onclick="cetakPDFSurat(${s.id}, false)" title="Download Asli"><i class="fa-solid fa-file-pdf"></i> Asli</button> <button class="btn-action bg-gold" onclick="cetakPDFSurat(${s.id}, true)" title="Download Salinan"><i class="fa-solid fa-copy"></i> Salinan</button></div>` 
-                    : `<span style="color:#94a3b8;font-size:0.82rem;"><i class="fa-solid fa-hourglass-half"></i> Menunggu Acc</span>`;
-                tb.innerHTML += `<tr><td>${s.tglPengajuan}</td><td><b style="color:var(--primary-dark);">${(s.keperluan||'').length>25?(s.keperluan||'').substring(0,25)+'...':s.keperluan||''}</b></td><td>${s.noSurat}</td><td><span class="badge ${badge}">${esc(s.status)}</span></td><td>${btnAction}</td></tr>`;
-            });
-        }
-    };
-
-    window.loadSuratAdmin = function() {
-        let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
-        let tb = document.getElementById('tbody-admin-surat-baru');
-        if(tb) {
-            tb.innerHTML='';
-            if(db.length === 0) { tb.innerHTML='<tr><td colspan="5" style="text-align:center;">Belum ada antrean surat.</td></tr>'; return; }
-            db.slice().reverse().forEach(s => {
-                let badge = s.status === 'Selesai' ? 'badge-selesai' : 'badge-menunggu';
-                let btnAction = '';
-                if(s.status !== 'Selesai') {
-                    btnAction = `<button class="btn-action bg-green" onclick="eksekusiSurat(${s.id})"><i class="fa-solid fa-check"></i> Acc & Buat Nomor</button> <button class="btn-table btn-tbl-del" onclick="hapusSuratPengajuan(${s.id})"><i class="fa-solid fa-trash"></i></button>`;
-                } else {
-                    btnAction = `<button class="btn-action bg-gold" onclick="cetakPDFSurat(${s.id}, true)"><i class="fa-solid fa-copy"></i> Download Salinan</button> <button class="btn-table btn-tbl-del" onclick="hapusSuratPengajuan(${s.id})"><i class="fa-solid fa-trash"></i></button>`;
-                }
-                tb.innerHTML += `<tr><td>${s.tglPengajuan}</td><td><b style="color:var(--primary-dark);">${esc(s.nama)}</b><br><small>NIK: ${s.nik}</small></td><td>${(s.keperluan||'').substring(0,30)}...</td><td><span class="badge ${badge}">${esc(s.status)}</span><br><b style="font-size:0.85rem; margin-top:5px; display:inline-block;">${s.noSurat}</b></td><td>${btnAction}</td></tr>`;
-            });
-        }
-    };
-
-    window.eksekusiSurat = function(id) {
-        Swal.fire({ title: 'Setujui Pengajuan?', text: 'Sistem akan meng-generate nomor surat otomatis.', icon: 'question', showCancelButton: true, confirmButtonColor: '#10b981', confirmButtonText: 'Ya, Acc Sekarang!' }).then((result) => {
-            if (result.isConfirmed) {
-                let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
-                let idx = db.findIndex(x => x.id === id);
-                if(idx !== -1) {
-                    db[idx].status = 'Selesai';
-                    db[idx].noSurat = getAutoNomorSurat();
-                    let count = parseInt(localStorage.getItem('surat_counter'));
-                    if (isNaN(count) || count < 178) count = 178;
-                    localStorage.setItem('surat_counter', count + 1);
-                    localStorage.setItem('db_req_surat_v2', JSON.stringify(db));
-                    if(typeof syncSemuaData==='function') syncSemuaData(true);
-                    if(typeof loadSuratAdmin === 'function') loadSuratAdmin();
-                    Toast.fire({ icon: 'success', title: 'Surat Di-Acc!' });
-                }
-            }
-        });
-    };
-
-    window.hapusSuratPengajuan = function(id) {
-        Swal.fire({title:'Hapus pengajuan surat?',text:'Data surat akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{
-            if(r.isConfirmed){
-                let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
-                localStorage.setItem('db_req_surat_v2', JSON.stringify(db.filter(x => x.id !== id)));
-                if(typeof syncSemuaData==='function') syncSemuaData(true);
-                if(typeof loadSuratAdmin === 'function') loadSuratAdmin();
-                Toast.fire({icon:'success',title:'Surat dihapus'});
-            }
-        });
-    };
-
-    // === MESIN CETAK PDF A4 ANTI BOCOR (VERSI OPTIMAL 1 HALAMAN) ===
+    
 window.cetakPDFSurat = function(id, isSalinan) {
     let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
     let dt = db.find(x => x.id === id);
