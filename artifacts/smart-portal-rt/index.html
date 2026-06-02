@@ -10666,45 +10666,31 @@ window.verifikasiTokenSurat = function(suratId) {
         title: '<i class="fa-solid fa-key"></i> Masukkan Token',
         html: '<p style="color:#64748b;margin-bottom:12px;font-size:0.9rem;">Masukkan token yang diberikan oleh RT untuk mengunduh surat.</p>'
             + '<input type="text" id="swal-token-input" maxlength="10" placeholder="Contoh: 225513"'
-            + ' style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;font-size:1.1rem;text-align:center;letter-spacing:4px;font-weight:700;"'
-            + ' oninput="(function(el){var btn=document.getElementById(\'swal-btn-verif\');if(btn){btn.disabled=el.value.trim().length<4;btn.style.opacity=el.value.trim().length<4?\'0.4\':\'1\';}})(this)">',
-        showConfirmButton: true,
-        confirmButtonText: '<i class="fa-solid fa-check"></i> Verifikasi',
-        confirmButtonColor: '#1d4ed8',
+            + ' style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;font-size:1.1rem;text-align:center;letter-spacing:4px;font-weight:700;">',
         showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-unlock"></i> Verifikasi & Download',
         cancelButtonText: 'Batal',
-        didOpen: function() {
-            var btn = Swal.getConfirmButton();
-            if (btn) { btn.id = 'swal-btn-verif'; btn.disabled = true; btn.style.opacity = '0.4'; }
-            var inp = document.getElementById('swal-token-input');
-            if (inp) inp.focus();
-        },
+        confirmButtonColor: '#1d4ed8',
         preConfirm: function() {
-            var inp = document.getElementById('swal-token-input');
-            var tokenInput = inp ? inp.value.trim() : '';
-            if (!tokenInput) { Swal.showValidationMessage('Token tidak boleh kosong'); return false; }
-            if (String(tokenInput) !== String(surat.token)) {
-                Swal.showValidationMessage('<i class="fa-solid fa-xmark"></i> Token salah! Hubungi pengurus RT.');
-                return false;
-            }
-            return true;
+            var token = (document.getElementById('swal-token-input').value || '').trim();
+            if (!token) { Swal.showValidationMessage('Token tidak boleh kosong!'); return false; }
+            var validToken = String(surat.token || surat.noSurat || '').trim();
+            if (!validToken) { Swal.showValidationMessage('Token belum diset oleh RT!'); return false; }
+            if (token !== validToken) { Swal.showValidationMessage('Token salah! Cek kembali.'); return false; }
+            return token;
         }
     }).then(function(result) {
         if (result.isConfirmed) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Token Valid!',
-                html: '<p>Surat sedang diunduh...</p><i class="fa-solid fa-circle-check" style="font-size:3rem;color:#16a34a;"></i>',
-                timer: 1800,
-                showConfirmButton: false,
-                timerProgressBar: true
-            }).then(function() {
-                if (typeof cetakPDFSurat === 'function') cetakPDFSurat(suratId, false);
-            });
+            // Download asli + salinan
+            if (typeof cetakPDFSurat === 'function') {
+                cetakPDFSurat(suratId, false);
+                setTimeout(function(){ cetakPDFSurat(suratId, true); }, 800);
+            } else {
+                Swal.fire('Error','Fungsi cetak tidak ditemukan','error');
+            }
         }
     });
 };
-
 
 window.loadSuratWarga = function() {
     try {
@@ -10767,57 +10753,56 @@ window.loadSuratWarga = function() {
 };
 
 window.submitSuratWarga = function(e) {
-        e.preventDefault();
-        let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
+    e.preventDefault();
+    try {
+        var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+        var warga = window.loggedInWarga || {};
+        var now = new Date();
+        var tgl = now.toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'});
         db.push({
-            id: Date.now(),
-            idWarga: loggedInWarga.id,
-            nama: document.getElementById('req_nama').value,
-            nik: document.getElementById('req_nik').value,
-            ttl: document.getElementById('req_ttl').value,
-            agama: document.getElementById('req_agama').value,
-            statusKawin: document.getElementById('req_status_kawin').value,
-            pendidikan: document.getElementById('req_pendidikan').value,
-            pekerjaan: document.getElementById('req_pekerjaan').value,
-            alamat: document.getElementById('req_alamat').value,
-            keperluan: document.getElementById('req_keperluan').value,
-            status: 'Menunggu Acc',
-            tglPengajuan: new Date().toLocaleDateString('id-ID'),
-            noSurat: '-'
+            id           : Date.now(),
+            idWarga      : warga.id  || '',
+            nik          : document.getElementById('req_nik').value,
+            nama         : document.getElementById('req_nama').value,
+            ttl          : document.getElementById('req_ttl').value,
+            agama        : document.getElementById('req_agama').value,
+            statusKawin  : document.getElementById('req_status_kawin').value,
+            pendidikan   : document.getElementById('req_pendidikan').value,
+            pekerjaan    : document.getElementById('req_pekerjaan').value,
+            alamat       : document.getElementById('req_alamat').value,
+            keperluan    : document.getElementById('req_keperluan').value,
+            status       : 'Menunggu Acc',
+            tglPengajuan : tgl,
+            noSurat      : '-'
         });
         localStorage.setItem('db_req_surat_v2', JSON.stringify(db));
-        if (typeof syncSemuaData === 'function') syncSemuaData(true);
 
-        // ANIMASI PROGRESS: Hilangkan form, munculkan progress
-        document.getElementById('form-surat-warga-inner') && document.getElementById('form-surat-warga-inner').reset(); Swal.fire({icon:'success',title:'Pengajuan Terkirim!',text:'Pengajuan surat kamu sudah dikirim, tunggu konfirmasi dari RT.',confirmButtonText:'OK'}).then(function(){ if(typeof loadSuratWarga==='function') loadSuratWarga(); });
+        // Tampilkan tracking section
+        var formEl = document.getElementById('form-pengajuan-surat');
+        var trackEl = document.getElementById('tracking-surat-section');
+        if (formEl)  formEl.style.display  = 'none';
+        if (trackEl) trackEl.style.display = 'block';
 
-        // Reset Style Animasi
-        document.getElementById('progress-line-fill').style.width = '0%';
-        document.getElementById('step-2-icon').style.background = 'white'; document.getElementById('step-2-icon').style.color = '#cbd5e1'; document.getElementById('step-2-icon').style.boxShadow = '0 0 0 3px #cbd5e1';
-        document.getElementById('step-2-text').style.color = 'var(--text-muted)';
+        // Scroll ke atas
+        if (trackEl) trackEl.scrollIntoView({behavior:'smooth', block:'start'});
 
-        // Jalankan Garis Biru
-        setTimeout(() => {
-            document.getElementById('progress-line-fill').style.width = '50%';
-            setTimeout(() => {
-                document.getElementById('step-2-icon').style.background = 'var(--primary-blue)';
-                document.getElementById('step-2-icon').style.color = 'white';
-                document.getElementById('step-2-icon').style.boxShadow = '0 0 0 3px var(--primary-blue)';
-                document.getElementById('step-2-text').style.color = 'var(--primary-dark)';
-            }, 800);
-        }, 200);
+        // Reload tabel riwayat
+        if (typeof loadSuratWarga === 'function') loadSuratWarga();
 
-        e.target.reset();
-        if(typeof loadSuratWarga === 'function') loadSuratWarga();
+        // Notif sukses
+        Swal.fire({
+            icon: 'success',
+            title: 'Pengajuan Terkirim!',
+            text: 'Surat Anda sedang diproses oleh RT.',
+            timer: 2500,
+            showConfirmButton: false
+        });
+    } catch(err) {
+        console.error('submitSuratWarga:', err);
+        Swal.fire('Error', 'Gagal menyimpan pengajuan: ' + err.message, 'error');
+    }
+};
 
-    };
-    // Tombol untuk mengembalikan form ke awal
-    window.resetFormSuratWarga = function() {
-        document.getElementById('tracking-surat-section').style.display = 'none';
-        document.getElementById('form-pengajuan-surat').style.display = 'block';
-    };
-
-    
 window.cetakPDFSurat = function(id, isSalinan) {
     let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
     let dt = db.find(x => x.id === id);
