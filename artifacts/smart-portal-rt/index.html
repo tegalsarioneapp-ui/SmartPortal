@@ -15254,7 +15254,43 @@ html[data-theme="dark"] #ft-install-title { color: #f1f5f9; }
 
   /* ── 1. SPLASH SCREEN — inline at top of body (no injection needed) */
   function injectSplash() {
-    /* Splash is baked into HTML at top of <body> for immediate render.
+    /* Splash is baked into HTML at top of <style id="gt-kop-presisi">
+.kop-surat-resmi {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    gap: 12px !important;
+}
+.kop-surat-resmi > img {
+    width: 110px !important;
+    height: auto !important;
+    object-fit: contain !important;
+    align-self: stretch !important;
+    flex-shrink: 0 !important;
+}
+.kop-surat-resmi > div {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    text-align: center !important;
+}
+.kop-garis {
+    border: none !important;
+    border-top: 4px solid #000 !important;
+    border-bottom: 1.5px solid #000 !important;
+    height: 6px !important;
+    margin: 4px 0 14px 0 !important;
+    width: 100% !important;
+}
+@media print {
+    .kop-surat-resmi { display: flex !important; flex-direction: row !important; align-items: stretch !important; }
+    .kop-surat-resmi > img { width: 110px !important; height: auto !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .kop-garis { border-top: 4px solid #000 !important; border-bottom: 1.5px solid #000 !important; }
+}
+</style>
+<body> for immediate render.
        This function is kept as a stub to avoid reference errors. */
     return;
     /* Dead code below preserved for reference only */
