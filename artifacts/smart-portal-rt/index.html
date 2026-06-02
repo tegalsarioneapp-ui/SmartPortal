@@ -10595,6 +10595,7 @@ window.bukaFormLogin = function() {
 
 
 
+
 window.verifikasiTokenSurat = function(suratId) {
     var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
     var surat = db.find(function(s){ return s.id === suratId; });
@@ -10604,7 +10605,7 @@ window.verifikasiTokenSurat = function(suratId) {
         html: '<p style="color:#64748b;margin-bottom:12px;font-size:0.9rem;">Masukkan token yang diberikan oleh RT untuk mengunduh surat.</p>'
             + '<input type="text" id="swal-token-input" maxlength="10" placeholder="Contoh: 225513"'
             + ' style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;font-size:1.1rem;text-align:center;letter-spacing:4px;font-weight:700;"'
-            + ' oninput="var btn=document.getElementById('swal-btn-verif');if(btn){btn.disabled=this.value.trim().length<4;btn.style.opacity=this.value.trim().length<4?'0.4':'1';}">',
+            + ' oninput="(function(el){var btn=document.getElementById(\'swal-btn-verif\');if(btn){btn.disabled=el.value.trim().length<4;btn.style.opacity=el.value.trim().length<4?\'0.4\':\'1\';}})(this)">',
         showConfirmButton: true,
         confirmButtonText: '<i class="fa-solid fa-check"></i> Verifikasi',
         confirmButtonColor: '#1d4ed8',
