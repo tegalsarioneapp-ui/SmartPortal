@@ -6085,6 +6085,7 @@ window.downloadPdfFromHtml = function(htmlContent, filename) {
     iframe.id = '_pdf_iframe_';
     iframe.style.cssText = 'flex:1;border:none;background:white;';
 
+    var __b64Logo = typeof __LOGO_B64_0__ !== 'undefined' ? __LOGO_B64_0__ : '';
     var fullHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
         + '<style>'
         + 'body{margin:0;padding:20px;background:#f0f0f0;}'
@@ -6093,16 +6094,7 @@ window.downloadPdfFromHtml = function(htmlContent, filename) {
         + 'body{margin:0;padding:0;background:white;}'
         + '}'
         + '</style>'
-        + '<script id='gt-logo-b64-vars'>
-var __LOGO_B64_0 = 'data:image/png;base64,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';
-</script>
-<script id='gt-logo-b64-patch'>
-document.addEventListener('DOMContentLoaded', function() {
-  window.__LOGO_B64_0__ = __LOGO_B64_0__;
-  document.querySelectorAll('img[src="__LOGO_B64_0__"]').forEach(function(el){ el.src = __LOGO_B64_0; });
-});
-</script>
-</head><body>'
+        </head><body>'
         + htmlContent
         + '</body></html>';
 
@@ -6445,7 +6437,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
                     <button onclick="window.openGtChat()" class="dsh-ai-btn" style="display:inline-flex;align-items:center;gap:6px;"><img src="/benny-avatar.webp" style="width:22px;height:22px;border-radius:50%;object-fit:cover;object-position:center 10%;" onerror="this.style.display='none'"> TANYA BENNY</button>
-                    <img src="__LOGO_B64_0__" class="dsh-logo" onerror="this.style.display='none'">
+                    <img src=\"' + __b64Logo + '\" class="dsh-logo" onerror="this.style.display='none'">
                 </div>
             </div>
 
@@ -7589,7 +7581,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
     </div> </div>
         <div id="hidden-pdf-container" style="display: none !important;">
     <div class="letter-paper" id="surat-warga-paper">
-        <div class="kop-surat-resmi"><img src="__LOGO_B64_0__" class="kop-logo"><div class="kop-teks"><h2>KOTA SEMARANG</h2><h3>KECAMATAN CANDISARI</h3><h3>KELURAHAN TEGALSARI</h3><h3>RT. 005 / RW. 012</h3></div></div><div class="kop-garis"></div>
+        <div class="kop-surat-resmi"><img src=\"' + __b64Logo + '\" class="kop-logo"><div class="kop-teks"><h2>KOTA SEMARANG</h2><h3>KECAMATAN CANDISARI</h3><h3>KELURAHAN TEGALSARI</h3><h3>RT. 005 / RW. 012</h3></div></div><div class="kop-garis"></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:1.05rem; color:#000;"><div style="width:55%;"><div>Nomor : <b id="pdf-no"></b></div><div>Lampiran : -</div><div style="font-weight:bold; text-decoration:underline; margin-top:5px;">Hal : Surat Pengantar</div></div><div style="text-align:right;"><div>Semarang, <span id="pdf-tgl"></span></div><div style="margin-top:10px;">Kepada Yth.<br><b>Kepala Kelurahan Tegalsari</b><br>di -<br>    <b style="text-transform:uppercase; text-decoration:underline;">Semarang</b></div></div></div>
         <p style="margin-bottom:15px; color:#000; font-size:1.05rem;">Bersama ini menerangkan bahwa :</p>
         <table class="tabel-isi-surat">
@@ -7610,7 +7602,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
 
 <div id="hidden-notulen-container" style="display: none;">
     <div class="letter-paper" id="notulen-paper">
-        <div class="kop-surat-resmi"><img src="__LOGO_B64_0__" style="width: 70px; height: auto; filter: grayscale(100%);"><div style="flex: 1; text-align: center;"><h2 style="margin: 0; font-size: 1.4rem; font-weight: bold; text-transform: uppercase; color: black;">PENGURUS RUKUN TETANGGA 005 RUKUN WARGA 012</h2><h3 style="margin: 2px 0; font-size: 1.1rem; font-weight: normal; text-transform: uppercase; color: black;">KELURAHAN TEGALSARI • KECAMATAN CANDISARI</h3><h3 style="margin: 2px 0; font-size: 1.1rem; font-weight: normal; text-transform: uppercase; color: black;">KOTA SEMARANG</h3></div></div>
+        <div class="kop-surat-resmi"><img src=\"' + __b64Logo + '\" style="width: 70px; height: auto; filter: grayscale(100%);"><div style="flex: 1; text-align: center;"><h2 style="margin: 0; font-size: 1.4rem; font-weight: bold; text-transform: uppercase; color: black;">PENGURUS RUKUN TETANGGA 005 RUKUN WARGA 012</h2><h3 style="margin: 2px 0; font-size: 1.1rem; font-weight: normal; text-transform: uppercase; color: black;">KELURAHAN TEGALSARI • KECAMATAN CANDISARI</h3><h3 style="margin: 2px 0; font-size: 1.1rem; font-weight: normal; text-transform: uppercase; color: black;">KOTA SEMARANG</h3></div></div>
         <div style="border-top: 3px solid black; border-bottom: 1px solid black; height: 1px; margin-bottom: 20px; padding-top: 2px;"></div>
         <h3 style="text-align:center; text-decoration:underline; font-weight:bold; color:black; margin-bottom: 25px;">NOTULENSI RAPAT</h3>
         <table style="width:100%; font-size:1.1rem; color:black; border:none; margin-bottom: 25px;"><tr><td style="width:150px; padding:3px 0; border:none; background:transparent;">Hari, Tanggal</td><td style="width:20px; border:none; background:transparent;">:</td><td style="border:none; background:transparent;"><b id="cetak_n_tgl"></b></td></tr><tr><td style="padding:3px 0; border:none; background:transparent;">Agenda Utama</td><td style="border:none; background:transparent;">:</td><td style="border:none; background:transparent;"><b id="cetak_n_judul"></b></td></tr></table>
@@ -9884,7 +9876,7 @@ window.bukaFormLogin = function() {
         let htmlCetak = `
         <div style="width: 210mm; min-height: 297mm; padding: 20mm; box-sizing: border-box; background: white; color: black; font-family: 'Times New Roman', Times, serif; line-height: 1.5; margin: 0 auto; position:relative;">
             <div style="display: flex; align-items: center; border-bottom: 4px double black; padding-bottom: 10px; margin-bottom: 20px;">
-                <img src="__LOGO_B64_0__" style="width: 80px; height: auto; filter: grayscale(100%); margin-right:20px;">
+                <img src=\"' + __b64Logo + '\" style="width: 80px; height: auto; filter: grayscale(100%); margin-right:20px;">
                 <div style="flex: 1; text-align: center;">
                     <h2 style="margin: 0; font-size: 24px; font-weight: bold;">KOTA SEMARANG</h2>
                     <h3 style="margin: 2px 0; font-size: 20px; font-weight:normal;">KECAMATAN CANDISARI</h3>
@@ -10042,7 +10034,7 @@ window.bukaFormLogin = function() {
             '<td style="border:1px solid #000;"><b>'+(a.judul||'-')+'</b><br><small>'+(a.isi||'')+'</small></td>'+
             '<td style="border:1px solid #000; text-align:center;">'+(a.status||'-')+'</td></tr>').join('');
         let html = '<div class="letter-paper" style="padding:0;">'+
-            '<div class="kop-surat-resmi"><img src="__LOGO_B64_0__" style="width:70px; filter:grayscale(100%);">'+
+            '<div class="kop-surat-resmi"><img src=\"' + __b64Logo + '\" style="width:70px; filter:grayscale(100%);">'+
             '<div style="flex:1; text-align:center;"><h2 style="margin:0; font-size:1.3rem; font-weight:bold; text-transform:uppercase;">PENGURUS RT 005 / RW 012</h2>'+
             '<h3 style="margin:2px 0; font-size:1rem; font-weight:normal;">KELURAHAN TEGALSARI &bull; CANDISARI &bull; SEMARANG</h3></div></div>'+
             '<hr style="border:0; border-top:3px solid black;"><h3 style="text-align:center; text-decoration:underline;">REKAPITULASI ADUAN WARGA ('+fb+')</h3>'+
@@ -10702,10 +10694,6 @@ window.lihatTokenSurat = function(suratId) {
     var token = s.token || '-';
     var noSurat = s.noSurat || '-';
     var nama = s.nama || '-';
-    var shareText = 'Halo ' + nama + ', surat Anda telah selesai diproses.\n'
-        + 'No. Surat: ' + noSurat + '\n'
-        + 'Token Download: *' + token + '*\n'
-        + 'Gunakan token ini untuk mengunduh surat di portal warga.';
     Swal.fire({
         title: '<i class="fa-solid fa-key" style="color:#0d9488;"></i> Token Surat',
         html: '<div style="text-align:center;padding:8px 0;">'
@@ -10715,21 +10703,54 @@ window.lihatTokenSurat = function(suratId) {
             + '<div style="font-size:0.78rem;color:#64748b;margin-bottom:4px;">TOKEN</div>'
             + '<div id="swal-token-display" style="font-size:2rem;font-weight:900;letter-spacing:8px;color:#0f766e;font-family:monospace;">' + token + '</div>'
             + '</div>'
-            + '<div style="display:flex;gap:8px;justify-content:center;">'
-            + '<button onclick="navigator.clipboard.writeText(''+token+'').then(function(){var el=document.getElementById('swal-token-display');el.style.color='#16a34a';setTimeout(function(){el.style.color='#0f766e';},1000);})" '
-            + 'style="padding:9px 18px;background:linear-gradient(135deg,#0f766e,#0d9488);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.88rem;">'
+            + '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">'
+            + '<button id="swal-btn-copy-token" style="padding:9px 18px;background:linear-gradient(135deg,#0f766e,#0d9488);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.88rem;">'
             + '<i class="fa-solid fa-copy"></i> Salin Token</button>'
-            + '<button onclick="if(navigator.share){navigator.share({title:'Token Surat',text:''+shareText.replace(/
-/g,'\\n')+''})}else{navigator.clipboard.writeText(''+shareText.replace(/
-/g,'\\n')+''');Swal.showValidationMessage('Teks disalin! Paste ke WhatsApp.');}" '
-            + 'style="padding:9px 18px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.88rem;">'
+            + '<button id="swal-btn-share-token" style="padding:9px 18px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.88rem;">'
             + '<i class="fa-brands fa-whatsapp"></i> Bagikan</button>'
             + '</div></div>',
         showConfirmButton: false,
         showCloseButton: true,
-        width: 420
+        didOpen: function() {
+            var shareText = 'Halo ' + nama + ', surat Anda telah selesai.\n'
+                + 'No. Surat: ' + noSurat + '\n'
+                + 'Token Download: ' + token + '\n'
+                + 'Gunakan token ini untuk mengunduh surat di portal warga.';
+            var btnCopy = document.getElementById('swal-btn-copy-token');
+            var btnShare = document.getElementById('swal-btn-share-token');
+            if (btnCopy) {
+                btnCopy.onclick = function() {
+                    navigator.clipboard.writeText(token).then(function() {
+                        var el = document.getElementById('swal-token-display');
+                        if (el) { el.style.color = '#16a34a'; }
+                        btnCopy.innerHTML = '<i class="fa-solid fa-check"></i> Disalin!';
+                        setTimeout(function() {
+                            if (el) { el.style.color = '#0f766e'; }
+                            btnCopy.innerHTML = '<i class="fa-solid fa-copy"></i> Salin Token';
+                        }, 2000);
+                    }).catch(function() {
+                        Swal.showValidationMessage('Gagal menyalin, coba manual.');
+                    });
+                };
+            }
+            if (btnShare) {
+                btnShare.onclick = function() {
+                    if (navigator.share) {
+                        navigator.share({ title: 'Token Surat', text: shareText });
+                    } else {
+                        navigator.clipboard.writeText(shareText).then(function() {
+                            btnShare.innerHTML = '<i class="fa-solid fa-check"></i> Teks Disalin!';
+                            setTimeout(function() {
+                                btnShare.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Bagikan';
+                            }, 2000);
+                        });
+                    }
+                };
+            }
+        }
     });
 };
+
 window.accSuratLangsung = function(id) {
     var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
     var i = db.findIndex(function(x){ return x.id === id; });
@@ -10985,7 +11006,7 @@ window.cetakPDFSurat = function(id, isSalinan) {
         ${watermarkHTML}
 
         <div style="display: flex; align-items: center; border-bottom: 4px double black; padding-bottom: 8px; margin-bottom: 15px; z-index:2; position:relative;">
-            <img src="__LOGO_B64_0__" style="width: 75px; height: auto; margin-right:20px;">
+            <img src=\"' + __b64Logo + '\" style="width: 75px; height: auto; margin-right:20px;">
             <div style="flex: 1; text-align: center;">
                 <h2 style="margin: 0; font-size: 22px; font-weight: bold; letter-spacing: 1px;">PEMERINTAH KOTA SEMARANG</h2>
                 <h3 style="margin: 1px 0; font-size: 19px; font-weight:normal;">KECAMATAN CANDISARI</h3>
