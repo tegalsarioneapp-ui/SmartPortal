@@ -6042,6 +6042,90 @@ html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-sub {
     pointer-events: none !important;
 }
 </style>
+
+<script id="gt-pdf-download-helper">
+/* ══ downloadPdfFromHtml — SmartPortal PDF Helper ══ */
+window.downloadPdfFromHtml = function(htmlContent, filename) {
+    filename = (filename || 'dokumen').replace(/[^A-Za-z0-9_\-]/g, '_') + '.pdf';
+    Swal.fire({
+        title: '<i class="fa-solid fa-file-pdf" style="color:#dc2626;"></i> Menyiapkan PDF...',
+        html: '<p style="color:#64748b;">Dokumen sedang dirender, mohon tunggu.</p>',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: function() { Swal.showLoading(); }
+    });
+    // Buat container tersembunyi
+    var container = document.createElement('div');
+    container.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:white;z-index:-1;';
+    container.innerHTML = htmlContent;
+    document.body.appendChild(container);
+
+    setTimeout(function() {
+        if (typeof html2canvas !== 'undefined' && typeof window.jspdf !== 'undefined') {
+            // Gunakan html2canvas + jsPDF
+            var jsPDF = window.jspdf.jsPDF;
+            html2canvas(container, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                logging: false
+            }).then(function(canvas) {
+                document.body.removeChild(container);
+                var imgData = canvas.toDataURL('image/jpeg', 0.92);
+                var pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                var pageW = pdf.internal.pageSize.getWidth();
+                var pageH = pdf.internal.pageSize.getHeight();
+                var imgW = pageW;
+                var imgH = (canvas.height * imgW) / canvas.width;
+                var posY = 0;
+                // Multi halaman
+                while (posY < imgH) {
+                    if (posY > 0) pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 0, -posY, imgW, imgH);
+                    posY += pageH;
+                }
+                pdf.save(filename);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'PDF Berhasil Diunduh!',
+                    text: filename,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }).catch(function(err) {
+                document.body.removeChild(container);
+                console.error('html2canvas error:', err);
+                window._fallbackPrint(htmlContent, filename);
+            });
+        } else {
+            // Fallback: print dialog
+            document.body.removeChild(container);
+            window._fallbackPrint(htmlContent, filename);
+        }
+    }, 300);
+};
+
+window._fallbackPrint = function(htmlContent, filename) {
+    Swal.close();
+    var w = window.open('', '_blank', 'width=900,height=700');
+    if (w) {
+        w.document.write('<html><head><title>' + (filename||'Dokumen') + '</title>'
+            + '<style>@media print{body{margin:0;}}</style></head><body>'
+            + htmlContent + '<script>window.onload=function(){window.print()}<\/script></body></html>');
+        w.document.close();
+    } else {
+        Swal.fire('Info','Izinkan popup untuk membuka dokumen','info');
+    }
+};
+
+// Override printViaIframe sebagai alias
+window.printViaIframe = function(htmlContent, title) {
+    return window.downloadPdfFromHtml(htmlContent, title);
+};
+</script>
+
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════════
@@ -7084,22 +7168,7 @@ html[data-theme="dark"] body.warga-portal-aktif #view-warga .wfb-user-sub {
             </div>
 
             <div class="card">
-                <div class="card-title-header"><h3><i class="fa-solid fa-inbox"></i> Antrean Pengajuan Surat</h3></div>
-<div style="overflow-x:auto;">
-<table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
-<thead>
-<tr style="background:var(--primary-dark,#1e3a5f);color:#fff;">
-<th style="padding:10px 12px;text-align:left;">Tgl Ajuan</th>
-<th style="padding:10px 12px;text-align:left;">Nama Warga</th>
-<th style="padding:10px 12px;text-align:left;">NIK</th>
-<th style="padding:10px 12px;text-align:left;">Keperluan</th>
-<th style="padding:10px 12px;text-align:left;">Status</th>
-<th style="padding:10px 12px;text-align:center;">Aksi</th>
-</tr>
-</thead>
-<tbody id="tbody-surat-admin"></tbody>
-</table>
-</div>ngajuan Warga</h3></div>
+                <div class="card-title-header"><h3><i class="fa-solid fa-inbox"></i> Antrean Pengajuan Surat</h3></div>ngajuan Warga</h3></div>
                 <div class="table-responsive">
                     <table>
                         <thead><tr><th>Tgl Masuk</th><th>Data Warga</th><th>Keperluan</th><th>Status / No. Surat</th><th>Aksi Eksekusi</th></tr></thead>
@@ -10836,8 +10905,7 @@ window.loadSuratAdmin = function() {
                 ? '<span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Ditolak</span>'
                 : '<span style="background:#fef9c3;color:#ca8a04;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Menunggu</span>';
             var aksi = status === 'Selesai'
-                ? '<button onclick="cetakPDFSurat('+s.id+',false)" style="padding:6px 10px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;margin-right:4px;"><i class=\"fa-solid fa-print\"></i> Cetak</button>'
-                  + '<button onclick="cetakPDFSurat('+s.id+',true)" style="padding:6px 10px;background:#0f766e;color:#fff;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;"><i class=\"fa-solid fa-copy\"></i> Salinan</button>'
+                ? '<button onclick="cetakPDFSurat('+s.id+',true)" style="padding:6px 10px;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;font-weight:700;"><i class=\"fa-solid fa-download\"></i> Download Salinan</button>'
                 : status === 'Ditolak'
                 ? '<span style="color:#94a3b8;font-size:0.8rem;">Ditolak</span>'
                 : '<button onclick="approveSurat('+s.id+')" style="padding:6px 10px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;margin-right:4px;"><i class=\"fa-solid fa-check\"></i> Acc</button>'
