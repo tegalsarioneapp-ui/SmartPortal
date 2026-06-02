@@ -7162,23 +7162,38 @@ window.printViaIframe = function(htmlContent, title) {
         </div>
 
         <div id="surat" class="admin-tab-content">
-            <div class="card-header-premium">
-                <div><h2>Manajemen Surat Pengantar</h2><p>Verifikasi pengajuan warga dan cetak salinan arsip.</p></div>
-                <div class="logo-3d-container"><i class="fa-solid fa-file-signature" style="font-size: 3.5rem; color: var(--accent-gold);"></i></div>
-            </div>
+  <div class="card-header-premium">
+    <div>
+      <h2>Manajemen Surat Pengantar</h2>
+      <p>Verifikasi pengajuan warga dan cetak salinan arsip.</p>
+    </div>
+    <div class="logo-3d-container">
+      <i class="fa-solid fa-file-signature" style="font-size:3.5rem;color:var(--accent-gold);"></i>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title-header">
+      <h3><i class="fa-solid fa-inbox"></i> Antrean Pengajuan Surat</h3>
+    </div>
+    <div class="table-responsive">
+      <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+        <thead>
+          <tr style="background:var(--primary-dark,#1e3a5f);color:#fff;">
+            <th style="padding:10px 12px;text-align:left;">Tgl Ajuan</th>
+            <th style="padding:10px 12px;text-align:left;">Nama Warga</th>
+            <th style="padding:10px 12px;text-align:left;">NIK</th>
+            <th style="padding:10px 12px;text-align:left;">Keperluan</th>
+            <th style="padding:10px 12px;text-align:left;">Status</th>
+            <th style="padding:10px 12px;text-align:center;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-surat-admin"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-            <div class="card">
-                <div class="card-title-header"><h3><i class="fa-solid fa-inbox"></i> Antrean Pengajuan Surat</h3></div>ngajuan Warga</h3></div>
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Tgl Masuk</th><th>Data Warga</th><th>Keperluan</th><th>Status / No. Surat</th><th>Aksi Eksekusi</th></tr></thead>
-                        <tbody id="tbody-admin-surat-baru"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="admin-publikasi" class="admin-tab-content">
+<div id="admin-publikasi" class="admin-tab-content">
 
             <div style="display: flex; gap: 15px; margin-bottom: 25px; background: #fff; padding: 15px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto;">
                 <button class="btn-action bg-blue" onclick="openSubPublikasi('sub-agenda')" style="flex:1; justify-content:center; font-size:1.05rem; padding:15px; border-radius:12px; box-shadow:none;"><i class="fa-solid fa-calendar-days"></i> Agenda RT</button>
