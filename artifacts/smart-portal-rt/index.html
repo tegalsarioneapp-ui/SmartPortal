@@ -6106,11 +6106,19 @@ window.downloadPdfFromHtml = function(htmlContent, filename) {
 
     // Tombol print
     document.getElementById('_pdf_print_btn_').onclick = function() {
-        try {
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-        } catch(e) {
-            window.print();
+        var blob = new Blob([fullHtml], {type: 'text/html;charset=utf-8'});
+        var url = URL.createObjectURL(blob);
+        var win = window.open(url, '_blank');
+        if (win) {
+            win.onload = function() {
+                setTimeout(function() { win.focus(); win.print(); }, 500);
+            };
+        } else {
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename.replace('.pdf', '.html');
+            a.click();
+            setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);
         }
     };
 
@@ -9911,21 +9919,18 @@ window.bukaFormLogin = function() {
             </table>
         </div>`;
 
-        let iframe = document.createElement('iframe');
-        iframe.style.position = 'absolute'; iframe.style.width = '0px'; iframe.style.height = '0px'; iframe.style.border = 'none';
-        document.body.appendChild(iframe);
-        let doc = iframe.contentWindow.document;
-        let style = doc.createElement('style');
-        style.innerHTML = "@page { size: A4; margin: 0; } body { margin: 0; background:white; -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }";
-        doc.head.appendChild(style);
-        doc.title = 'Undangan_' + k.perihal.replace(/\s/g,'_');
-        doc.body.innerHTML = htmlCetak;
-
-        Swal.fire({ title: 'Mencetak Undangan...', text: 'Pastikan Destination diset ke "Save as PDF".', timer: 1200, showConfirmButton: false, didOpen: () => { Swal.showLoading(); } }).then(() => {
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-            setTimeout(() => { document.body.removeChild(iframe); }, 2000);
-        });
+        // Cetak undangan via blob URL
+        var _blob = new Blob([htmlCetak], {type: 'text/html;charset=utf-8'});
+        var _url = URL.createObjectURL(_blob);
+        var _win = window.open(_url, '_blank');
+        if (_win) {
+            _win.onload = function() {
+                setTimeout(function() { _win.focus(); _win.print(); }, 500);
+            };
+        } else {
+            Swal.fire('Info', 'Popup diblokir browser. Izinkan popup lalu coba lagi.', 'info');
+        }
+        setTimeout(function(){ URL.revokeObjectURL(_url); }, 10000);
     };
     window.previewUndangan = function(id) { let db = JSON.parse(localStorage.getItem('kegiatan')) || []; let k = db.find(x => x.id === id); if(!k) return; document.getElementById('cetak_k_no').innerText = k.no; document.getElementById('cetak_k_perihal').innerText = k.perihal; document.getElementById('cetak_k_uraian').innerText = k.uraian; document.getElementById('cetak_k_tgl_acara').innerText = k.tglAcara; document.getElementById('cetak_k_waktu').innerText = k.waktu; document.getElementById('cetak_k_tempat').innerText = k.tempat; document.getElementById('area-cetak-kegiatan').style.display = 'block'; window.scrollTo({top: document.getElementById('area-cetak-kegiatan').offsetTop}); };
     window.downloadSuratJPEG = function() { html2canvas(document.querySelector("#surat-kegiatan-paper"), {scale:2}).then(c => { let l = document.createElement('a'); l.download = 'Undangan.jpg'; l.href = c.toDataURL('image/jpeg'); l.click(); }); };
@@ -10620,12 +10625,7 @@ window.loadSuratAdmin = function() {
                 : status === 'Ditolak'
                 ? '<span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Ditolak</span>'
                 : '<span style="background:#fef9c3;color:#ca8a04;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Menunggu</span>';
-            var aksi = status === 'Selesai'
-                ? '<button onclick="cetakPDFSurat('+s.id+',true)" style="padding:6px 10px;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;font-weight:700;"><i class=\"fa-solid fa-download\"></i> Download Salinan</button>'
-                : status === 'Ditolak'
-                ? '<span style="color:#94a3b8;font-size:0.8rem;">Ditolak</span>'
-                : '<button onclick="approveSurat('+s.id+')" style="padding:6px 10px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;margin-right:4px;"><i class=\"fa-solid fa-check\"></i> Acc</button>'
-                  + '<button onclick="rejectSurat('+s.id+')" style="padding:6px 10px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:0.78rem;cursor:pointer;"><i class=\"fa-solid fa-times\"></i> Tolak</button>';
+                        var aksi = '<button onclick="previewSuratAdmin('+s.id+')" style="padding:6px 12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;font-size:0.8rem;cursor:pointer;"><i class=\"fa-solid fa-eye\"></i> Lihat & Verifikasi</button>'
             rows += '<tr style="border-bottom:1px solid rgba(255,255,255,0.06);">'
                 + '<td style="padding:10px 12px;">' + (s.tglPengajuan||'-') + '</td>'
                 + '<td style="padding:10px 12px;font-weight:600;">' + (s.nama||'-') + '</td>'
@@ -10640,24 +10640,191 @@ window.loadSuratAdmin = function() {
     } catch(e) { console.error('loadSuratAdmin:', e); }
 };
 
+
+
+window.accSuratLangsung = function(id) {
+    var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+    var i = db.findIndex(function(x){ return x.id === id; });
+    if (i === -1) return Swal.fire('Error','Data tidak ditemukan','error');
+
+    // Auto no surat
+    var allNomor = db
+        .filter(function(s){ return s.noSurat && s.noSurat !== '-'; })
+        .map(function(s){
+            var m = String(s.noSurat).match(/^(\d+)\//);
+            return m ? parseInt(m[1]) : 0;
+        });
+    var lastNomor = allNomor.length > 0 ? Math.max.apply(null, allNomor) : 181;
+    var nextNomor = lastNomor + 1;
+    var now = new Date();
+    var bulanRomawi = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'][now.getMonth()];
+    var autoNoSurat = nextNomor + '/RT.005/RW.012/' + bulanRomawi + '/' + now.getFullYear();
+
+    // Auto token 9 karakter
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var autoToken = '';
+    for (var t = 0; t < 9; t++) {
+        autoToken += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    // Langsung simpan tanpa popup
+    db[i].status   = 'Selesai';
+    db[i].noSurat  = autoNoSurat;
+    db[i].token    = autoToken;
+    db[i].tglAcc   = now.toLocaleDateString('id-ID');
+    localStorage.setItem('db_req_surat_v2', JSON.stringify(db));
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Surat Disetujui!',
+        html: '<div style="text-align:left;background:#f0fdf4;border-radius:10px;padding:14px;margin-top:8px;">'
+            + '<div style="margin-bottom:8px;"><span style="font-size:0.75rem;color:#64748b;font-weight:600;">NOMOR SURAT</span>'
+            + '<div style="font-size:1.05rem;font-weight:800;color:#15803d;">' + autoNoSurat + '</div></div>'
+            + '<div><span style="font-size:0.75rem;color:#64748b;font-weight:600;">TOKEN WARGA</span>'
+            + '<div style="font-size:1.6rem;font-weight:900;letter-spacing:6px;color:#1d4ed8;">' + autoToken + '</div></div>'
+            + '<div style="margin-top:10px;font-size:0.78rem;color:#64748b;"><i class="fa-solid fa-info-circle"></i> Berikan token ini kepada warga untuk download surat.</div>'
+            + '</div>',
+        confirmButtonText: '<i class="fa-solid fa-print"></i> Cetak Arsip',
+        showCancelButton: true,
+        cancelButtonText: 'Tutup',
+        confirmButtonColor: '#1d4ed8'
+    }).then(function(r) {
+        if (r.isConfirmed && typeof cetakPDFSurat === 'function') cetakPDFSurat(id, true);
+        if (typeof loadSuratAdmin === 'function') loadSuratAdmin();
+    });
+};
+
+window.tolakSuratAdmin = function(id) {
+    var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+    var i = db.findIndex(function(x){ return x.id === id; });
+    if (i === -1) return Swal.fire('Error','Data tidak ditemukan','error');
+
+    Swal.fire({
+        title: '<i class="fa-solid fa-ban"></i> Tolak Pengajuan',
+        html: '<p style="color:#64748b;margin-bottom:12px;font-size:0.88rem;">Berikan alasan penolakan yang jelas untuk warga.</p>'
+            + '<textarea id="sw-alasan-tolak" rows="4" placeholder="Contoh: Data NIK tidak sesuai dengan kartu keluarga, harap perbaiki dan ajukan ulang..." '
+            + 'style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:8px;font-size:0.88rem;resize:vertical;font-family:inherit;"></textarea>',
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-times"></i> Tolak Pengajuan',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#dc2626',
+        preConfirm: function() {
+            var alasan = (document.getElementById('sw-alasan-tolak').value||'').trim();
+            if (!alasan) { Swal.showValidationMessage('Alasan penolakan wajib diisi!'); return false; }
+            return alasan;
+        }
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            db[i].status      = 'Ditolak';
+            db[i].alasanTolak = result.value;
+            db[i].tglTolak    = new Date().toLocaleDateString('id-ID');
+            localStorage.setItem('db_req_surat_v2', JSON.stringify(db));
+            Swal.fire({
+                icon: 'info',
+                title: 'Pengajuan Ditolak',
+                html: '<div style="background:#fef2f2;border-radius:10px;padding:12px;color:#dc2626;">'
+                    + '<i class="fa-solid fa-ban"></i> <b>Alasan:</b> ' + result.value + '</div>',
+                confirmButtonColor: '#64748b'
+            }).then(function(){
+                if (typeof loadSuratAdmin === 'function') loadSuratAdmin();
+            });
+        }
+    });
+};
+
+window.previewSuratAdmin = function(id) {
+    var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+    var s = db.find(function(x){ return x.id === id; });
+    if (!s) return Swal.fire('Error','Data tidak ditemukan','error');
+    var status = s.status || 'Menunggu Acc';
+
+    var actionBtns = '';
+    if (status === 'Menunggu Acc' || status === 'Menunggu') {
+        actionBtns = '<div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">'
+            + '<button onclick="Swal.close();setTimeout(function(){accSuratLangsung('+id+')},200)" style="padding:11px 28px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;">'
+            + '<i class="fa-solid fa-check-circle"></i> ACC</button>'
+            + '<button onclick="Swal.close();setTimeout(function(){tolakSuratAdmin('+id+')},200)" style="padding:11px 28px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;">'
+            + '<i class="fa-solid fa-times-circle"></i> Tolak</button>'
+            + '</div>';
+    } else if (status === 'Selesai') {
+        actionBtns = '<div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">'
+            + '<button onclick="Swal.close();cetakPDFSurat('+id+',false)" style="padding:11px 24px;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;">'
+            + '<i class="fa-solid fa-file-pdf"></i> Download Asli</button>'
+            + '<button onclick="Swal.close();cetakPDFSurat('+id+',true)" style="padding:11px 24px;background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;">'
+            + '<i class="fa-solid fa-copy"></i> Download Salinan</button>'
+            + '</div>';
+    } else {
+        actionBtns = '<div style="margin-top:16px;padding:10px;background:#fee2e2;border-radius:10px;color:#dc2626;font-weight:700;text-align:center;">'
+            + '<i class="fa-solid fa-ban"></i> Ditolak'
+            + (s.alasanTolak ? ': ' + s.alasanTolak : '')
+            + '</div>';
+    }
+
+    var info = '<div style="text-align:left;font-size:0.88rem;">'
+        + '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:4px;">'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
+        + '<div><div style="font-size:0.72rem;color:#64748b;font-weight:600;">NAMA</div><div style="font-weight:700;">' + (s.nama||'-') + '</div></div>'
+        + '<div><div style="font-size:0.72rem;color:#64748b;font-weight:600;">NIK</div><div style="font-weight:700;">' + (s.nik||'-') + '</div></div>'
+        + '<div><div style="font-size:0.72rem;color:#64748b;font-weight:600;">TTL</div><div>' + (s.ttl||'-') + '</div></div>'
+        + '<div><div style="font-size:0.72rem;color:#64748b;font-weight:600;">AGAMA</div><div>' + (s.agama||'-') + '</div></div>'
+        + '<div><div style="font-size:0.72rem;color:#64748b;font-weight:600;">STATUS KAWIN</div><div>' + (s.statusKawin||'-') + '</div></div>'
+        + '<div><div style="font-size:0.72rem;color:#64748b;font-weight:600;">PEKERJAAN</div><div>' + (s.pekerjaan||'-') + '</div></div>'
+        + '<div style="grid-column:1/-1;"><div style="font-size:0.72rem;color:#64748b;font-weight:600;">ALAMAT</div><div>' + (s.alamat||'-') + '</div></div>'
+        + '<div style="grid-column:1/-1;"><div style="font-size:0.72rem;color:#64748b;font-weight:600;">KEPERLUAN</div><div style="font-weight:600;color:#1d4ed8;">' + (s.keperluan||'-') + '</div></div>'
+        + '</div></div>'
+        + actionBtns
+        + '</div>';
+
+    Swal.fire({
+        title: '<i class="fa-solid fa-file-lines"></i> Detail Pengajuan Surat',
+        html: info,
+        width: 520,
+        showConfirmButton: false,
+        showCloseButton: true
+    });
+};
+
 window.approveSurat = function(id) {
     var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
     var i = db.findIndex(function(s){ return s.id === id; });
     if (i === -1) return Swal.fire('Error','Data tidak ditemukan','error');
+
+    // Auto generate no surat: mulai dari 182, increment dari surat terakhir
+    var allNomor = db
+        .filter(function(s){ return s.noSurat && s.noSurat !== '-'; })
+        .map(function(s){
+            var m = String(s.noSurat).match(/^(\d+)\//);
+            return m ? parseInt(m[1]) : 0;
+        });
+    var lastNomor = allNomor.length > 0 ? Math.max.apply(null, allNomor) : 181;
+    var nextNomor = lastNomor + 1;
+    var now = new Date();
+    var bulanRomawi = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'][now.getMonth()];
+    var autoNoSurat = nextNomor + '/RT.005/RW.012/' + bulanRomawi + '/' + now.getFullYear();
+
+    // Auto generate token: 9 karakter kombinasi huruf besar + angka
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var autoToken = '';
+    for (var t = 0; t < 9; t++) {
+        autoToken += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
     Swal.fire({
         title: '<i class="fa-solid fa-file-signature"></i> Setujui Pengajuan',
-        html: '<p style="color:#64748b;margin-bottom:12px;">Masukkan nomor surat dan token untuk warga.</p>'
-            + '<input id="sw-nosurat" placeholder="Nomor Surat (cth: 001/RT01/VI/2025)" style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:8px;margin-bottom:8px;font-size:0.9rem;">'
-            + '<input id="sw-token" placeholder="Token (6 digit, cth: 225513)" maxlength="10" style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:8px;font-size:0.9rem;">',
+        html: '<p style="color:#64748b;margin-bottom:12px;">Nomor surat dan token telah digenerate otomatis. Ubah jika perlu.</p>'
+            + '<label style="font-size:0.82rem;color:#64748b;font-weight:600;">NOMOR SURAT</label>'
+            + '<input id="sw-nosurat" value="' + autoNoSurat + '" style="width:100%;padding:10px;border:2px solid #10b981;border-radius:8px;margin-bottom:10px;font-size:0.9rem;font-weight:600;">'
+            + '<label style="font-size:0.82rem;color:#64748b;font-weight:600;">TOKEN WARGA <span style="color:#94a3b8;font-weight:400;">(9 karakter, bisa diubah)</span></label>'
+            + '<input id="sw-token" value="' + autoToken + '" maxlength="12" style="width:100%;padding:10px;border:2px solid #3b82f6;border-radius:8px;font-size:1.1rem;font-weight:800;letter-spacing:4px;text-align:center;">',
         showCancelButton: true,
-        confirmButtonText: '<i class="fa-solid fa-check"></i> Setujui',
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Setujui & Simpan',
         cancelButtonText: 'Batal',
         confirmButtonColor: '#16a34a',
         preConfirm: function() {
             var no = (document.getElementById('sw-nosurat').value||'').trim();
             var tk = (document.getElementById('sw-token').value||'').trim();
             if (!no) { Swal.showValidationMessage('Nomor surat wajib diisi!'); return false; }
-            if (!tk) { Swal.showValidationMessage('Token wajib diisi!'); return false; }
+            if (!tk || tk.length < 4) { Swal.showValidationMessage('Token minimal 4 karakter!'); return false; }
             return { noSurat: no, token: tk };
         }
     }).then(function(result) {
