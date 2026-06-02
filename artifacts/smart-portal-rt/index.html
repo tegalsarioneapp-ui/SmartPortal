@@ -10659,8 +10659,8 @@ window.bukaFormLogin = function() {
             my.reverse().forEach(s => {
                 let badge = s.status === 'Selesai' ? 'badge-selesai' : 'badge-menunggu';
                 let btnAction = s.status === 'Selesai' 
-                    ? `<button class="btn-action bg-red" onclick="cetakPDFSurat(${s.id}, false)"><i class="fa-solid fa-file-pdf"></i> Download Asli</button>` 
-                    : `<span style="color:#94a3b8;"><i class="fa-solid fa-hourglass-half"></i> Sedang Diproses</span>`;
+                    ? `<div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn-action bg-red" onclick="cetakPDFSurat(${s.id}, false)" title="Download Asli"><i class="fa-solid fa-file-pdf"></i> Asli</button> <button class="btn-action bg-gold" onclick="cetakPDFSurat(${s.id}, true)" title="Download Salinan"><i class="fa-solid fa-copy"></i> Salinan</button></div>` 
+                    : `<span style="color:#94a3b8;font-size:0.82rem;"><i class="fa-solid fa-hourglass-half"></i> Menunggu Acc</span>`;
                 tb.innerHTML += `<tr><td>${s.tglPengajuan}</td><td><b style="color:var(--primary-dark);">${(s.keperluan||'').length>25?(s.keperluan||'').substring(0,25)+'...':s.keperluan||''}</b></td><td>${s.noSurat}</td><td><span class="badge ${badge}">${esc(s.status)}</span></td><td>${btnAction}</td></tr>`;
             });
         }
