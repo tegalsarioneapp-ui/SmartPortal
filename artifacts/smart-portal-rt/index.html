@@ -10140,8 +10140,7 @@ window.bukaFormLogin = function() {
         localStorage.setItem('db_req_surat', JSON.stringify(db));
 
         // 3. Animasi: Hilangkan Form, Munculkan Progress
-        document.getElementById('form-pengajuan-surat').style.display = 'none';
-        document.getElementById('tracking-surat-section').style.display = 'block';
+        document.getElementById('form-surat-warga-inner') && document.getElementById('form-surat-warga-inner').reset(); Swal.fire({icon:'success',title:'Pengajuan Terkirim!',text:'Pengajuan surat kamu sudah dikirim, tunggu konfirmasi dari RT.',confirmButtonText:'OK'}).then(function(){ if(typeof loadSuratWarga==='function') loadSuratWarga(); });
 
         // 4. Jalankan Simulasi Progress (Visual saja untuk kepuasan warga)
         updateProgressBar(25); // Step 1 selesai
@@ -10626,6 +10625,54 @@ window.bukaFormLogin = function() {
     
 
 
+
+window.verifikasiTokenSurat = function(suratId) {
+    var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
+    var surat = db.find(function(s){ return s.id === suratId; });
+    if (!surat) return Swal.fire('Error','Data surat tidak ditemukan','error');
+    Swal.fire({
+        title: '<i class="fa-solid fa-key"></i> Masukkan Token',
+        html: '<p style="color:#64748b;margin-bottom:12px;font-size:0.9rem;">Masukkan token yang diberikan oleh RT untuk mengunduh surat.</p>'
+            + '<input type="text" id="swal-token-input" maxlength="10" placeholder="Contoh: 225513"'
+            + ' style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;font-size:1.1rem;text-align:center;letter-spacing:4px;font-weight:700;"'
+            + ' oninput="var btn=document.getElementById('swal-btn-verif');if(btn){btn.disabled=this.value.trim().length<4;btn.style.opacity=this.value.trim().length<4?'0.4':'1';}">',
+        showConfirmButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Verifikasi',
+        confirmButtonColor: '#1d4ed8',
+        showCancelButton: true,
+        cancelButtonText: 'Batal',
+        didOpen: function() {
+            var btn = Swal.getConfirmButton();
+            if (btn) { btn.id = 'swal-btn-verif'; btn.disabled = true; btn.style.opacity = '0.4'; }
+            var inp = document.getElementById('swal-token-input');
+            if (inp) inp.focus();
+        },
+        preConfirm: function() {
+            var inp = document.getElementById('swal-token-input');
+            var tokenInput = inp ? inp.value.trim() : '';
+            if (!tokenInput) { Swal.showValidationMessage('Token tidak boleh kosong'); return false; }
+            if (String(tokenInput) !== String(surat.token)) {
+                Swal.showValidationMessage('<i class="fa-solid fa-xmark"></i> Token salah! Hubungi pengurus RT.');
+                return false;
+            }
+            return true;
+        }
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Token Valid!',
+                html: '<p>Surat sedang diunduh...</p><i class="fa-solid fa-circle-check" style="font-size:3rem;color:#16a34a;"></i>',
+                timer: 1800,
+                showConfirmButton: false,
+                timerProgressBar: true
+            }).then(function() {
+                if (typeof cetakPDFSurat === 'function') cetakPDFSurat(suratId, false);
+            });
+        }
+    });
+};
+
 window.loadSuratWarga = function() {
     try {
         var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]');
@@ -10651,19 +10698,9 @@ window.loadSuratWarga = function() {
             var badge = status === 'Selesai'
                 ? '<span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Selesai</span>'
                 : '<span style="background:#fef9c3;color:#ca8a04;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">Menunggu Acc</span>';
-            var btn = '';
-            if (status === 'Selesai') {
-                btn = '<div style="display:flex;flex-direction:column;gap:6px;">'
-                    + '<div style="display:flex;gap:6px;align-items:center;">'
-                    + '<input type="text" id="token-input-' + s.id + '" placeholder="Masukkan Token" maxlength="10" style="padding:5px 8px;border:1px solid #e2e8f0;border-radius:8px;font-size:0.78rem;width:120px;">'
-                    + '<button class="btn-download-token" onclick="verifikasiTokenSurat(' + s.id + ')">'
-                    + '<i class=\"fa-solid fa-file-pdf\"></i> Download</button>'
-                    + '</div>'
-                    + '<small style="color:#94a3b8;font-size:0.72rem;"><i class=\"fa-solid fa-circle-info\"></i> Masukkan token yang diberikan RT</small>'
-                    + '</div>';
-            } else {
-                btn = '<span style="color:#94a3b8;font-size:0.82rem;"><i class=\"fa-solid fa-hourglass-half\"></i> Menunggu Acc</span>';
-            }
+            var btn = status === 'Selesai'
+                ? '<button onclick="verifikasiTokenSurat(' + s.id + ')" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:white;border:none;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;"><i class=\"fa-solid fa-file-pdf\"></i> Download Surat</button>'
+                : '<span style="color:#94a3b8;font-size:0.82rem;"><i class=\"fa-solid fa-hourglass-half\"></i> Menunggu Acc</span>';
             rows += '<tr>'
                 + '<td style="padding:10px 12px;font-size:0.85rem;">' + tgl + '</td>'
                 + '<td style="padding:10px 12px;font-size:0.85rem;"><b style="color:var(--primary-dark);">' + keperluan + '</b></td>'
@@ -10699,8 +10736,7 @@ window.submitSuratWarga = function(e) {
         if (typeof syncSemuaData === 'function') syncSemuaData(true);
 
         // ANIMASI PROGRESS: Hilangkan form, munculkan progress
-        document.getElementById('form-pengajuan-surat').style.display = 'none';
-        document.getElementById('tracking-surat-section').style.display = 'block';
+        document.getElementById('form-surat-warga-inner') && document.getElementById('form-surat-warga-inner').reset(); Swal.fire({icon:'success',title:'Pengajuan Terkirim!',text:'Pengajuan surat kamu sudah dikirim, tunggu konfirmasi dari RT.',confirmButtonText:'OK'}).then(function(){ if(typeof loadSuratWarga==='function') loadSuratWarga(); });
 
         // Reset Style Animasi
         document.getElementById('progress-line-fill').style.width = '0%';
