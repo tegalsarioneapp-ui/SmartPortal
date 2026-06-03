@@ -1464,7 +1464,7 @@
     };
     window.loadProfilPribadiWarga = function() {
         if(!loggedInWarga) return; let db = JSON.parse(localStorage.getItem('db_warga')) || []; let myData = db.find(x => String(x.id) === String(loggedInWarga.id)); let tb = document.getElementById('tbody-profil-saya');
-        if(!tb) return; tb.innerHTML = ''; if(myData) { tb.innerHTML = `<tr><td><b style="color:var(--primary-dark); font-size:1.05rem;">${myData.nama}</b><br><small>NIK: ${myData.nik||'-'}</small></td><td><b>${myData.alamat}</b></td><td><button class="btn-action bg-blue" onclick="siapkanEditProfilSaya()"><i class="fa-solid fa-pen"></i> Edit</button></td></tr>`; } else { tb.innerHTML = `<tr><td colspan="3" style="text-align:center;">Anda belum melengkapi data.</td></tr>`; }
+        if(!tb) return; tb.innerHTML = ''; if(myData) { tb.innerHTML = `<tr><td><b style="color:var(--primary-dark); font-size:1.05rem;">${myData.nama}</b><br><small>NIK: ${myData.nik||'-'}</small></td><td><b>${myData.alamat}</b></td><td style="white-space:nowrap;"><button class="btn-action bg-blue" style="margin-bottom:4px;" onclick="window.lihatProfilWarga()"><i class="fa-solid fa-eye"></i> Lihat</button><br><button class="btn-action bg-gold" onclick="siapkanEditProfilSaya()"><i class="fa-solid fa-pen"></i> Edit</button></td></tr>`; } else { tb.innerHTML = `<tr><td colspan="3" style="text-align:center;">Anda belum melengkapi data.</td></tr>`; }
     };
     window.siapkanEditProfilSaya = function() {
         let db = JSON.parse(localStorage.getItem('db_warga')) || []; let myData = db.find(x => String(x.id) === String(loggedInWarga.id));
