@@ -4408,6 +4408,78 @@ body:not(.gt-dark) table td { color: #1e293b; }
 #view-warga table td { white-space: normal !important; word-break: break-word !important; }
 #view-admin table th,
 #view-warga table th { white-space: nowrap !important; }
+
+/* ═══ C. UNIVERSAL BUTTON COLOR FIX — ALL PORTALS ═══════════════════════════
+   Specificity: #id (1,0,0) + .class.class (0,2,0) = 1,2,0
+   Beats .gt-admin-admin-card-scope .card (0,2,0) which makes text #e5eefb.
+   Covers btn-action + btn-submit × bg-blue/green/gold/red/purple
+   in Admin, Warga, Bendahara, Koperasi portals.
+══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── ADMIN ── */
+#view-admin .btn-action.bg-blue,  #view-admin .btn-submit.bg-blue  { background:linear-gradient(135deg,#2563eb,#1d4ed8)!important; color:#fff!important; border:none!important; }
+#view-admin .btn-action.bg-green, #view-admin .btn-submit.bg-green { background:linear-gradient(135deg,#059669,#047857)!important; color:#fff!important; border:none!important; }
+#view-admin .btn-action.bg-gold,  #view-admin .btn-submit.bg-gold  { background:linear-gradient(135deg,#d97706,#b45309)!important; color:#fff!important; border:none!important; }
+#view-admin .btn-action.bg-red,   #view-admin .btn-submit.bg-red   { background:linear-gradient(135deg,#dc2626,#b91c1c)!important; color:#fff!important; border:none!important; }
+#view-admin .btn-action.bg-purple,#view-admin .btn-submit.bg-purple { background:linear-gradient(135deg,#7c3aed,#6d28d9)!important; color:#fff!important; border:none!important; }
+/* btn-submit tanpa bg-* class di admin */
+#view-admin .btn-submit:not([class*="bg-"]):not([style*="background"]) { background:linear-gradient(135deg,#2563eb,#1d4ed8)!important; color:#fff!important; border:none!important; }
+/* btn-action dengan inline background wajib putih */
+#view-admin .btn-action[style*="background"]:not([style*="color"]) { color:#fff!important; }
+/* btn-submit dengan inline background wajib putih */
+#view-admin .btn-submit[style*="background"]:not([style*="color"]) { color:#fff!important; }
+
+/* ── WARGA ── */
+#view-warga .btn-action.bg-blue,  #view-warga .btn-submit.bg-blue  { background:linear-gradient(135deg,#2563eb,#1d4ed8)!important; color:#fff!important; border:none!important; }
+#view-warga .btn-action.bg-green, #view-warga .btn-submit.bg-green { background:linear-gradient(135deg,#059669,#047857)!important; color:#fff!important; border:none!important; }
+#view-warga .btn-action.bg-gold,  #view-warga .btn-submit.bg-gold  { background:linear-gradient(135deg,#d97706,#b45309)!important; color:#fff!important; border:none!important; }
+#view-warga .btn-action.bg-red,   #view-warga .btn-submit.bg-red   { background:linear-gradient(135deg,#dc2626,#b91c1c)!important; color:#fff!important; border:none!important; }
+#view-warga .btn-action.bg-purple,#view-warga .btn-submit.bg-purple { background:linear-gradient(135deg,#7c3aed,#6d28d9)!important; color:#fff!important; border:none!important; }
+#view-warga .btn-submit:not([class*="bg-"]):not([style*="background"]) { background:linear-gradient(135deg,#2563eb,#1d4ed8)!important; color:#fff!important; border:none!important; }
+#view-warga .btn-action[style*="background"]:not([style*="color"]) { color:#fff!important; }
+
+/* ── BENDAHARA ── */
+#view-ben .btn-action.bg-blue,  #view-ben .btn-submit.bg-blue  { background:linear-gradient(135deg,#2563eb,#1d4ed8)!important; color:#fff!important; border:none!important; }
+#view-ben .btn-action.bg-green, #view-ben .btn-submit.bg-green { background:linear-gradient(135deg,#059669,#047857)!important; color:#fff!important; border:none!important; }
+#view-ben .btn-action.bg-gold,  #view-ben .btn-submit.bg-gold  { background:linear-gradient(135deg,#d97706,#b45309)!important; color:#fff!important; border:none!important; }
+#view-ben .btn-action.bg-red,   #view-ben .btn-submit.bg-red   { background:linear-gradient(135deg,#dc2626,#b91c1c)!important; color:#fff!important; border:none!important; }
+#view-ben .btn-action.bg-purple,#view-ben .btn-submit.bg-purple { background:linear-gradient(135deg,#7c3aed,#6d28d9)!important; color:#fff!important; border:none!important; }
+#view-ben .btn-submit:not([class*="bg-"]):not([style*="background"]) { background:linear-gradient(135deg,#1e40af,#1d4ed8)!important; color:#fff!important; border:none!important; }
+#view-ben .btn-action[style*="background"]:not([style*="color"]) { color:#fff!important; }
+#view-ben .btn-submit[style*="background"]:not([style*="color"]) { color:#fff!important; }
+
+/* ── KOPERASI ── */
+#view-kop .btn-action.bg-blue,  #view-kop .btn-submit.bg-blue  { background:linear-gradient(135deg,#2563eb,#1d4ed8)!important; color:#fff!important; border:none!important; }
+#view-kop .btn-action.bg-green, #view-kop .btn-submit.bg-green { background:linear-gradient(135deg,#059669,#047857)!important; color:#fff!important; border:none!important; }
+#view-kop .btn-action.bg-gold,  #view-kop .btn-submit.bg-gold  { background:linear-gradient(135deg,#d97706,#b45309)!important; color:#fff!important; border:none!important; }
+#view-kop .btn-action.bg-red,   #view-kop .btn-submit.bg-red   { background:linear-gradient(135deg,#dc2626,#b91c1c)!important; color:#fff!important; border:none!important; }
+#view-kop .btn-action.bg-purple,#view-kop .btn-submit.bg-purple { background:linear-gradient(135deg,#7c3aed,#6d28d9)!important; color:#fff!important; border:none!important; }
+#view-kop .btn-submit:not([class*="bg-"]):not([style*="background"]) { background:linear-gradient(135deg,#7c3aed,#6d28d9)!important; color:#fff!important; border:none!important; }
+#view-kop .btn-action[style*="background"]:not([style*="color"]) { color:#fff!important; }
+#view-kop .btn-submit[style*="background"]:not([style*="color"]) { color:#fff!important; }
+
+/* ── card-title-header : semua btn-action & btn-submit wajib putih ── */
+.card-title-header .btn-action,
+.card-title-header .btn-submit { color:#fff!important; }
+
+/* ── btn-action polos (tanpa bg-* dan tanpa inline bg) di semua portal ──
+   fallback agar tidak pernah invisible */
+#view-warga .btn-action:not([class*="bg-"]):not([style*="background"]) {
+  background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;
+  color:#fff!important; border:none!important;
+  border-radius:9px!important; padding:9px 16px!important;
+  font-weight:700!important; font-size:0.85rem!important;
+}
+
+/* ── hover brightness universal ── */
+#view-admin .btn-action:hover, #view-admin .btn-submit:hover,
+#view-warga .btn-action:hover, #view-warga .btn-submit:hover,
+#view-ben   .btn-action:hover, #view-ben   .btn-submit:hover,
+#view-kop   .btn-action:hover, #view-kop   .btn-submit:hover {
+  filter: brightness(1.08) !important;
+  transform: translateY(-1px) !important;
+}
+
 </style>
 
     <script>
@@ -6844,7 +6916,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
 
                 <div id="warga-profil" class="warga-tab-content">
             <div id="warga-view-data">
-                <div class="card-title-header"><h3><i class="fa-solid fa-users"></i> Data Keluarga Saya</h3><button class="btn-action bg-green" onclick="tampilFormKeluarga(true)"><i class="fa-solid fa-plus"></i> Tambah / Edit Data</button></div>
+                <div class="card-title-header"><h3><i class="fa-solid fa-users"></i> Data Keluarga Saya</h3><button onclick="tampilFormKeluarga(true)" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(5,150,105,0.25);"><i class="fa-solid fa-plus"></i> Tambah / Edit Data</button></div>
                 <div class="table-responsive" style="margin-bottom: 30px;"><table><thead><tr><th>Kepala Keluarga & NIK</th><th>Alamat Rumah</th><th>Aksi</th></tr></thead><tbody id="tbody-profil-saya"></tbody></table></div>
                 <div class="card-title-header" style="margin-top:20px;">
                     <h3><i class="fa-solid fa-key"></i> Pengaturan Keamanan & Notifikasi</h3>
@@ -6907,7 +6979,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                             <div class="form-group" style="grid-column: 1 / -1;"><label>Alamat Lengkap / Blok *</label><input type="text" id="kk-alamat" required placeholder="Contoh: Blok A No. 12"></div>
                         </div>
                         <h4 style="margin-top:20px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;">Data Anak</h4>
-                        <div id="container-anak" style="margin-bottom:15px;"></div><button type="button" class="btn-action bg-green" onclick="tambahKolomAnak()"><i class="fa-solid fa-plus"></i> Tambah Kolom Anak</button>
+                        <div id="container-anak" style="margin-bottom:15px;"></div><button type="button" onclick="tambahKolomAnak()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(5,150,105,0.25);"><i class="fa-solid fa-plus"></i> Tambah Kolom Anak</button>
                         <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:30px; border-top:1px solid #e2e8f0; padding-top:20px;">
                             <button type="button" onclick="tampilFormKeluarga(false)" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:#f1f5f9;color:#475569;border:1.5px solid #cbd5e1;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'"><i class="fa-solid fa-xmark"></i> Batal</button>
                             <button type="submit" style="display:inline-flex;align-items:center;gap:8px;padding:11px 28px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,0.32);transition:opacity .15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'"><i class="fa-solid fa-floppy-disk"></i> Simpan Data</button>
@@ -6928,8 +7000,8 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                 <div class="card-title-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                     <h3><i class="fa-solid fa-file-pdf"></i> Dokumen Resmi Struktur (PDF)</h3>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                        <a id="warga-pengurus-pdf-download" class="btn-action bg-blue" href="#" download style="text-decoration:none;"><i class="fa-solid fa-download"></i> Unduh PDF</a>
-                        <button class="btn-action bg-gold" onclick="bukaPdfFullscreen('warga-pengurus-pdf-frame')"><i class="fa-solid fa-expand"></i> Layar Penuh</button>
+                        <a id="warga-pengurus-pdf-download" href="#" download style="text-decoration:none;display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);"><i class="fa-solid fa-download"></i> Unduh PDF</a>
+                        <button onclick="bukaPdfFullscreen('warga-pengurus-pdf-frame')" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(217,119,6,0.25);"><i class="fa-solid fa-expand"></i> Layar Penuh</button>
                     </div>
                 </div>
                 <div id="warga-pengurus-pdf-meta" style="font-size:0.85rem; color:#64748b; margin-bottom:10px;"></div>
@@ -6989,7 +7061,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                             <textarea id="req_keperluan" rows="4" placeholder="Jelaskan detail keperluan pengajuan (Otomatis turun baris)" required style="resize:vertical; line-height:1.6;"></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn-submit bg-blue"><i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan</button>
+                    <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);width:100%;margin-top:12px;"><i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan</button>
                 </form>
             </div>
 
@@ -7015,7 +7087,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <span id="step-3-text" style="font-size: 0.85rem; font-weight: bold; margin-top: 10px; color:var(--text-muted);">Selesai</span>
                     </div>
                 </div>
-                <button class="btn-action bg-blue" onclick="resetFormSuratWarga()"><i class="fa-solid fa-rotate-left"></i> Buat Pengajuan Baru</button>
+                <button onclick="resetFormSuratWarga()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);"><i class="fa-solid fa-rotate-left"></i> Buat Pengajuan Baru</button>
             </div>
 
             <div class="card">
@@ -7044,11 +7116,11 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                     <div class="form-group"><label>Judul Aduan Singkat</label><input type="text" id="aduan-judul" required placeholder="Contoh: Lampu Jalan Mati di Blok A"></div>
                     <div class="form-group" style="grid-column: 1 / -1;"><label>Detail Kronologi / Keluhan</label><textarea id="aduan-isi" rows="4" required placeholder="Ceritakan sedetail mungkin permasalahan di sini..."></textarea></div>
                     <div class="form-group" style="grid-column: 1 / -1;"><label>Lampirkan Bukti (Foto / Screenshot) <small style="color:var(--text-muted);font-weight:400;">— opsional</small></label><input type="file" id="aduan-bukti" accept="image/*" style="background: rgba(255,255,255,0.5); padding: 10px;"></div>
-                    <button type="submit" class="btn-submit bg-red" style="grid-column: 1 / -1;"><i class="fa-solid fa-paper-plane"></i> Kirim Laporan ke Pak RT</button>
+                    <button type="submit" style="grid-column: 1 / -1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(220,38,38,0.28);width:100%;margin-top:12px;"><i class="fa-solid fa-paper-plane"></i> Kirim Laporan ke Pak RT</button>
                 </form>
             </div>
             <div class="card">
-                <div class="card-title-header"><h3><i class="fa-solid fa-list-check"></i> Riwayat Aduan Saya</h3><button class="btn-action bg-blue" onclick="if(typeof loadAduanWarga === 'function') loadAduanWarga();"><i class="fa-solid fa-rotate"></i> Refresh Data</button></div>
+                <div class="card-title-header"><h3><i class="fa-solid fa-list-check"></i> Riwayat Aduan Saya</h3><button onclick="if(typeof loadAduanWarga === 'function') loadAduanWarga();" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);"><i class="fa-solid fa-rotate"></i> Refresh Data</button></div>
                 <div class="table-responsive"><table><thead><tr><th>Tgl Dikirim</th><th>Kategori</th><th>Keluhan</th><th>Bukti</th><th>Status</th></tr></thead><tbody id="tbody-aduan-warga"></tbody></table></div>
             </div>
         </div>
@@ -7202,11 +7274,11 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                     <div class="card-title-header" style="display:flex; justify-content:space-between; align-items:center;">
                         <h3><i class="fa-solid fa-users-rectangle"></i> Database Keluarga (KK) RT 005</h3>
                         <div style="display:flex; gap:10px;">
-                            <button class="btn-action bg-gold" onclick="loadTabelKKAdmin()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                            <button onclick="loadTabelKKAdmin()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(217,119,6,0.25);"><i class="fa-solid fa-rotate"></i> Refresh</button>
                             <button id="btn-toggle-sensitive" class="btn-action" style="background:#7c3aed;color:#fff;border:none;" onclick="window.toggleDataSensitif()"><i class="fa-solid fa-eye-slash"></i> Buka Data Sensitif</button>
                             <input type="file" id="import-excel-warga" accept=".xlsx, .xls, .csv" style="display:none" onchange="prosesImportExcelWarga(event)">
 <button class="btn-action" style="background:#8b5cf6; color:white; border:none;" onclick="document.getElementById('import-excel-warga').click()"><i class="fa-solid fa-file-excel"></i> Import Excel Massal</button>
-<button class="btn-action" style="background:#059669;color:#fff;border:none;" onclick="exportExcelWarga()"><i class="fa-solid fa-file-excel"></i> Export Excel</button><button class="btn-action bg-green" onclick="tampilFormKKAdmin(true)"><i class="fa-solid fa-plus"></i> Tambah KK Manual</button>
+<button class="btn-action" style="background:#059669;color:#fff;border:none;" onclick="exportExcelWarga()"><i class="fa-solid fa-file-excel"></i> Export Excel</button><button onclick="tampilFormKKAdmin(true)" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(5,150,105,0.25);"><i class="fa-solid fa-plus"></i> Tambah KK Manual</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -7264,8 +7336,8 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                             <div class="form-group" style="grid-column: 1 / -1;"><label>Alamat Lengkap / Blok *</label><input type="text" id="adm-kk-alamat" placeholder="Contoh: Blok A No. 12" required></div>
                         </div>
                         <h4 style="margin-top:20px; border-bottom:1px solid #e2e8f0; padding-bottom:10px; color:var(--primary-dark);">Data Anak</h4>
-                        <div id="adm-container-anak" style="margin-bottom:15px;"></div><button type="button" class="btn-action bg-blue" onclick="tambahKolomAnakAdmin()"><i class="fa-solid fa-child"></i> Tambah Kolom Anak</button>
-                        <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:30px; border-top:1px solid #e2e8f0; padding-top:20px;"><button type="button" class="btn-action" style="color:var(--danger); border-color:var(--danger);" onclick="tampilFormKKAdmin(false)">Batal</button><button type="submit" class="btn-submit bg-green" style="width:auto; margin-top:0;"><i class="fa-solid fa-save"></i> Simpan Data Keluarga</button></div>
+                        <div id="adm-container-anak" style="margin-bottom:15px;"></div><button type="button" onclick="tambahKolomAnakAdmin()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);"><i class="fa-solid fa-child"></i> Tambah Kolom Anak</button>
+                        <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:30px; border-top:1px solid #e2e8f0; padding-top:20px;"><button type="button" onclick="tampilFormKKAdmin(false)" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:#f1f5f9;color:#475569;border:1.5px solid #cbd5e1;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;">Batal</button><button type="submit" style="display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,0.28);margin-top:0;"><i class="fa-solid fa-save"></i> Simpan Data Keluarga</button></div>
                     </form>
                 </div>
             </div>
@@ -7281,7 +7353,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <div class="form-group" style="grid-column: 1/-1;"><label>Keterangan Tambahan</label><input type="text" id="m_keterangan" required></div>
                         <div class="form-group" style="grid-column: 1/-1;"><label>Tanggal Eksekusi</label><input type="date" id="m_tanggal" required></div>
                     </div>
-                    <button type="submit" class="btn-submit bg-blue"><i class="fa-solid fa-save"></i> Arsipkan Mutasi</button>
+                    <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);width:100%;margin-top:12px;"><i class="fa-solid fa-save"></i> Arsipkan Mutasi</button>
                 </form>
             </div>
             <div class="card"><div class="card-title-header"><h3><i class="fa-solid fa-book-journal-whills"></i> Buku Induk Mutasi</h3></div><div class="table-responsive"><table><thead><tr><th>Nama Subjek</th><th>Status Mutasi</th><th>Catatan</th><th>Tgl Tercatat</th><th>Opsi</th></tr></thead><tbody id="tabel-mutasi"></tbody></table></div></div>
@@ -7322,9 +7394,9 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
 <div id="admin-publikasi" class="admin-tab-content">
 
             <div style="display: flex; gap: 15px; margin-bottom: 25px; background: #fff; padding: 15px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto;">
-                <button class="btn-action bg-blue" onclick="openSubPublikasi('sub-agenda')" style="flex:1; justify-content:center; font-size:1.05rem; padding:15px; border-radius:12px; box-shadow:none;"><i class="fa-solid fa-calendar-days"></i> Agenda RT</button>
-                <button class="btn-action bg-gold" onclick="openSubPublikasi('sub-berita')" style="flex:1; justify-content:center; font-size:1.05rem; padding:15px; border-radius:12px; box-shadow:none;"><i class="fa-solid fa-newspaper"></i> Berita RT 005</button>
-                <button class="btn-action bg-green" onclick="openSubPublikasi('sub-notulen')" style="flex:1; justify-content:center; font-size:1.05rem; padding:15px; border-radius:12px; box-shadow:none;"><i class="fa-solid fa-book-open"></i> Notulen & Arisan</button>
+                <button onclick="openSubPublikasi('sub-agenda')" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:12px;font-size:1.05rem;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,0.3);"><i class="fa-solid fa-calendar-days"></i> Agenda RT</button>
+                <button onclick="openSubPublikasi('sub-berita')" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:12px;font-size:1.05rem;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(217,119,6,0.3);"><i class="fa-solid fa-newspaper"></i> Berita RT 005</button>
+                <button onclick="openSubPublikasi('sub-notulen')" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:12px;font-size:1.05rem;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(5,150,105,0.3);"><i class="fa-solid fa-book-open"></i> Notulen & Arisan</button>
             </div>
 
             <div id="sub-agenda" class="sub-pub-content">
@@ -7338,7 +7410,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <div class="form-group"><label>Waktu (Jam)</label><input type="time" id="k_waktu" required></div>
                         <div class="form-group"><label>Tempat</label><input type="text" id="k_tempat" required></div>
                         <div class="form-group" style="grid-column: 1 / -1;"><label>Keterangan Tambahan</label><textarea id="k_uraian" rows="3"></textarea></div>
-                        <button type="submit" class="btn-submit bg-blue" style="grid-column: 1 / -1;"><i class="fa-solid fa-save"></i> Sebarkan Undangan</button>
+                        <button type="submit" style="grid-column:1/-1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);width:100%;margin-top:12px;"><i class="fa-solid fa-save"></i> Sebarkan Undangan</button>
                     </form>
                 </div>
                 <div class="card"><div class="card-title-header"><h3><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Agenda</h3></div><div class="table-responsive"><table><thead><tr><th>No Surat</th><th>Perihal / Acara</th><th>Opsi</th></tr></thead><tbody id="tabel-riwayat-kegiatan"></tbody></table></div></div>
@@ -7352,7 +7424,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <div class="form-group"><label>Judul Berita</label><input type="text" id="b_judul" required></div>
                         <div class="form-group" style="grid-column: 1 / -1;"><label>Isi Berita</label><textarea id="b_isi" rows="4" required></textarea></div>
                         <div class="form-group" style="grid-column: 1 / -1;"><label>Lampiran Gambar (Bisa Kosong)</label><input type="file" id="b_gambar" accept="image/*" style="padding:10px; background:#f8fafc; border-radius:8px;"></div>
-                        <button type="submit" class="btn-submit bg-gold" style="grid-column: 1 / -1;"><i class="fa-solid fa-paper-plane"></i> Siarkan Berita</button>
+                        <button type="submit" style="grid-column:1/-1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(217,119,6,0.28);width:100%;margin-top:12px;"><i class="fa-solid fa-paper-plane"></i> Siarkan Berita</button>
                     </form>
                 </div>
                 <div class="card"><div class="card-title-header"><h3><i class="fa-solid fa-list"></i> Daftar Berita</h3></div><div class="table-responsive"><table><thead><tr><th>Kategori</th><th>Tanggal</th><th>Judul Berita</th><th>Aksi</th></tr></thead><tbody id="tbody-admin-berita"></tbody></table></div></div>
@@ -7367,23 +7439,23 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <div class="form-group"><label>Tanggal Terima</label><input type="date" id="inp_arisan_tgl" required></div>
                         <div class="form-group"><label style="color:var(--primary-blue); font-weight:bold;">Tuan Rumah Selanjutnya</label><input type="text" id="inp_host_nama" required placeholder="Contoh: Keluarga Pak Joko"></div>
                         <div class="form-group"><label>Tanggal Acara Selanjutnya</label><input type="date" id="inp_host_tgl" required></div>
-                        <button type="submit" class="btn-submit bg-green" style="grid-column: 1 / -1; margin-top:0;"><i class="fa-solid fa-check-double"></i> Update Info ke Dasbor Warga</button>
+                        <button type="submit" style="grid-column:1/-1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,0.28);width:100%;margin-top:0;"><i class="fa-solid fa-check-double"></i> Update Info ke Dasbor Warga</button>
                     </form>
                 </div>
 
                 <div class="card" style="border-top: 4px solid #10b981;">
                     <div class="card-title-header">
                         <h3><i class="fa-solid fa-pen-nib"></i> Tulis Notulen Hasil Rapat</h3>
-                        <button type="button" class="btn-action bg-blue" onclick="if(typeof susunNotulenAI === 'function') susunNotulenAI();"><i class="fa-solid fa-wand-magic-sparkles"></i> Rapikan Teks dengan AI</button>
+                        <button type="button" onclick="if(typeof susunNotulenAI === 'function') susunNotulenAI();" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);"><i class="fa-solid fa-wand-magic-sparkles"></i> Rapikan Teks dengan AI</button>
                     </div>
                     <form onsubmit="simpanNotulen(event)" class="form-grid">
                         <div class="form-group"><label>Tanggal Rapat</label><input type="date" id="inp_notul_tgl" required></div>
                         <div class="form-group"><label>Agenda / Judul Rapat</label><input type="text" id="inp_notul_judul" required placeholder="Contoh: Rapat Persiapan 17 Agustus"></div>
                         <div class="form-group" style="grid-column: 1 / -1;"><label>Poin-Poin Hasil Rapat (Ketik bebas)</label><textarea id="inp_notul_isi" rows="6" required placeholder="Ketik hasil rapat di sini..."></textarea></div>
-                        <button type="submit" class="btn-submit bg-green" style="grid-column: 1 / -1;"><i class="fa-solid fa-save"></i> Simpan Arsip Notulen</button>
+                        <button type="submit" style="grid-column:1/-1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,0.28);width:100%;margin-top:12px;"><i class="fa-solid fa-save"></i> Simpan Arsip Notulen</button>
                     </form>
                 </div>
-                <div class="card"><div class="card-title-header"><h3><i class="fa-solid fa-folder-open"></i> Riwayat Arsip Notulen</h3><button class="btn-action bg-blue" onclick="if(typeof loadNotulenAdmin === 'function') loadNotulenAdmin();"><i class="fa-solid fa-rotate"></i> Refresh Tabel</button></div><div class="table-responsive"><table><thead><tr><th>Tanggal</th><th>Judul Rapat</th><th>Opsi Dokumen</th></tr></thead><tbody id="tbody-notulen"></tbody></table></div></div>
+                <div class="card"><div class="card-title-header"><h3><i class="fa-solid fa-folder-open"></i> Riwayat Arsip Notulen</h3><button onclick="if(typeof loadNotulenAdmin === 'function') loadNotulenAdmin();" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);"><i class="fa-solid fa-rotate"></i> Refresh Tabel</button></div><div class="table-responsive"><table><thead><tr><th>Tanggal</th><th>Judul Rapat</th><th>Opsi Dokumen</th></tr></thead><tbody id="tbody-notulen"></tbody></table></div></div>
             </div>
 
         </div>
@@ -7396,7 +7468,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                             <option value="Semua">Semua Bulan</option>
                             <option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option><option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option><option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
                         </select>
-                        <button class="btn-action bg-gold" onclick="cetakRekapAduan()"><i class="fa-solid fa-print"></i> Cetak Rekap Bulanan</button>
+                        <button onclick="cetakRekapAduan()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(217,119,6,0.25);"><i class="fa-solid fa-print"></i> Cetak Rekap Bulanan</button>
                     </div>
                 </div>
                 <div class="table-responsive"><table><thead><tr><th>Tgl & Pelapor</th><th>Kategori</th><th>Detail Laporan</th><th>Bukti Lampiran</th><th>Status (Tindakan)</th></tr></thead><tbody id="tbody-aduan-admin"></tbody></table></div>
@@ -7413,7 +7485,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <div class="form-group"><label>Link Google Maps (Opsional)</label><input type="text" id="d_maps"></div>
                         <div class="form-group" style="grid-column: 1 / -1;"><label>Pilih Ikon Layanan</label><select id="d_icon"><option value="fa-headset|#ef4444">Call Center Umum (Merah)</option><option value="fa-fire-extinguisher|#f97316">Pemadam Kebakaran (Oranye)</option><option value="fa-ambulance|#10b981">Ambulans / Medis (Hijau)</option><option value="fa-shield-halved|#3b82f6">Polisi / Keamanan (Biru)</option><option value="fa-bolt|#f59e0b">PLN / Kelistrikan (Kuning)</option><option value="fa-droplet|#06b6d4">PDAM / Air (Cyan)</option></select></div>
                     </div>
-                    <div style="display:flex; gap:15px; margin-top:15px;"><button type="submit" class="btn-submit bg-red" id="btn-submit-darurat" style="margin-top:0;"><i class="fa-solid fa-save"></i> Tambahkan ke Layar Warga</button><button type="button" class="btn-submit" id="btn-cancel-edit-darurat" style="background: transparent; border:1px solid var(--danger); color:var(--danger); display: none; margin-top:0;" onclick="cancelEditDarurat()"><i class="fa-solid fa-times"></i> Batal Edit</button></div>
+                    <div style="display:flex; gap:15px; margin-top:15px;"><button type="submit" id="btn-submit-darurat" style="display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(220,38,38,0.28);margin-top:0;"><i class="fa-solid fa-save"></i> Tambahkan ke Layar Warga</button><button type="button" class="btn-submit" id="btn-cancel-edit-darurat" style="background: transparent; border:1px solid var(--danger); color:var(--danger); display: none; margin-top:0;" onclick="cancelEditDarurat()"><i class="fa-solid fa-times"></i> Batal Edit</button></div>
                 </form>
             </div>
             <div class="card"><div class="card-title-header"><h3><i class="fa-solid fa-address-book"></i> Daftar Kontak Siaga</h3></div><div class="table-responsive"><table><thead><tr><th>Instansi</th><th>No. Telp</th><th>WA / Maps</th><th>Aksi</th></tr></thead><tbody id="tbody-admin-darurat"></tbody></table></div></div>
@@ -7485,7 +7557,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <textarea id="bs-catatan" rows="2" placeholder="Contoh: 3 kg beras + minyak goreng 1L" style="width:100%;padding:14px 18px;border:2px solid #e2e8f0;border-radius:12px;font-size:1rem;resize:vertical;"></textarea>
                     </div>
                     <div style="grid-column:1/-1;text-align:right;">
-                        <button type="submit" class="btn-submit bg-red" style="width:auto;margin:0;padding:12px 28px;"><i class="fa-solid fa-save"></i> Simpan Catatan Bantuan</button>
+                        <button type="submit" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(220,38,38,0.28);width:auto;margin:0;"><i class="fa-solid fa-save"></i> Simpan Catatan Bantuan</button>
                     </div>
                 </form>
             </div>
@@ -7520,7 +7592,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                             <div class="form-group" style="margin:0;"><label>Nama RW</label><input type="text" id="set_nama_rw"></div>
                             <div class="form-group" style="margin:0;"><label>Nama Bendahara</label><input type="text" id="set_nama_ben"></div>
                         </div>
-                        <button class="btn-submit bg-blue" style="margin-top:16px;" onclick="simpanPengaturanSistem()"><i class="fa-solid fa-floppy-disk"></i> Simpan Identitas</button>
+                        <button onclick="simpanPengaturanSistem()" style="display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);margin-top:16px;"><i class="fa-solid fa-floppy-disk"></i> Simpan Identitas</button>
                     </div>
                 </div>
             </div>
@@ -7556,7 +7628,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <div style="background:#fef9c3;border:1px solid #fde047;border-radius:10px;padding:10px 14px;margin:12px 0;font-size:0.8rem;color:#78350f;">
                             <i class="fa-solid fa-triangle-exclamation"></i> Catat password baru sebelum menyimpan.
                         </div>
-                        <button class="btn-submit" style="background:#ef4444;" onclick="simpanPasswordSistem()"><i class="fa-solid fa-floppy-disk"></i> Simpan Password Baru</button>
+                        <button onclick="simpanPasswordSistem()" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(239,68,68,0.3);width:100%;margin-top:12px;"><i class="fa-solid fa-floppy-disk"></i> Simpan Password Baru</button>
                     </div>
                 </div>
             </div>
@@ -7574,13 +7646,13 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
                                 <div style="font-weight:700;color:#10b981;margin-bottom:6px;"><i class="fa-solid fa-cloud-arrow-down"></i> Download Backup</div>
                                 <div style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Unduh seluruh data dari server PostgreSQL dalam format JSON terenkripsi.</div>
-                                <button class="btn-action bg-green" style="width:100%;margin:0;" onclick="exportData()"><i class="fa-solid fa-download"></i> Download Backup (JSON)</button>
+                                <button onclick="exportData()" style="width:100%;margin:0;display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(5,150,105,0.25);"><i class="fa-solid fa-download"></i> Download Backup (JSON)</button>
                             </div>
                             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
                                 <div style="font-weight:700;color:#3b82f6;margin-bottom:6px;"><i class="fa-solid fa-cloud-arrow-up"></i> Restore Data</div>
                                 <div style="font-size:0.82rem;color:#64748b;margin-bottom:12px;">Pulihkan data dari file backup JSON ke server PostgreSQL.</div>
                                 <input type="file" id="import_file" accept=".json" style="display:none" onchange="prosesImportData(event)">
-                                <button class="btn-action bg-blue" style="width:100%;margin:0;" onclick="document.getElementById('import_file').click()"><i class="fa-solid fa-upload"></i> Restore Data (JSON)</button>
+                                <button onclick="document.getElementById('import_file').click()" style="width:100%;margin:0;display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);"><i class="fa-solid fa-upload"></i> Restore Data (JSON)</button>
                             </div>
                         </div>
                         <p style="font-size:0.78rem;color:#94a3b8;text-align:center;margin-top:8px;"><i class="fa-solid fa-shield-halved"></i> Backup diambil langsung dari PostgreSQL. Aman untuk multi-device.</p>
@@ -7604,7 +7676,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                             </div>
                         </div>
                         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                            <button class="btn-action bg-blue" onclick="window.triggerPWAInstall()"><i class="fa-solid fa-download"></i> Install Sekarang</button>
+                            <button onclick="window.triggerPWAInstall()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);"><i class="fa-solid fa-download"></i> Install Sekarang</button>
                             <button class="btn-action" style="background:#64748b;" onclick="try{localStorage.removeItem('ft-install-dismissed-ts');}catch(e){}Toast.fire({icon:'success',title:'Banner install direset, akan muncul saat reload'});"><i class="fa-solid fa-rotate-right"></i> Reset Banner Install</button>
                         </div>
                     </div>
@@ -7686,7 +7758,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                 <div class="acc-body" id="acc-danger">
                     <div class="acc-body-inner">
                         <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:15px;">Fitur ini digunakan untuk menghapus data spesifik atau mereset aplikasi ke pengaturan pabrik.</p>
-                        <button class="btn-submit bg-red" onclick="bukaMenuResetData()" style="max-width:300px;margin:0 auto;box-shadow:0 10px 20px rgba(239,68,68,0.3) !important;"><i class="fa-solid fa-trash-can"></i> Hapus / Reset Data</button>
+                        <button onclick="bukaMenuResetData()" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 10px 20px rgba(239,68,68,0.35);max-width:300px;margin:0 auto;width:100%;"><i class="fa-solid fa-trash-can"></i> Hapus / Reset Data</button>
                     </div>
                 </div>
             </div>
@@ -7712,7 +7784,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <div class="form-group"><label>Nama Lengkap Pengurus</label><input type="text" id="org-nama" required></div>
                         <div class="form-group"><label>Upload Foto (Opsional)</label><input type="file" id="org-foto" accept="image/*" style="background: rgba(255,255,255,0.5); padding: 10px;"></div>
                     </div>
-                    <div style="display:flex; gap:15px; margin-top: 15px;"><button type="submit" class="btn-submit bg-blue" id="btn-submit-org" style="margin-top:0; width: auto;"><i class="fa-solid fa-save"></i> Simpan Data Pengurus</button><button type="button" class="btn-submit bg-red" id="btn-cancel-org" style="display: none; margin-top:0; width: auto;" onclick="batalEditPengurus()"><i class="fa-solid fa-times"></i> Batal Edit</button></div>
+                    <div style="display:flex; gap:15px; margin-top: 15px;"><button type="submit" id="btn-submit-org" style="display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);margin-top:0;width:auto;"><i class="fa-solid fa-save"></i> Simpan Data Pengurus</button><button type="button" class="btn-submit bg-red" id="btn-cancel-org" style="display: none; margin-top:0; width: auto;" onclick="batalEditPengurus()"><i class="fa-solid fa-times"></i> Batal Edit</button></div>
                 </form>
             </div>
 
@@ -7721,7 +7793,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                 <div class="form-group">
                     <textarea id="org-deskripsi-input" rows="3" placeholder="Contoh: Struktur kepengurusan ini disusun berdasarkan Surat Keputusan Kepala Kelurahan Tegalsari Nomor: 123/SK/2026..." style="resize:vertical;"></textarea>
                 </div>
-                <button class="btn-submit bg-blue" style="width: auto; margin-top: 10px;" onclick="simpanDeskripsiPengurus()"><i class="fa-solid fa-save"></i> Simpan Deskripsi</button>
+                <button onclick="simpanDeskripsiPengurus()" style="display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);width:auto;margin-top:10px;"><i class="fa-solid fa-save"></i> Simpan Deskripsi</button>
             </div>
 
             <div class="card form-input-section" style="border-top: 4px solid var(--primary-blue);">
@@ -7735,9 +7807,9 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                 </div>
                 <div id="pengurus-pdf-info" style="margin:10px 0; padding:12px; border-radius:8px; background:#f1f5f9; color:#475569; font-size:0.9rem;">Belum ada dokumen ter-upload.</div>
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <button class="btn-submit bg-blue" style="width:auto; margin-top:0;" onclick="uploadPengurusPdf()"><i class="fa-solid fa-upload"></i> Upload Dokumen</button>
-                    <button class="btn-action bg-gold" onclick="lihatPengurusPdf()" id="btn-view-pengurus-pdf" style="display:none;"><i class="fa-solid fa-eye"></i> Pratinjau</button>
-                    <button class="btn-action bg-red" onclick="hapusPengurusPdf()" id="btn-del-pengurus-pdf" style="display:none;"><i class="fa-solid fa-trash"></i> Hapus</button>
+                    <button onclick="uploadPengurusPdf()" style="display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);margin-top:0;width:auto;"><i class="fa-solid fa-upload"></i> Upload Dokumen</button>
+                    <button onclick="lihatPengurusPdf()" id="btn-view-pengurus-pdf" style="display:none;display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(217,119,6,0.25);"><i class="fa-solid fa-eye"></i> Pratinjau</button>
+                    <button onclick="hapusPengurusPdf()" id="btn-del-pengurus-pdf" style="display:none;display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(220,38,38,0.25);"><i class="fa-solid fa-trash"></i> Hapus</button>
                 </div>
             </div>
             <div class="card"><div class="card-title-header"><h3><i class="fa-solid fa-list-check"></i> Riwayat Daftar Pengurus</h3></div><div class="table-responsive"><table><thead><tr><th>No</th><th>Foto</th><th>Jabatan (Kategori)</th><th>Nama Lengkap</th><th>Aksi Data</th></tr></thead><tbody id="tbody-struktur-admin"></tbody></table></div></div>
@@ -7757,7 +7829,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                 <div class="stat-box" style="border-color:var(--success);"><i class="fa-solid fa-vault bg-icon" style="color:var(--success) !important;"></i><h4>Total Saldo Kas Akhir</h4><h2 id="ben-saldo-kas-input">Rp 0</h2></div>
                 <div class="stat-box" style="border-color:var(--primary-blue);"><i class="fa-solid fa-clock-rotate-left bg-icon" style="color:var(--primary-blue) !important;"></i><h4>Saldo Bawaan (Awal)</h4><h2 id="ben-display-saldo-awal">Rp 0</h2></div>
             </div>
-            <div class="card" style="border-top: 4px solid var(--primary-blue);"><div class="card-title-header"><h3><i class="fa-solid fa-lock"></i> Kunci Saldo Awal Pembukuan</h3></div><div style="display: flex; gap: 15px; margin-top: 10px;"><input type="number" id="ben-saldo-awal-input" class="search-box" placeholder="Masukkan nominal saldo sisa periode lalu..." style="flex: 1;"><button class="btn-submit bg-blue" style="width:auto; margin-top:0;" onclick="simpanSaldoAwal()"><i class="fa-solid fa-save"></i> Kunci</button></div></div>
+            <div class="card" style="border-top: 4px solid var(--primary-blue);"><div class="card-title-header"><h3><i class="fa-solid fa-lock"></i> Kunci Saldo Awal Pembukuan</h3></div><div style="display: flex; gap: 15px; margin-top: 10px;"><input type="number" id="ben-saldo-awal-input" class="search-box" placeholder="Masukkan nominal saldo sisa periode lalu..." style="flex: 1;"><button onclick="simpanSaldoAwal()" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);margin-top:0;width:auto;"><i class="fa-solid fa-save"></i> Kunci</button></div></div>
             <div class="form-grid">
                 <div class="card" style="margin-bottom:0; border-top: 4px solid var(--success);">
                     <div class="card-title-header"><h3><i class="fa-solid fa-pen-to-square"></i> Input Kas Harian</h3></div>
@@ -7766,7 +7838,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <div class="form-group"><label>Keterangan Transaksi</label><input type="text" id="ben-desc" required></div>
                         <div class="form-group"><label>Arus Dana</label><select id="ben-tipe"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div>
                         <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="ben-amt" required></div>
-                        <button type="submit" class="btn-submit bg-green"><i class="fa-solid fa-check-circle"></i> Simpan Transaksi</button>
+                        <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,0.28);width:100%;margin-top:12px;"><i class="fa-solid fa-check-circle"></i> Simpan Transaksi</button>
                     </form>
                 </div>
         </div>
@@ -7796,7 +7868,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <label style="font-size:0.82rem;font-weight:600;color:var(--text-muted);">Tahun</label>
                         <select id="ben-lap-tahun" class="search-box" style="width:110px;" onchange="if(typeof loadBenLaporan==='function') loadBenLaporan();"></select>
                     </div>
-                    <button class="btn-submit bg-blue" style="width:auto;margin-top:0;padding:12px 24px;" onclick="cetakBAKasRT()">
+                    <button onclick="cetakBAKasRT()" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);margin-top:0;width:auto;">
                         <i class="fa-solid fa-file-pdf"></i> Download PDF BA Kas
                     </button>
                 </div>
@@ -7834,7 +7906,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                     <div class="form-group"><label>Nama Anggota</label><select id="k_simpan_warga" required></select></div>
                     <div class="form-group"><label>Jenis Transaksi</label><select id="k_simpan_jenis"><option value="Tabungan">Setoran Tabungan (+)</option><option value="Penarikan">Penarikan Saldo (-)</option></select></div>
                     <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="k_simpan_amt" required></div>
-                    <button type="submit" class="btn-submit bg-purple" style="grid-column: 1 / -1;"><i class="fa-solid fa-save"></i> Catat Transaksi</button>
+                    <button type="submit" style="grid-column:1/-1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(124,58,237,0.28);width:100%;margin-top:12px;"><i class="fa-solid fa-save"></i> Catat Transaksi</button>
                 </form>
             </div>
             <div class="card">
@@ -7842,7 +7914,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                     <h3><i class="fa-solid fa-book"></i> Rekapitulasi Buku Tabungan</h3>
                     <div style="display:flex; gap:10px;">
                         <select id="kop-rekap-bulan" class="search-box" style="width:150px; font-size:0.9rem;"><option value="Global">Global (Semua)</option><option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option><option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option><option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option><option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option></select>
-                        <button class="btn-action bg-gold" onclick="cetakRekapTabungan()"><i class="fa-solid fa-print"></i> Cetak BA Rekap</button>
+                        <button onclick="cetakRekapTabungan()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(217,119,6,0.25);"><i class="fa-solid fa-print"></i> Cetak BA Rekap</button>
                     </div>
                 </div>
                 <div class="table-responsive"><table><thead><tr><th>Tanggal Transaksi</th><th>Nama Anggota</th><th>Jenis</th><th>Nominal</th><th>Opsi</th></tr></thead><tbody id="tbody-koperasi-simpanan"></tbody></table></div>
@@ -7862,7 +7934,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                             <div class="form-group"><label>Tenor / Jumlah Periode Angsuran</label><select id="p-tenor" onchange="updatePreviewPinjaman()" required><option value="3" selected>3 periode</option><option value="6">6 periode</option><option value="12">12 periode</option></select></div>
                             <div class="form-group"><label>Total Kewajiban + Bunga (10%)</label><input type="text" id="p-total" readonly style="color:var(--danger); font-weight:bold;"></div>
                             <div class="form-group"><label>Angsuran per Periode</label><input type="text" id="p-angsuran" readonly style="color:#0c4a6e; font-weight:bold;"></div>
-                            <button type="submit" class="btn-submit bg-red" style="grid-column: 1 / -1;"><i class="fa-solid fa-check"></i> Setujui & Cairkan</button>
+                            <button type="submit" style="grid-column:1/-1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(220,38,38,0.28);width:100%;margin-top:12px;"><i class="fa-solid fa-check"></i> Setujui & Cairkan</button>
                         </div>
                     </div>
                 </form>
@@ -7872,7 +7944,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                     <h3><i class="fa-solid fa-users"></i> Daftar Piutang & Pinjaman Aktif</h3>
                     <div style="display:flex; gap:10px;">
                         <select id="kop-rekap-pinjam-bulan" class="search-box" style="width:150px; font-size:0.9rem;"><option value="Global">Global (Semua)</option><option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option><option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option><option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option><option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option></select>
-                        <button class="btn-action bg-gold" onclick="cetakRekapPinjaman()"><i class="fa-solid fa-print"></i> Cetak BA Pinjaman</button>
+                        <button onclick="cetakRekapPinjaman()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(217,119,6,0.25);"><i class="fa-solid fa-print"></i> Cetak BA Pinjaman</button>
                     </div>
                 </div>
                 <div class="table-responsive"><table><thead><tr><th>ID</th><th>Nama Peminjam</th><th>Plafon Awal</th><th>Tenor</th><th>Sudah Dibayar</th><th>Sisa Hutang</th><th>Aksi</th></tr></thead><tbody id="tbody-koperasi-pinjaman"></tbody></table></div>
@@ -7894,7 +7966,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
             <div class="card" style="text-align:center;">
                 <div class="card-title-header" style="justify-content:center;"><h3><i class="fa-solid fa-flag-checkered"></i> Eksekusi Tutup Buku Lebaran RT 005</h3></div>
                 <p style="font-size:1.05rem; margin-bottom:30px; color:var(--text-muted);">Sistem akan menampilkan persentase laba bunga peminjam, membuat BA, dan <b>membagikannya secara proporsional</b> ke semua warga yang menabung (SHU).</p>
-                <button onclick="hitungSHUMassal()" class="btn-submit bg-gold" style="max-width:400px; margin:auto;"><i class="fa-solid fa-gift"></i> Tinjau Detail & Bagikan SHU</button>
+                <button onclick="hitungSHUMassal()" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:11px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(217,119,6,0.28);max-width:400px;margin:auto;"><i class="fa-solid fa-gift"></i> Tinjau Detail & Bagikan SHU</button>
             </div>
         </div>
     </div> </div>
