@@ -1,0 +1,3 @@
+- [JS-string injection pitfall](js-string-injection.md) — never use html.replace('</head>', ...) in a file that contains '</head>' inside JS string literals (e.g. cetakLaporanBulanan). Use a unique nearby Python/JS marker instead.
+- [Button CSS conflict root cause](button-css-conflict.md) — .gt-admin-admin-card-scope .card {color:#e5eefb !important} (0,2,0) beats .bg-blue {color:#fff} (0,1,0). Fix: nuclear CSS at end of file + inline styles on all <button> tags with bg-* classes.
+- [Smart Portal RT data keys](smartportal-data-keys.md) — canonical data keys and schema for db_warga, db_iuran, db_req_surat_v2, db_settings.

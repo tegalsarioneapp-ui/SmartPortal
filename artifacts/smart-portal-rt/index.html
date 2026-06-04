@@ -7296,7 +7296,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                             <button id="btn-toggle-sensitive" class="btn-action" style="background:#7c3aed;color:#fff;border:none;" onclick="window.toggleDataSensitif()"><i class="fa-solid fa-eye-slash"></i> Buka Data Sensitif</button>
                             <input type="file" id="import-excel-warga" accept=".xlsx, .xls, .csv" style="display:none" onchange="prosesImportExcelWarga(event)">
 <button class="btn-action" style="background:#8b5cf6; color:white; border:none;" onclick="document.getElementById('import-excel-warga').click()"><i class="fa-solid fa-file-excel"></i> Import Excel Massal</button>
-<button class="btn-action" style="background:#059669;color:#fff;border:none;" onclick="exportExcelWarga()"><i class="fa-solid fa-file-excel"></i> Export Excel</button><button onclick="tampilFormKKAdmin(true)" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(5,150,105,0.25);"><i class="fa-solid fa-plus"></i> Tambah KK Manual</button>
+<button onclick="exportExcelWarga()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(5,150,105,0.25);"><i class="fa-solid fa-file-excel"></i> Export Excel/CSV</button><button onclick="tampilFormKKAdmin(true)" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(5,150,105,0.25);"><i class="fa-solid fa-plus"></i> Tambah KK Manual</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -9750,6 +9750,290 @@ window.bukaFormLogin = function() {
         if(lama !== (idx !== -1 ? dbMandiri[idx].password : 'rt005')) return Swal.fire('Ditolak', 'Sandi lama salah!', 'error');
         if(idx !== -1) dbMandiri[idx].password = baru; else dbMandiri.push({ id: loggedInWarga.id, nama: loggedInWarga.nama, password: baru });
         localStorage.setItem('data_warga_mandiri', JSON.stringify(dbMandiri)); document.getElementById('pw-lama').value = ''; document.getElementById('pw-baru').value = ''; Swal.fire('Berhasil', 'Password diperbarui.', 'success');
+    };
+
+    
+    // ══════════════════════════════════════════════════════════
+    // EXPORT EXCEL / CSV WARGA — dengan filter & multi-sheet
+    // ══════════════════════════════════════════════════════════
+    window.exportExcelWarga = function() {
+        if (typeof XLSX === 'undefined') {
+            Swal.fire('Error', 'Library XLSX belum tersedia. Coba refresh halaman.', 'error');
+            return;
+        }
+
+        // Ambil data settings untuk nama RT
+        var settings  = JSON.parse(localStorage.getItem('db_settings') || localStorage.getItem('db_pengaturan') || '{}');
+        var namaRT    = settings.namaRT || 'RT 005';
+        var namaKetua = settings.namaKetua || '';
+
+        // Opsi filter — buat HTML untuk modal Swal
+        var modalHTML = `
+<div style="text-align:left;font-size:0.9rem;">
+  <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:12px 16px;margin-bottom:14px;">
+    <div style="font-weight:800;color:#1e3a5f;margin-bottom:8px;"><i class="fa-solid fa-filter"></i> Filter Data yang Diexport</div>
+    <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;">
+      <select id="exp-filter-status" style="padding:7px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:0.88rem;width:100%;">
+        <option value="semua">Semua KK</option>
+        <option value="aktif">Aktif saja</option>
+        <option value="nonaktif">Tidak Aktif saja</option>
+        <option value="Umum">Status Sosial: Umum</option>
+        <option value="Janda">Status Sosial: Janda / Cerai Hidup</option>
+        <option value="Duda">Status Sosial: Duda</option>
+        <option value="Lansia">Status Sosial: Lansia</option>
+        <option value="Difabel">Status Sosial: Difabel</option>
+        <option value="Duafa">Status Sosial: Duafa / Kurang Mampu</option>
+      </select>
+    </label>
+  </div>
+  <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-bottom:14px;">
+    <div style="font-weight:800;color:#14532d;margin-bottom:8px;"><i class="fa-solid fa-table-columns"></i> Sheet yang Disertakan</div>
+    <label style="display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;">
+      <input type="checkbox" id="exp-sheet-kk" checked style="width:16px;height:16px;accent-color:#059669;">
+      <span>Data KK & Anggota Keluarga</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;">
+      <input type="checkbox" id="exp-sheet-iuran" checked style="width:16px;height:16px;accent-color:#059669;">
+      <span>Rekap Iuran per KK (12 bulan terakhir)</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+      <input type="checkbox" id="exp-sheet-stat" checked style="width:16px;height:16px;accent-color:#059669;">
+      <span>Statistik Ringkasan RT</span>
+    </label>
+  </div>
+  <div style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;">
+    <div style="font-weight:800;color:#78350f;margin-bottom:8px;"><i class="fa-solid fa-file-arrow-down"></i> Format File</div>
+    <label style="display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;">
+      <input type="radio" name="exp-fmt" value="xlsx" checked style="width:16px;height:16px;accent-color:#d97706;">
+      <span>Excel (.xlsx) — Multi-sheet, format lengkap</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+      <input type="radio" name="exp-fmt" value="csv" style="width:16px;height:16px;accent-color:#d97706;">
+      <span>CSV (.csv) — Sheet Data KK saja</span>
+    </label>
+  </div>
+</div>`;
+
+        Swal.fire({
+            title: '<i class="fa-solid fa-file-excel" style="color:#059669;"></i> Export Data Warga',
+            html: modalHTML,
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-download"></i> Export Sekarang',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#059669',
+            cancelButtonColor: '#94a3b8',
+            width: '520px',
+        }).then(function(result) {
+            if (!result.isConfirmed) return;
+
+            // Baca pilihan user
+            var filterStatus  = document.getElementById('exp-filter-status').value;
+            var inclKK        = document.getElementById('exp-sheet-kk').checked;
+            var inclIuran     = document.getElementById('exp-sheet-iuran').checked;
+            var inclStat      = document.getElementById('exp-sheet-stat').checked;
+            var fmt           = document.querySelector('input[name="exp-fmt"]:checked').value;
+
+            // ── Ambil dan filter data ──
+            var dbWarga = JSON.parse(localStorage.getItem('db_warga') || '[]');
+            if (filterStatus === 'aktif')    dbWarga = dbWarga.filter(function(w){ return w.aktif !== false; });
+            else if (filterStatus === 'nonaktif') dbWarga = dbWarga.filter(function(w){ return w.aktif === false; });
+            else if (filterStatus !== 'semua') dbWarga = dbWarga.filter(function(w){
+                return (w.statusSosial || 'Umum') === filterStatus;
+            });
+
+            if (dbWarga.length === 0) {
+                Swal.fire('Tidak Ada Data', 'Tidak ada data yang cocok dengan filter yang dipilih.', 'warning');
+                return;
+            }
+
+            var tglExport = new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'});
+            var fileTs    = new Date().toISOString().slice(0,10);
+
+            // ── Bangun workbook ──
+            var wb = XLSX.utils.book_new();
+
+            // ── SHEET 1: Data KK ──
+            if (inclKK) {
+                var kkRows = [
+                    // Header kop
+                    ['EXPORT DATA WARGA ' + namaRT.toUpperCase()],
+                    ['Diekspor pada: ' + tglExport + (namaKetua ? ' | Ketua: ' + namaKetua : '')],
+                    ['Filter: ' + (filterStatus === 'semua' ? 'Semua KK' : filterStatus === 'aktif' ? 'Aktif' : filterStatus === 'nonaktif' ? 'Tidak Aktif' : 'Status Sosial: ' + filterStatus)],
+                    ['Total KK yang diexport: ' + dbWarga.length],
+                    [], // baris kosong
+                    // Header kolom
+                    ['No','Nama Kepala Keluarga','No KK','NIK','Alamat','Nama Istri',
+                     'Jumlah Anak','Nama Anak','Pekerjaan','Pendapatan','BPJS','Telp','Email',
+                     'Status Aktif','Status Sosial']
+                ];
+                dbWarga.forEach(function(w, idx) {
+                    var anakArr = Array.isArray(w.anak) ? w.anak : (w.anak ? [String(w.anak)] : []);
+                    kkRows.push([
+                        idx + 1,
+                        w.nama || '',
+                        w.kk   || '',
+                        w.nik  || '',
+                        w.alamat || '',
+                        w.istri  || '',
+                        anakArr.length,
+                        anakArr.join(', '),
+                        w.pekerjaan  || '',
+                        w.pendapatan || '',
+                        w.bpjs   || '',
+                        w.telp   || '',
+                        w.email  || '',
+                        w.aktif === false ? 'Tidak Aktif' : 'Aktif',
+                        w.statusSosial || 'Umum'
+                    ]);
+                });
+                var wsKK = XLSX.utils.aoa_to_sheet(kkRows);
+                // Lebar kolom
+                wsKK['!cols'] = [
+                    {wch:4},{wch:28},{wch:18},{wch:18},{wch:30},{wch:22},
+                    {wch:6},{wch:35},{wch:20},{wch:16},{wch:14},{wch:16},{wch:24},
+                    {wch:14},{wch:18}
+                ];
+                // Merge header kop
+                wsKK['!merges'] = [
+                    {s:{r:0,c:0},e:{r:0,c:14}},
+                    {s:{r:1,c:0},e:{r:1,c:14}},
+                    {s:{r:2,c:0},e:{r:2,c:14}},
+                    {s:{r:3,c:0},e:{r:3,c:14}},
+                ];
+                XLSX.utils.book_append_sheet(wb, wsKK, 'Data KK');
+            }
+
+            // ── SHEET 2: Rekap Iuran ──
+            if (inclIuran) {
+                var dbIuran = JSON.parse(localStorage.getItem('db_iuran') || '[]');
+                var settings2 = JSON.parse(localStorage.getItem('db_settings') || localStorage.getItem('db_pengaturan') || '{}');
+                var nomIuran = Number(settings2.nomIuran || settings2.nominalIuran || 0);
+
+                // Ambil 12 bulan terakhir
+                var now = new Date();
+                var bulanList = [];
+                for (var b = 11; b >= 0; b--) {
+                    var d = new Date(now.getFullYear(), now.getMonth() - b, 1);
+                    bulanList.push({
+                        key: d.toLocaleString('id-ID',{month:'long'}).toLowerCase() + '-' + d.getFullYear(),
+                        label: d.toLocaleString('id-ID',{month:'long'}) + ' ' + d.getFullYear(),
+                        bulan: d.toLocaleString('id-ID',{month:'long'}).toLowerCase(),
+                        tahun: d.getFullYear()
+                    });
+                }
+
+                var iuranHeader = ['No','Nama KK','Alamat','Status'].concat(bulanList.map(function(b){ return b.label; })).concat(['Total Lunas','Total Belum']);
+                var iuranRows = [
+                    ['REKAP IURAN BULANAN ' + namaRT.toUpperCase()],
+                    ['Nominal Iuran: Rp ' + nomIuran.toLocaleString('id-ID') + '/bulan | Diekspor: ' + tglExport],
+                    [],
+                    iuranHeader
+                ];
+
+                var totalLunasAll = 0, totalBelumAll = 0;
+                dbWarga.forEach(function(w, idx) {
+                    var row = [idx+1, w.nama||'', w.alamat||'', w.aktif===false?'Tidak Aktif':'Aktif'];
+                    var lunas = 0, belum = 0;
+                    bulanList.forEach(function(bln) {
+                        var bayar = dbIuran.find(function(x) {
+                            return String(x.idWarga||x.id_warga||x.nama) === String(w.id||w.nama)
+                                && (x.bulan||'').toLowerCase().includes(bln.bulan)
+                                && String(x.tahun||bln.tahun) === String(bln.tahun);
+                        });
+                        if (bayar) {
+                            row.push(bayar.posted ? '✓ Lunas' : '⏳ Konfirmasi');
+                            lunas++;
+                        } else {
+                            row.push('✗ Belum');
+                            belum++;
+                        }
+                    });
+                    row.push(lunas); row.push(belum);
+                    totalLunasAll += lunas; totalBelumAll += belum;
+                    iuranRows.push(row);
+                });
+                // Baris total
+                iuranRows.push([]);
+                var totalRow = ['','TOTAL','',''].concat(bulanList.map(function(){ return ''; }));
+                totalRow.push(totalLunasAll); totalRow.push(totalBelumAll);
+                iuranRows.push(totalRow);
+
+                var wsIuran = XLSX.utils.aoa_to_sheet(iuranRows);
+                wsIuran['!cols'] = [{wch:4},{wch:28},{wch:30},{wch:14}]
+                    .concat(bulanList.map(function(){ return {wch:16}; }))
+                    .concat([{wch:12},{wch:12}]);
+                wsIuran['!merges'] = [
+                    {s:{r:0,c:0},e:{r:0,c:iuranHeader.length-1}},
+                    {s:{r:1,c:0},e:{r:1,c:iuranHeader.length-1}},
+                ];
+                XLSX.utils.book_append_sheet(wb, wsIuran, 'Rekap Iuran');
+            }
+
+            // ── SHEET 3: Statistik ──
+            if (inclStat) {
+                var db2  = JSON.parse(localStorage.getItem('db_warga') || '[]');
+                var totalKK = db2.length;
+                var aktifKK = db2.filter(function(w){ return w.aktif !== false; }).length;
+                var totalAnak = db2.reduce(function(s, w){ return s + (Array.isArray(w.anak) ? w.anak.length : 0); }, 0);
+                var hasBpjs = db2.filter(function(w){ return w.bpjs && w.bpjs !== '' && w.bpjs.toLowerCase() !== 'tidak' && w.bpjs.toLowerCase() !== 'tidak ada'; }).length;
+
+                // Status sosial breakdown
+                var sosialMap = {};
+                db2.forEach(function(w){ var s = w.statusSosial || 'Umum'; sosialMap[s] = (sosialMap[s]||0)+1; });
+
+                var statRows = [
+                    ['STATISTIK ' + namaRT.toUpperCase()],
+                    ['Digenerate: ' + tglExport],
+                    [],
+                    ['KEPENDUDUKAN',''],
+                    ['Total KK Terdaftar', totalKK],
+                    ['KK Aktif', aktifKK],
+                    ['KK Tidak Aktif', totalKK - aktifKK],
+                    ['Estimasi Total Jiwa (anggota terdaftar)', totalAnak + aktifKK],
+                    ['Total Anak Terdaftar', totalAnak],
+                    ['KK dengan BPJS', hasBpjs],
+                    [],
+                    ['STATUS SOSIAL','Jumlah KK']
+                ];
+                Object.keys(sosialMap).forEach(function(k){
+                    statRows.push([k, sosialMap[k]]);
+                });
+                statRows.push([]);
+                statRows.push(['Catatan: Data diexport dari Smart Portal ' + namaRT,'']);
+
+                var wsStat = XLSX.utils.aoa_to_sheet(statRows);
+                wsStat['!cols'] = [{wch:36},{wch:16}];
+                wsStat['!merges'] = [
+                    {s:{r:0,c:0},e:{r:0,c:1}},
+                    {s:{r:1,c:0},e:{r:1,c:1}},
+                ];
+                XLSX.utils.book_append_sheet(wb, wsStat, 'Statistik');
+            }
+
+            // ── Download file ──
+            var filename = 'DataWarga_' + namaRT.replace(/\s/g,'') + '_' + fileTs;
+            if (fmt === 'csv') {
+                // CSV: ambil sheet pertama saja
+                var ws0 = wb.Sheets[wb.SheetNames[0]];
+                var csvStr = XLSX.utils.sheet_to_csv(ws0);
+                var blob = new Blob(['\ufeff' + csvStr], {type:'text/csv;charset=utf-8;'});
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename + '.csv';
+                a.click();
+            } else {
+                XLSX.writeFile(wb, filename + '.xlsx');
+            }
+
+            // Log ke riwayat export (reuse existing mechanism if available)
+            try {
+                var exp = JSON.parse(localStorage.getItem('db_riwayat_ekspor') || '[]');
+                exp.unshift({ tgl: tglExport, jenis: 'Export Data Warga', format: fmt.toUpperCase(), jumlah: dbWarga.length + ' KK', filter: filterStatus });
+                localStorage.setItem('db_riwayat_ekspor', JSON.stringify(exp.slice(0,20)));
+            } catch(e) {}
+
+            Toast.fire({ icon: 'success', title: 'Export berhasil! ' + dbWarga.length + ' KK diexport.' });
+        });
     };
 
     window.tampilFormKKAdmin = function(show) { document.getElementById('admin-view-kk').style.display = show ? 'none' : 'block'; document.getElementById('admin-form-kk').style.display = show ? 'block' : 'none'; if(!show) { document.getElementById('form-kk-admin').reset(); document.getElementById('adm-kk-id').value = ''; document.getElementById('adm-container-anak').innerHTML=''; } };
