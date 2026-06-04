@@ -6855,13 +6855,17 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                             <div style="font-weight:700;font-size:0.95rem;color:#7c3aed;"><i class="fa-solid fa-bell"></i> Notifikasi Push</div>
                             <div style="font-size:0.8rem;color:#64748b;margin-top:3px;" id="push-status-warga">Belum aktif di perangkat ini</div>
                         </div>
-                        <button id="btn-toggle-push" class="btn-action" style="background:#7c3aed;color:#fff;border:none;margin:0;" onclick="togglePushSubscription()">
+                        <button id="btn-toggle-push" onclick="togglePushSubscription()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:10px;font-size:0.88rem;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(124,58,237,0.30);transition:opacity .15s;flex-shrink:0;" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
                             <i class="fa-solid fa-bell-slash"></i> Aktifkan Notifikasi
                         </button>
                     </div>
                     <p style="font-size:0.75rem;color:#94a3b8;margin-top:10px;margin-bottom:0;"><i class="fa-solid fa-circle-info"></i> Aktifkan agar mendapat pemberitahuan dari RT (pengumuman, jadwal rapat, dll) walau aplikasi ditutup.</p>
                 </div>
-                <div class="card" style="max-width:500px; margin:0 auto;"><div class="form-group"><label>Password Lama</label><input type="password" id="pw-lama" placeholder="Ketik password saat ini"></div><div class="form-group"><label>Password Baru</label><input type="password" id="pw-baru" placeholder="Ketik password baru"></div><button onclick="ubahPasswordWarga()" class="btn-submit bg-blue"><i class="fa-solid fa-lock"></i> Update Password</button></div>
+                <div class="card" style="max-width:500px; margin:0 auto;">
+    <div class="form-group"><label>Password Lama</label><input type="password" id="pw-lama" placeholder="Ketik password saat ini"></div>
+    <div class="form-group"><label>Password Baru</label><input type="password" id="pw-baru" placeholder="Ketik password baru"></div>
+    <button onclick="ubahPasswordWarga()" style="display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);transition:opacity .15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'"><i class="fa-solid fa-lock"></i> Update Password</button>
+</div>
             </div>
             <div id="warga-form-data" style="display: none;">
                 <div class="card-title-header"><h3><i class="fa-solid fa-pen-to-square"></i> Formulir Kartu Keluarga</h3></div>
@@ -9609,7 +9613,10 @@ window.bukaFormLogin = function() {
                 '<td><b style="color:var(--primary-dark);font-size:1.05rem;">' + myData.nama + '</b> ' + badgeAktif + badgeSS + badgePrioritas + '<br><small>NIK: ' + (myData.nik||'-') + '</small>' + telpTampil + pkrTampil + '</td>' +
                 '<td><b>' + myData.alamat + '</b></td>' +
                 '<td style="white-space:nowrap;text-align:center;">' +
-                  '<button onclick="siapkanEditProfilSaya()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);transition:opacity .15s;" onmouseover="this.style.opacity=\'.82\'" onmouseout="this.style.opacity=\'1\'"><i class="fa-solid fa-pen-to-square"></i> Edit Data</button>' +
+                  '<div style="display:flex;flex-direction:column;gap:7px;align-items:center;">' +
+                  '<button onclick="siapkanEditProfilSaya()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);transition:opacity .15s;width:100%;justify-content:center;" onmouseover="this.style.opacity=\'.82\'" onmouseout="this.style.opacity=\'1\'"><i class="fa-solid fa-pen-to-square"></i> Edit Data</button>' +
+                  '<button onclick="hapusProfilSaya()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(220,38,38,0.25);transition:opacity .15s;width:100%;justify-content:center;" onmouseover="this.style.opacity=\'.82\'" onmouseout="this.style.opacity=\'1\'"><i class="fa-solid fa-trash-can"></i> Hapus Data</button>' +
+                  '</div>' +
                 '</td></tr>';
         } else {
             tb.innerHTML = '<tr><td colspan="3" style="text-align:center;">Anda belum melengkapi data.</td></tr>';
@@ -9620,6 +9627,31 @@ window.bukaFormLogin = function() {
         if(myData) { document.getElementById('kk-nama').value = myData.nama||''; document.getElementById('kk-nokk').value = myData.kk||''; document.getElementById('kk-nik').value = myData.nik||''; if(document.getElementById('kk-pekerjaan')) document.getElementById('kk-pekerjaan').value = myData.pekerjaan||''; if(document.getElementById('kk-pendapatan')) { document.getElementById('kk-pendapatan').value = myData.pendapatan||''; var wpg = document.getElementById('warga-pendapatan-group'); if(wpg) wpg.style.display = (myData.pekerjaan && myData.pekerjaan !== '') ? 'block' : 'none'; } if(document.getElementById('kk-telp')) document.getElementById('kk-telp').value = myData.telp||''; document.getElementById('kk-bpjs').value = myData.bpjs||''; document.getElementById('kk-istri').value = myData.istri||''; document.getElementById('kk-alamat').value = myData.alamat||'';
             document.getElementById('container-anak').innerHTML = ''; if(myData.anak) { myData.anak.forEach(a => { let d = document.createElement('div'); d.innerHTML = `<input type="text" class="kk_anak" value="${a}" style="margin-top:10px; width:100%; padding:14px 18px; border:2px solid #e2e8f0; border-radius:12px;">`; document.getElementById('container-anak').appendChild(d); }); } tampilFormKeluarga(true);
         }
+    };
+    window.hapusProfilSaya = function() {
+        if(!loggedInWarga) return;
+        Swal.fire({
+            title: 'Hapus Data Keluarga?',
+            html: '<p style="color:#94a3b8;font-size:0.9rem;margin:0;">Data kartu keluarga Anda akan dihapus permanen dari sistem.<br><br><b style="color:#ef4444;">Tindakan ini tidak bisa dibatalkan.</b></p>',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-trash-can"></i> Ya, Hapus',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#64748b',
+            background: '#0f172a',
+            color: '#e2e8f0',
+            width: '380px'
+        }).then(function(result) {
+            if(!result.isConfirmed) return;
+            var db = JSON.parse(localStorage.getItem('db_warga')) || [];
+            db = db.filter(function(x){ return String(x.id) !== String(loggedInWarga.id); });
+            localStorage.setItem('db_warga', JSON.stringify(db));
+            localStorage.setItem('ts_warga', new Date().toISOString());
+            if(typeof syncSemuaData === 'function') syncSemuaData();
+            Toast.fire({icon:'success', title:'Data keluarga berhasil dihapus.'});
+            if(typeof loadProfilPribadiWarga === 'function') loadProfilPribadiWarga();
+        });
     };
     window.ubahPasswordWarga = function() {
         if(loggedInWarga.nama === "Warga RT 005 (Global)") return Swal.fire('Ditolak', 'Akun Global tidak bisa diubah sandinya.', 'error');
