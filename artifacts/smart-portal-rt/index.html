@@ -4345,11 +4345,7 @@ body:not(.gt-dark) table td { color: #1e293b; }
 /* card-title-header action buttons */
 .card-title-header .btn-action { color: #fff !important; }
 
-/* Warga portal */
-#view-warga .btn-action:not([style*="color"]),
-#view-warga .card .btn-action:not([style*="color"]) { color: #1e293b !important; }
-#view-warga .btn-action[style*="background:#"],
-#view-warga .btn-action[style*="background:linear"] { color: #fff !important; }
+/* Warga portal — tombol aksi diatur via inline style, tidak perlu override CSS */
 
 /* Bendahara portal */
 #view-ben .btn-action:not([style*="background"]) {
@@ -6908,7 +6904,10 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         </div>
                         <h4 style="margin-top:20px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;">Data Anak</h4>
                         <div id="container-anak" style="margin-bottom:15px;"></div><button type="button" class="btn-action bg-green" onclick="tambahKolomAnak()"><i class="fa-solid fa-plus"></i> Tambah Kolom Anak</button>
-                        <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:30px; border-top:1px solid #e2e8f0; padding-top:20px;"><button type="button" class="btn-action" style="color:var(--danger); border-color:var(--danger);" onclick="tampilFormKeluarga(false)">Batal</button><button type="submit" class="btn-action bg-gold" style="font-size:1.1rem; padding:12px 25px;"><i class="fa-solid fa-save"></i> Simpan Data</button></div>
+                        <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:30px; border-top:1px solid #e2e8f0; padding-top:20px;">
+                            <button type="button" onclick="tampilFormKeluarga(false)" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:#f1f5f9;color:#475569;border:1.5px solid #cbd5e1;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'"><i class="fa-solid fa-xmark"></i> Batal</button>
+                            <button type="submit" style="display:inline-flex;align-items:center;gap:8px;padding:11px 28px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,0.32);transition:opacity .15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'"><i class="fa-solid fa-floppy-disk"></i> Simpan Data</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -9609,9 +9608,8 @@ window.bukaFormLogin = function() {
             tb.innerHTML = '<tr>' +
                 '<td><b style="color:var(--primary-dark);font-size:1.05rem;">' + myData.nama + '</b> ' + badgeAktif + badgeSS + badgePrioritas + '<br><small>NIK: ' + (myData.nik||'-') + '</small>' + telpTampil + pkrTampil + '</td>' +
                 '<td><b>' + myData.alamat + '</b></td>' +
-                '<td style="white-space:nowrap;">' +
-                  '<button class="btn-action bg-blue" style="margin-bottom:4px;" onclick="window.lihatProfilWarga()"><i class="fa-solid fa-eye"></i> Lihat</button><br>' +
-                  '<button class="btn-action bg-gold" onclick="siapkanEditProfilSaya()"><i class="fa-solid fa-pen"></i> Edit</button>' +
+                '<td style="white-space:nowrap;text-align:center;">' +
+                  '<button onclick="siapkanEditProfilSaya()" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:9px;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,0.25);transition:opacity .15s;" onmouseover="this.style.opacity=\'.82\'" onmouseout="this.style.opacity=\'1\'"><i class="fa-solid fa-pen-to-square"></i> Edit Data</button>' +
                 '</td></tr>';
         } else {
             tb.innerHTML = '<tr><td colspan="3" style="text-align:center;">Anda belum melengkapi data.</td></tr>';
