@@ -7025,7 +7025,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
             </div>
             <div class="card">
                 <div class="card-title-header"><h3><i class="fa-solid fa-file-invoice-dollar"></i> Riwayat Pembayaran Iuran RT</h3><button class="btn-action" style="background:#059669;color:#fff;border:none;" onclick="exportExcelIuran()"><i class="fa-solid fa-file-excel"></i> Export Excel</button></div>
-                <div class="table-responsive"><table id="tabel-iuran-pribadi"><thead><tr><th>Bulan Periode</th><th>Tanggal Tercatat</th><th>Nominal</th><th>Status Validasi</th></tr></thead><tbody id="tbody-iuran-pribadi"></tbody><tfoot style="background:#f8fafc; font-weight:800;"><tr><td colspan="2" style="text-align:right;">TOTAL TERBAYAR:</td><td id="w_prof_total_iuran" style="color:var(--primary-dark); font-size:1.2rem;">Rp 0</td><td></td></tr></tfoot></table></div>
+                <div class="table-responsive"><table id="tabel-iuran-pribadi"><thead><tr><th>Bulan Periode</th><th>Tanggal Tercatat</th><th>Nominal</th><th>Status</th><th style="text-align:center;">Kuitansi</th></tr></thead><tbody id="tbody-iuran-pribadi"></tbody><tfoot style="background:#f8fafc; font-weight:800;"><tr><td colspan="2" style="text-align:right;">TOTAL TERBAYAR:</td><td id="w_prof_total_iuran" style="color:var(--primary-dark); font-size:1.2rem;">Rp 0</td><td></td><td></td></tr></tfoot></table></div>
             </div>
         </div>
 
@@ -7236,6 +7236,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
     <div id="view-admin" class="tab-view" style="display:none;">
         <div class="admin-nav-tabs no-print">
             <button class="admin-tab-btn active" onclick="openAdminTab('admin-datakk'); loadTabelKKAdmin();"><i class="fa-solid fa-users-rectangle"></i><span>Data Keluarga (KK)</span></button>
+            <button class="admin-tab-btn" onclick="window.cetakLaporanBulanan ? cetakLaporanBulanan() : alert('Memuat...')" style="background:linear-gradient(135deg,#1e3a5f,#2563eb)!important;color:#fff!important;border:1px solid rgba(255,255,255,0.2)!important;"><i class="fa-solid fa-chart-bar" style="color:#93c5fd;"></i><span style="color:#fff;">Laporan Bulanan</span></button>
             <button class="admin-tab-btn" onclick="openAdminTab('mutasi')"><i class="fa-solid fa-truck-moving"></i><span>Mutasi Warga</span></button>
             <button class="admin-tab-btn" onclick="openAdminTab('surat'); if(typeof loadSuratAdmin === 'function') loadSuratAdmin();"><i class="fa-solid fa-envelope"></i><span>Surat & Acc</span></button>
             <button class="admin-tab-btn" onclick="openAdminTab('admin-aduan')"><i class="fa-solid fa-inbox"></i><span>Kotak Aduan Warga</span></button>
@@ -9963,7 +9964,7 @@ window.bukaFormLogin = function() {
 
     // === 7. MUTASI, BERITA, AGENDA ===
     window.saveMutasi = function(e) { e.preventDefault(); let db = JSON.parse(localStorage.getItem('mutasi')) || []; let w = document.getElementById('m_nama'); if(!w.value) return Swal.fire('Gagal','Pilih nama warga!','warning'); let namaW = w.options[w.selectedIndex].text; db.push({ id: Date.now(), nama: namaW, status: document.getElementById('m_status').value, ket: document.getElementById('m_keterangan').value, tgl: document.getElementById('m_tanggal').value }); localStorage.setItem('mutasi', JSON.stringify(db)); e.target.reset(); if(typeof jQuery !== 'undefined') $(w).val('').trigger('change'); syncSemuaData(); Toast.fire({icon:'success',title:'Disimpan'}); };
-    window.loadMutasi = function() { let db = JSON.parse(localStorage.getItem('mutasi')) || []; let tb = document.getElementById('tabel-mutasi'); if(!tb) return; tb.innerHTML = ''; db.forEach(m => { let badge = m.status === 'Datang' ? 'badge-masuk' : 'badge-keluar'; tb.innerHTML += `<tr><td><b>${esc(m.nama)}</b></td><td><span class="badge ${badge}">${esc(m.status)}</span></td><td>${esc(m.ket)}</td><td>${m.tgl}</td><td><button class="btn-table btn-tbl-del" onclick="hapusMutasi(${m.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`; }); };
+    window.loadMutasi = function() { let db = JSON.parse(localStorage.getItem('mutasi')) || []; let tb = document.getElementById('tabel-mutasi'); if(!tb) return; tb.innerHTML = ''; db.forEach(m => { let badge = m.status === 'Datang' ? 'badge-masuk' : 'badge-keluar'; tb.innerHTML += `<tr><td><b>${esc(m.nama)}</b></td><td><span class="badge ${badge}">${esc(m.status)}</span></td><td>${esc(m.ket)}</td><td>${m.tgl||'-'}</td><td><button class="btn-table btn-tbl-del" onclick="hapusMutasi(${m.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`; }); };
     window.hapusMutasi = function(id) { Swal.fire({title:'Hapus data mutasi?',text:'Tindakan ini tidak dapat dibatalkan.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('mutasi')) || []; localStorage.setItem('mutasi', JSON.stringify(db.filter(x => x.id !== id))); syncSemuaData(); Toast.fire({icon:'success',title:'Data dihapus'}); } }); };
 
     window.saveBeritaAdmin = function(e) { e.preventDefault(); let f = document.getElementById('b_gambar').files[0]; if(f) { let r = new FileReader(); r.onload = function(evt) { prosesSimpanBerita(evt.target.result); }; r.readAsDataURL(f); } else { prosesSimpanBerita(''); } };
@@ -10358,20 +10359,27 @@ window.bukaFormLogin = function() {
     window.prosesAjukanSuratStep = function(e) {
         e.preventDefault();
 
-        // 1. Ambil Data
+        // 1. Ambil Data — field names diselaraskan dengan loadSuratAdmin (db_req_surat_v2)
+        let _dbW = JSON.parse(localStorage.getItem('db_warga') || '[]');
+        let _wData = _dbW.find(function(w){ return String(w.id) === String(loggedInWarga.id); }) || {};
+        let _tglNow = new Date();
         let data = {
             id: Date.now(),
             idWarga: loggedInWarga.id,
-            namaWarga: loggedInWarga.nama,
-            keperluan: document.getElementById('req_keperluan_lengkap').value,
+            nama: loggedInWarga.nama || _wData.nama || '-',
+            namaWarga: loggedInWarga.nama || '-',
+            nik: loggedInWarga.nik || _wData.nik || '-',
+            keperluan: document.getElementById('req_keperluan_lengkap') ? document.getElementById('req_keperluan_lengkap').value : '-',
+            keterangan: document.getElementById('req_keperluan_lengkap') ? document.getElementById('req_keperluan_lengkap').value : '-',
             status: 'Menunggu',
-            tgl: new Date().toLocaleDateString('id-ID')
+            tglPengajuan: _tglNow.toLocaleDateString('id-ID'),
+            tgl: _tglNow.toISOString().split('T')[0]
         };
 
-        // 2. Simpan ke database (localstorage)
-        let db = JSON.parse(localStorage.getItem('db_req_surat')) || [];
+        // 2. Simpan ke db_req_surat_v2 (key baru yang dibaca loadSuratAdmin)
+        let db = JSON.parse(localStorage.getItem('db_req_surat_v2')) || [];
         db.push(data);
-        localStorage.setItem('db_req_surat', JSON.stringify(db));
+        localStorage.setItem('db_req_surat_v2', JSON.stringify(db));
 
         // 3. Animasi: Hilangkan Form, Munculkan Progress
         document.getElementById('form-surat-warga-inner') && document.getElementById('form-surat-warga-inner').reset(); Swal.fire({icon:'success',title:'Pengajuan Terkirim!',text:'Pengajuan surat kamu sudah dikirim, tunggu konfirmasi dari RT.',confirmButtonText:'OK'}).then(function(){ if(typeof loadSuratWarga==='function') loadSuratWarga(); });
@@ -10424,8 +10432,8 @@ window.bukaFormLogin = function() {
         if(document.getElementById('req_alamat')) document.getElementById('req_alamat').value = loggedInWarga.alamat || '-';
     }, 500);
     window.batalEditReqSurat = function() { document.getElementById('req_keperluan').value = ''; document.getElementById('btn-batal-req').style.display='none'; };
-    window.accSurat = function(id) { let db = JSON.parse(localStorage.getItem('db_req_surat')) || []; let idx = db.findIndex(x=>x.id===id); if(idx!==-1){ db[idx].status='Selesai'; localStorage.setItem('db_req_surat',JSON.stringify(db)); syncSemuaData(); Toast.fire({icon:'success',title:'Di-Acc!'}); } };
-    window.hapusSurat = function(id) { Swal.fire({title:'Hapus surat ini?',text:'Data surat akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('db_req_surat')) || []; localStorage.setItem('db_req_surat', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); Toast.fire({icon:'success',title:'Surat dihapus'}); } }); };
+    window.accSurat = function(id) { if(typeof accSuratLangsung==='function') { accSuratLangsung(id); return; } var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]'); var idx = db.findIndex(function(x){ return x.id===id; }); if(idx!==-1){ db[idx].status='Selesai'; localStorage.setItem('db_req_surat_v2',JSON.stringify(db)); if(typeof syncSemuaData==='function') syncSemuaData(); if(typeof loadSuratAdmin==='function') loadSuratAdmin(); Toast.fire({icon:'success',title:'Surat di-Acc!'}); } };
+    window.hapusSurat = function(id) { Swal.fire({title:'Hapus surat ini?',text:'Data surat akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(function(r){ if(r.isConfirmed){ var db = JSON.parse(localStorage.getItem('db_req_surat_v2') || '[]'); localStorage.setItem('db_req_surat_v2', JSON.stringify(db.filter(function(x){ return x.id!==id; }))); if(typeof syncSemuaData==='function') syncSemuaData(); if(typeof loadSuratAdmin==='function') loadSuratAdmin(); Toast.fire({icon:'success',title:'Surat dihapus'}); } }); };
 
 
     window.kirimAduanWarga = function(e) { e.preventDefault(); let f = document.getElementById('aduan-bukti').files[0]; if(f) { let r = new FileReader(); r.onload = function(evt) { prosesSimpanAduan(evt.target.result); }; r.readAsDataURL(f); } else { prosesSimpanAduan(null); } };
@@ -10434,7 +10442,7 @@ window.bukaFormLogin = function() {
     window.updateStatusAduan = function(id, val) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let idx = db.findIndex(x=>x.id===id); if(idx!==-1) { db[idx].status=val; localStorage.setItem('db_aduan',JSON.stringify(db)); syncSemuaData(); Toast.fire({icon:'success',title:'Status Update!'}); } };
     window.hapusAduan = function(id) { Swal.fire({title:'Hapus aduan ini?',text:'Data aduan akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('db_aduan')) || []; localStorage.setItem('db_aduan', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); Toast.fire({icon:'success',title:'Aduan dihapus'}); } }); };
     window.loadAduanWarga = function() { if(!loggedInWarga) return; let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let my = db.filter(x => String(x.idPelapor)===String(loggedInWarga.id)); let tb = document.getElementById('tbody-aduan-warga'); if(tb) { tb.innerHTML=''; my.forEach(a => { let bd = a.status==='Selesai'?'badge-selesai':(a.status==='Diproses'?'badge-proses':'badge-menunggu'); tb.innerHTML+=`<tr><td>${a.tglTampil}</td><td>${a.kategori}</td><td><b>${esc(a.judul)}</b></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})"><i class="fa-solid fa-image"></i></button></td><td><span class="badge ${bd}">${esc(a.status)}</span></td></tr>`; }); } };
-    window.loadAduanAdmin = function() { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let fb = document.getElementById('filter-bulan-aduan').value; let tb = document.getElementById('tbody-aduan-admin'); if(tb) { tb.innerHTML=''; if(fb!=='Semua') db=db.filter(x=>x.tglAsli.split('-')[1]===fb); db.forEach(a => { let s = `<select style="padding:6px;font-size:0.8rem;" onchange="updateStatusAduan(${a.id}, this.value)"><option value="Menunggu" ${esc(a.status==='Menunggu'?'selected':'')}>Menunggu</option><option value="Diproses" ${esc(a.status==='Diproses'?'selected':'')}>Diproses</option><option value="Selesai" ${esc(a.status==='Selesai'?'selected':'')}>Selesai</option></select>`; tb.innerHTML+=`<tr><td><b>${a.tglTampil}</b><br><small>${a.namaPelapor}</small></td><td>${a.kategori}</td><td><b>${esc(a.judul)}</b><br><small>${esc(a.isi)}</small></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})"><i class="fa-solid fa-image"></i></button> <button class="btn-table btn-tbl-del" onclick="hapusAduan(${a.id})"><i class="fa-solid fa-trash"></i></button></td><td>${s}</td></tr>`; }); } };
+    window.loadAduanAdmin = function() { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let fb = document.getElementById('filter-bulan-aduan').value; let tb = document.getElementById('tbody-aduan-admin'); if(tb) { tb.innerHTML=''; if(fb!=='Semua') db=db.filter(x=>(x.tglAsli||'').split('-')[1]===fb); db.forEach(a => { let s = `<select style="padding:6px;font-size:0.8rem;" onchange="updateStatusAduan(${a.id}, this.value)"><option value="Menunggu" ${esc(a.status==='Menunggu'?'selected':'')}>Menunggu</option><option value="Diproses" ${esc(a.status==='Diproses'?'selected':'')}>Diproses</option><option value="Selesai" ${esc(a.status==='Selesai'?'selected':'')}>Selesai</option></select>`; tb.innerHTML+=`<tr><td><b>${a.tglTampil}</b><br><small>${a.namaPelapor}</small></td><td>${a.kategori}</td><td><b>${esc(a.judul)}</b><br><small>${esc(a.isi)}</small></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})"><i class="fa-solid fa-image"></i></button> <button class="btn-table btn-tbl-del" onclick="hapusAduan(${a.id})"><i class="fa-solid fa-trash"></i></button></td><td>${s}</td></tr>`; }); } };
     window.cetakRekapAduan = function() {
         let db = JSON.parse(localStorage.getItem('db_aduan')) || [];
         let fb = (document.getElementById('filter-bulan-aduan')||{}).value || 'Semua';
@@ -10646,7 +10654,7 @@ window.bukaFormLogin = function() {
             let total = 0;
 
             if(myIuran.length === 0) {
-                tb.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);">Belum ada riwayat pembayaran iuran bulan ini.</td></tr>';
+                tb.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Belum ada riwayat pembayaran iuran. Silakan hubungi bendahara untuk pencatatan.</td></tr>';
                 if(tTotal) tTotal.innerText = 'Rp 0';
                 return;
             }
@@ -10654,34 +10662,36 @@ window.bukaFormLogin = function() {
             myIuran.sort((a,b) => b.id - a.id).forEach((i, index) => {
                 let nom = Number(i.nominal) || 0;
                 total += nom;
-
-                let p1 = (10000 / 20000) * nom;
-                let p2 = (5000 / 20000) * nom;
-                let p3 = (5000 / 20000) * nom;
+                let tglTampil = i.tglBayar || i.tgl || '-';
+                if (tglTampil && tglTampil !== '-' && tglTampil.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                    try { tglTampil = new Date(tglTampil + 'T00:00:00').toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'}); } catch(e){}
+                }
 
                 let badgeStatus = i.posted 
                     ? `<span class="badge badge-masuk"><i class="fa-solid fa-check-double"></i> Valid</span>`
                     : `<span class="badge badge-menunggu"><i class="fa-solid fa-clock"></i> Proses</span>`;
 
-                // ID unik untuk fitur hide and seek
+                let btnKuitansi = `<button onclick="event.stopPropagation();downloadKuitansiIuran(${i.id || index})" style="display:inline-flex;align-items:center;gap:5px;padding:6px 13px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(5,150,105,0.25);white-space:nowrap;"><i class="fa-solid fa-file-invoice"></i> Unduh</button>`;
+
                 let detailRowId = `rincian-iuran-${index}`;
                 let iconId = `icon-iuran-${index}`;
 
                 tb.innerHTML += `
                 <tr style="cursor:pointer; transition:0.3s;" onclick="toggleHideSeekIuran('${detailRowId}', '${iconId}')" onmouseover="this.style.background='#f0f9ff'" onmouseout="this.style.background='transparent'">
-                    <td><b style="color:var(--text-dark); font-size:1.05rem;">${i.bulan}</b> <i id="${iconId}" class="fa-solid fa-chevron-down" style="font-size:0.8rem; color:var(--primary-blue); margin-left:8px; transition:0.3s;"></i></td>
-                    <td style="color:var(--text-muted); font-size:0.9rem;">${i.tglBayar}</td>
+                    <td><b style="color:var(--text-dark); font-size:1.05rem;">${i.bulan || '-'}</b> <i id="${iconId}" class="fa-solid fa-chevron-down" style="font-size:0.8rem; color:var(--primary-blue); margin-left:8px; transition:0.3s;"></i></td>
+                    <td style="color:var(--text-muted); font-size:0.9rem;">${tglTampil}</td>
                     <td><b style="color:var(--primary-dark); font-size:1.1rem;">${fmt(nom)}</b></td>
                     <td>${badgeStatus}</td>
+                    <td style="text-align:center;">${btnKuitansi}</td>
                 </tr>
 
                 <tr id="${detailRowId}" style="display:none; background:#f8fafc;">
-                    <td colspan="4" style="padding:15px 25px; border-left:4px solid var(--primary-blue); border-bottom:1px solid #cbd5e1;">
+                    <td colspan="5" style="padding:15px 25px; border-left:4px solid var(--primary-blue); border-bottom:1px solid #cbd5e1;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <div style="font-size:0.9rem; color:var(--text-dark); width: 300px;">
-                                <div style="margin-bottom:8px; display:flex; justify-content:space-between;"><span><i class="fa-solid fa-screwdriver-wrench" style="color:var(--success); width:20px;"></i> Pembangunan</span> <b>${fmt(p1)}</b></div>
-                                <div style="margin-bottom:8px; display:flex; justify-content:space-between;"><span><i class="fa-solid fa-chair" style="color:var(--accent-gold); width:20px;"></i> Uang Meja</span> <b>${fmt(p2)}</b></div>
-                                <div style="display:flex; justify-content:space-between;"><span><i class="fa-solid fa-flag" style="color:var(--danger); width:20px;"></i> 17 Agustus</span> <b>${fmt(p3)}</b></div>
+                                <div style="margin-bottom:8px; display:flex; justify-content:space-between;"><span><i class="fa-solid fa-screwdriver-wrench" style="color:var(--success); width:20px;"></i> Pembangunan</span> <b>${fmt(Math.round(nom*0.5))}</b></div>
+                                <div style="margin-bottom:8px; display:flex; justify-content:space-between;"><span><i class="fa-solid fa-chair" style="color:var(--accent-gold); width:20px;"></i> Uang Meja</span> <b>${fmt(Math.round(nom*0.25))}</b></div>
+                                <div style="display:flex; justify-content:space-between;"><span><i class="fa-solid fa-flag" style="color:var(--danger); width:20px;"></i> 17 Agustus</span> <b>${fmt(Math.round(nom*0.25))}</b></div>
                             </div>
                             <div style="text-align:right; font-size:0.8rem; color:var(--text-muted);">
                                 <i class="fa-solid fa-hand-pointer"></i> Klik baris lagi untuk menutup
@@ -11088,10 +11098,10 @@ window.loadSuratAdmin = function() {
                 : '<span style="color:#94a3b8;font-size:0.78rem;">—</span>';
             var aksi = '<button onclick="previewSuratAdmin(' + s.id + ')" style="padding:6px 12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;font-size:0.8rem;cursor:pointer;"><i class=\'fa-solid fa-eye\'></i> Lihat</button>';
             rows += '<tr style="border-bottom:1px solid rgba(255,255,255,0.06);">'
-                + '<td style="padding:10px 12px;">' + (s.tglPengajuan||'-') + '</td>'
-                + '<td style="padding:10px 12px;font-weight:600;">' + (s.nama||'-') + '</td>'
+                + '<td style="padding:10px 12px;">' + (s.tglPengajuan||s.tgl||'-') + '</td>'
+                + '<td style="padding:10px 12px;font-weight:600;">' + (s.nama||s.namaPengaju||'-') + '</td>'
                 + '<td style="padding:10px 12px;font-size:0.82rem;color:#64748b;">' + (s.nik||'-') + '</td>'
-                + '<td style="padding:10px 12px;">' + ((s.keperluan||'-')+'').substring(0,35) + '</td>'
+                + '<td style="padding:10px 12px;">' + ((s.keperluan||s.keterangan||'-')+'').substring(0,35) + '</td>'
                 + '<td style="padding:10px 12px;">' + badge + '</td>'
                 + '<td style="padding:10px 12px;text-align:center;">' + tokenCell + '</td>'
                 + '<td style="padding:10px 12px;text-align:center;">' + aksi + '</td>'
@@ -12632,6 +12642,307 @@ window.exportExcelIuran = function() {
 // ═══════════════════════════════════════════════════════════════
 // BANTUAN SOSIAL — loadBantuanSosial, simpanCatatanBantuan, dll
 // ═══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════
+// KUITANSI IURAN RT — fungsi download kuitansi resmi per warga
+// ════════════════════════════════════════════════════════════════════════
+window.downloadKuitansiIuran = function(iuranId) {
+    try {
+        if (!window.loggedInWarga) return Swal.fire('Error','Anda belum login.','error');
+        var dbIuran  = JSON.parse(localStorage.getItem('db_iuran') || '[]');
+        var dbWarga  = JSON.parse(localStorage.getItem('db_warga') || '[]');
+        var dbSettings = JSON.parse(localStorage.getItem('db_settings') || '{}');
+
+        // Cari record iuran berdasarkan id atau index
+        var iuran = dbIuran.find(function(x){ return String(x.id) === String(iuranId); });
+        if (!iuran) {
+            // fallback: cari di iuran milik warga ini berurutan
+            var mine = dbIuran.filter(function(x){ return String(x.idWarga) === String(window.loggedInWarga.id); });
+            mine.sort(function(a,b){ return b.id - a.id; });
+            iuran = mine[iuranId] || mine[0];
+        }
+        if (!iuran) return Swal.fire('Tidak Ditemukan','Data iuran tidak ditemukan.','warning');
+
+        var warga = dbWarga.find(function(w){ return String(w.id) === String(window.loggedInWarga.id); }) || window.loggedInWarga;
+
+        var namaRT    = dbSettings.namaKetua || dbSettings.namaRT || 'Kasimin';
+        var namaRW    = dbSettings.namaRW    || 'Mulyono';
+        var namaBen   = dbSettings.namaBen   || 'Parmin';
+        var alamatRT  = dbSettings.alamatRT  || 'Jl. Tegalsari, Candisari, Semarang';
+        var nominalIuran = Number(iuran.nominal) || Number(dbSettings.nominalIuran) || 25000;
+
+        // Format tanggal
+        var tglBayar = iuran.tglBayar || iuran.tgl || '';
+        if (tglBayar && tglBayar.match && tglBayar.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            try {
+                tglBayar = new Date(tglBayar + 'T00:00:00').toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
+            } catch(e){}
+        } else if (!tglBayar) {
+            tglBayar = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
+        }
+
+        var now    = new Date();
+        var noKuit = 'KIT/' + iuran.id + '/RT005/' + (now.getMonth()+1).toString().padStart(2,'0') + '/' + now.getFullYear();
+        var statusLabel = iuran.posted ? 'LUNAS - TELAH DIPOSTING KE KAS' : 'LUNAS - MENUNGGU KONFIRMASI';
+        var statusColor = iuran.posted ? '#16a34a' : '#ca8a04';
+        var statusBg    = iuran.posted ? '#dcfce7' : '#fef9c3';
+
+        // Format Rupiah
+        var fmtR = function(n) { return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(n||0); };
+
+        // Rincian peruntukan iuran
+        var p1 = Math.round(nominalIuran * 0.50); // Pembangunan
+        var p2 = Math.round(nominalIuran * 0.25); // Uang Meja
+        var p3 = nominalIuran - p1 - p2;          // 17 Agustus
+
+        var html = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+            body { font-family: Arial, sans-serif; font-size: 13px; margin: 0; padding: 0; background: #fff; }
+            .kop { display: flex; align-items: center; gap: 18px; border-bottom: 3px solid #1e3a5f; padding-bottom: 12px; margin-bottom: 16px; }
+            .kop-logo { width: 75px; height: 75px; object-fit: contain; flex-shrink: 0; }
+            .kop-text { flex: 1; text-align: center; }
+            .kop-title { font-size: 15px; font-weight: 900; letter-spacing: 1px; color: #1e3a5f; margin: 0; }
+            .kop-sub { font-size: 12px; color: #374151; margin: 2px 0; }
+            .kop-addr { font-size: 10px; color: #6b7280; margin: 0; }
+            h2.judul { text-align: center; font-size: 15px; font-weight: 900; letter-spacing: 2px; color: #1e3a5f; margin: 12px 0 4px; text-transform: uppercase; }
+            .no-kuit { text-align: center; font-size: 11px; color: #6b7280; margin-bottom: 16px; }
+            .status-bar { background: ${statusBg}; color: ${statusColor}; border: 1.5px solid ${statusColor}; border-radius: 8px; text-align: center; padding: 8px; font-weight: 900; font-size: 13px; margin-bottom: 16px; letter-spacing: 0.5px; }
+            table.info { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+            table.info td { padding: 6px 8px; font-size: 12px; vertical-align: top; }
+            table.info td:first-child { width: 38%; color: #374151; font-weight: 600; }
+            table.info td:nth-child(2) { width: 4%; }
+            table.info td:last-child { font-weight: 700; color: #111827; }
+            .nominal-box { background: linear-gradient(135deg,#1e3a5f,#2563eb); color: #fff; border-radius: 10px; padding: 14px 20px; text-align: center; margin-bottom: 14px; }
+            .nominal-box .label { font-size: 11px; letter-spacing: 1px; opacity: 0.85; margin-bottom: 4px; }
+            .nominal-box .angka { font-size: 26px; font-weight: 900; letter-spacing: 1px; }
+            .nominal-box .terbilang { font-size: 10px; opacity: 0.8; margin-top: 4px; font-style: italic; }
+            table.rincian { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
+            table.rincian th { background: #1e3a5f; color: #fff; padding: 7px 10px; text-align: left; font-size: 11px; }
+            table.rincian td { border-bottom: 1px solid #e5e7eb; padding: 7px 10px; }
+            table.rincian tr:last-child td { border-bottom: none; font-weight: 800; background: #f0f9ff; }
+            .ttd { display: flex; justify-content: space-between; margin-top: 20px; }
+            .ttd-col { text-align: center; width: 45%; }
+            .ttd-col .role { font-size: 11px; color: #6b7280; }
+            .ttd-col .spacer { height: 55px; }
+            .ttd-col .nama { font-weight: 900; font-size: 13px; text-decoration: underline; }
+            .footer-note { font-size: 10px; color: #9ca3af; text-align: center; margin-top: 14px; padding-top: 8px; border-top: 1px dashed #d1d5db; }
+            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-30deg); font-size: 80px; font-weight: 900; color: rgba(30,58,95,0.06); white-space: nowrap; pointer-events: none; z-index: 0; letter-spacing: 4px; }
+        </style></head><body>
+        <div class="watermark">RT 005 TEGALSARI</div>
+        <div class="kop">
+            <img class="kop-logo" src="Lambang_Kota_Semarang.png" style="max-height:75px;" onerror="this.style.visibility=\'hidden\'">
+            <div class="kop-text">
+                <p class="kop-title">RUKUN TETANGGA 005 / RUKUN WARGA 012</p>
+                <p class="kop-sub">KELURAHAN TEGALSARI — KECAMATAN CANDISARI</p>
+                <p class="kop-sub">KOTA SEMARANG — PROVINSI JAWA TENGAH</p>
+                <p class="kop-addr">${alamatRT}</p>
+            </div>
+        </div>
+
+        <h2 class="judul">Kuitansi Pembayaran Iuran RT</h2>
+        <div class="no-kuit">Nomor: <b>${noKuit}</b></div>
+        <div class="status-bar"><i class="fa-solid fa-circle-check"></i> ${statusLabel}</div>
+
+        <table class="info">
+            <tr><td>Diterima dari</td><td>:</td><td>${warga.nama || window.loggedInWarga.nama || '-'}</td></tr>
+            <tr><td>NIK / ID</td><td>:</td><td>${warga.nik || window.loggedInWarga.nik || window.loggedInWarga.id || '-'}</td></tr>
+            <tr><td>Alamat</td><td>:</td><td>${warga.alamat || alamatRT}</td></tr>
+            <tr><td>Untuk Pembayaran</td><td>:</td><td>Iuran Wajib RT 005 Bulan <b>${iuran.bulan || '-'}</b></td></tr>
+            <tr><td>Tanggal Bayar</td><td>:</td><td>${tglBayar}</td></tr>
+        </table>
+
+        <div class="nominal-box">
+            <div class="label">JUMLAH YANG DITERIMA</div>
+            <div class="angka">${fmtR(nominalIuran)}</div>
+        </div>
+
+        <table class="rincian">
+            <thead><tr><th>No.</th><th>Peruntukan</th><th style="text-align:right;">Nominal</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td>Dana Pembangunan</td><td style="text-align:right;">${fmtR(p1)}</td></tr>
+                <tr><td>2</td><td>Uang Meja</td><td style="text-align:right;">${fmtR(p2)}</td></tr>
+                <tr><td>3</td><td>Dana 17 Agustus</td><td style="text-align:right;">${fmtR(p3)}</td></tr>
+                <tr><td colspan="2" style="text-align:right;"><b>TOTAL</b></td><td style="text-align:right;"><b>${fmtR(nominalIuran)}</b></td></tr>
+            </tbody>
+        </table>
+
+        <div class="ttd">
+            <div class="ttd-col">
+                <div class="role">Yang Membayar</div>
+                <div class="spacer"></div>
+                <div class="nama">${warga.nama || window.loggedInWarga.nama || '.....................'}</div>
+            </div>
+            <div class="ttd-col">
+                <div class="role">Bendahara RT 005</div>
+                <div class="spacer"></div>
+                <div class="nama">${namaBen}</div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            Kuitansi ini sah sebagai bukti pembayaran iuran RT yang dikeluarkan oleh RT 005 / RW 012 Tegalsari, Candisari, Kota Semarang.
+            Dicetak otomatis oleh SmartPortal RT 005 — ${new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}.
+        </div>
+        </body></html>`;
+
+        if (typeof window.downloadPdfFromHtml === 'function') {
+            window.downloadPdfFromHtml(html, 'Kuitansi_Iuran_' + (iuran.bulan||'').replace(/\s/g,'_') + '_' + (warga.nama||'').replace(/\s/g,'_'));
+        } else {
+            // fallback: buka di tab baru
+            var win = window.open('', '_blank');
+            if (win) { win.document.write(html); win.document.close(); win.print(); }
+            else Swal.fire('Error','Popup diblokir browser. Izinkan popup untuk mengunduh kuitansi.','warning');
+        }
+    } catch(e) {
+        console.error('[downloadKuitansiIuran]', e);
+        Swal.fire('Gagal', 'Gagal membuat kuitansi: ' + e.message, 'error');
+    }
+};
+
+// ════════════════════════════════════════════════════════════════════════
+// LAPORAN BULANAN RT — PDF laporan lengkap: kas+iuran+aduan+arisan
+// ════════════════════════════════════════════════════════════════════════
+window.cetakLaporanBulanan = function() {
+    try {
+        var now  = new Date();
+        var bln  = now.getMonth(); // 0-based
+        var thn  = now.getFullYear();
+        var BNAMES = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        var bulanNama = BNAMES[bln];
+        var bulanStr  = bulanNama + ' ' + thn;
+        var tglCetak  = now.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+        var s = JSON.parse(localStorage.getItem('db_settings') || '{}');
+        var namaKetua = s.namaKetua || s.namaRT || 'Kasimin';
+        var namaBen   = s.namaBen   || 'Parmin';
+        var fmtR = function(n){ return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(n||0); };
+
+        // KAS
+        var dbKas = JSON.parse(localStorage.getItem('db_kas') || '[]');
+        var kasM  = dbKas.filter(function(k){ return k.tipe==='masuk' && k.tgl && k.tgl.startsWith(thn+'-'+(bln+1).toString().padStart(2,'0')); });
+        var kasK  = dbKas.filter(function(k){ return k.tipe==='keluar' && k.tgl && k.tgl.startsWith(thn+'-'+(bln+1).toString().padStart(2,'0')); });
+        var totM  = kasM.reduce(function(s,k){ return s+Number(k.nominal||0); }, 0);
+        var totK  = kasK.reduce(function(s,k){ return s+Number(k.nominal||0); }, 0);
+
+        // IURAN
+        var dbIuran = JSON.parse(localStorage.getItem('db_iuran') || '[]');
+        var iuranBln = dbIuran.filter(function(x){ return (x.bulan||'').toLowerCase().includes(bulanNama.toLowerCase()); });
+        var totalIuranMasuk = iuranBln.reduce(function(s,x){ return s+Number(x.nominal||0); }, 0);
+        var iuranPosted = iuranBln.filter(function(x){ return x.posted; }).length;
+
+        // WARGA
+        var dbWarga = JSON.parse(localStorage.getItem('db_warga') || '[]');
+        var totalKK = dbWarga.length;
+
+        // ADUAN
+        var dbAduan = JSON.parse(localStorage.getItem('db_aduan') || '[]');
+        var aduanBln = dbAduan.filter(function(a){ return a.tglAsli && a.tglAsli.startsWith(thn+'-'+(bln+1).toString().padStart(2,'0')); });
+
+        // ARISAN
+        var dbArisan = JSON.parse(localStorage.getItem('db_arisan_info') || '{}');
+        var pemenangArisan = dbArisan.nama || '—';
+
+        var kasRows = '';
+        dbKas.filter(function(k){ return k.tgl && k.tgl.startsWith(thn+'-'+(bln+1).toString().padStart(2,'0')); })
+        .sort(function(a,b){ return a.tgl > b.tgl ? 1 : -1; })
+        .forEach(function(k,i){
+            var color = k.tipe==='masuk' ? '#15803d' : '#dc2626';
+            kasRows += '<tr><td style="border:1px solid #e5e7eb;padding:7px;">'+(i+1)+'</td>'
+                +'<td style="border:1px solid #e5e7eb;padding:7px;">'+k.tgl+'</td>'
+                +'<td style="border:1px solid #e5e7eb;padding:7px;">'+(k.uraian||'-')+'</td>'
+                +'<td style="border:1px solid #e5e7eb;padding:7px;text-align:right;color:'+color+';font-weight:700;">'+fmtR(k.nominal)+'</td>'
+                +'<td style="border:1px solid #e5e7eb;padding:7px;text-align:center;color:'+color+';">'+(k.tipe==='masuk'?'Masuk':'Keluar')+'</td>'
+                +'</tr>';
+        });
+
+        var aduanRows = '';
+        aduanBln.forEach(function(a,i){
+            var warna = a.status==='Selesai'?'#15803d':a.status==='Diproses'?'#ca8a04':'#dc2626';
+            aduanRows += '<tr><td style="border:1px solid #e5e7eb;padding:7px;">'+(i+1)+'</td>'
+                +'<td style="border:1px solid #e5e7eb;padding:7px;">'+(a.tglTampil||a.tglAsli||'-')+'</td>'
+                +'<td style="border:1px solid #e5e7eb;padding:7px;">'+(a.namaPelapor||'-')+'</td>'
+                +'<td style="border:1px solid #e5e7eb;padding:7px;">'+(a.kategori||'-')+'</td>'
+                +'<td style="border:1px solid #e5e7eb;padding:7px;color:'+warna+';font-weight:700;">'+(a.status||'-')+'</td>'
+                +'</tr>';
+        });
+
+        var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><style>'
+            +'body{font-family:Arial,sans-serif;font-size:12px;margin:0;padding:24px;}'
+            +'h2{text-align:center;font-size:14px;letter-spacing:2px;color:#1e3a5f;margin:10px 0 4px;}'
+            +'table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;}'
+            +'th{background:#1e3a5f;color:#fff;padding:7px 10px;text-align:left;font-size:11px;}'
+            +'.kop{display:flex;align-items:center;gap:18px;border-bottom:3px solid #1e3a5f;padding-bottom:12px;margin-bottom:16px;}'
+            +'.kop-logo{width:65px;height:65px;object-fit:contain;}'
+            +'.kop-text{flex:1;text-align:center;}'
+            +'.kop-title{font-size:14px;font-weight:900;color:#1e3a5f;margin:0;}'
+            +'.kop-sub{font-size:11px;color:#374151;margin:2px 0;}'
+            +'.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}'
+            +'.stat-box{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px;text-align:center;}'
+            +'.stat-box .val{font-size:18px;font-weight:900;color:#1e3a5f;}'
+            +'.stat-box .lbl{font-size:10px;color:#64748b;margin-top:3px;}'
+            +'</style></head><body>'
+            +'<div class="kop">'
+            +'<img class="kop-logo" src="Lambang_Kota_Semarang.png" style="max-height:65px;" onerror="this.style.visibility=\'hidden\'">'
+            +'<div class="kop-text">'
+            +'<p class="kop-title">LAPORAN BULANAN RT 005 / RW 012 TEGALSARI</p>'
+            +'<p class="kop-sub">KELURAHAN TEGALSARI — KECAMATAN CANDISARI — KOTA SEMARANG</p>'
+            +'</div></div>'
+            +'<h2>LAPORAN BULANAN PERIODE '+bulanStr.toUpperCase()+'</h2>'
+            +'<p style="text-align:center;color:#64748b;font-size:11px;margin-bottom:16px;">Dicetak: '+tglCetak+'</p>'
+
+            +'<div class="stat-grid">'
+            +'<div class="stat-box"><div class="val">'+totalKK+'</div><div class="lbl">Total KK</div></div>'
+            +'<div class="stat-box"><div class="val">'+fmtR(totM)+'</div><div class="lbl">Total Pemasukan</div></div>'
+            +'<div class="stat-box"><div class="val">'+fmtR(totK)+'</div><div class="lbl">Total Pengeluaran</div></div>'
+            +'<div class="stat-box"><div class="val">'+iuranPosted+'/'+totalKK+'</div><div class="lbl">Iuran Lunas</div></div>'
+            +'</div>'
+
+            +'<h3 style="margin:12px 0 6px;color:#1e3a5f;font-size:13px;border-bottom:2px solid #1e3a5f;padding-bottom:4px;">A. REKAPITULASI KAS</h3>'
+            +'<table>'
+            +'<tr style="font-weight:800;background:#e0f2fe;"><td style="border:1px solid #e5e7eb;padding:7px;">Pemasukan</td><td style="border:1px solid #e5e7eb;padding:7px;text-align:right;">'+fmtR(totM)+'</td></tr>'
+            +'<tr style="font-weight:800;background:#fee2e2;"><td style="border:1px solid #e5e7eb;padding:7px;">Pengeluaran</td><td style="border:1px solid #e5e7eb;padding:7px;text-align:right;">'+fmtR(totK)+'</td></tr>'
+            +'<tr style="font-weight:900;background:#dcfce7;"><td style="border:1px solid #e5e7eb;padding:7px;">Saldo Bulan Ini</td><td style="border:1px solid #e5e7eb;padding:7px;text-align:right;">'+fmtR(totM-totK)+'</td></tr>'
+            +'</table>'
+
+            +'<h3 style="margin:12px 0 6px;color:#1e3a5f;font-size:13px;border-bottom:2px solid #1e3a5f;padding-bottom:4px;">B. DETAIL TRANSAKSI KAS</h3>'
+            +'<table><thead><tr><th>No.</th><th>Tanggal</th><th>Uraian</th><th style="text-align:right;">Nominal</th><th>Tipe</th></tr></thead><tbody>'
+            +(kasRows || '<tr><td colspan="5" style="text-align:center;padding:12px;color:#94a3b8;">Tidak ada transaksi bulan ini.</td></tr>')
+            +'</tbody></table>'
+
+            +'<h3 style="margin:12px 0 6px;color:#1e3a5f;font-size:13px;border-bottom:2px solid #1e3a5f;padding-bottom:4px;">C. STATUS IURAN ('+bulanStr+')</h3>'
+            +'<table><thead><tr><th>Keterangan</th><th>Jumlah</th></tr></thead><tbody>'
+            +'<tr><td style="border:1px solid #e5e7eb;padding:7px;">Iuran Masuk Periode Ini</td><td style="border:1px solid #e5e7eb;padding:7px;font-weight:700;">'+fmtR(totalIuranMasuk)+'</td></tr>'
+            +'<tr><td style="border:1px solid #e5e7eb;padding:7px;">Jumlah KK Lunas</td><td style="border:1px solid #e5e7eb;padding:7px;font-weight:700;color:#16a34a;">'+iuranPosted+' KK</td></tr>'
+            +'<tr><td style="border:1px solid #e5e7eb;padding:7px;">Persentase Pelunasan</td><td style="border:1px solid #e5e7eb;padding:7px;font-weight:700;color:#1d4ed8;">'+(totalKK>0?Math.round(iuranPosted/totalKK*100):0)+'%</td></tr>'
+            +'</tbody></table>'
+
+            +'<h3 style="margin:12px 0 6px;color:#1e3a5f;font-size:13px;border-bottom:2px solid #1e3a5f;padding-bottom:4px;">D. PENGADUAN WARGA ('+bulanStr+')</h3>'
+            +'<table><thead><tr><th>No.</th><th>Tanggal</th><th>Pelapor</th><th>Kategori</th><th>Status</th></tr></thead><tbody>'
+            +(aduanRows || '<tr><td colspan="5" style="text-align:center;padding:12px;color:#94a3b8;">Tidak ada aduan bulan ini.</td></tr>')
+            +'</tbody></table>'
+
+            +'<h3 style="margin:12px 0 6px;color:#1e3a5f;font-size:13px;border-bottom:2px solid #1e3a5f;padding-bottom:4px;">E. INFORMASI ARISAN</h3>'
+            +'<table><thead><tr><th>Keterangan</th><th>Data</th></tr></thead><tbody>'
+            +'<tr><td style="border:1px solid #e5e7eb;padding:7px;">Pemenang Arisan Terakhir</td><td style="border:1px solid #e5e7eb;padding:7px;font-weight:700;">'+pemenangArisan+'</td></tr>'
+            +'</tbody></table>'
+
+            +'<div style="display:flex;justify-content:space-between;margin-top:30px;">'
+            +'<div style="text-align:center;width:45%;">Yang Membuat Laporan,<br>Sekretaris RT 005<div style="height:55px;"></div><b style="text-decoration:underline;">'+(s.namaSekretaris||'.........................')+'</b></div>'
+            +'<div style="text-align:center;width:45%;">Mengetahui,<br>Ketua RT 005<div style="height:55px;"></div><b style="text-decoration:underline;">'+namaKetua+'</b></div>'
+            +'</div>'
+            +'<div style="font-size:9px;color:#9ca3af;text-align:center;margin-top:16px;border-top:1px dashed #d1d5db;padding-top:8px;">Dicetak otomatis oleh SmartPortal RT 005 Tegalsari — '+tglCetak+'</div>'
+            +'</body></html>';
+
+        if (typeof window.downloadPdfFromHtml === 'function') {
+            window.downloadPdfFromHtml(html, 'Laporan_Bulanan_RT005_'+bulanStr.replace(/\s/g,'_'));
+        } else {
+            var win = window.open('', '_blank');
+            if (win) { win.document.write(html); win.document.close(); win.print(); }
+        }
+        Toast.fire({icon:'success', title:'Laporan Bulanan '+bulanStr+' sedang dibuat...'});
+    } catch(e) {
+        console.error('[cetakLaporanBulanan]', e);
+        Swal.fire('Gagal','Gagal membuat laporan: '+e.message,'error');
+    }
+};
+
 
 // Helper label & warna status sosial
 function _ssBadgeHtml(ss) {
