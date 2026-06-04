@@ -287,9 +287,7 @@ var __LOGO_B64_0__ = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMA
 
 
 
-@media (max-width: 1100px) {
-    .btn-toggle-right-panel { display: none !important; }
-}
+/* btn-toggle-right-panel selalu tampil di semua ukuran layar */
 
 /* Mengatur Teks agar Menghilang dengan Animasi */
 .admin-tab-btn span, .nav-btn span {
@@ -4579,6 +4577,24 @@ window.addEventListener('load', () => {
 });
 </script>
 
+<script id="gt-toggle-right-panel-v3">
+/* toggleRightPanel v3 — handles warga desktop + mobile drawer */
+window.toggleRightPanel = function(){
+  var isMobile = window.innerWidth <= 768;
+  if(isMobile){
+    // Mobile: toggle drawer
+    document.body.classList.toggle('warga-right-panel-open');
+    return;
+  }
+  // Desktop/tablet: toggle width
+  var view = document.getElementById('view-warga');
+  if(view){
+    view.classList.toggle('right-panel-collapsed');
+    var collapsed = view.classList.contains('right-panel-collapsed');
+    try { localStorage.setItem('right_panel_state', collapsed ? 'collapsed' : 'open'); } catch(e){}
+  }
+};
+</script>
 <script id="gt-toggle-sidebar-restore">
 /* toggleSidebar — harus load lebih awal sebelum button render */
 window.toggleSidebar = function() {
@@ -7229,6 +7245,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
 <div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-receipt"></i> IURAN BULAN INI</div><div class="scc-iuran-pct" id="scc-iuran-pct">0%</div><div class="scc-progress-wrap"><div class="scc-progress-bar" id="scc-iuran-bar" style="width:0%"></div></div><div class="scc-iuran-sub" id="scc-iuran-sub">0 dari 0 KK sudah membayar</div><div class="scc-iuran-nominal" id="scc-iuran-nominal"></div><button class="scc-btn scc-btn-blue" onclick="openWargaTab('warga-keuangan')"><i class="fa-solid fa-chart-line"></i> Lihat Detail Iuran</button></div>
 <div class="scc-card scc-card-danger"><div class="scc-card-title"><i class="fa-solid fa-triangle-exclamation"></i> QUICK EMERGENCY</div><div class="scc-grid2"><button class="scc-emergency-btn" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-phone-volume"></i><span>Call Darurat</span></button><button class="scc-emergency-btn" id="scc-ambulans" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-truck-medical"></i><span>Ambulans</span></button><button class="scc-emergency-btn" id="scc-damkar" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-fire-extinguisher"></i><span>Damkar</span></button><button class="scc-emergency-btn" id="scc-polisi" onclick="openWargaTab('warga-darurat')"><i class="fa-solid fa-shield-halved"></i><span>Polisi</span></button></div></div>
 <div class="scc-card"><div class="scc-card-title"><i class="fa-solid fa-users-gear"></i> PENGURUS AKTIF</div><div id="scc-pengurus-list" class="scc-pengurus-list"><div class="scc-loading">Memuat...</div></div><button class="scc-btn scc-btn-violet" onclick="openWargaTab('warga-struktur')"><i class="fa-solid fa-sitemap"></i> Lihat Struktur RT</button></div>
+<div class="warga-right-backdrop" id="warga-right-backdrop" onclick="if(typeof toggleRightPanel==='function') toggleRightPanel()"></div>
 </aside><!-- /.warga-fb-right -->
 
     </div>
@@ -7785,7 +7802,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                         <div class="form-group"><label>Nama Lengkap Pengurus</label><input type="text" id="org-nama" required></div>
                         <div class="form-group"><label>Upload Foto (Opsional)</label><input type="file" id="org-foto" accept="image/*" style="background: rgba(255,255,255,0.5); padding: 10px;"></div>
                     </div>
-                    <div style="display:flex; gap:15px; margin-top: 15px;"><button type="submit" id="btn-submit-org" style="display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);margin-top:0;width:auto;"><i class="fa-solid fa-save"></i> Simpan Data Pengurus</button><button type="button" class="btn-submit bg-red" id="btn-cancel-org" style="display: none; margin-top:0; width: auto;" onclick="batalEditPengurus()"><i class="fa-solid fa-times"></i> Batal Edit</button></div>
+                    <div style="display:flex; gap:15px; margin-top: 15px;"><button type="submit" id="btn-submit-org" style="display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;font-size:0.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.28);margin-top:0;width:auto;"><i class="fa-solid fa-save"></i> Simpan Data Pengurus</button><button type="button" class="btn-submit bg-red" id="btn-cancel-org" style="display: none; margin-top:0; width: auto;background:linear-gradient(135deg,#dc2626,#b91c1c)!important;color:#fff!important;border:none!important;" onclick="batalEditPengurus()"><i class="fa-solid fa-times"></i> Batal Edit</button></div>
                 </form>
             </div>
 
@@ -10036,7 +10053,7 @@ window.bukaFormLogin = function() {
 
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px dashed #cbd5e1; padding-bottom:15px; margin-bottom:20px;">
                 <p style="font-size:0.85rem; color:var(--text-muted); margin:0;"><i class="fa-regular fa-clock"></i> Dipublikasikan: ${b.tgl}</p>
-                <button class="btn-action bg-green" onclick="shareWABerita('${b.judul.replace(/'/g, "\\'")}', '${b.tgl}', '${b.isi.replace(/'/g, "\\'").replace(/\n/g, " ").substring(0,100)}...')" style="padding: 6px 12px; font-size: 0.85rem;">
+                <button class="btn-action bg-green" onclick="shareWABerita('${b.judul.replace(/'/g, "\\'")}', '${b.tgl}', '${b.isi.replace(/'/g, "\\'").replace(/\n/g, " ").substring(0,100)}...')" style="padding: 6px 12px; font-size: 0.85rem;background:linear-gradient(135deg,#059669,#047857)!important;color:#fff!important;border:none!important;">
                     <i class="fa-brands fa-whatsapp"></i> Bagikan WA
                 </button>
             </div>
@@ -10264,8 +10281,8 @@ window.bukaFormLogin = function() {
                 <b>Uraian Kegiatan:</b><br>${k.uraian ? k.uraian.replace(/\n/g, '<br>') : '-'}
             </div>
             <div style="margin-top:25px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-                <button class="btn-action bg-blue" onclick="cetakUndanganResmi(${k.id})"><i class="fa-solid fa-file-pdf"></i> Cetak Undangan Resmi</button>
-                <button class="btn-action bg-green" onclick="shareWAAgenda('${k.perihal.replace(/'/g, "\\'")}', '${k.tglAcara}', '${k.waktu}', '${k.tempat}')"><i class="fa-brands fa-whatsapp"></i> Bagikan WA</button>
+                <button class="btn-action bg-blue" onclick="cetakUndanganResmi(${k.id})" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;color:#fff!important;border:none!important;"><i class="fa-solid fa-file-pdf"></i> Cetak Undangan Resmi</button>
+                <button class="btn-action bg-green" onclick="shareWAAgenda('${k.perihal.replace(/'/g, "\\'")}', '${k.tglAcara}', '${k.waktu}', '${k.tempat}')" style="background:linear-gradient(135deg,#059669,#047857)!important;color:#fff!important;border:none!important;"><i class="fa-brands fa-whatsapp"></i> Bagikan WA</button>
             </div>
         </div>`;
 
@@ -10441,8 +10458,8 @@ window.bukaFormLogin = function() {
     window.lihatBuktiAduan = function(id) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let a = db.find(x=>x.id===id); if(a && a.foto) { Swal.fire({ imageUrl: a.foto, width: 600 }); } else { Swal.fire('Info', 'Tidak ada bukti foto untuk aduan ini.', 'info'); } };
     window.updateStatusAduan = function(id, val) { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let idx = db.findIndex(x=>x.id===id); if(idx!==-1) { db[idx].status=val; localStorage.setItem('db_aduan',JSON.stringify(db)); syncSemuaData(); Toast.fire({icon:'success',title:'Status Update!'}); } };
     window.hapusAduan = function(id) { Swal.fire({title:'Hapus aduan ini?',text:'Data aduan akan dihapus permanen.',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',cancelButtonText:'Batal'}).then(r=>{ if(r.isConfirmed){ let db = JSON.parse(localStorage.getItem('db_aduan')) || []; localStorage.setItem('db_aduan', JSON.stringify(db.filter(x=>x.id!==id))); syncSemuaData(); Toast.fire({icon:'success',title:'Aduan dihapus'}); } }); };
-    window.loadAduanWarga = function() { if(!loggedInWarga) return; let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let my = db.filter(x => String(x.idPelapor)===String(loggedInWarga.id)); let tb = document.getElementById('tbody-aduan-warga'); if(tb) { tb.innerHTML=''; my.forEach(a => { let bd = a.status==='Selesai'?'badge-selesai':(a.status==='Diproses'?'badge-proses':'badge-menunggu'); tb.innerHTML+=`<tr><td>${a.tglTampil}</td><td>${a.kategori}</td><td><b>${esc(a.judul)}</b></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})"><i class="fa-solid fa-image"></i></button></td><td><span class="badge ${bd}">${esc(a.status)}</span></td></tr>`; }); } };
-    window.loadAduanAdmin = function() { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let fb = document.getElementById('filter-bulan-aduan').value; let tb = document.getElementById('tbody-aduan-admin'); if(tb) { tb.innerHTML=''; if(fb!=='Semua') db=db.filter(x=>(x.tglAsli||'').split('-')[1]===fb); db.forEach(a => { let s = `<select style="padding:6px;font-size:0.8rem;" onchange="updateStatusAduan(${a.id}, this.value)"><option value="Menunggu" ${esc(a.status==='Menunggu'?'selected':'')}>Menunggu</option><option value="Diproses" ${esc(a.status==='Diproses'?'selected':'')}>Diproses</option><option value="Selesai" ${esc(a.status==='Selesai'?'selected':'')}>Selesai</option></select>`; tb.innerHTML+=`<tr><td><b>${a.tglTampil}</b><br><small>${a.namaPelapor}</small></td><td>${a.kategori}</td><td><b>${esc(a.judul)}</b><br><small>${esc(a.isi)}</small></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})"><i class="fa-solid fa-image"></i></button> <button class="btn-table btn-tbl-del" onclick="hapusAduan(${a.id})"><i class="fa-solid fa-trash"></i></button></td><td>${s}</td></tr>`; }); } };
+    window.loadAduanWarga = function() { if(!loggedInWarga) return; let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let my = db.filter(x => String(x.idPelapor)===String(loggedInWarga.id)); let tb = document.getElementById('tbody-aduan-warga'); if(tb) { tb.innerHTML=''; my.forEach(a => { let bd = a.status==='Selesai'?'badge-selesai':(a.status==='Diproses'?'badge-proses':'badge-menunggu'); tb.innerHTML+=`<tr><td>${a.tglTampil}</td><td>${a.kategori}</td><td><b>${esc(a.judul)}</b></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;color:#fff!important;border:none!important;"><i class="fa-solid fa-image"></i></button></td><td><span class="badge ${bd}">${esc(a.status)}</span></td></tr>`; }); } };
+    window.loadAduanAdmin = function() { let db = JSON.parse(localStorage.getItem('db_aduan')) || []; let fb = document.getElementById('filter-bulan-aduan').value; let tb = document.getElementById('tbody-aduan-admin'); if(tb) { tb.innerHTML=''; if(fb!=='Semua') db=db.filter(x=>(x.tglAsli||'').split('-')[1]===fb); db.forEach(a => { let s = `<select style="padding:6px;font-size:0.8rem;" onchange="updateStatusAduan(${a.id}, this.value)"><option value="Menunggu" ${esc(a.status==='Menunggu'?'selected':'')}>Menunggu</option><option value="Diproses" ${esc(a.status==='Diproses'?'selected':'')}>Diproses</option><option value="Selesai" ${esc(a.status==='Selesai'?'selected':'')}>Selesai</option></select>`; tb.innerHTML+=`<tr><td><b>${a.tglTampil}</b><br><small>${a.namaPelapor}</small></td><td>${a.kategori}</td><td><b>${esc(a.judul)}</b><br><small>${esc(a.isi)}</small></td><td><button class="btn-action bg-blue" onclick="lihatBuktiAduan(${a.id})" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;color:#fff!important;border:none!important;"><i class="fa-solid fa-image"></i></button> <button class="btn-table btn-tbl-del" onclick="hapusAduan(${a.id})"><i class="fa-solid fa-trash"></i></button></td><td>${s}</td></tr>`; }); } };
     window.cetakRekapAduan = function() {
         let db = JSON.parse(localStorage.getItem('db_aduan')) || [];
         let fb = (document.getElementById('filter-bulan-aduan')||{}).value || 'Semua';
@@ -12725,7 +12742,59 @@ window.downloadKuitansiIuran = function(iuranId) {
             .ttd-col .nama { font-weight: 900; font-size: 13px; text-decoration: underline; }
             .footer-note { font-size: 10px; color: #9ca3af; text-align: center; margin-top: 14px; padding-top: 8px; border-top: 1px dashed #d1d5db; }
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-30deg); font-size: 80px; font-weight: 900; color: rgba(30,58,95,0.06); white-space: nowrap; pointer-events: none; z-index: 0; letter-spacing: 4px; }
-        </style></head><body>
+        </style><style id="gt-panel-kanan-mobile">
+/* ═════════════════════════════════════════════
+   PANEL KANAN WARGA — MOBILE DRAWER
+   Pada layar < 768px, panel kanan menjadi
+   fixed drawer dari kanan (seperti sheet)
+   ═════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Default: tersembunyi di kanan (di luar viewport) */
+  .warga-fb-right {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: min(88vw, 320px) !important;
+    min-width: 0 !important;
+    height: 100dvh !important;
+    z-index: 9999 !important;
+    transform: translateX(105%) !important;
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1) !important;
+    opacity: 1 !important;
+    padding: 16px 12px 80px 12px !important;
+    overflow-y: auto !important;
+    box-shadow: -20px 0 60px rgba(0,0,0,0.5) !important;
+  }
+  /* Saat terbuka */
+  body.warga-right-panel-open .warga-fb-right {
+    transform: translateX(0) !important;
+  }
+  /* Overlay backdrop */
+  .warga-right-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9998;
+  }
+  body.warga-right-panel-open .warga-right-backdrop {
+    display: block;
+  }
+}
+@media (min-width: 769px) and (max-width: 1100px) {
+  /* Tablet: panel kanan tetap tampil (sudah punya display:flex !important) */
+  .warga-fb-right {
+    width: 240px !important;
+    min-width: 240px !important;
+  }
+}
+/* Tombol toggle panel kanan — selalu tampil */
+#btn-toggle-right-panel {
+  display: flex !important;
+}
+</style>
+</head><body>
         <div class="watermark">RT 005 TEGALSARI</div>
         <div class="kop">
             <img class="kop-logo" src="Lambang_Kota_Semarang.png" style="max-height:75px;" onerror="this.style.visibility=\'hidden\'">
@@ -19104,3 +19173,79 @@ html:not([data-theme="dark"]) body.warga-portal-aktif #view-warga .warga-fb-righ
 
 </body>
 </html>
+<style id="gt-nuclear-button-override-v2">
+/*
+ ██████  NUCLEAR BUTTON OVERRIDE v2 ██████
+ Blok ini ditempatkan di AKHIR file untuk memiliki specificity tertinggi.
+ Memastikan semua btn-action dan btn-submit dengan class bg-* selalu terlihat.
+*/
+
+/* ── Semua portal: bg-* class selalu dapat warna yang benar ── */
+.btn-action.bg-blue,.btn-submit.bg-blue{background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;color:#fff!important;border:none!important;}
+.btn-action.bg-green,.btn-submit.bg-green{background:linear-gradient(135deg,#059669,#047857)!important;color:#fff!important;border:none!important;}
+.btn-action.bg-gold,.btn-submit.bg-gold{background:linear-gradient(135deg,#d97706,#b45309)!important;color:#fff!important;border:none!important;}
+.btn-action.bg-red,.btn-submit.bg-red{background:linear-gradient(135deg,#dc2626,#b91c1c)!important;color:#fff!important;border:none!important;}
+.btn-action.bg-purple,.btn-submit.bg-purple{background:linear-gradient(135deg,#7c3aed,#6d28d9)!important;color:#fff!important;border:none!important;}
+
+/* ── btn-action tanpa bg-* class: pastikan kontras minimal ── */
+.btn-action:not([class*="bg-"]):not([class*="btn-tbl"]):not([style*="background"]) {
+  color: #1e293b !important;
+}
+/* ── btn-submit tanpa bg-* class: biru default ── */
+.btn-submit:not([class*="bg-"]):not([style*="background"]) {
+  background: linear-gradient(135deg,#2563eb,#1d4ed8) !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+/* ── btn-action dengan inline background: teks putih ── */
+button[class*="btn-action"][style*="background"],
+button[class*="btn-submit"][style*="background"] {
+  color: #fff !important;
+}
+
+/* ── SCC panel buttons ── */
+.scc-btn { color: #fff !important; }
+.scc-btn-blue  { background: linear-gradient(135deg,#3b82f6,#6366f1) !important; }
+.scc-btn-violet{ background: linear-gradient(135deg,#7c3aed,#6366f1) !important; }
+.scc-btn-red   { background: linear-gradient(135deg,#dc2626,#ef4444) !important; }
+
+/* ── Emergency buttons ── */
+.scc-emergency-btn { color: #fca5a5 !important; }
+.scc-action-btn { color: #a5b4fc !important; }
+
+/* ── Hover brightness universal ── */
+.btn-action:hover,.btn-submit:hover { filter: brightness(1.1); }
+
+/* ── btn-toggle-right-panel — SELALU tampil ── */
+#btn-toggle-right-panel { display: flex !important; }
+
+/* ── Admin tab buttons teks harus terlihat ── */
+.admin-tab-btn, .admin-tab-btn span { visibility: visible !important; opacity: 1 !important; }
+.admin-tab-btn span { color: inherit !important; }
+
+/* ── Warga nav buttons ── */
+.nav-btn, .nav-btn span { color: inherit !important; visibility: visible !important; }
+
+/* ── Table action buttons ── */
+.btn-table, .btn-tbl-view, .btn-tbl-edit { 
+  background: rgba(37,99,235,.18) !important; 
+  color: #93c5fd !important; 
+  border: 1px solid rgba(37,99,235,.22) !important; 
+}
+.btn-tbl-del { 
+  background: rgba(239,68,68,.18) !important; 
+  color: #fca5a5 !important; 
+  border: 1px solid rgba(239,68,68,.22) !important; 
+}
+
+/* ── Inline-style buttons: teks putih jika bg gelap ── */
+[style*="background:#1"],[style*="background: #1"],
+[style*="background:#2"],[style*="background: #2"],
+[style*="background:#0"],[style*="background: #0"],
+[style*="background:linear"],[style*="background: linear"],
+[style*="background:rgb(1"],[style*="background: rgb(1"],
+[style*="background:rgb(2"],[style*="background: rgb(2"] {
+  /* tidak bisa force color di sini tanpa inline style, skip */
+}
+</style>
