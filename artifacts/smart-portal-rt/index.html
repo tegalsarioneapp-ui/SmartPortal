@@ -6801,7 +6801,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
 
             <!-- AI Chat shortcut -->
             <button class="wfb-nav-item" onclick="window.openGtChat()">
-                <div class="wfb-nav-icon wfb-icon-indigo" style="overflow:hidden;padding:0;border-radius:50%;"><img src="/benny-icon-new.png" style="width:100%;height:100%;object-fit:contain;
+                <div class="wfb-nav-icon wfb-icon-indigo" style="overflow:hidden;padding:0;border-radius:50%;"><img src="/benny-icon-new.webp" style="width:100%;height:100%;object-fit:contain;
   object-position: center center;
   display: block;
   background: #0b2878;object-position:center 10%;border-radius:50%;"></div>
@@ -6836,8 +6836,8 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
                     <div class="dsh-greeting-name">Halo, <span id="warga-welcome-name">Warga</span> 👋</div>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <button onclick="window.openGtChat()" class="dsh-ai-btn" style="display:inline-flex;align-items:center;gap:6px;"><img src="/benny-icon-new.png" style="width:22px;height:22px;border-radius:50%;object-fit:cover;object-position:center 10%;" onerror="this.style.display='none'"> TANYA BENNY</button>
-                    <img src="/t1-logo-app.png" onclick="openWargaTab('warga-berita-portal')" style="width:34px;height:34px;border-radius:50%;object-fit:contain;cursor:pointer;background:#fff;padding:2px;box-shadow:0 2px 8px rgba(0,0,0,0.25);" title="TegalsariOneApp" alt="TegalsariOneApp">
+                    <button onclick="window.openGtChat()" class="dsh-ai-btn" style="display:inline-flex;align-items:center;gap:6px;"><img src="/benny-icon-new.webp" style="width:22px;height:22px;border-radius:50%;object-fit:cover;object-position:center 10%;" onerror="this.style.display='none'"> TANYA BENNY</button>
+                    <img src="/t1-logo-app.webp" onclick="openWargaTab('warga-berita-portal')" style="width:34px;height:34px;border-radius:50%;object-fit:contain;cursor:pointer;background:#fff;padding:2px;box-shadow:0 2px 8px rgba(0,0,0,0.25);" title="TegalsariOneApp" alt="TegalsariOneApp">
                 </div>
             </div>
 
@@ -14130,13 +14130,13 @@ window.loadArsipBA = window.loadArsipBA || function() {
 
 <!-- ═══════════════════ GT CHAT AI ═══════════════════ -->
 <button id="gt-chat-fab" onclick="window.openGtChat()" title="TANYA BENNY Asisten RT" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);overflow:hidden;padding:0 !important;">
-    <img src="/benny-icon-new.png" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;border-radius:50%;" onerror="this.style.display='none'">
+    <img src="/benny-icon-new.webp" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;border-radius:50%;" onerror="this.style.display='none'">
     <span class="gt-chat-badge" id="gt-chat-fab-badge"></span>
 </button>
 
 <div id="gt-chat-panel">
     <div id="gt-chat-header">
-        <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,0.3);"><img src="/benny-icon-new.png" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;" onerror="this.style.display='none'"></div>
+        <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,0.3);"><img src="/benny-icon-new.webp" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;" onerror="this.style.display='none'"></div>
         <div style="flex:1;">
             <div style="font-weight:800;color:#fff;font-size:0.95rem;">BENNY — Asisten RT 005</div>
             <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);">Siap membantu 24 jam</div>
@@ -14820,7 +14820,7 @@ window.dshTab = function(tab) {
     var ring = document.createElement('div');
     ring.className = 'gt-v11-hero-ring';
     var img = document.createElement('img');
-    img.src = '/benny-icon-new.png';
+    img.src = '/benny-icon-new.webp';
     img.onerror = function(){ this.style.display='none'; };
     var info = document.createElement('div');
     info.className = 'gt-v11-info';
@@ -15444,7 +15444,7 @@ html[data-theme="dark"] #wfb-iuran-progress-wrap > div:first-child {
     var img = fab.querySelector('img');
     if(!img){
       var i = document.createElement('img');
-      i.src = '/benny-icon-new.png';
+      i.src = '/benny-icon-new.webp';
       i.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center 10%;border-radius:50%;';
       fab.innerHTML = '';
       fab.appendChild(i);
