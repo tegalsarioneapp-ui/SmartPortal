@@ -13140,9 +13140,7 @@ window.downloadKuitansiIuran = function(iuranId) {
             window.downloadPdfFromHtml(html, 'Kuitansi_Iuran_' + (iuran.bulan||'').replace(/\s/g,'_') + '_' + (warga.nama||'').replace(/\s/g,'_'));
         } else {
             // fallback: buka di tab baru
-            var win = window.open('', '_blank');
-            if (win) { win.document.write(html); win.document.close(); win.print(); }
-            else Swal.fire('Error','Popup diblokir browser. Izinkan popup untuk mengunduh kuitansi.','warning');
+            printViaIframe(html, 'Kuitansi Iuran');
         }
     } catch(e) {
         console.error('[downloadKuitansiIuran]', e);
@@ -13286,8 +13284,7 @@ window.cetakLaporanBulanan = function() {
         if (typeof window.downloadPdfFromHtml === 'function') {
             window.downloadPdfFromHtml(html, 'Laporan_Bulanan_RT005_'+bulanStr.replace(/\s/g,'_'));
         } else {
-            var win = window.open('', '_blank');
-            if (win) { win.document.write(html); win.document.close(); win.print(); }
+            printViaIframe(html, 'Laporan Bulanan '+bulanStr);
         }
         Toast.fire({icon:'success', title:'Laporan Bulanan '+bulanStr+' sedang dibuat...'});
     } catch(e) {
