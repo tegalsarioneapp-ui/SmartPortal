@@ -13078,72 +13078,74 @@ window.downloadKuitansiIuran = function(iuranId) {
   display: flex !important;
 }
 </style>
-<style id="gt-smooth-transition">
-/* ══════════════════════════════════════════════════════
-   GT SMOOTH TRANSITION — semua panel kiri & kanan
-   ══════════════════════════════════════════════════════ */
 
-/* === DRAWER UTAMA (#gt-sp-drawer) === */
+<style id="gt-smooth-transition">
+/* ══════════════════════════════════════════════
+   GT SMOOTH TRANSITION v3
+   ══════════════════════════════════════════════ */
+
+/* === DRAWER === */
 #gt-sp-drawer {
   transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
   will-change: transform !important;
 }
+
+/* === OVERLAY — opacity based, bukan display === */
 #gt-sp-overlay {
+  display: block !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
   transition: opacity 0.35s ease !important;
-  opacity: 0;
-  pointer-events: none;
 }
 #gt-sp-overlay.open {
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
-/* === PANEL KIRI WARGA (.warga-fb-left) === */
-body.warga-portal-aktif #view-warga .warga-fb-left {
-  transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
-  will-change: transform !important;
+/* === PANEL KIRI WARGA === */
+@media (max-width: 768px) {
+  body.warga-portal-aktif #view-warga .warga-fb-left {
+    transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
+    will-change: transform !important;
+  }
+
+  /* === PANEL KANAN WARGA — SAMA dengan kiri === */
+  body.warga-portal-aktif #view-warga .warga-fb-right {
+    transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
+    will-change: transform !important;
+  }
+
+  /* === ADMIN PANEL KIRI === */
+  body.admin-portal-aktif #view-admin .admin-nav-tabs.no-print {
+    transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
+    will-change: transform !important;
+  }
+
+  /* === ADMIN PANEL KANAN === */
+  body.admin-portal-aktif #view-admin .gt-admin-global-side {
+    transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
+    will-change: transform !important;
+  }
 }
 
-/* === PANEL KANAN WARGA (.warga-fb-right) === */
-body.warga-portal-aktif #view-warga .warga-fb-right {
-  transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
-  will-change: transform !important;
-}
-
-/* === PANEL KIRI ADMIN (.admin-nav-tabs mobile) === */
-body.admin-portal-aktif #view-admin .admin-nav-tabs.no-print {
-  transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
-  will-change: transform !important;
-}
-
-/* === PANEL KANAN ADMIN (.gt-admin-global-side) === */
-body.admin-portal-aktif #view-admin .gt-admin-global-side {
-  transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
-  will-change: transform !important;
-}
-
-/* === OVERLAY semua portal === */
+/* === OVERLAY WARGA & ADMIN === */
+#gt-warga-shell-overlay,
 .gt-admin-mobile-overlay,
 .gt-admin-mobile-overlay-v6,
-.gt-admin-panel-overlay,
-#gt-warga-shell-overlay {
+.gt-admin-panel-overlay {
   transition: opacity 0.35s ease !important;
+  will-change: opacity !important;
 }
 
-/* === BOTTOM NAV hide/seek — lebih smooth === */
-.admin-nav-tabs, .nav-tabs {
-  transition: transform 0.38s cubic-bezier(0.32, 0, 0.17, 1) !important;
-  will-change: transform !important;
-}
-
-/* === Reduced motion: hormati preferensi user === */
+/* === REDUCED MOTION === */
 @media (prefers-reduced-motion: reduce) {
   #gt-sp-drawer,
+  #gt-sp-overlay,
+  #gt-warga-shell-overlay,
   body.warga-portal-aktif #view-warga .warga-fb-left,
   body.warga-portal-aktif #view-warga .warga-fb-right,
   body.admin-portal-aktif #view-admin .admin-nav-tabs.no-print,
-  body.admin-portal-aktif #view-admin .gt-admin-global-side,
-  .admin-nav-tabs, .nav-tabs {
+  body.admin-portal-aktif #view-admin .gt-admin-global-side {
     transition: none !important;
   }
 }
@@ -17533,8 +17535,8 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 
 
 <style id="gt-smartportal-sidebar-style">
-#gt-sp-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;backdrop-filter:blur(2px)}
-#gt-sp-overlay.open{display:block}
+#gt-sp-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity 0.35s ease}
+#gt-sp-overlay.open{opacity:1;pointer-events:auto}
 #gt-sp-drawer{position:fixed;top:0;left:0;bottom:0;width:280px;max-width:85vw;background:#111827;z-index:9999;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.3s cubic-bezier(.4,0,.2,1);box-shadow:4px 0 24px rgba(0,0,0,0.4);padding-bottom:env(safe-area-inset-bottom,0px)}
 #gt-sp-drawer.open{transform:translateX(0)}
 #gt-sp-drawer .sp-head{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 14px;border-bottom:1px solid #1f2937}
@@ -17574,7 +17576,7 @@ html[data-theme="dark"] #view-warga.warga-fb-layout {
 
   <!-- ══ TOMBOL KELUAR MOBILE ══ -->
   <div style="padding:10px 10px 4px;">
-    <button class="sp-keluar-btn" onclick="gtSpClose(); setTimeout(gtKeluar, 200);">
+    <button class="sp-keluar-btn" onclick="gtSpClose(); setTimeout(function(){ if(typeof gtKeluar==='function') gtKeluar(); }, 400);">
       <i class="fa-solid fa-right-from-bracket"></i>
       <span>Keluar dari Portal</span>
     </button>
@@ -17673,6 +17675,7 @@ function gtSpOpen() {
   });
 
   overlay.classList.add("open");
+  overlay.style.pointerEvents = "auto";
   drawer.classList.add("open");
   document.body.style.overflow = "hidden";
 }
@@ -17680,8 +17683,11 @@ function gtSpOpen() {
 function gtSpClose() {
   var overlay = document.getElementById("gt-sp-overlay");
   var drawer  = document.getElementById("gt-sp-drawer");
-  if (overlay) overlay.classList.remove("open");
-  if (drawer)  drawer.classList.remove("open");
+  if (overlay) {
+    overlay.classList.remove("open");
+    overlay.style.pointerEvents = "none";
+  }
+  if (drawer) drawer.classList.remove("open");
   document.body.style.overflow = "";
 }
 
