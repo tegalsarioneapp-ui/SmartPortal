@@ -9747,7 +9747,7 @@ window.bukaFormLogin = function() {
         if(loggedInWarga.nama === "Warga RT 005 (Global)") return Swal.fire('Ditolak', 'Akun Global tidak bisa diubah sandinya.', 'error');
         let lama = document.getElementById('pw-lama').value, baru = document.getElementById('pw-baru').value; if(!lama || !baru) return Swal.fire('Gagal', 'Isi sandi.', 'error');
         let dbMandiri = JSON.parse(localStorage.getItem('data_warga_mandiri')) || []; let idx = dbMandiri.findIndex(x => String(x.id) === String(loggedInWarga.id)); 
-        if(lama !== (idx !== -1 ? dbMandiri[idx].password : (window.__RT_ADMIN_PW__ || ''))) return Swal.fire('Ditolak', 'Sandi lama salah!', 'error');
+        if(lama !== (idx !== -1 ? dbMandiri[idx].password : (localStorage.getItem('rt_admin_pw_hash') || ''))) return Swal.fire('Ditolak', 'Sandi lama salah!', 'error');
         if(idx !== -1) dbMandiri[idx].password = baru; else dbMandiri.push({ id: loggedInWarga.id, nama: loggedInWarga.nama, password: baru });
         localStorage.setItem('data_warga_mandiri', JSON.stringify(dbMandiri)); document.getElementById('pw-lama').value = ''; document.getElementById('pw-baru').value = ''; Swal.fire('Berhasil', 'Password diperbarui.', 'success');
     };
