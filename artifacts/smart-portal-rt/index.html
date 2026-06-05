@@ -9715,7 +9715,7 @@ window.bukaFormLogin = function() {
     window.siapkanEditProfilSaya = function() {
         let db = JSON.parse(localStorage.getItem('db_warga')) || []; let myData = db.find(x => String(x.id) === String(loggedInWarga.id));
         if(myData) { document.getElementById('kk-nama').value = myData.nama||''; document.getElementById('kk-nokk').value = myData.kk||''; document.getElementById('kk-nik').value = myData.nik||''; if(document.getElementById('kk-pekerjaan')) document.getElementById('kk-pekerjaan').value = myData.pekerjaan||''; if(document.getElementById('kk-pendapatan')) { document.getElementById('kk-pendapatan').value = myData.pendapatan||''; var wpg = document.getElementById('warga-pendapatan-group'); if(wpg) wpg.style.display = (myData.pekerjaan && myData.pekerjaan !== '') ? 'block' : 'none'; } if(document.getElementById('kk-telp')) document.getElementById('kk-telp').value = myData.telp||''; document.getElementById('kk-bpjs').value = myData.bpjs||''; document.getElementById('kk-istri').value = myData.istri||''; document.getElementById('kk-alamat').value = myData.alamat||'';
-            document.getElementById('container-anak').innerHTML = ''; if(myData.anak) { myData.anak.forEach(a => { let d = document.createElement('div'); d.innerHTML = `<input type="text" class="kk_anak" value="${a}" style="margin-top:10px; width:100%; padding:14px 18px; border:2px solid #e2e8f0; border-radius:12px;">`; document.getElementById('container-anak').appendChild(d); }); } tampilFormKeluarga(true);
+            document.getElementById('container-anak').innerHTML = ''; if(myData.anak) { myData.anak.forEach(a => { let d = document.createElement('div'); d.innerHTML = `<input type="text" class="kk_anak" value="${(typeof esc==='function'?esc(a):a)}" style="margin-top:10px; width:100%; padding:14px 18px; border:2px solid #e2e8f0; border-radius:12px;">`; document.getElementById('container-anak').appendChild(d); }); } tampilFormKeluarga(true);
         }
     };
     window.hapusProfilSaya = function() {
@@ -9747,7 +9747,7 @@ window.bukaFormLogin = function() {
         if(loggedInWarga.nama === "Warga RT 005 (Global)") return Swal.fire('Ditolak', 'Akun Global tidak bisa diubah sandinya.', 'error');
         let lama = document.getElementById('pw-lama').value, baru = document.getElementById('pw-baru').value; if(!lama || !baru) return Swal.fire('Gagal', 'Isi sandi.', 'error');
         let dbMandiri = JSON.parse(localStorage.getItem('data_warga_mandiri')) || []; let idx = dbMandiri.findIndex(x => String(x.id) === String(loggedInWarga.id)); 
-        if(lama !== (idx !== -1 ? dbMandiri[idx].password : 'rt005')) return Swal.fire('Ditolak', 'Sandi lama salah!', 'error');
+        if(lama !== (idx !== -1 ? dbMandiri[idx].password : (window.__RT_ADMIN_PW__ || ''))) return Swal.fire('Ditolak', 'Sandi lama salah!', 'error');
         if(idx !== -1) dbMandiri[idx].password = baru; else dbMandiri.push({ id: loggedInWarga.id, nama: loggedInWarga.nama, password: baru });
         localStorage.setItem('data_warga_mandiri', JSON.stringify(dbMandiri)); document.getElementById('pw-lama').value = ''; document.getElementById('pw-baru').value = ''; Swal.fire('Berhasil', 'Password diperbarui.', 'success');
     };
@@ -10133,7 +10133,7 @@ window.bukaFormLogin = function() {
         let w = db.find(x => String(x.id) === String(id)); 
         if(w) { 
             document.getElementById('adm-kk-id').value = w.id; document.getElementById('adm-kk-nama').value = w.nama||''; document.getElementById('adm-kk-nokk').value = w.kk||''; document.getElementById('adm-kk-nik').value = w.nik||''; if(document.getElementById('adm-kk-pekerjaan')) document.getElementById('adm-kk-pekerjaan').value = w.pekerjaan||''; if(document.getElementById('adm-kk-pendapatan')) { document.getElementById('adm-kk-pendapatan').value = w.pendapatan||''; var pg = document.getElementById('adm-pendapatan-group'); if(pg) pg.style.display = (w.pekerjaan && w.pekerjaan !== '') ? 'block' : 'none'; } document.getElementById('adm-kk-telp').value = w.telp||''; document.getElementById('adm-kk-istri').value = w.istri||''; document.getElementById('adm-kk-alamat').value = w.alamat||''; document.getElementById('adm-container-anak').innerHTML = ''; if(document.getElementById('adm-kk-aktif')) document.getElementById('adm-kk-aktif').checked = (w.aktif !== false); if(document.getElementById('adm-kk-status-sosial')) document.getElementById('adm-kk-status-sosial').value = w.statusSosial||'Umum'; 
-            if(w.anak) { w.anak.forEach(a => { let d = document.createElement('div'); d.innerHTML = `<input type="text" class="adm_anak" value="${a}" style="margin-top:10px; width:100%; padding:14px 18px; border:2px solid #e2e8f0; border-radius:12px;">`; document.getElementById('adm-container-anak').appendChild(d); }); } 
+            if(w.anak) { w.anak.forEach(a => { let d = document.createElement('div'); d.innerHTML = `<input type="text" class="adm_anak" value="${(typeof esc==='function'?esc(a):a)}" style="margin-top:10px; width:100%; padding:14px 18px; border:2px solid #e2e8f0; border-radius:12px;">`; document.getElementById('adm-container-anak').appendChild(d); }); } 
             tampilFormKKAdmin(true); window.scrollTo({top: 0}); 
         } 
     };
@@ -17598,7 +17598,7 @@ function gtSpOpen() {
       list.querySelectorAll(".sp-item").forEach(function(el){ el.classList.remove("active"); });
       btn.classList.add("active");
       // Jalankan fungsi navigasi
-      try { (function(){try{return eval(m.fn)}catch(e){console.error("[SECURITY] eval blocked:",e);return null;}})(); } catch(e) { console.warn("gtSidebar nav error:", e); }
+      try { (function(){try{return ((typeof m.fn==='string'&&m.fn.length<500)?eval(m.fn):null)}catch(e){console.error("[SECURITY] eval blocked:",e);return null;}})(); } catch(e) { console.warn("gtSidebar nav error:", e); }
       // Tutup sidebar setelah navigasi
       setTimeout(gtSpClose, 150);
     });
