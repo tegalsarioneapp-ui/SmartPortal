@@ -6700,7 +6700,7 @@ window.printViaIframe = function(htmlContent, title) { return window.downloadPdf
         <div style="display:flex; align-items:center; gap:12px;">
             <!-- Satu tombol hamburger untuk semua ukuran layar -->
             <button id="gt-sp-hamburger"
-                    onclick="if(window.innerWidth>768 && typeof toggleSidebar==='function'){toggleSidebar();}else if(typeof gtSpOpen==='function'){gtSpOpen();}"
+                    onclick="if(typeof gtSpOpen==='function') gtSpOpen();"
                     title="Menu Navigasi"
                     style="background:#1d4ed8;color:#fff;border:none;border-radius:10px;
                            width:40px;height:40px;font-size:1.1rem;cursor:pointer;
@@ -13150,6 +13150,18 @@ window.downloadKuitansiIuran = function(iuranId) {
   }
 }
 </style>
+<style id="gt-hide-sidebar-mobile">
+/* Sembunyikan sidebar asli di mobile — gunakan gt-sp-drawer saja */
+@media (max-width: 768px) {
+  .warga-fb-left.no-print {
+    display: none !important;
+  }
+  /* Pastikan drawer tetap tampil */
+  #gt-sp-drawer {
+    display: flex !important;
+  }
+}
+</style>
 </head><body>
         <div class="watermark">RT 005 TEGALSARI</div>
         <div class="kop">
@@ -18910,9 +18922,6 @@ body.mobile-right-open #gt-warga-shell-overlay {
     ensureOverlay();
     document.body.classList.add('mobile-left-open');
     document.body.classList.remove('mobile-right-open');
-    // Buka gt-sp-drawer
-    var ov=document.getElementById('gt-sp-overlay'),dr=document.getElementById('gt-sp-drawer');
-    if(ov&&dr){if(typeof gtSpOpen==='function'){gtSpOpen()}else{ov.classList.add('open');dr.classList.add('open');document.body.style.overflow='hidden'}}
   }
   function openMobileRight(){
     ensureOverlay();
@@ -19352,7 +19361,7 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
   function sideHTML(){return '<aside class="gt-admin-global-side" aria-label="Panel kanan admin"><div class="gt-admin-card"><div class="gt-admin-card-title">Ringkasan Bulan Ini <button class="gt-admin-link">Mei 2025</button></div><div class="gt-admin-panel-list"><div class="gt-admin-panel-item"><i class="fa-solid fa-id-card"></i><b>KK Baru</b><span>4</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-user-plus"></i><b>Warga Baru</b><span>12</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-truck-moving"></i><b>Mutasi Masuk</b><span>3</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-file-lines"></i><b>Surat Dibuat</b><span>18</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-message"></i><b>Aduan Masuk</b><span>7</span></div></div></div><div class="gt-admin-card gt-admin-important"><div class="gt-admin-card-title">Informasi Penting <button class="gt-admin-link">Lihat semua</button></div><h4><i class="fa-solid fa-circle-info"></i> Kerja Bakti Lingkungan RT 005</h4><p>Minggu, 1 Juni 2025<br>Mari bersama menjaga kebersihan lingkungan RT 005 Tegalsari.</p></div></aside>'}
   function ensureSide(){var v=view(); if(!v) return null; var side=qs('#view-admin .gt-admin-global-side'); if(!side){v.insertAdjacentHTML('beforeend',sideHTML());side=qs('#view-admin .gt-admin-global-side')} document.body.classList.add('gt-admin-global-side-ready'); return side}
   function closePanels(){document.body.classList.remove('admin-mobile-menu-open','admin-mobile-right-open')}
-  function openLeft(){overlay();document.body.classList.add('admin-mobile-menu-open');document.body.classList.remove('admin-mobile-right-open');(function(){var ov=document.getElementById('gt-sp-overlay'),dr=document.getElementById('gt-sp-drawer');if(ov&&dr){if(typeof gtSpOpen==='function'){gtSpOpen()}else{ov.classList.add('open');dr.classList.add('open');document.body.style.overflow='hidden'}}})()}
+  function openLeft(){overlay();document.body.classList.add('admin-mobile-menu-open');document.body.classList.remove('admin-mobile-right-open')
   function openRight(){ensureSide();overlay();document.body.classList.add('admin-mobile-right-open');document.body.classList.remove('admin-mobile-menu-open')}
   function setRightHidden(hidden){var v=view(); if(!v) return; ensureSide(); v.classList.toggle('right-panel-collapsed',hidden); document.body.classList.toggle('admin-right-panel-collapsed',hidden); try{localStorage.setItem('admin_right_panel_state',hidden?'hidden':'visible')}catch(_){}}
   function toggleRight(){if(!isAdmin()) return false; if(isMobile()){document.body.classList.contains('admin-mobile-right-open')?closePanels():openRight();return false} var v=view(); var hidden=!(v&&v.classList.contains('right-panel-collapsed')); setRightHidden(hidden); return false}
