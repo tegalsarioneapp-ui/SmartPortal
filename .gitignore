@@ -64,3 +64,5 @@ cleanup_*.py
 
 # Ignore nested/broken local repository
 SmartPortal/
+
+.env.local
