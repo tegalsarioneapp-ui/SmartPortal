@@ -18834,6 +18834,9 @@ body.mobile-right-open #gt-warga-shell-overlay {
     ensureOverlay();
     document.body.classList.add('mobile-left-open');
     document.body.classList.remove('mobile-right-open');
+    // Buka gt-sp-drawer
+    var ov=document.getElementById('gt-sp-overlay'),dr=document.getElementById('gt-sp-drawer');
+    if(ov&&dr){if(typeof gtSpOpen==='function'){gtSpOpen()}else{ov.classList.add('open');dr.classList.add('open');document.body.style.overflow='hidden'}}
   }
   function openMobileRight(){
     ensureOverlay();
@@ -18853,14 +18856,7 @@ body.mobile-right-open #gt-warga-shell-overlay {
     document.body.classList.toggle('sidebar-collapsed');
   };
 
-  var oldGtSpOpen = window.gtSpOpen;
-  window.gtSpOpen = function(){
-    if (document.body.classList.contains('warga-portal-aktif') && isMobile()) {
-      openMobileLeft();
-      return;
-    }
-    if (typeof oldGtSpOpen === 'function') return oldGtSpOpen.apply(this, arguments);
-  };
+  /* gtSpOpen warga override removed - handled by openMobileLeft() patch */;
 
   window.toggleRightPanel = function(){
     var v = view();
@@ -19280,7 +19276,7 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
   function sideHTML(){return '<aside class="gt-admin-global-side" aria-label="Panel kanan admin"><div class="gt-admin-card"><div class="gt-admin-card-title">Ringkasan Bulan Ini <button class="gt-admin-link">Mei 2025</button></div><div class="gt-admin-panel-list"><div class="gt-admin-panel-item"><i class="fa-solid fa-id-card"></i><b>KK Baru</b><span>4</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-user-plus"></i><b>Warga Baru</b><span>12</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-truck-moving"></i><b>Mutasi Masuk</b><span>3</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-file-lines"></i><b>Surat Dibuat</b><span>18</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-message"></i><b>Aduan Masuk</b><span>7</span></div></div></div><div class="gt-admin-card gt-admin-important"><div class="gt-admin-card-title">Informasi Penting <button class="gt-admin-link">Lihat semua</button></div><h4><i class="fa-solid fa-circle-info"></i> Kerja Bakti Lingkungan RT 005</h4><p>Minggu, 1 Juni 2025<br>Mari bersama menjaga kebersihan lingkungan RT 005 Tegalsari.</p></div></aside>'}
   function ensureSide(){var v=view(); if(!v) return null; var side=qs('#view-admin .gt-admin-global-side'); if(!side){v.insertAdjacentHTML('beforeend',sideHTML());side=qs('#view-admin .gt-admin-global-side')} document.body.classList.add('gt-admin-global-side-ready'); return side}
   function closePanels(){document.body.classList.remove('admin-mobile-menu-open','admin-mobile-right-open')}
-  function openLeft(){overlay();document.body.classList.add('admin-mobile-menu-open');document.body.classList.remove('admin-mobile-right-open')}
+  function openLeft(){overlay();document.body.classList.add('admin-mobile-menu-open');document.body.classList.remove('admin-mobile-right-open');(function(){var ov=document.getElementById('gt-sp-overlay'),dr=document.getElementById('gt-sp-drawer');if(ov&&dr){if(typeof gtSpOpen==='function'){gtSpOpen()}else{ov.classList.add('open');dr.classList.add('open');document.body.style.overflow='hidden'}}})()}
   function openRight(){ensureSide();overlay();document.body.classList.add('admin-mobile-right-open');document.body.classList.remove('admin-mobile-menu-open')}
   function setRightHidden(hidden){var v=view(); if(!v) return; ensureSide(); v.classList.toggle('right-panel-collapsed',hidden); document.body.classList.toggle('admin-right-panel-collapsed',hidden); try{localStorage.setItem('admin_right_panel_state',hidden?'hidden':'visible')}catch(_){}}
   function toggleRight(){if(!isAdmin()) return false; if(isMobile()){document.body.classList.contains('admin-mobile-right-open')?closePanels():openRight();return false} var v=view(); var hidden=!(v&&v.classList.contains('right-panel-collapsed')); setRightHidden(hidden); return false}
@@ -19291,7 +19287,7 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
     if(typeof _oldToggleRight === "function") return _oldToggleRight();
   };
   var oldSide=window.toggleSidebar; window.toggleSidebar=function(){if(isAdmin()&&isMobile()){openLeft();return false} var r=typeof oldSide==='function'?oldSide.apply(this,arguments):document.body.classList.toggle('sidebar-collapsed'); if(isAdmin())document.body.classList.toggle('admin-left-collapsed',document.body.classList.contains('sidebar-collapsed')); return r};
-  var oldSp=window.gtSpOpen; window.gtSpOpen=function(){if(isAdmin()&&isMobile()){openLeft();return false} return typeof oldSp==='function'?oldSp.apply(this,arguments):window.toggleSidebar()};
+  /* gtSpOpen override removed - handled by openLeft() patch */;
   function bind(){if(!isAdmin())return; ensureSide(); overlay(); qsa('button,a').forEach(function(b){if(b.__gtAdminV6) return; var html=(b.innerHTML||'')+' '+(b.textContent||'')+' '+(b.id||'')+' '+(b.className||'')+' '+(b.title||'')+' '+(b.getAttribute('aria-label')||''); if(/fa-bars|hamburger|menu-toggle|toggle-sidebar|sidebar/i.test(html)){b.__gtAdminV6=true;b.addEventListener('click',function(e){if(isAdmin()&&isMobile()){e.preventDefault();e.stopPropagation();openLeft()}},true)} if(/right|panel|table-columns|chevron-left|columns/i.test(html)){b.__gtAdminV6=true;b.addEventListener('click',function(e){if(isAdmin()){e.preventDefault();e.stopPropagation();toggleRight()}},true)}}); qsa('#view-admin .admin-tab-btn').forEach(function(b){if(b.__gtAdminV6Nav)return;b.__gtAdminV6Nav=true;b.addEventListener('click',function(){if(isMobile())closePanels();setTimeout(function(){var a=qs('#view-admin .admin-tab-content.active');if(a)a.scrollTop=0},60)})})}
   var oldOpen=window.openAdminTab; if(typeof oldOpen==='function'&&!oldOpen.__gtAdminV6){window.openAdminTab=function(){var r=oldOpen.apply(this,arguments);setTimeout(bind,80);return r}; window.openAdminTab.__gtAdminV6=true;}
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closePanels()}); window.addEventListener('resize',function(){if(!isMobile())closePanels()},{passive:true});
