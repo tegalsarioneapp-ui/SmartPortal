@@ -13078,6 +13078,76 @@ window.downloadKuitansiIuran = function(iuranId) {
   display: flex !important;
 }
 </style>
+<style id="gt-smooth-transition">
+/* ══════════════════════════════════════════════════════
+   GT SMOOTH TRANSITION — semua panel kiri & kanan
+   ══════════════════════════════════════════════════════ */
+
+/* === DRAWER UTAMA (#gt-sp-drawer) === */
+#gt-sp-drawer {
+  transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
+  will-change: transform !important;
+}
+#gt-sp-overlay {
+  transition: opacity 0.35s ease !important;
+  opacity: 0;
+  pointer-events: none;
+}
+#gt-sp-overlay.open {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* === PANEL KIRI WARGA (.warga-fb-left) === */
+body.warga-portal-aktif #view-warga .warga-fb-left {
+  transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
+  will-change: transform !important;
+}
+
+/* === PANEL KANAN WARGA (.warga-fb-right) === */
+body.warga-portal-aktif #view-warga .warga-fb-right {
+  transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
+  will-change: transform !important;
+}
+
+/* === PANEL KIRI ADMIN (.admin-nav-tabs mobile) === */
+body.admin-portal-aktif #view-admin .admin-nav-tabs.no-print {
+  transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
+  will-change: transform !important;
+}
+
+/* === PANEL KANAN ADMIN (.gt-admin-global-side) === */
+body.admin-portal-aktif #view-admin .gt-admin-global-side {
+  transition: transform 0.35s cubic-bezier(0.32, 0, 0.17, 1) !important;
+  will-change: transform !important;
+}
+
+/* === OVERLAY semua portal === */
+.gt-admin-mobile-overlay,
+.gt-admin-mobile-overlay-v6,
+.gt-admin-panel-overlay,
+#gt-warga-shell-overlay {
+  transition: opacity 0.35s ease !important;
+}
+
+/* === BOTTOM NAV hide/seek — lebih smooth === */
+.admin-nav-tabs, .nav-tabs {
+  transition: transform 0.38s cubic-bezier(0.32, 0, 0.17, 1) !important;
+  will-change: transform !important;
+}
+
+/* === Reduced motion: hormati preferensi user === */
+@media (prefers-reduced-motion: reduce) {
+  #gt-sp-drawer,
+  body.warga-portal-aktif #view-warga .warga-fb-left,
+  body.warga-portal-aktif #view-warga .warga-fb-right,
+  body.admin-portal-aktif #view-admin .admin-nav-tabs.no-print,
+  body.admin-portal-aktif #view-admin .gt-admin-global-side,
+  .admin-nav-tabs, .nav-tabs {
+    transition: none !important;
+  }
+}
+</style>
 </head><body>
         <div class="watermark">RT 005 TEGALSARI</div>
         <div class="kop">
