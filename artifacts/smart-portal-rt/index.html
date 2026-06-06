@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
 <script id="gt-logo-b64-vars">
@@ -19361,7 +19361,7 @@ body.light.admin-portal-aktif #view-admin input,body.light.admin-portal-aktif #v
   function sideHTML(){return '<aside class="gt-admin-global-side" aria-label="Panel kanan admin"><div class="gt-admin-card"><div class="gt-admin-card-title">Ringkasan Bulan Ini <button class="gt-admin-link">Mei 2025</button></div><div class="gt-admin-panel-list"><div class="gt-admin-panel-item"><i class="fa-solid fa-id-card"></i><b>KK Baru</b><span>4</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-user-plus"></i><b>Warga Baru</b><span>12</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-truck-moving"></i><b>Mutasi Masuk</b><span>3</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-file-lines"></i><b>Surat Dibuat</b><span>18</span></div><div class="gt-admin-panel-item"><i class="fa-solid fa-message"></i><b>Aduan Masuk</b><span>7</span></div></div></div><div class="gt-admin-card gt-admin-important"><div class="gt-admin-card-title">Informasi Penting <button class="gt-admin-link">Lihat semua</button></div><h4><i class="fa-solid fa-circle-info"></i> Kerja Bakti Lingkungan RT 005</h4><p>Minggu, 1 Juni 2025<br>Mari bersama menjaga kebersihan lingkungan RT 005 Tegalsari.</p></div></aside>'}
   function ensureSide(){var v=view(); if(!v) return null; var side=qs('#view-admin .gt-admin-global-side'); if(!side){v.insertAdjacentHTML('beforeend',sideHTML());side=qs('#view-admin .gt-admin-global-side')} document.body.classList.add('gt-admin-global-side-ready'); return side}
   function closePanels(){document.body.classList.remove('admin-mobile-menu-open','admin-mobile-right-open')}
-  function openLeft(){overlay();document.body.classList.add('admin-mobile-menu-open');document.body.classList.remove('admin-mobile-right-open')
+  function openLeft(){overlay();document.body.classList.add('admin-mobile-menu-open');document.body.classList.remove('admin-mobile-right-open')}
   function openRight(){ensureSide();overlay();document.body.classList.add('admin-mobile-right-open');document.body.classList.remove('admin-mobile-menu-open')}
   function setRightHidden(hidden){var v=view(); if(!v) return; ensureSide(); v.classList.toggle('right-panel-collapsed',hidden); document.body.classList.toggle('admin-right-panel-collapsed',hidden); try{localStorage.setItem('admin_right_panel_state',hidden?'hidden':'visible')}catch(_){}}
   function toggleRight(){if(!isAdmin()) return false; if(isMobile()){document.body.classList.contains('admin-mobile-right-open')?closePanels():openRight();return false} var v=view(); var hidden=!(v&&v.classList.contains('right-panel-collapsed')); setRightHidden(hidden); return false}
