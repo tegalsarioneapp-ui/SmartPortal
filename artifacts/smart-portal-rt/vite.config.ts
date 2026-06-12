@@ -1,33 +1,25 @@
 import { defineConfig } from "vite";
 import path from "path";
 
-const rawPort = process.env.PORT;
-
-if (!rawPort) {
-  throw new Error(
-    "PORT environment variable is required but was not provided.",
-  );
-}
-
-const port = Number(rawPort);
-
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
-
-const basePath = process.env.BASE_PATH || "/";
+const port = parseInt(process.env.PORT || "5000", 10);
 
 export default defineConfig({
-  base: basePath,
-  root: path.resolve(import.meta.dirname),
-  build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
-    emptyOutDir: true,
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
   },
-  publicDir: path.resolve(import.meta.dirname, "public"),
+  build: {
+    outDir: "dist/public",
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "index.html"),
+      },
+    },
+  },
   server: {
     port,
-    strictPort: true,
     host: "0.0.0.0",
     allowedHosts: true,
     proxy: {
@@ -38,14 +30,7 @@ export default defineConfig({
     },
   },
   preview: {
-    port,
+    port: 4173,
     host: "0.0.0.0",
-    allowedHosts: true,
-    proxy: {
-      "/api": {
-        target: process.env.API_URL || "http://localhost:8080",
-        changeOrigin: true,
-      },
-    },
   },
 });

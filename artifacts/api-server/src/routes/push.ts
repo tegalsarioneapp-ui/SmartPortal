@@ -14,7 +14,11 @@ const VAPID_PRIVATE_KEY =
   "RT6KWhdORXWE2peuwulkCcyx9C2JsFcrxJ6CGeSd4FU";
 const VAPID_SUBJECT = process.env["VAPID_SUBJECT"] ?? "mailto:admin@rt005.local";
 
-webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+try {
+  webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+} catch (err) {
+  console.error("[Push] Failed to set VAPID details — push notifications disabled:", (err as Error).message);
+}
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 const SUBS_KEY = "push_subscriptions";

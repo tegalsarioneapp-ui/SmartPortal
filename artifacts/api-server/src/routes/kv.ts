@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Response } from "express";
 import { db, kvStoreTable } from "@workspace/db";
-import { gt, inArray, sql } from "drizzle-orm";
+import { gt, inArray, isNotNull, sql } from "drizzle-orm";
 
 const router: IRouter = Router();
 
@@ -22,11 +22,9 @@ function sseSend(client: SseClient, event: string, data: unknown) {
     client.res.write(`event: ${event}\n`);
     client.res.write(`data: ${JSON.stringify(data)}\n\n`);
     // Explicitly flush to prevent proxy/middleware buffering.
-    // This is critical for SSE to work through intermediate proxies.
     const r = client.res as Response & { flush?: () => void };
     if (typeof r.flush === "function") r.flush();
   } catch {
-    // Client disconnected — remove from registry so broadcasts skip it.
     sseClients.delete(client);
   }
 }
@@ -50,20 +48,46 @@ setInterval(() => {
   }
 }, 10000).unref?.();
 
+// ---------------------------------------------------------------------------
+// Vacuum: hard-delete soft-deleted (value=null) rows older than 24 hours.
+// This prevents the kv_store table from growing indefinitely with tombstones.
+// ---------------------------------------------------------------------------
+async function vacuum() {
+  try {
+    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    await db.execute(
+      sql`DELETE FROM "kv_store" WHERE "value" IS NULL AND "updated_at" < ${cutoff}`
+    );
+  } catch {
+    // non-fatal
+  }
+}
+// Run vacuum at startup and every hour
+vacuum();
+setInterval(vacuum, 60 * 60 * 1000).unref?.();
+
 router.get("/kv/stream", (req, res) => {
+  // Explicitly set CORS headers on the SSE response.
+  // The global cors() middleware sets these on the initial response, but some
+  // proxies (nginx, Vercel edge, Railway) strip or fail to forward middleware
+  // headers on long-lived streaming responses. Setting them directly here
+  // guarantees the browser never sees a CORS error on EventSource connections.
+  const origin = req.headers["origin"] ?? "*";
+  res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Vary", "Origin");
+
   res.status(200);
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache, no-store, no-transform");
   res.setHeader("Connection", "keep-alive");
   res.setHeader("X-Accel-Buffering", "no");
-  // Prevent any gzip/deflate compression which would break SSE streaming
   res.setHeader("Content-Encoding", "identity");
 
   res.flushHeaders?.();
 
   req.socket.setKeepAlive(true);
   req.socket.setTimeout(0);
-  // Disable Nagle algorithm for immediate writes
   req.socket.setNoDelay(true);
 
   const client: SseClient = {
@@ -73,7 +97,6 @@ router.get("/kv/stream", (req, res) => {
 
   sseClients.add(client);
 
-  // Initial hello so the client knows the stream is live.
   sseSend(client, "hello", {
     serverTime: new Date().toISOString(),
     clientId: client.id,
@@ -102,30 +125,32 @@ router.get("/kv/stream", (req, res) => {
   res.on("error", cleanup);
 });
 
-// Lightweight key list — used by the client on boot to reconcile and prune any
-// stale localStorage entries that were deleted server-side while the device
-// was offline. Confirms server-side PostgreSQL is the only source of truth.
-router.get("/kv/keys", async (_req, res, next) => {
+// Lightweight key list — only returns LIVE (non-deleted) keys.
+// Used by the client on boot and periodically to reconcile stale localStorage
+// entries that were deleted server-side while the device was offline.
+router.get("/kv/keys", async (_req, res) => {
   try {
     const rows = await db
       .select({ key: kvStoreTable.key })
-      .from(kvStoreTable);
+      .from(kvStoreTable)
+      .where(isNotNull(kvStoreTable.value));
     res.json({
       serverTime: new Date().toISOString(),
       keys: rows.map((r) => r.key),
     });
   } catch (err) {
-    next(err);
+    console.error("[KV] /kv/keys DB error:", err instanceof Error ? err.message : String(err));
+    res.status(200).json({ serverTime: new Date().toISOString(), keys: [] });
   }
 });
 
-// Public audit endpoint — proves the storage backend, row count, and server
-// time so any device can verify it is talking to the centralised PostgreSQL.
-router.get("/audit", async (_req, res, next) => {
+// Audit endpoint for diagnostics
+router.get("/audit", async (_req, res) => {
   try {
     const result = await db
       .select({ count: sql<number>`cast(count(*) as int)` })
-      .from(kvStoreTable);
+      .from(kvStoreTable)
+      .where(isNotNull(kvStoreTable.value));
 
     const count = result?.[0]?.count ?? 0;
     res.json({
@@ -136,115 +161,128 @@ router.get("/audit", async (_req, res, next) => {
       sseSubscribers: sseClients.size,
       serverTime: new Date().toISOString(),
       message:
-        "Application uses centralized server-side PostgreSQL with realtime multi-device synchronization and no client-side shared-data persistence.",
+        "Application uses centralized server-side PostgreSQL with realtime multi-device synchronization.",
     });
   } catch (err) {
-    next(err);
+    console.error("[Audit] DB error:", err instanceof Error ? err.message : String(err));
+    res.status(200).json({
+      ok: false,
+      driver: "postgres",
+      table: "kv_store",
+      rowCount: 0,
+      sseSubscribers: sseClients.size,
+      serverTime: new Date().toISOString(),
+      message: "DB unavailable",
+    });
   }
 });
 
+// ---------------------------------------------------------------------------
+// GET /api/kv
+//
+// Without ?since=  → full snapshot of all LIVE (non-null) entries.
+//                    Used on boot and by fresh devices.
+//
+// With ?since=ISO  → delta: ALL rows updated after `since`, INCLUDING rows
+//                    with value=null (soft-deleted tombstones). This is what
+//                    makes deletions visible to polling clients that were
+//                    briefly offline.
+// ---------------------------------------------------------------------------
 router.get("/kv", async (req, res) => {
   try {
     const sinceRaw =
-      typeof req.query.since === "string"
-        ? req.query.since
-        : "";
-
+      typeof req.query.since === "string" ? req.query.since : "";
     const since = sinceRaw ? new Date(sinceRaw) : null;
 
-    let rows = [];
+    let rows: { key: string; value: string | null; updatedAt: Date | null }[] = [];
 
     try {
       if (since && !Number.isNaN(since.getTime())) {
+        // Delta poll: return ALL changed rows (including soft-deleted tombstones)
         rows = await db
           .select()
           .from(kvStoreTable)
           .where(gt(kvStoreTable.updatedAt, since));
       } else {
+        // Full snapshot: return only LIVE rows
         rows = await db
           .select()
-          .from(kvStoreTable);
+          .from(kvStoreTable)
+          .where(isNotNull(kvStoreTable.value));
       }
     } catch (dbErr) {
       console.error("DB query failed:", dbErr);
-      return res.status(200).json({
-        serverTime: new Date().toISOString(),
-        entries: []
-      });
+      return res.status(200).json({ serverTime: new Date().toISOString(), entries: [] });
     }
 
     return res.json({
       serverTime: new Date().toISOString(),
       entries: rows.map(r => ({
         key: r.key,
-        value: r.value,
-        updatedAt: new Date(
-          r.updatedAt || Date.now()
-        ).toISOString()
+        value: r.value,          // null means "deleted" — client will remove from localStorage
+        updatedAt: new Date(r.updatedAt || Date.now()).toISOString()
       }))
     });
 
   } catch (err) {
     console.error("KV route crash:", err);
-    return res.status(200).json({
-      serverTime: new Date().toISOString(),
-      entries: []
-    });
+    return res.status(200).json({ serverTime: new Date().toISOString(), entries: [] });
   }
 });
 
+// ---------------------------------------------------------------------------
+// PUT /api/kv
+//
+// Writes: upsert key/value pairs.
+// Deletes: SOFT-DELETE — set value=NULL, update updated_at.
+//   This keeps a tombstone so delta polling clients (offline devices) can
+//   discover the deletion via ?since= queries instead of only via reconcileKeys.
+// ---------------------------------------------------------------------------
 router.put("/kv", async (req, res) => {
   try {
     const body = req.body || {};
+    const serverTime = new Date().toISOString();
 
-    const writes = Array.isArray(body.writes)
+    const writes: { key: string; value: string }[] = Array.isArray(body.writes)
       ? body.writes.filter((w: { key?: string }) => w?.key)
       : [];
 
-    const deletes = Array.isArray(body.deletes)
-      ? body.deletes
-      : [];
+    const deletes: string[] = Array.isArray(body.deletes) ? body.deletes : [];
 
-    // UPSERT setiap key secara aman
+    // Upsert live entries
     for (const item of writes) {
       try {
         await db
           .insert(kvStoreTable)
-          .values({
-            key: item.key,
-            value: item.value
-          })
+          .values({ key: item.key, value: item.value })
           .onConflictDoUpdate({
             target: kvStoreTable.key,
-            set: {
-              value: item.value,
-              updatedAt: sql`now()`
-            }
+            set: { value: item.value, updatedAt: sql`now()` }
           });
       } catch (e) {
         console.error("Write failed:", e);
       }
     }
 
-    // Hapus keys yang diminta
+    // Soft-delete: set value=NULL so the tombstone is visible to ?since= polls
     if (deletes.length) {
       try {
         await db
-          .delete(kvStoreTable)
-          .where(inArray(kvStoreTable.key, deletes));
+          .insert(kvStoreTable)
+          .values(deletes.map(k => ({ key: k, value: null })))
+          .onConflictDoUpdate({
+            target: kvStoreTable.key,
+            set: { value: null, updatedAt: sql`now()` }
+          });
       } catch (e) {
-        console.error("Delete failed:", e);
+        console.error("Soft-delete failed:", e);
       }
     }
 
-    const serverTime = new Date().toISOString();
-
-    // Broadcast ke semua SSE subscriber agar browser/device lain
-    // langsung mendapat update tanpa menunggu polling.
-    // originId diteruskan agar pengirim asli bisa memfilter echo-nya sendiri.
+    // Broadcast to all SSE subscribers so other devices update instantly.
     const broadcastEntries = [
-      ...writes.map((w: { key: string; value: string }) => ({ key: w.key, value: w.value, updatedAt: serverTime })),
-      ...deletes.map((k: string) => ({ key: k, value: null, updatedAt: serverTime })),
+      ...writes.map(w => ({ key: w.key, value: w.value, updatedAt: serverTime })),
+      ...deletes.map(k => ({ key: k, value: null, updatedAt: serverTime })),
     ];
 
     if (broadcastEntries.length > 0) {
@@ -263,14 +301,11 @@ router.put("/kv", async (req, res) => {
 
   } catch (err) {
     console.error("PUT /kv crash:", err);
-    return res.status(200).json({
-      serverTime: new Date().toISOString(),
-      written: 0,
-      deleted: 0
-    });
+    return res.status(200).json({ serverTime: new Date().toISOString(), written: 0, deleted: 0 });
   }
 });
 
+// Full wipe — hard-delete all rows and broadcast clear event.
 router.delete("/kv", async (_req, res, next) => {
   try {
     await db.delete(kvStoreTable);

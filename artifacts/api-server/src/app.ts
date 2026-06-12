@@ -4,120 +4,119 @@ import express, {
   type Request,
   type Response,
 } from "express";
-import cors from "cors";
+import cors, { type CorsOptions } from "cors";
 import pinoHttp from "pino-http";
 import path from "path";
 import { existsSync } from "fs";
-import router from "./routes";
-import { logger } from "./lib/logger";
+import { rateLimit } from "express-rate-limit";
+import router from "./routes/index.js";
+import { logger } from "./lib/logger.js";
 
 const app: Express = express();
 
 app.disable("x-powered-by");
+app.set("trust proxy", 1);
 
-app.use(
-  pinoHttp({
-    logger,
-    serializers: {
-      req(req) {
-        return {
-          id: req.id,
-          method: req.method,
-          url: req.url?.split("?")[0],
-        };
-      },
-      res(res) {
-        return {
-          statusCode: res.statusCode,
-        };
-      },
-    },
-  }),
-);
+app.use(pinoHttp({
+  logger,
+  serializers: {
+    req(req) { return { id: req.id, method: req.method, url: req.url?.split("?")[0] }; },
+    res(res) { return { statusCode: res.statusCode }; },
+  },
+}));
 
 const allowedOriginsRaw = process.env["CORS_ALLOWED_ORIGINS"]?.trim();
 const allowedOrigins = allowedOriginsRaw
-  ? allowedOriginsRaw
-      .split(",")
-      .map((o) => o.trim())
-      .filter(Boolean)
+  ? allowedOriginsRaw.split(",").map((o) => o.trim()).filter(Boolean)
   : null;
 
-app.use(
-  cors({
-    origin: (origin, cb) => {
-      // Same-origin / non-browser callers (no Origin header) are always allowed.
-      if (!origin) return cb(null, true);
-      if (!allowedOrigins) {
-        // Allow all origins — in production the Express server serves both
-        // frontend and API from the same port, so CORS is not needed.
-        // Allowing all origins here ensures SSE and fetch requests work
-        // even through any intermediate proxy layer.
-        return cb(null, true);
-      }
-      return cb(null, allowedOrigins.includes(origin));
-    },
-  }),
-);
+const corsOptions: CorsOptions = {
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    if (!allowedOrigins) return cb(null, true);
+    return cb(null, allowedOrigins.includes(origin));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  maxAge: 86400,
+};
 
-// Limit dinaikkan ke 12 MB untuk mendukung upload PDF (mis. SK Struktur Pengurus)
-// yang disimpan sebagai base64 di key store.
+app.options("/{*path}", cors(corsOptions));
+app.use(cors(corsOptions));
+
+const generalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 120,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many requests, please slow down." },
+  skip: (req) =>
+    req.path === "/kv/stream" ||
+    req.path === "/health" ||
+    req.path === "/healthz",
+});
+
+const writeLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many write requests, please slow down." },
+});
+
+app.use("/api", generalLimiter);
+app.use("/api/kv", (req: Request, res: Response, next: NextFunction) => {
+  if (req.method === "PUT" || req.method === "DELETE") {
+    return writeLimiter(req, res, next);
+  }
+  next();
+});
+
 app.use(express.json({ limit: "12mb" }));
 app.use(express.urlencoded({ extended: true, limit: "12mb" }));
 
+// Simple health check — no DB dependency, responds immediately
+app.get("/api/health", (_req, res) => {
+  res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
+});
+app.get("/api/healthz", (_req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.use("/api", router);
 
-// 404 for unknown /api/* routes (HTML defaults leak framework info).
-app.use("/api", (_req, res) => {
+app.use("/api", (_req: Request, res: Response) => {
   res.status(404).json({ error: "Not Found" });
 });
 
-// Centralized error handler. Hides internals in production, logs everything.
-app.use(
-  (
-    err: Error & { status?: number; statusCode?: number },
-    req: Request,
-    res: Response,
-    _next: NextFunction,
-  ) => {
-    const status = err.status ?? err.statusCode ?? 500;
-    (req as Request & { log?: { error: (...args: unknown[]) => void } }).log?.error?.(
-      { err },
-      "request failed",
-    );
-    if (res.headersSent) return;
-    res.status(status).json({
-      error:
-        status >= 500 && process.env["NODE_ENV"] === "production"
-          ? "Internal Server Error"
-          : err.message || "Internal Server Error",
-    });
-  },
-);
-
-// ---------------------------------------------------------------------------
-// Production: serve the Vite-built frontend static files directly from
-// Express, eliminating any proxy layer that could buffer SSE streams.
-// The frontend build output is at artifacts/smart-portal-rt/dist/public/
-// relative to the workspace root.
-// ---------------------------------------------------------------------------
-if (process.env["NODE_ENV"] === "production") {
-  // Try multiple candidate paths to find the static build output.
-  const candidates = [
-    path.resolve(import.meta.dirname, "../../smart-portal-rt/dist/public"),
-    path.resolve(process.cwd(), "artifacts/smart-portal-rt/dist/public"),
-  ];
-  const staticDir = candidates.find((d) => existsSync(d)) ?? candidates[0];
-
-  logger.info({ staticDir }, "Serving static frontend from Express");
-
-  // Serve assets (JS, CSS, images, _sync.js, etc.)
-  app.use(express.static(staticDir, { maxAge: 0, etag: false }));
-
-  // SPA fallback — all other routes serve index.html (Express 5 wildcard syntax)
-  app.get("/{*path}", (_req, res) => {
-    res.sendFile(path.join(staticDir, "index.html"));
+app.use((err: Error & { status?: number }, _req: Request, res: Response, _next: NextFunction) => {
+  const status = err.status ?? 500;
+  console.error("[App] Error:", err.message);
+  if (res.headersSent) return;
+  res.status(status).json({
+    error: status >= 500 && process.env["NODE_ENV"] === "production"
+      ? "Internal Server Error"
+      : err.message,
   });
+});
+
+if (process.env["NODE_ENV"] === "production") {
+  const candidates = [
+    path.resolve(import.meta.dirname, "../../smart-portal-rt/dist"),
+    path.resolve(process.cwd(), "artifacts/smart-portal-rt/dist"),
+  ];
+  const staticDir = candidates.find((d) => existsSync(d)) ?? null;
+  if (staticDir) {
+    app.use(express.static(staticDir, { maxAge: 0, etag: false }));
+    const indexHtml = path.join(staticDir, "index.html");
+    if (existsSync(indexHtml)) {
+      app.get("/{*path}", (req: Request, res: Response, next: NextFunction) => {
+        if (req.path.startsWith("/api")) return next();
+        res.sendFile(indexHtml, (err) => { if (err) next(err); });
+      });
+    }
+  }
 }
 
 export default app;

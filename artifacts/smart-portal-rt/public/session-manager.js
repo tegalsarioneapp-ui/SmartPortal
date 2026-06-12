@@ -7,6 +7,11 @@
   if (window.__GT_SESSION_INSTALLED__) return;
   window.__GT_SESSION_INSTALLED__ = true;
 
+  const _h = window.location.hostname;
+  const API_BASE_URL = (_h === 'localhost' || _h.includes('replit') || _h.includes('127.0.0.1'))
+    ? ''
+    : 'https://smartportal-production.up.railway.app';
+
   var sessionToken = null;
   var sessionRole = null;
   var sessionExpiresAt = null;
@@ -53,7 +58,7 @@
 
   // Login: authenticate and get session token
   window.__GT_LOGIN__ = function (role, password) {
-    return fetch("/api/auth/login", {
+    return fetch(API_BASE_URL + "/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ role: role, password: password }),
@@ -87,7 +92,7 @@
     sessionExpiresAt = null;
     clearSessionStorage();
 
-    return fetch("/api/auth/logout", {
+    return fetch(API_BASE_URL + "/api/auth/logout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: token }),

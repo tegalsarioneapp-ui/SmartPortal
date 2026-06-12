@@ -1,0 +1,2618 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+<title>Portal Bendahara RT 005</title>
+<link rel="icon" type="image/png" href="Lambang_Kota_Semarang.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --sidebar-w:260px;
+  --bg:#f0f4f8;
+  --card:#fff;
+  --primary:#2563eb;
+  --primary-dark:#1d4ed8;
+  --success:#10b981;
+  --danger:#ef4444;
+  --warn:#f59e0b;
+  --purple:#8b5cf6;
+  --teal:#0d9488;
+  --text:#1e293b;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);height:100vh;position:fixed;top:0;left:0;
+  background:linear-gradient(180deg,#0f172a 0%,#1e293b 100%);
+  display:flex;flex-direction:column;z-index:200;overflow-y:auto;transition:transform .3s;
+}
+.sb-brand{padding:22px 20px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-brand img{width:42px;height:42px;border-radius:10px}
+.sb-brand h1{color:#fff;font-size:.92rem;font-weight:700;margin-top:10px;letter-spacing:.3px;line-height:1.4}
+.sb-brand p{color:#94a3b8;font-size:.72rem;margin-top:2px}
+.sb-nav{flex:1;padding:12px 10px}
+.sb-sep{color:#475569;font-size:.68rem;font-weight:700;letter-spacing:1px;padding:14px 10px 6px;text-transform:uppercase}
+.nav-item{
+  display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;
+  color:#94a3b8;font-size:.88rem;font-weight:500;transition:all .2s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;
+}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#e2e8f0}
+.nav-item.active{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.4)}
+.nav-item i{width:18px;text-align:center;font-size:1rem}
+.sb-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-footer .user-chip{display:flex;align-items:center;gap:10px}
+.sb-footer .avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--success),#059669);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;flex-shrink:0}
+.sb-footer .user-name{color:#e2e8f0;font-size:.82rem;font-weight:600}
+.sb-footer .user-role{color:#64748b;font-size:.7rem;margin-top:1px}
+.sb-footer .btn-back{margin-top:10px;display:flex;align-items:center;gap:8px;color:#94a3b8;font-size:.78rem;cursor:pointer;padding:6px 10px;border-radius:8px;transition:all .2s;border:none;background:none;width:100%}
+.sb-footer .btn-back:hover{background:rgba(255,255,255,.07);color:#e2e8f0}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.topbar h2{font-size:1.05rem;font-weight:700;color:var(--text)}
+.topbar .topbar-right{display:flex;align-items:center;gap:12px}
+.badge-date{background:#f1f5f9;color:var(--muted);font-size:.76rem;font-weight:600;padding:5px 12px;border-radius:20px}
+.content{padding:28px;flex:1}
+
+/* ── PANEL ── */
+.panel{display:none}.panel.active{display:block;animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:var(--radius);padding:22px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid var(--border);margin-bottom:20px}
+.card-title{font-size:.98rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--text)}
+.card-title i{color:var(--primary)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:22px}
+.stat-box{background:var(--card);border-radius:var(--radius);padding:18px 20px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.05);position:relative;overflow:hidden}
+.stat-box .sb-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:2.2rem;opacity:.1}
+.stat-box .sb-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.stat-box .sb-val{font-size:1.3rem;font-weight:800;margin-top:4px;color:var(--text)}
+.stat-box .sb-sub{font-size:.72rem;color:var(--muted);margin-top:2px}
+
+/* ── FORM ── */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.fg{display:flex;flex-direction:column;gap:6px}
+.fg label{font-size:.8rem;font-weight:600;color:var(--muted)}
+.fg input,.fg select,.fg textarea{
+  padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;
+  font-family:inherit;font-size:.88rem;color:var(--text);background:#f8fafc;
+  transition:border-color .2s;outline:none;width:100%;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--primary);background:#fff}
+.fg textarea{resize:vertical;min-height:80px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 4px 12px rgba(37,99,235,.3)}
+.btn-primary:hover{box-shadow:0 6px 16px rgba(37,99,235,.45);transform:translateY(-1px)}
+.btn-success{background:linear-gradient(135deg,var(--success),#059669);color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.3)}
+.btn-danger{background:linear-gradient(135deg,var(--danger),#dc2626);color:#fff;box-shadow:0 4px 12px rgba(239,68,68,.3)}
+.btn-warn{background:linear-gradient(135deg,var(--warn),#d97706);color:#fff;box-shadow:0 4px 12px rgba(245,158,11,.3)}
+.btn-ghost{background:#f1f5f9;color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{background:#e2e8f0}
+.btn-sm{padding:6px 12px;font-size:.78rem;border-radius:8px}
+.btn-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+thead th{background:#f8fafc;padding:11px 14px;text-align:left;font-weight:700;font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:11px 14px;border-bottom:1px solid #f1f5f9;color:var(--text)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#fafbff}
+.tbl-empty{text-align:center;color:var(--muted);padding:40px;font-size:.88rem}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.filter-bar input,.filter-bar select{
+  padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;
+  font-size:.83rem;font-family:inherit;color:var(--text);background:#fff;outline:none;
+}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--primary)}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:700}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-yellow{background:#fef9c3;color:#854d0e}
+.badge-blue{background:#dbeafe;color:#1d4ed8}
+.badge-gray{background:#f1f5f9;color:#475569}
+
+/* ── MATRIKS TABLE ── */
+.matrix-table{min-width:700px}
+.matrix-table th,.matrix-table td{text-align:center;padding:8px 6px;font-size:.78rem}
+.matrix-table th:first-child,.matrix-table td:first-child{text-align:left;padding-left:14px}
+.cell-ok{background:#dcfce7;color:#166534;border-radius:6px;font-weight:800;font-size:.9rem}
+.cell-no{background:#fee2e2;color:#991b1b;border-radius:6px;font-weight:800;font-size:.9rem}
+.cell-empty{background:#f8fafc;color:#cbd5e1;border-radius:6px}
+
+/* ── PROGRESS ── */
+.progress-wrap{background:#f1f5f9;border-radius:999px;height:10px;overflow:hidden;margin-top:6px}
+.progress-bar{height:100%;border-radius:999px;transition:width .6s ease}
+
+/* ── CHECKBOX GROUP ── */
+.check-group{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.check-item{display:flex;align-items:center;gap:8px;background:#f8fafc;border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;transition:all .2s;flex:1;min-width:160px}
+.check-item:hover{border-color:var(--primary);background:#eff6ff}
+.check-item.checked{border-color:var(--success);background:#f0fdf4}
+.check-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--success);cursor:pointer}
+.check-item .ci-label{font-size:.85rem;font-weight:600;color:var(--text)}
+.check-item .ci-nom{font-size:.75rem;color:var(--muted)}
+
+/* ── SECTION DIVIDER ── */
+.sec-divider{display:flex;align-items:center;gap:12px;margin:24px 0 16px;color:var(--muted);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── LAPORAN CARD ── */
+.lap-card{background:linear-gradient(135deg,#f8faff,#eff6ff);border:1px solid #bfdbfe;border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.lap-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #dbeafe;font-size:.88rem}
+.lap-row:last-child{border-bottom:none}
+.lap-row.total{font-weight:800;font-size:1rem;color:var(--primary-dark);padding-top:12px}
+.lap-row.debit{color:var(--success);font-weight:600}
+.lap-row.kredit{color:var(--danger);font-weight:600}
+
+/* ── TOGGLE ── */
+.tab-btns{display:flex;gap:6px;background:#f1f5f9;border-radius:12px;padding:4px;margin-bottom:20px}
+.tab-btn{flex:1;padding:8px 12px;border:none;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;background:none;color:var(--muted);font-family:inherit}
+.tab-btn.active{background:#fff;color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+
+/* ── MOBILE ── */
+#mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:300;background:var(--primary);color:#fff;border:none;border-radius:10px;width:40px;height:40px;font-size:1rem;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,.4)}
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150}
+@media(max-width:768px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #sb-overlay.open{display:block}
+  #main{margin-left:0}
+  .content{padding:16px}
+  .topbar{padding:14px 16px;padding-left:60px}
+  #mob-toggle{display:flex;align-items:center;justify-content:center}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .form-grid{grid-template-columns:1fr}
+}
+
+/* ── PRINT ── */
+@media print{
+  #sidebar,#mob-toggle,#sb-overlay,.no-print{display:none!important}
+  #main{margin-left:0}
+  .content{padding:0}
+  .card{box-shadow:none;border:1px solid #ddd}
+}
+
+/* ── MISC ── */
+.icon-circle{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state i{font-size:3rem;opacity:.3;margin-bottom:12px}
+.empty-state p{font-size:.9rem}
+.toast-success,.toast-error{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1e293b;color:#fff;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);display:none;animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+
+/* ── PANEL HEADER BANNER ── */
+.panel-header{
+  background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 55%,#2563eb 100%);
+  color:#fff;padding:22px 28px 20px;margin:-28px -28px 28px;
+  display:flex;align-items:center;gap:16px;
+  border-radius:0 0 22px 22px;position:relative;overflow:hidden;
+}
+.panel-header::before{
+  content:'';position:absolute;right:-40px;top:-40px;
+  width:200px;height:200px;background:rgba(255,255,255,.05);border-radius:50%;
+}
+.panel-header::after{
+  content:'';position:absolute;right:60px;bottom:-60px;
+  width:140px;height:140px;background:rgba(255,255,255,.04);border-radius:50%;
+}
+.ph-icon{
+  width:54px;height:54px;background:rgba(255,255,255,.15);border-radius:16px;
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+  flex-shrink:0;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.2);z-index:1;
+}
+.ph-content{z-index:1}
+.ph-title{font-size:1.12rem;font-weight:700;letter-spacing:.2px}
+.ph-sub{font-size:.78rem;opacity:.72;margin-top:3px}
+.ph-badge{
+  margin-left:auto;z-index:1;background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.25);border-radius:999px;
+  padding:4px 14px;font-size:.75rem;font-weight:700;white-space:nowrap;
+}
+
+/* ── CARD TITLE ICON ── */
+.cti{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.cti-blue{background:#dbeafe;color:#1d4ed8}
+.cti-green{background:#dcfce7;color:#15803d}
+.cti-warn{background:#fef9c3;color:#92400e}
+.cti-red{background:#fee2e2;color:#991b1b}
+.cti-purple{background:#ede9fe;color:#6d28d9}
+.cti-teal{background:#ccfbf1;color:#0f766e}
+.cti-gray{background:#f1f5f9;color:#475569}
+
+/* ── STAT BOX HOVER ── */
+.stat-box{transition:transform .2s,box-shadow .2s}
+.stat-box:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+
+/* ── INFO TIP ── */
+.info-tip{
+  display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted);
+  background:#f8fafc;border:1px solid var(--border);border-radius:8px;
+  padding:8px 12px;margin-top:10px;
+}
+.info-tip i{color:var(--primary);flex-shrink:0}
+
+/* ── KOMPONEN EDIT ROW ── */
+.kp-edit-input{
+  padding:6px 10px;border:1.5px solid var(--primary);border-radius:8px;
+  font-size:.83rem;font-family:inherit;color:var(--text);background:#fff;
+  outline:none;width:100%;
+}
+.kp-edit-input:focus{box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+
+/* ── SIDEBAR NAV ACTIVE BORDER ── */
+.nav-item.active{
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.4);
+  border-left:3px solid #93c5fd;padding-left:11px;
+}
+
+/* ── TOPBAR BREADCRUMB ── */
+.topbar-breadcrumb{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--muted);margin-top:2px}
+.topbar-breadcrumb span{color:var(--primary);font-weight:600}
+
+/* ── QUICK ACTIONS STRIP ── */
+.quick-strip{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.quick-chip{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 14px;
+  border-radius:999px;font-size:.78rem;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--border);background:#fff;color:var(--text);
+  transition:all .2s;white-space:nowrap;
+}
+.quick-chip:hover{border-color:var(--primary);color:var(--primary);background:#eff6ff}
+</style>
+</head>
+<body>
+
+<button id="mob-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+<div id="sb-overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<nav id="sidebar">
+  <div class="sb-brand">
+    <img src="Lambang_Kota_Semarang.png" alt="Logo">
+    <h1>Portal Bendahara</h1>
+    <p>RT 005 Tegalsari · Candisari</p>
+  </div>
+
+  <div class="sb-nav">
+    <div class="sb-sep">Keuangan</div>
+    <button class="nav-item active" onclick="showPanel('ben-input',this)">
+      <i class="fas fa-cash-register"></i> Input Kas
+    </button>
+    <button class="nav-item" onclick="showPanel('ben-iuran',this)">
+      <i class="fas fa-hand-holding-dollar"></i> Iuran Kolektif
+    </button>
+    <button class="nav-item" onclick="showPanel('ben-laporan',this)">
+      <i class="fas fa-book-open"></i> Laporan Kas
+    </button>
+    <div class="sb-sep">Analitik</div>
+    <button class="nav-item" onclick="showPanel('ben-matriks',this)">
+      <i class="fas fa-table-cells"></i> Matriks Iuran
+    </button>
+    <button class="nav-item" onclick="showPanel('ben-alisa',this)">
+      <i class="fas fa-chart-line"></i> Analisa Kas
+    </button>
+    <div class="sb-sep">Dokumen</div>
+    <button class="nav-item" onclick="showPanel('ben-arsip',this)">
+      <i class="fas fa-folder-open"></i> Arsip BA
+    </button>
+    <div class="sb-sep">Sistem</div>
+    <button class="nav-item" onclick="showPanel('ben-setting',this)">
+      <i class="fas fa-sliders"></i> Pengaturan
+    </button>
+  </div>
+
+  <div class="sb-footer">
+    <div class="user-chip">
+      <div class="avatar"><i class="fas fa-vault"></i></div>
+      <div>
+        <div class="user-name" id="sb-nama-ben">Bendahara</div>
+        <div class="user-role">Otoritas Keuangan RT 005</div>
+      </div>
+    </div>
+    <button class="btn-back" onclick="try{localStorage.removeItem('gt_local_session');}catch(_){}window.location.href='/'">
+      <i class="fas fa-arrow-left"></i> Kembali ke Portal Utama
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+  <div class="topbar no-print">
+    <h2 id="topbar-title"><i class="fas fa-cash-register" style="color:var(--primary);margin-right:8px"></i> Input Kas Manual</h2>
+    <div class="topbar-right">
+      <span id="ben-sync-badge" style="display:none;font-size:.72rem;font-weight:600;color:#fff;padding:3px 10px;border-radius:20px;margin-right:8px;transition:all .3s"></span>
+      <span class="badge-date" id="topbar-date"></span>
+      <button class="btn btn-ghost btn-sm" onclick="refreshAll()"><i class="fas fa-rotate-right"></i></button>
+    </div>
+  </div>
+
+  <div class="content">
+
+  <!-- ══════════════════════════════════════════════
+       PANEL 1 : BEN-INPUT (Kas Manual)
+  ══════════════════════════════════════════════ -->
+  <div id="panel-ben-input" class="panel active">
+    <div class="panel-header no-print">
+      <div class="ph-icon"><i class="fas fa-cash-register"></i></div>
+      <div class="ph-content">
+        <div class="ph-title">Input Kas Manual</div>
+        <div class="ph-sub">Catat setiap transaksi pemasukan & pengeluaran kas RT</div>
+      </div>
+      <div class="ph-badge" id="ph-saldo-badge">Saldo: Rp 0</div>
+    </div>
+    <div class="stats-row" id="inp-stats"></div>
+
+    <div class="form-grid">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-lock"></i> Kunci Saldo Awal Periode</div>
+        <div class="fg">
+          <label>Saldo Awal (Rp)</label>
+          <input type="number" id="inp-saldo-awal" placeholder="Nominal saldo sisa periode lalu...">
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="simpanSaldoAwal()"><i class="fas fa-lock"></i> Kunci Saldo</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="fas fa-pen-to-square"></i> Input Kas Harian</div>
+        <form id="form-kas" onsubmit="simpanKas(event)">
+          <div class="form-grid" style="gap:12px">
+            <div class="fg"><label>Tanggal</label><input type="date" id="kas-tgl" required></div>
+            <div class="fg"><label>Arus Dana</label>
+              <select id="kas-tipe">
+                <option value="masuk">Pemasukan (+)</option>
+                <option value="keluar">Pengeluaran (-)</option>
+              </select>
+            </div>
+            <div class="fg" style="grid-column:span 2"><label>Keterangan</label><input type="text" id="kas-desc" placeholder="Keterangan transaksi..." required></div>
+            <div class="fg"><label>Kategori</label>
+              <select id="kas-kategori">
+                <option value="Kas Utama">Kas Utama</option>
+                <option value="Operasional">Operasional</option>
+                <option value="Sosial">Sosial</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+            <div class="fg"><label>Nominal (Rp)</label><input type="number" id="kas-amt" placeholder="0" required></div>
+          </div>
+          <div class="btn-group">
+            <button type="submit" class="btn btn-success"><i class="fas fa-check-circle"></i> Simpan Transaksi</button>
+            <button type="reset" class="btn btn-ghost"><i class="fas fa-rotate-left"></i> Reset</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <span><i class="fas fa-list-ul"></i> Riwayat Transaksi Perbulan</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-success btn-sm no-print" onclick="excelKas()"><i class="fas fa-file-excel"></i> Export Excel</button>
+          <button class="btn btn-warn btn-sm no-print" onclick="excelKasRingkasan()"><i class="fas fa-table"></i> Ringkasan Bulanan</button>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <input type="text" id="f-kas-nama" placeholder="Cari keterangan..." oninput="renderKasTable()">
+        <select id="f-kas-bulan" onchange="renderKasTable()">
+          <option value="">Semua Bulan</option>
+        </select>
+        <select id="f-kas-tipe" onchange="renderKasTable()">
+          <option value="">Semua Jenis</option>
+          <option value="masuk">Pemasukan</option>
+          <option value="keluar">Pengeluaran</option>
+        </select>
+        <input type="date" id="f-kas-tgl" onchange="renderKasTable()">
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th>Jenis</th><th>Nominal</th><th>Aksi</th>
+          </tr></thead>
+          <tbody id="tbody-kas"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PANEL 2 : BEN-IURAN (Iuran Kolektif)
+  ══════════════════════════════════════════════ -->
+  <div id="panel-ben-iuran" class="panel">
+    <div class="panel-header no-print">
+      <div class="ph-icon"><i class="fas fa-hand-holding-dollar"></i></div>
+      <div class="ph-content">
+        <div class="ph-title">Iuran Kolektif Warga</div>
+        <div class="ph-sub">Input pembayaran iuran & cetak kwitansi per warga</div>
+      </div>
+      <div class="ph-badge" id="ph-iuran-badge">0 Record</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fas fa-hand-holding-dollar"></i> Input Iuran Kolektif Warga</div>
+      <form id="form-iuran" onsubmit="simpanIuran(event)">
+        <div class="form-grid">
+          <div class="fg">
+            <label>Nama Warga Terdaftar</label>
+            <select id="iur-warga" required onchange="cekStatusIuran()">
+              <option value="">-- Pilih Warga --</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Tahun</label>
+            <select id="iur-tahun" onchange="cekStatusIuran()"></select>
+          </div>
+          <div class="fg">
+            <label>Bulan</label>
+            <select id="iur-bulan" onchange="cekStatusIuran()">
+              <option value="1">Januari</option><option value="2">Februari</option>
+              <option value="3">Maret</option><option value="4">April</option>
+              <option value="5">Mei</option><option value="6">Juni</option>
+              <option value="7">Juli</option><option value="8">Agustus</option>
+              <option value="9">September</option><option value="10">Oktober</option>
+              <option value="11">November</option><option value="12">Desember</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sec-divider">Pilih Komponen Iuran</div>
+
+        <div id="iur-status-banner" style="display:none;background:#fef9c3;border:1px solid #fde047;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.83rem;color:#854d0e;"></div>
+
+        <div class="check-group" id="check-group-iuran"></div>
+
+        <div class="btn-group" style="margin-top:20px">
+          <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan Iuran</button>
+          <button type="button" class="btn btn-ghost" onclick="document.getElementById('form-iuran').reset();cekStatusIuran()"><i class="fas fa-rotate-left"></i> Reset</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <span><i class="fas fa-history"></i> Riwayat Pembayaran Iuran</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-success btn-sm no-print" onclick="excelIuranDetail()"><i class="fas fa-file-excel"></i> Export Detail</button>
+          <button class="btn btn-warn btn-sm no-print" onclick="excelIuranPerWarga()"><i class="fas fa-table"></i> Rekap Per Warga</button>
+          <button class="btn btn-primary btn-sm no-print" onclick="excelIuranMatriks()"><i class="fas fa-grid"></i> Matriks Tahunan</button>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <input type="text" id="f-iur-nama" placeholder="Cari warga..." oninput="renderIuranTable()">
+        <select id="f-iur-bulan" onchange="renderIuranTable()">
+          <option value="">Semua Bulan</option>
+        </select>
+        <select id="f-iur-tahun" onchange="renderIuranTable()">
+          <option value="">Semua Tahun</option>
+        </select>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th>Nama Warga</th><th>Periode</th><th>Pembangunan</th><th>Meja</th><th>17 Agustus</th><th>Sosial</th><th>Total</th><th>Tgl Bayar</th><th>Aksi</th>
+          </tr></thead>
+          <tbody id="tbody-iuran"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PANEL 3 : BEN-LAPORAN
+  ══════════════════════════════════════════════ -->
+  <div id="panel-ben-laporan" class="panel">
+    <div class="panel-header no-print">
+      <div class="ph-icon"><i class="fas fa-book-open"></i></div>
+      <div class="ph-content">
+        <div class="ph-title">Laporan Kas</div>
+        <div class="ph-sub">Laporan keuangan kas utama, kas 17 Agustus & kas sosial</div>
+      </div>
+    </div>
+    <div class="tab-btns no-print">
+      <button class="tab-btn active" onclick="switchLapTab('utama',this)">📊 Kas Utama</button>
+      <button class="tab-btn" onclick="switchLapTab('terpisah',this)">📋 Kas Terpisah</button>
+    </div>
+
+    <!-- Kas Utama -->
+    <div id="lap-tab-utama">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-vault"></i> Laporan Kas Utama RT 005</div>
+        <div id="lap-utama-content"></div>
+        <div class="btn-group no-print">
+          <button class="btn btn-primary" onclick="printLaporan('lap-tab-utama')"><i class="fas fa-print"></i> Cetak</button>
+          <button class="btn btn-warn" onclick="downloadPDF('lap-tab-utama','Laporan Kas Utama')"><i class="fas fa-file-pdf"></i> Download PDF</button>
+          <button class="btn btn-success" style="background:linear-gradient(135deg,#16a34a,#15803d)" onclick="excelLaporanUtama()"><i class="fas fa-file-excel"></i> Download Excel</button>
+          <button class="btn btn-ghost" onclick="simpanArsip('utama')"><i class="fas fa-folder-plus"></i> Simpan ke Arsip</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kas Terpisah -->
+    <div id="lap-tab-terpisah" style="display:none">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-flag"></i> Laporan Kas 17 Agustus</div>
+        <div id="lap-agustus-content"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="fas fa-heart"></i> Laporan Kas Sosial</div>
+        <div id="lap-sosial-content"></div>
+      </div>
+      <div class="btn-group no-print">
+        <button class="btn btn-primary" onclick="printLaporan('lap-tab-terpisah')"><i class="fas fa-print"></i> Cetak</button>
+        <button class="btn btn-warn" onclick="downloadPDF('lap-tab-terpisah','Laporan Kas Terpisah')"><i class="fas fa-file-pdf"></i> Download PDF</button>
+        <button class="btn btn-success" style="background:linear-gradient(135deg,#16a34a,#15803d)" onclick="excelLaporanTerpisah()"><i class="fas fa-file-excel"></i> Download Excel</button>
+        <button class="btn btn-ghost" onclick="simpanArsip('terpisah')"><i class="fas fa-folder-plus"></i> Simpan ke Arsip</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PANEL 4 : BEN-MATRIKS
+  ══════════════════════════════════════════════ -->
+  <div id="panel-ben-matriks" class="panel">
+    <div class="panel-header no-print">
+      <div class="ph-icon"><i class="fas fa-table-cells"></i></div>
+      <div class="ph-content">
+        <div class="ph-title">Matriks Iuran</div>
+        <div class="ph-sub">Visualisasi status pembayaran iuran seluruh warga per bulan</div>
+      </div>
+      <div class="ph-badge" id="ph-mtrx-badge">Tahun <span id="mtrx-tahun-label2"></span></div>
+    </div>
+    <div class="stats-row" id="mtrx-stats"></div>
+
+    <div class="form-grid" style="grid-template-columns:1fr">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-user-check"></i> Rekap Pembayaran Per Warga</div>
+        <div class="filter-bar" style="margin-bottom:14px">
+          <select id="mtrx-warga" onchange="renderMatriksWarga()" style="flex:1;min-width:200px">
+            <option value="">-- Pilih Warga untuk Melihat Detail --</option>
+          </select>
+          <select id="mtrx-tahun" onchange="renderMatriksWarga()"></select>
+        </div>
+        <div id="mtrx-detail"></div>
+        <div class="btn-group no-print" id="mtrx-btns" style="display:none">
+          <button class="btn btn-warn" onclick="bayarOtomatis()"><i class="fas fa-magic"></i> Bayar Otomatis Kekurangan</button>
+          <button class="btn btn-success" onclick="waRekap()"><i class="fab fa-whatsapp"></i> WhatsApp Info Rekap</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <span><i class="fas fa-table-cells"></i> Matriks Iuran Global — <span id="mtrx-tahun-label"></span></span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-success btn-sm no-print" onclick="excelMatriksGlobal()"><i class="fas fa-file-excel"></i> Export Matriks Excel</button>
+          <button class="btn btn-primary btn-sm no-print" onclick="excelLaporanLengkap()"><i class="fas fa-file-excel"></i> Laporan Lengkap</button>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <input type="text" id="f-mtrx-nama" placeholder="Cari warga..." oninput="renderMatriksGlobal()">
+        <select id="f-mtrx-tahun" onchange="renderMatriksGlobal()"></select>
+        <select id="f-mtrx-komponen" onchange="renderMatriksGlobal()">
+          <option value="pembangunan">Uang Pembangunan</option>
+          <option value="meja">Uang Meja</option>
+          <option value="agustus">Uang 17 Agustus</option>
+          <option value="sosial">Uang Sosial</option>
+        </select>
+      </div>
+      <div class="tbl-wrap">
+        <table class="matrix-table">
+          <thead id="mtrx-thead"></thead>
+          <tbody id="mtrx-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PANEL 5 : BEN-ALISA (Analisa)
+  ══════════════════════════════════════════════ -->
+  <div id="panel-ben-alisa" class="panel">
+    <div class="panel-header no-print">
+      <div class="ph-icon"><i class="fas fa-chart-line"></i></div>
+      <div class="ph-content">
+        <div class="ph-title">Analisa Kas</div>
+        <div class="ph-sub">Grafik tren kas, komposisi iuran & ranking warga taat bayar</div>
+      </div>
+    </div>
+    <div class="stats-row" id="alisa-stats"></div>
+
+    <div class="form-grid">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-chart-bar"></i> Tren Kas Bulanan</div>
+        <canvas id="chart-kas" height="220"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="fas fa-chart-pie"></i> Komposisi Iuran Terkumpul</div>
+        <canvas id="chart-iuran-pie" height="220"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="fas fa-chart-line"></i> Progress Iuran Per Komponen</div>
+      <div id="alisa-progress"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="fas fa-ranking-star"></i> Top Warga Taat Bayar</div>
+      <div id="alisa-top-warga"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PANEL 6 : BEN-ARSIP
+  ══════════════════════════════════════════════ -->
+  <div id="panel-ben-arsip" class="panel">
+    <div class="panel-header no-print">
+      <div class="ph-icon"><i class="fas fa-folder-open"></i></div>
+      <div class="ph-content">
+        <div class="ph-title">Arsip Berita Acara</div>
+        <div class="ph-sub">Dokumen laporan yang telah disimpan & dapat diunduh kembali</div>
+      </div>
+      <div class="ph-badge" id="ph-arsip-badge">0 Dokumen</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fas fa-folder-open"></i> Arsip Berita Acara & Laporan</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Judul Dokumen</th><th>Tipe</th><th>Tanggal Simpan</th><th>Ukuran</th><th style="text-align:center">Aksi</th>
+          </tr></thead>
+          <tbody id="tbody-arsip"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PANEL 7 : BEN-SETTING
+  ══════════════════════════════════════════════ -->
+  <div id="panel-ben-setting" class="panel">
+    <div class="panel-header no-print">
+      <div class="ph-icon"><i class="fas fa-sliders"></i></div>
+      <div class="ph-content">
+        <div class="ph-title">Pengaturan Portal</div>
+        <div class="ph-sub">Identitas bendahara, kelola komponen iuran & manajemen data</div>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-user-tie"></i> Identitas Bendahara</div>
+        <div class="fg" style="margin-bottom:12px">
+          <label>Nama Bendahara Utama</label>
+          <input type="text" id="set-nama-ben" placeholder="Nama lengkap bendahara...">
+        </div>
+        <div class="fg" style="margin-bottom:12px">
+          <label>Nama Bendahara Pembantu</label>
+          <input type="text" id="set-nama-ben2" placeholder="Nama bendahara pembantu...">
+        </div>
+        <div class="fg" style="margin-bottom:12px">
+          <label>Nomor RT</label>
+          <input type="text" id="set-no-rt" placeholder="Contoh: RT 005">
+        </div>
+        <div class="fg" style="margin-bottom:16px">
+          <label>Nomor RW</label>
+          <input type="text" id="set-no-rw" placeholder="Contoh: RW 012">
+        </div>
+        <button class="btn btn-primary" onclick="simpanSetting()"><i class="fas fa-save"></i> Simpan Identitas</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="fas fa-coins"></i> Kelola Komponen Iuran Kolektif</div>
+        <div id="list-iuran-komponen" style="margin-bottom:14px"></div>
+        <div class="form-grid" style="gap:10px" id="form-tambah-komponen">
+          <div class="fg"><label>Nama Komponen</label><input type="text" id="new-iur-nama" placeholder="Cth: Uang Pembangunan"></div>
+          <div class="fg"><label>Nominal (Rp)</label><input type="number" id="new-iur-nom" placeholder="50000"></div>
+          <div class="fg"><label>Pos Kas</label>
+            <select id="new-iur-pos">
+              <option value="utama">Kas Utama</option>
+              <option value="agustus">Kas 17 Agustus</option>
+              <option value="sosial">Kas Sosial</option>
+            </select>
+          </div>
+          <div class="fg"><label>Efektif Mulai</label><input type="month" id="new-iur-tgl"></div>
+        </div>
+        <div class="btn-group" style="margin-top:12px">
+          <button class="btn btn-success btn-sm" onclick="tambahKomponenIuran()"><i class="fas fa-plus"></i> Tambah Komponen</button>
+        </div>
+        <div class="info-tip"><i class="fas fa-circle-info"></i> Klik tombol <b>✏ Edit</b> untuk mengubah nominal komponen tanpa menghapus. Perubahan langsung mempengaruhi kalkulasi iuran di seluruh portal.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="fas fa-database"></i> Manajemen Data</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-danger btn-sm" onclick="resetData('kas')"><i class="fas fa-trash"></i> Reset Data Kas</button>
+        <button class="btn btn-danger btn-sm" onclick="resetData('iuran')"><i class="fas fa-trash"></i> Reset Data Iuran</button>
+        <button class="btn btn-danger btn-sm" onclick="resetData('arsip')"><i class="fas fa-trash"></i> Reset Arsip</button>
+        <button class="btn btn-warn btn-sm" onclick="exportData()"><i class="fas fa-download"></i> Export JSON</button>
+        <button class="btn btn-success btn-sm" onclick="excelLaporanLengkap()"><i class="fas fa-file-excel"></i> Export Semua ke Excel</button>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT — STATE MANAGEMENT & BUSINESS LOGIC
+═══════════════════════════════════════════════════════ -->
+<script>
+// ─────────────── CONSTANTS ───────────────
+const MONTHS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const MONTHS_FULL = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const CUR_YEAR = new Date().getFullYear();
+const CUR_MONTH = new Date().getMonth() + 1;
+
+// ─────────────── BEN_SYNC — Mini API Sync Layer ───────────────
+// Menjamin setiap baca/tulis portal bendahara sinkron dua arah
+// dengan PostgreSQL via /api/kv, persis seperti _sync.js di portal utama.
+const BEN_SYNC = (function() {
+  var API = '/api/kv';
+  var ORIGIN_ID = 'ben-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,7);
+  var DEBOUNCE_MS = 150;
+  // Semua key yang dikelola portal bendahara (+ db_warga read-only)
+  var BEN_KEYS = ['ben_settings','db_kas','ben_iuran','ben_arsip','ben_saldo_awal','ben_komponen'];
+
+  var pending = {};
+  var timer   = null;
+  var syncing = false;
+
+  function showSyncBadge(text, color) {
+    var el = document.getElementById('ben-sync-badge');
+    if (!el) return;
+    el.textContent = text;
+    el.style.background = color || '#64748b';
+    el.style.display = 'inline-block';
+  }
+
+  function flush() {
+    timer = null;
+    var keys = Object.keys(pending);
+    if (!keys.length) return;
+    var writes = [], deletes = [], snapshot = {};
+    keys.forEach(function(k) {
+      snapshot[k] = pending[k];
+      if (pending[k] === null) deletes.push(k);
+      else writes.push({ key: k, value: pending[k] });
+    });
+    keys.forEach(function(k) { delete pending[k]; });
+
+    syncing = true;
+    showSyncBadge('Menyimpan…', '#0369a1');
+    fetch(API, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ writes: writes, deletes: deletes, originId: ORIGIN_ID })
+    })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      showSyncBadge('Tersimpan ✓', '#16a34a');
+      setTimeout(function(){ var el=document.getElementById('ben-sync-badge'); if(el) el.style.display='none'; }, 2000);
+    })
+    .catch(function(err) {
+      console.warn('[BenSync] flush error:', err);
+      showSyncBadge('Gagal simpan ✗', '#dc2626');
+      // Re-queue yang gagal
+      keys.forEach(function(k) { if (!(k in pending)) pending[k] = snapshot[k]; });
+    })
+    .finally(function() {
+      syncing = false;
+      if (Object.keys(pending).length) setTimeout(flush, 200);
+    });
+  }
+
+  function queue(key, value) {
+    pending[key] = value;
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(flush, DEBOUNCE_MS);
+  }
+
+  function push(key, value) {
+    queue(key, typeof value === 'string' ? value : JSON.stringify(value));
+  }
+
+  function del(key) {
+    queue(key, null);
+  }
+
+  function boot(onDone) {
+    showSyncBadge('Memuat data…', '#0369a1');
+    fetch(API, { headers: { Accept: 'application/json' }, cache: 'no-store' })
+      .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(data) {
+        var entries = data.entries || [];
+        entries.forEach(function(e) {
+          if (BEN_KEYS.indexOf(e.key) !== -1 || e.key === 'db_warga') {
+            if (e.value == null) localStorage.removeItem(e.key);
+            else localStorage.setItem(e.key, e.value);
+          }
+        });
+        console.info('[BenSync] Boot dari server OK — ' + entries.length + ' keys');
+        showSyncBadge('Sinkron ✓', '#16a34a');
+        setTimeout(function(){ var el=document.getElementById('ben-sync-badge'); if(el) el.style.display='none'; }, 2500);
+        if (onDone) onDone();
+      })
+      .catch(function(err) {
+        console.warn('[BenSync] Boot gagal, pakai data lokal:', err);
+        showSyncBadge('Offline — data lokal', '#dc2626');
+        if (onDone) onDone();
+      });
+  }
+
+  // Flush sebelum tab ditutup
+  window.addEventListener('beforeunload', function() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    var keys = Object.keys(pending);
+    if (!keys.length) return;
+    var writes = [], deletes = [];
+    keys.forEach(function(k) {
+      if (pending[k] === null) deletes.push(k);
+      else writes.push({ key: k, value: pending[k] });
+    });
+    try { navigator.sendBeacon(API, new Blob([JSON.stringify({ writes: writes, deletes: deletes, originId: ORIGIN_ID })], { type: 'application/json' })); } catch(_) {}
+  });
+
+  return { push: push, del: del, boot: boot, flush: flush };
+})();
+
+// ─────────────── STATE ───────────────
+const STATE = {
+  get settings()   { return JSON.parse(localStorage.getItem('ben_settings') || '{}') },
+  set settings(v)  { const s = JSON.stringify(v); localStorage.setItem('ben_settings', s); BEN_SYNC.push('ben_settings', s); onStateChange(); },
+  get kas()        { return JSON.parse(localStorage.getItem('db_kas') || '[]') },
+  set kas(v)       { const s = JSON.stringify(v); localStorage.setItem('db_kas', s); localStorage.setItem('ts_kas', new Date().toISOString()); BEN_SYNC.push('db_kas', s); onStateChange(); },
+  get iuran()      { return JSON.parse(localStorage.getItem('ben_iuran') || '[]') },
+  set iuran(v)     { const s = JSON.stringify(v); localStorage.setItem('ben_iuran', s); BEN_SYNC.push('ben_iuran', s); onStateChange(); },
+  get arsip()      { return JSON.parse(localStorage.getItem('ben_arsip') || '[]') },
+  set arsip(v)     { const s = JSON.stringify(v); localStorage.setItem('ben_arsip', s); BEN_SYNC.push('ben_arsip', s); },
+  get saldoAwal()  { return parseFloat(localStorage.getItem('ben_saldo_awal') || '0') },
+  set saldoAwal(v) { const s = String(v); localStorage.setItem('ben_saldo_awal', s); BEN_SYNC.push('ben_saldo_awal', s); onStateChange(); },
+  get komponen()   {
+    let k = JSON.parse(localStorage.getItem('ben_komponen') || '[]');
+    if (!k.length) k = [
+      { id:'pembangunan', nama:'Uang Pembangunan', nominal:25000, pos:'utama',   tgl:'2024-01' },
+      { id:'meja',        nama:'Uang Meja',        nominal:10000, pos:'utama',   tgl:'2024-01' },
+      { id:'agustus',     nama:'Uang 17 Agustus',  nominal:15000, pos:'agustus', tgl:'2024-01' },
+      { id:'sosial',      nama:'Uang Sosial',       nominal:10000, pos:'sosial',  tgl:'2024-01' },
+    ];
+    return k;
+  },
+  set komponen(v)  { const s = JSON.stringify(v); localStorage.setItem('ben_komponen', s); BEN_SYNC.push('ben_komponen', s); onStateChange(); },
+  get warga()      { return JSON.parse(localStorage.getItem('db_warga') || '[]') }
+};
+
+// ─────────────── HELPERS ───────────────
+const fmt = v => new Intl.NumberFormat('id-ID', { style:'currency', currency:'IDR', minimumFractionDigits:0, maximumFractionDigits:0 }).format(v||0);
+const fmtTgl = d => d ? new Date(d).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '-';
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const uid = () => Date.now() + '-' + Math.random().toString(36).slice(2,7);
+const getBulanNama = n => MONTHS_FULL[parseInt(n)-1] || '-';
+
+function Toast(icon, title) {
+  if (typeof Swal !== 'undefined') {
+    Swal.mixin({ toast:true, position:'top-end', showConfirmButton:false, timer:2500, timerProgressBar:true })
+      .fire({ icon, title });
+  }
+}
+
+function getWargaList() {
+  const w = STATE.warga;
+  return w.length ? w : [];
+}
+function getWargaNama(id) {
+  const w = STATE.warga.find(x => String(x.id) === String(id));
+  return w ? w.nama : String(id);
+}
+
+// ─────────────── INIT ───────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // ── Login guard ──
+  (function() {
+    try {
+      const sess = JSON.parse(localStorage.getItem('gt_local_session') || '{}');
+      if (sess.role !== 'bendahara') {
+        window.location.replace('/');
+        return;
+      }
+    } catch(_) {
+      window.location.replace('/');
+      return;
+    }
+  })();
+
+  // Date display
+  document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  // Boot: tarik data dari server dulu, baru render
+  BEN_SYNC.boot(function() {
+    // Init defaults (hanya jika belum ada di server)
+    const s = STATE.settings;
+    if (!s.namaBen) { s.namaBen = 'Bapak Suparmin'; s.namaBen2 = 'Ibu Sari'; s.noRT = 'RT 005'; s.noRW = 'RW 012'; STATE.settings = s; }
+    // Trigger komponen default jika kosong
+    const k = STATE.komponen;
+    if (!localStorage.getItem('ben_komponen')) { STATE.komponen = k; }
+    initDropdowns();
+    loadSettings();
+    refreshAll();
+  });
+});
+
+function initDropdowns() {
+  // Tahun options
+  const yrs = [];
+  for (let y = CUR_YEAR; y >= CUR_YEAR - 4; y--) yrs.push(y);
+
+  ['iur-tahun','mtrx-tahun','f-mtrx-tahun'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = yrs.map(y => `<option value="${y}" ${y===CUR_YEAR?'selected':''}>${y}</option>`).join('');
+  });
+
+  // Bulan filter options
+  ['f-kas-bulan','f-iur-bulan'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = '<option value="">Semua Bulan</option>' +
+      MONTHS_FULL.map((m,i) => `<option value="${i+1}">${m}</option>`).join('');
+  });
+
+  // Tahun filter
+  const fyrs = '<option value="">Semua Tahun</option>' + yrs.map(y => `<option value="${y}">${y}</option>`).join('');
+  ['f-iur-tahun'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = fyrs;
+  });
+
+  // Iuran bulan default = current
+  const ib = document.getElementById('iur-bulan');
+  if (ib) ib.value = CUR_MONTH;
+
+  // Set today
+  const kt = document.getElementById('kas-tgl');
+  if (kt) kt.valueAsDate = new Date();
+
+  const ni = document.getElementById('new-iur-tgl');
+  if (ni) { const d = new Date(); ni.value = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+
+  buildWargaDropdowns();
+}
+
+function buildWargaDropdowns() {
+  const warga = getWargaList();
+  const opts = warga.length
+    ? warga.map(w => `<option value="${w.id}">${esc(w.nama)}</option>`).join('')
+    : '<option value="">-- Belum ada data warga --</option>';
+
+  const dds = ['iur-warga','mtrx-warga'];
+  dds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      const first = el.id === 'iur-warga' ? '<option value="">-- Pilih Warga --</option>' : '<option value="">-- Pilih Warga --</option>';
+      el.innerHTML = first + opts;
+    }
+  });
+}
+
+function loadSettings() {
+  const s = STATE.settings;
+  const fields = { 'set-nama-ben': s.namaBen||'', 'set-nama-ben2': s.namaBen2||'', 'set-no-rt': s.noRT||'RT 005', 'set-no-rw': s.noRW||'RW 012' };
+  Object.entries(fields).forEach(([id, val]) => { const el = document.getElementById(id); if(el) el.value = val; });
+  document.getElementById('sb-nama-ben').textContent = s.namaBen || 'Bendahara';
+  renderKomponenSetting();
+  renderCheckGroupIuran();
+}
+
+// ─────────────── PANEL NAVIGATION ───────────────
+const PANEL_TITLES = {
+  'ben-input':    ['Input Kas Manual', 'fa-cash-register'],
+  'ben-iuran':    ['Iuran Kolektif',   'fa-hand-holding-dollar'],
+  'ben-laporan':  ['Laporan Kas RT',   'fa-book-open'],
+  'ben-matriks':  ['Matriks Iuran',    'fa-table-cells'],
+  'ben-alisa':    ['Analisa Kas',      'fa-chart-line'],
+  'ben-arsip':    ['Arsip BA',         'fa-folder-open'],
+  'ben-setting':  ['Pengaturan',       'fa-sliders'],
+};
+
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+
+  const [title, icon] = PANEL_TITLES[id] || ['Portal Bendahara','fa-vault'];
+  document.getElementById('topbar-title').innerHTML = `<i class="fas ${icon}" style="color:var(--primary);margin-right:8px"></i> ${title}`;
+
+  closeSidebar();
+  refreshPanel(id);
+}
+
+function refreshPanel(id) {
+  switch(id) {
+    case 'ben-input':   renderInputStats(); renderKasTable(); break;
+    case 'ben-iuran':   renderIuranTable(); cekStatusIuran(); break;
+    case 'ben-laporan': renderLaporan(); break;
+    case 'ben-matriks': renderMatriksStats(); renderMatriksGlobal(); renderMatriksWarga(); break;
+    case 'ben-alisa':   renderAlisa(); break;
+    case 'ben-arsip':   renderArsip(); break;
+    case 'ben-setting': loadSettings(); break;
+  }
+}
+
+function refreshAll() {
+  buildWargaDropdowns();
+  const active = document.querySelector('.panel.active');
+  if (active) {
+    const id = active.id.replace('panel-', '');
+    refreshPanel(id);
+  }
+}
+
+function onStateChange() {
+  refreshAll();
+}
+
+// ─────────────── SIDEBAR MOBILE ───────────────
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sb-overlay').classList.toggle('open'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sb-overlay').classList.remove('open'); }
+
+// ─────────────── PANEL: BEN-INPUT ───────────────
+function renderInputStats() {
+  const kas = STATE.kas;
+  const saldo = STATE.saldoAwal;
+  const masuk = kas.reduce((s,x) => s + (x.tipe==='masuk'? x.nominal||0 : 0), 0);
+  const keluar = kas.reduce((s,x) => s + (x.tipe==='keluar'? x.nominal||0 : 0), 0);
+  const akhir = saldo + masuk - keluar;
+  const iuranAll = STATE.iuran.reduce((s,x) => s + totalIuranRecord(x), 0);
+
+  const el = document.getElementById('inp-stats');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="stat-box" style="border-left:4px solid var(--success)">
+      <i class="fas fa-vault sb-icon" style="color:var(--success)"></i>
+      <div class="sb-label">Saldo Kas Akhir</div>
+      <div class="sb-val" style="color:var(--success)">${fmt(akhir)}</div>
+      <div class="sb-sub">Saldo awal + pemasukan - pengeluaran</div>
+    </div>
+    <div class="stat-box" style="border-left:4px solid var(--primary)">
+      <i class="fas fa-clock-rotate-left sb-icon" style="color:var(--primary)"></i>
+      <div class="sb-label">Saldo Awal</div>
+      <div class="sb-val" style="color:var(--primary)">${fmt(saldo)}</div>
+      <div class="sb-sub">Sisa periode lalu</div>
+    </div>
+    <div class="stat-box" style="border-left:4px solid var(--success)">
+      <i class="fas fa-arrow-trend-up sb-icon" style="color:var(--success)"></i>
+      <div class="sb-label">Total Pemasukan</div>
+      <div class="sb-val" style="color:var(--success)">${fmt(masuk)}</div>
+      <div class="sb-sub">${kas.filter(x=>x.tipe==='masuk').length} transaksi masuk</div>
+    </div>
+    <div class="stat-box" style="border-left:4px solid var(--danger)">
+      <i class="fas fa-arrow-trend-down sb-icon" style="color:var(--danger)"></i>
+      <div class="sb-label">Total Pengeluaran</div>
+      <div class="sb-val" style="color:var(--danger)">${fmt(keluar)}</div>
+      <div class="sb-sub">${kas.filter(x=>x.tipe==='keluar').length} transaksi keluar</div>
+    </div>
+  `;
+  // update panel header badge
+  const phb = document.getElementById('ph-saldo-badge');
+  if (phb) phb.textContent = 'Saldo: ' + fmt(akhir);
+
+  // set saldo awal input
+  const sa = document.getElementById('inp-saldo-awal');
+  if (sa && !sa.value) sa.value = saldo || '';
+}
+
+function simpanSaldoAwal() {
+  const v = parseFloat(document.getElementById('inp-saldo-awal').value || '0');
+  STATE.saldoAwal = v;
+  Toast('success', 'Saldo awal dikunci: ' + fmt(v));
+}
+
+function simpanKas(e) {
+  e.preventDefault();
+  const kas = STATE.kas;
+  kas.push({
+    id: uid(),
+    tgl: document.getElementById('kas-tgl').value,
+    uraian: document.getElementById('kas-desc').value,
+    tipe: document.getElementById('kas-tipe').value,
+    nominal: parseInt(document.getElementById('kas-amt').value) || 0,
+    kategori: document.getElementById('kas-kategori').value,
+  });
+  STATE.kas = kas;
+  document.getElementById('form-kas').reset();
+  document.getElementById('kas-tgl').valueAsDate = new Date();
+  Toast('success', 'Transaksi disimpan!');
+}
+
+function hapusKas(id) {
+  Swal.fire({ title:'Hapus transaksi?', text:'Data tidak bisa dikembalikan.', icon:'warning', showCancelButton:true, confirmButtonText:'Hapus', confirmButtonColor:'#ef4444', cancelButtonText:'Batal' })
+    .then(r => { if (!r.isConfirmed) return; STATE.kas = STATE.kas.filter(x => x.id !== id); Toast('success','Dihapus'); });
+}
+
+function renderKasTable() {
+  const kas = STATE.kas;
+  const fn = document.getElementById('f-kas-nama').value.toLowerCase();
+  const fb = document.getElementById('f-kas-bulan').value;
+  const ft = document.getElementById('f-kas-tipe').value;
+  const fd = document.getElementById('f-kas-tgl').value;
+
+  const filtered = kas.filter(x => {
+    if (fn && !x.uraian?.toLowerCase().includes(fn)) return false;
+    if (fb && x.tgl) { const m = new Date(x.tgl).getMonth()+1; if (String(m) !== fb) return false; }
+    if (ft && x.tipe !== ft) return false;
+    if (fd && x.tgl !== fd) return false;
+    return true;
+  }).sort((a,b) => (b.tgl||'').localeCompare(a.tgl||''));
+
+  const tbody = document.getElementById('tbody-kas');
+  if (!tbody) return;
+  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="6" class="tbl-empty"><i class="fas fa-inbox"></i><br>Belum ada data transaksi</td></tr>`; return; }
+
+  tbody.innerHTML = filtered.map(x => `
+    <tr>
+      <td>${fmtTgl(x.tgl)}</td>
+      <td><b>${esc(x.uraian)}</b></td>
+      <td><span class="badge badge-gray">${esc(x.kategori||'Lainnya')}</span></td>
+      <td><span class="badge ${x.tipe==='masuk'?'badge-green':'badge-red'}">${x.tipe==='masuk'?'+ Masuk':'− Keluar'}</span></td>
+      <td style="font-weight:700;color:${x.tipe==='masuk'?'var(--success)':'var(--danger)'}">${fmt(x.nominal)}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="hapusKas('${x.id}')"><i class="fas fa-trash"></i></button></td>
+    </tr>
+  `).join('');
+}
+
+// ─────────────── PANEL: BEN-IURAN ───────────────
+function getKomponen() { return STATE.komponen; }
+function totalIuranRecord(r) {
+  const k = getKomponen();
+  return k.reduce((s,kp) => s + (r[kp.id]? kp.nominal : 0), 0);
+}
+
+function renderCheckGroupIuran() {
+  const k = getKomponen();
+  const el = document.getElementById('check-group-iuran');
+  if (!el) return;
+  el.innerHTML = k.map(kp => `
+    <label class="check-item" id="ci-${kp.id}">
+      <input type="checkbox" id="iur-chk-${kp.id}" value="${kp.id}" onchange="toggleCheckItem(this)">
+      <div>
+        <div class="ci-label"><i class="fas fa-coins" style="color:var(--warn);font-size:.75rem"></i> ${esc(kp.nama)}</div>
+        <div class="ci-nom">${fmt(kp.nominal)}</div>
+      </div>
+    </label>
+  `).join('');
+}
+
+function toggleCheckItem(cb) {
+  const label = cb.closest('.check-item');
+  if (label) label.classList.toggle('checked', cb.checked);
+}
+
+function cekStatusIuran() {
+  const wId = document.getElementById('iur-warga')?.value;
+  const bln = document.getElementById('iur-bulan')?.value;
+  const thn = document.getElementById('iur-tahun')?.value;
+  const banner = document.getElementById('iur-status-banner');
+  if (!banner) return;
+  if (!wId || !bln || !thn) { banner.style.display='none'; return; }
+
+  const rec = STATE.iuran.find(x => String(x.wargaId)===String(wId) && String(x.bulan)===String(bln) && String(x.tahun)===String(thn));
+  const k = getKomponen();
+  if (rec) {
+    const sudah = k.filter(kp => rec[kp.id]).map(kp => kp.nama).join(', ');
+    const belum = k.filter(kp => !rec[kp.id]).map(kp => kp.nama).join(', ');
+    banner.style.display = 'block';
+    banner.innerHTML = `<i class="fas fa-info-circle"></i> <b>Sudah bayar:</b> ${sudah||'-'} &nbsp;|&nbsp; <b>Belum:</b> ${belum||'-'}`;
+    // tick checkboxes
+    k.forEach(kp => {
+      const cb = document.getElementById('iur-chk-' + kp.id);
+      const ci = document.getElementById('ci-' + kp.id);
+      if (cb) { cb.checked = !!rec[kp.id]; if(ci) ci.classList.toggle('checked', !!rec[kp.id]); }
+    });
+  } else {
+    banner.style.display = 'none';
+    k.forEach(kp => {
+      const cb = document.getElementById('iur-chk-' + kp.id);
+      const ci = document.getElementById('ci-' + kp.id);
+      if (cb) { cb.checked = false; if(ci) ci.classList.remove('checked'); }
+    });
+  }
+}
+
+function simpanIuran(e) {
+  e.preventDefault();
+  const wId = document.getElementById('iur-warga').value;
+  const bln = document.getElementById('iur-bulan').value;
+  const thn = document.getElementById('iur-tahun').value;
+  if (!wId) { Toast('warning','Pilih warga terlebih dahulu'); return; }
+
+  const k = getKomponen();
+  const rec = { id: uid(), wargaId: wId, bulan: bln, tahun: thn, tglBayar: new Date().toISOString().split('T')[0] };
+  k.forEach(kp => { rec[kp.id] = !!document.getElementById('iur-chk-' + kp.id)?.checked; });
+
+  const iuran = STATE.iuran;
+  const existIdx = iuran.findIndex(x => String(x.wargaId)===String(wId) && String(x.bulan)===String(bln) && String(x.tahun)===String(thn));
+  if (existIdx >= 0) { iuran[existIdx] = { ...iuran[existIdx], ...rec, id: iuran[existIdx].id }; }
+  else { iuran.push(rec); }
+  STATE.iuran = iuran;
+  Toast('success', 'Iuran ' + getWargaNama(wId) + ' disimpan!');
+  renderIuranTable();
+  cekStatusIuran();
+}
+
+function hapusIuran(id) {
+  Swal.fire({ title:'Hapus data iuran?', icon:'warning', showCancelButton:true, confirmButtonText:'Hapus', confirmButtonColor:'#ef4444', cancelButtonText:'Batal' })
+    .then(r => { if (!r.isConfirmed) return; STATE.iuran = STATE.iuran.filter(x => x.id !== id); Toast('success','Dihapus'); });
+}
+
+function renderIuranTable() {
+  const iuran = STATE.iuran;
+  const fn = document.getElementById('f-iur-nama').value.toLowerCase();
+  const fb = document.getElementById('f-iur-bulan').value;
+  const fth = document.getElementById('f-iur-tahun').value;
+  const k = getKomponen();
+
+  const filtered = iuran.filter(x => {
+    const nama = getWargaNama(x.wargaId).toLowerCase();
+    if (fn && !nama.includes(fn)) return false;
+    if (fb && String(x.bulan) !== fb) return false;
+    if (fth && String(x.tahun) !== fth) return false;
+    return true;
+  }).sort((a,b) => (b.tahun+'-'+String(b.bulan).padStart(2,'0')).localeCompare(a.tahun+'-'+String(a.bulan).padStart(2,'0')));
+
+  const tbody = document.getElementById('tbody-iuran');
+  if (!tbody) return;
+  // update panel header badge
+  const phib = document.getElementById('ph-iuran-badge');
+  if (phib) phib.textContent = iuran.length + ' Record';
+  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="9" class="tbl-empty"><i class="fas fa-inbox"></i><br>Belum ada data iuran</td></tr>`; return; }
+
+  tbody.innerHTML = filtered.map(x => {
+    const total = totalIuranRecord(x);
+    const pembangunan = k.find(k=>k.id==='pembangunan');
+    const meja = k.find(k=>k.id==='meja');
+    const agustus = k.find(k=>k.id==='agustus');
+    const sosial = k.find(k=>k.id==='sosial');
+    return `<tr>
+      <td><b>${esc(getWargaNama(x.wargaId))}</b></td>
+      <td>${getBulanNama(x.bulan)} ${x.tahun}</td>
+      <td><span class="badge ${x.pembangunan?'badge-green':'badge-red'}">${x.pembangunan?'✓':'✗'}</span></td>
+      <td><span class="badge ${x.meja?'badge-green':'badge-red'}">${x.meja?'✓':'✗'}</span></td>
+      <td><span class="badge ${x.agustus?'badge-green':'badge-red'}">${x.agustus?'✓':'✗'}</span></td>
+      <td><span class="badge ${x.sosial?'badge-green':'badge-red'}">${x.sosial?'✓':'✗'}</span></td>
+      <td style="font-weight:700;color:var(--success)">${fmt(total)}</td>
+      <td>${fmtTgl(x.tglBayar)}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-success btn-sm" onclick="cetakKwitansi('${x.id}')" title="Cetak Kwitansi"><i class="fas fa-receipt"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="hapusIuran('${x.id}')" style="margin-left:4px"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ─────────────── KWITANSI PEMBAYARAN IURAN ───────────────
+function cetakKwitansi(iuranId) {
+  const rec = STATE.iuran.find(x => x.id === iuranId);
+  if (!rec) return Toast('error','Data tidak ditemukan');
+
+  const s      = STATE.settings;
+  const k      = getKomponen();
+  const nama   = getWargaNama(rec.wargaId);
+  const bulan  = getBulanNama(rec.bulan);
+  const tahun  = rec.tahun;
+  const tglBayar = rec.tglBayar ? new Date(rec.tglBayar).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+  const noRT   = s.noRT  || 'RT 005';
+  const noRW   = s.noRW  || 'RW 012';
+  const namaBen = s.namaBen || 'Bendahara';
+  const tglCetak = new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+
+  // Baris komponen yang dibayar
+  const rows = k.filter(kp => rec[kp.id]).map(kp => `
+    <tr>
+      <td style="padding:5px 8px">${kp.nama}</td>
+      <td style="padding:5px 8px;text-align:right">${fmt(kp.nominal)}</td>
+    </tr>`).join('');
+
+  const total = totalIuranRecord(rec);
+  const noKwitansi = 'KWT/' + noRT.replace(/\s/g,'') + '/' + tahun + String(rec.bulan).padStart(2,'0') + '/' + iuranId.slice(-4).toUpperCase();
+
+  const html = `
+  <html><head><meta charset="utf-8">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px}
+    .kwitansi{background:#fff;width:100%;max-width:520px;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.15)}
+    .kw-header{background:linear-gradient(135deg,#1e40af,#1d4ed8);color:#fff;padding:22px 24px 16px;text-align:center}
+    .kw-header h1{font-size:1.1rem;font-weight:700;letter-spacing:.5px;margin-bottom:3px}
+    .kw-header p{font-size:.78rem;opacity:.85}
+    .kw-no{background:#1e3a8a;color:#93c5fd;font-size:.72rem;font-weight:600;padding:4px 16px;text-align:right;letter-spacing:.5px}
+    .kw-body{padding:22px 24px}
+    .kw-title{text-align:center;margin-bottom:18px}
+    .kw-title h2{font-size:1.15rem;font-weight:700;color:#1e40af;letter-spacing:1px;text-transform:uppercase}
+    .kw-title .kw-title-line{width:60px;height:3px;background:linear-gradient(90deg,#1e40af,#60a5fa);margin:8px auto 0;border-radius:2px}
+    .kw-field{display:flex;margin-bottom:9px;font-size:.88rem;color:#374151}
+    .kw-field .lbl{width:130px;flex-shrink:0;color:#6b7280;font-weight:500}
+    .kw-field .val{flex:1;font-weight:600;color:#111827}
+    .kw-divider{border:none;border-top:1px dashed #d1d5db;margin:14px 0}
+    .kw-table{width:100%;border-collapse:collapse;font-size:.86rem;margin-bottom:12px}
+    .kw-table thead tr{background:#eff6ff}
+    .kw-table thead th{padding:8px;text-align:left;color:#1d4ed8;font-weight:700;border-bottom:2px solid #bfdbfe}
+    .kw-table thead th:last-child{text-align:right}
+    .kw-table tbody tr:nth-child(even){background:#f9fafb}
+    .kw-total{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#1e40af,#1d4ed8);color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:.95rem;font-weight:700}
+    .kw-lunas{text-align:center;margin-bottom:16px}
+    .kw-lunas .stamp{display:inline-block;border:3px solid #16a34a;color:#16a34a;padding:6px 22px;border-radius:8px;font-size:1.1rem;font-weight:800;letter-spacing:2px;transform:rotate(-4deg)}
+    .kw-footer{display:flex;justify-content:flex-end;padding:0 8px 4px;font-size:.82rem;color:#374151}
+    .kw-sign{text-align:center;min-width:160px}
+    .kw-sign .sign-name{font-weight:700;border-top:1px solid #374151;margin-top:48px;padding-top:4px;font-size:.85rem}
+    .kw-sign .sign-role{font-size:.75rem;color:#6b7280}
+    .kw-bottom{background:#eff6ff;text-align:center;padding:8px;font-size:.7rem;color:#6b7280;border-top:1px solid #dbeafe}
+    @media print{body{background:#fff;padding:0}.kwitansi{box-shadow:none;border-radius:0;max-width:100%}}
+  </style></head><body>
+  <div class="kwitansi">
+    <div class="kw-header">
+      <h1>KWITANSI PEMBAYARAN IURAN</h1>
+      <p>${noRT} / ${noRW} &mdash; Kelurahan Tegalasari, Kec. Candisari, Semarang</p>
+    </div>
+    <div class="kw-no">No: ${noKwitansi}</div>
+    <div class="kw-body">
+      <div class="kw-title">
+        <h2>Bukti Pembayaran</h2>
+        <div class="kw-title-line"></div>
+      </div>
+      <div class="kw-field"><span class="lbl">Nama Warga</span><span class="val">: ${esc(nama)}</span></div>
+      <div class="kw-field"><span class="lbl">Periode</span><span class="val">: ${bulan} ${tahun}</span></div>
+      <div class="kw-field"><span class="lbl">Tanggal Bayar</span><span class="val">: ${tglBayar}</span></div>
+      <hr class="kw-divider">
+      <table class="kw-table">
+        <thead><tr><th>Komponen Iuran</th><th style="text-align:right">Jumlah</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="kw-total">
+        <span>TOTAL PEMBAYARAN</span>
+        <span>${fmt(total)}</span>
+      </div>
+      <div class="kw-lunas"><div class="stamp">✓ LUNAS</div></div>
+      <div class="kw-footer">
+        <div class="kw-sign">
+          <div>Semarang, ${tglCetak}</div>
+          <div>Bendahara ${noRT}</div>
+          <div class="sign-name">${esc(namaBen)}</div>
+          <div class="sign-role">Bendahara RT</div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-bottom">Kwitansi ini dicetak melalui Smart Portal ${noRT} Tegalsari &bull; Dokumen resmi berlaku tanpa tanda tangan basah</div>
+  </div>
+  <script>window.onload=function(){window.print();};<\/script>
+  </body></html>`;
+
+  // Tampilkan pilihan: Print atau Download PDF
+  Swal.fire({
+    title: `Kwitansi — ${nama}`,
+    html: `<p style="color:#6b7280;font-size:.9rem">Periode: <b>${bulan} ${tahun}</b> &nbsp;|&nbsp; Total: <b>${fmt(total)}</b></p>`,
+    icon: 'info',
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: '<i class="fas fa-print"></i> Cetak / Preview',
+    denyButtonText: '<i class="fas fa-file-pdf"></i> Download PDF',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#1d4ed8',
+    denyButtonColor: '#dc2626',
+  }).then(async result => {
+    if (result.isConfirmed) {
+      const win = window.open('', '_blank', 'width=600,height=700');
+      win.document.write(html);
+      win.document.close();
+    } else if (result.isDenied) {
+      Toast('info', 'Menyiapkan PDF…');
+      const container = document.createElement('div');
+      container.innerHTML = html.replace(/<script[\s\S]*?<\/script>/gi,'');
+      container.style.cssText = 'position:fixed;left:-9999px;top:0;width:560px;background:#f0f4f8';
+      // Ambil bagian body inner
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const inner = doc.querySelector('.kwitansi');
+      container.innerHTML = '';
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = 'background:#f0f4f8;padding:20px;width:560px';
+      // Apply inline styles for kwitansi
+      const style = doc.querySelector('style');
+      if (style) {
+        const styleEl = document.createElement('style');
+        styleEl.textContent = style.textContent;
+        document.head.appendChild(styleEl);
+        setTimeout(() => document.head.removeChild(styleEl), 5000);
+      }
+      wrapper.appendChild(inner);
+      container.appendChild(wrapper);
+      document.body.appendChild(container);
+      try {
+        const canvas = await html2canvas(container, { scale:2, useCORS:true, backgroundColor:'#f0f4f8' });
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a5' });
+        const W = pdf.internal.pageSize.getWidth();
+        const H = (canvas.height * W) / canvas.width;
+        pdf.addImage(canvas.toDataURL('image/jpeg',0.92), 'JPEG', 0, 0, W, H);
+        pdf.save(`Kwitansi-${nama.replace(/\s/g,'-')}-${bulan}-${tahun}.pdf`);
+        Toast('success','PDF kwitansi berhasil diunduh!');
+      } catch(err) {
+        Toast('error','Gagal buat PDF: '+err.message);
+      } finally {
+        document.body.removeChild(container);
+      }
+    }
+  });
+}
+
+// ─────────────── PANEL: BEN-LAPORAN ───────────────
+function switchLapTab(tab, btn) {
+  document.getElementById('lap-tab-utama').style.display = tab==='utama' ? '' : 'none';
+  document.getElementById('lap-tab-terpisah').style.display = tab==='terpisah' ? '' : 'none';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function renderLaporan() {
+  renderLaporanUtama();
+  renderLaporanTerpisah();
+}
+
+function getLaporanData() {
+  const kas = STATE.kas;
+  const iuran = STATE.iuran;
+  const k = getKomponen();
+  const s = STATE.settings;
+  const saldo = STATE.saldoAwal;
+
+  const masukKas = kas.filter(x=>x.tipe==='masuk').reduce((a,x)=>a+x.nominal,0);
+  const keluarKas = kas.filter(x=>x.tipe==='keluar').reduce((a,x)=>a+x.nominal,0);
+
+  const iuranByPos = {};
+  k.forEach(kp => {
+    iuranByPos[kp.id] = iuran.reduce((s,r) => s + (r[kp.id] ? kp.nominal : 0), 0);
+  });
+
+  return { kas, iuran, k, s, saldo, masukKas, keluarKas, iuranByPos };
+}
+
+function renderLaporanUtama() {
+  const { saldo, masukKas, keluarKas, iuranByPos, k } = getLaporanData();
+  const s = STATE.settings;
+  const utamaK = k.filter(kp => kp.pos === 'utama');
+  const iuranUtama = utamaK.reduce((t, kp) => t + (iuranByPos[kp.id]||0), 0);
+  const totalMasuk = masukKas + iuranUtama;
+  const akhir = saldo + totalMasuk - keluarKas;
+
+  const el = document.getElementById('lap-utama-content');
+  if (!el) return;
+  el.innerHTML = `
+    <div style="text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--border)">
+      <h2 style="font-size:1.1rem;font-weight:800;margin-bottom:4px">LAPORAN KAS UTAMA</h2>
+      <p style="font-size:.85rem;color:var(--muted)">${s.noRT||'RT 005'} ${s.noRW||'RW 012'} Tegalsari, Candisari, Semarang</p>
+      <p style="font-size:.82rem;color:var(--muted)">Bendahara: <b>${s.namaBen||'-'}</b> &nbsp;|&nbsp; Pembantu: <b>${s.namaBen2||'-'}</b></p>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:4px">Dicetak: ${new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}</p>
+    </div>
+
+    <div class="lap-card">
+      <div class="lap-row"><span>Saldo Awal (Sisa Periode Lalu)</span><span style="font-weight:700">${fmt(saldo)}</span></div>
+      ${utamaK.map(kp => `<div class="lap-row debit"><span>+ Iuran ${esc(kp.nama)} (Terkumpul)</span><span>${fmt(iuranByPos[kp.id]||0)}</span></div>`).join('')}
+      <div class="lap-row debit"><span>+ Pemasukan Kas Manual</span><span>${fmt(masukKas)}</span></div>
+      <div class="lap-row kredit"><span>− Total Pengeluaran</span><span>${fmt(keluarKas)}</span></div>
+      <div class="lap-row total"><span>SALDO AKHIR KAS UTAMA</span><span style="color:${akhir>=0?'var(--success)':'var(--danger)'}">${fmt(akhir)}</span></div>
+    </div>
+
+    <div style="margin-top:16px">
+      <b style="font-size:.82rem;color:var(--muted)">Rincian Transaksi Kas Manual:</b>
+      <div class="tbl-wrap" style="margin-top:8px">
+        <table>
+          <thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Nominal</th></tr></thead>
+          <tbody>${STATE.kas.length ? STATE.kas.sort((a,b)=>(a.tgl||'').localeCompare(b.tgl||'')).map(x=>`
+            <tr><td>${fmtTgl(x.tgl)}</td><td>${esc(x.uraian)}</td>
+            <td><span class="badge ${x.tipe==='masuk'?'badge-green':'badge-red'}">${x.tipe==='masuk'?'Masuk':'Keluar'}</span></td>
+            <td style="color:${x.tipe==='masuk'?'var(--success)':'var(--danger)'};font-weight:700">${fmt(x.nominal)}</td></tr>
+          `).join('') : '<tr><td colspan="4" class="tbl-empty">Belum ada transaksi</td></tr>'}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function renderLaporanTerpisah() {
+  const { iuranByPos, k } = getLaporanData();
+  const s = STATE.settings;
+
+  const renderSub = (posKey, label, icon, color) => {
+    const kps = k.filter(x => x.pos === posKey);
+    const saldoAwal = 0;
+    const total = kps.reduce((t,kp) => t + (iuranByPos[kp.id]||0), 0);
+    return `
+      <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+        <p style="font-size:.78rem;color:var(--muted)">${s.noRT||'RT 005'} ${s.noRW||'RW 012'} · Bendahara: <b>${s.namaBen||'-'}</b></p>
+      </div>
+      <div class="lap-card" style="background:linear-gradient(135deg,#f8fffe,${color}11);border-color:${color}44">
+        <div class="lap-row"><span>Saldo Awal</span><span style="font-weight:700">${fmt(0)}</span></div>
+        ${kps.map(kp => `<div class="lap-row debit"><span>+ Iuran ${esc(kp.nama)}</span><span>${fmt(iuranByPos[kp.id]||0)}</span></div>`).join('')}
+        <div class="lap-row total" style="color:${color}"><span>SALDO AKHIR</span><span>${fmt(total)}</span></div>
+      </div>
+      <div style="font-size:.78rem;color:var(--muted);margin-top:8px">Jumlah iuran terkumpul dari ${STATE.iuran.length} record iuran warga.</div>
+    `;
+  };
+
+  const ea = document.getElementById('lap-agustus-content');
+  const es = document.getElementById('lap-sosial-content');
+  if (ea) ea.innerHTML = renderSub('agustus','Uang 17 Agustus','fa-flag','#f59e0b');
+  if (es) es.innerHTML = renderSub('sosial','Uang Sosial','fa-heart','#8b5cf6');
+}
+
+// Print & PDF
+function printLaporan(elId) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const w = window.open('', '_blank');
+  w.document.write(`
+    <html><head><title>Laporan Kas</title>
+    <style>body{font-family:sans-serif;padding:20px;font-size:13px} .no-print{display:none} .btn{display:none} .tab-btns{display:none}</style>
+    </head><body>${el.innerHTML}</body></html>`);
+  w.document.close();
+  w.print();
+}
+
+async function downloadPDF(elId, title) {
+  Toast('info', 'Membuat PDF...');
+  const el = document.getElementById(elId);
+  const canvas = await html2canvas(el, { scale:2, useCORS:true });
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  const imgW = 210;
+  const imgH = canvas.height * imgW / canvas.width;
+  let y = 0;
+  while (y < imgH) {
+    if (y > 0) pdf.addPage();
+    pdf.addImage(canvas.toDataURL('image/jpeg',0.92), 'JPEG', 0, -y, imgW, imgH);
+    y += 297;
+  }
+  pdf.save(title.replace(/\s+/g,'-') + '-' + new Date().toISOString().split('T')[0] + '.pdf');
+  Toast('success', 'PDF berhasil diunduh!');
+}
+
+function simpanArsip(type) {
+  const el = document.getElementById(type==='utama' ? 'lap-tab-utama' : 'lap-tab-terpisah');
+  if (!el) return;
+  const arsip = STATE.arsip;
+  arsip.unshift({
+    id: uid(),
+    judul: 'Laporan Kas ' + (type==='utama'?'Utama':'Terpisah') + ' — ' + new Date().toLocaleDateString('id-ID'),
+    tipe: type==='utama'?'Kas Utama':'Kas Terpisah',
+    tgl: new Date().toISOString(),
+    html: el.innerHTML,
+    ukuran: Math.round(el.innerHTML.length/1024) + ' KB',
+  });
+  STATE.arsip = arsip;
+  Toast('success', 'Disimpan ke arsip!');
+}
+
+// ─────────────── PANEL: BEN-MATRIKS ───────────────
+function renderMatriksStats() {
+  const k = getKomponen();
+  const iuran = STATE.iuran;
+  const warga = getWargaList();
+  const n = warga.length || 1;
+  const el = document.getElementById('mtrx-stats');
+  if (!el) return;
+
+  const stats = k.map(kp => {
+    const terkumpul = iuran.reduce((s,r) => s + (r[kp.id]?kp.nominal:0), 0);
+    const jmlWarga = iuran.filter(r => r[kp.id]).length;
+    const colors = { utama:'var(--primary)', agustus:'var(--warn)', sosial:'var(--purple)', default:'var(--teal)' };
+    const color = colors[kp.pos] || colors.default;
+    return `
+      <div class="stat-box" style="border-left:4px solid ${color}">
+        <i class="fas fa-coins sb-icon" style="color:${color}"></i>
+        <div class="sb-label">${esc(kp.nama)}</div>
+        <div class="sb-val" style="color:${color}">${fmt(terkumpul)}</div>
+        <div class="sb-sub">${jmlWarga} warga telah bayar · @${fmt(kp.nominal)}</div>
+        <div class="progress-wrap" style="margin-top:8px">
+          <div class="progress-bar" style="width:${Math.min(100,jmlWarga/n*100)}%;background:${color}"></div>
+        </div>
+      </div>
+    `;
+  });
+
+  el.innerHTML = stats.join('');
+  // update panel header badge year
+  const tahunEl = document.getElementById('mtrx-tahun-label2');
+  const tahunSel = document.getElementById('f-mtrx-tahun');
+  if (tahunEl && tahunSel) tahunEl.textContent = tahunSel.value || CUR_YEAR;
+}
+
+function renderMatriksGlobal() {
+  const k = getKomponen();
+  const iuran = STATE.iuran;
+  const warga = getWargaList();
+  const fn = document.getElementById('f-mtrx-nama')?.value.toLowerCase() || '';
+  const fth = document.getElementById('f-mtrx-tahun')?.value || String(CUR_YEAR);
+  const komp = document.getElementById('f-mtrx-komponen')?.value || 'pembangunan';
+  const kp = k.find(x=>x.id===komp) || k[0];
+
+  document.getElementById('mtrx-tahun-label').textContent = 'Tahun ' + fth;
+
+  const filtered = warga.filter(w => !fn || w.nama?.toLowerCase().includes(fn));
+
+  const thead = document.getElementById('mtrx-thead');
+  const tbody = document.getElementById('mtrx-tbody');
+  if (!thead||!tbody) return;
+
+  thead.innerHTML = `<tr>
+    <th>Nama Warga</th>
+    ${MONTHS.map(m=>`<th>${m}</th>`).join('')}
+    <th>Total</th>
+    <th>Status</th>
+  </tr>`;
+
+  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="15" class="tbl-empty">Belum ada data warga</td></tr>`; return; }
+
+  tbody.innerHTML = filtered.map(w => {
+    let total = 0;
+    let lunas = 0;
+    const cells = MONTHS.map((_,mi) => {
+      const bulan = mi+1;
+      const rec = iuran.find(x => String(x.wargaId)===String(w.id) && String(x.bulan)===String(bulan) && String(x.tahun)===fth);
+      const paid = rec && rec[komp];
+      if (paid) { total += kp.nominal; lunas++; }
+      const isFuture = parseInt(fth)===CUR_YEAR && bulan > CUR_MONTH;
+      if (isFuture) return `<td><span class="cell-empty">—</span></td>`;
+      return `<td><span class="${paid?'cell-ok':'cell-no'}">${paid?'✓':'✗'}</span></td>`;
+    });
+    const maxBulan = parseInt(fth)<CUR_YEAR ? 12 : CUR_MONTH;
+    const statusColor = lunas===maxBulan?'badge-green': lunas===0?'badge-red':'badge-yellow';
+    return `<tr>
+      <td><b>${esc(w.nama)}</b></td>
+      ${cells.join('')}
+      <td style="font-weight:700">${fmt(total)}</td>
+      <td><span class="badge ${statusColor}">${lunas}/${maxBulan}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderMatriksWarga() {
+  const wId = document.getElementById('mtrx-warga')?.value;
+  const fth = document.getElementById('mtrx-tahun')?.value || String(CUR_YEAR);
+  const el = document.getElementById('mtrx-detail');
+  const btns = document.getElementById('mtrx-btns');
+  if (!el) return;
+
+  if (!wId) { el.innerHTML = `<div class="empty-state"><i class="fas fa-user-circle"></i><p>Pilih warga untuk melihat rekap pembayarannya</p></div>`; if(btns)btns.style.display='none'; return; }
+
+  const k = getKomponen();
+  const iuran = STATE.iuran;
+  const warga = STATE.warga.find(x=>String(x.id)===String(wId));
+  if (!warga) { el.innerHTML='<p>Warga tidak ditemukan</p>'; return; }
+
+  if(btns) btns.style.display='flex';
+
+  const rows = MONTHS_FULL.map((m,mi) => {
+    const bulan = mi+1;
+    const rec = iuran.find(x => String(x.wargaId)===String(wId) && String(x.bulan)===String(bulan) && String(x.tahun)===fth);
+    const isFuture = parseInt(fth)===CUR_YEAR && bulan > CUR_MONTH;
+    return `<tr>
+      <td><b>${m}</b></td>
+      ${k.map(kp => {
+        if (isFuture) return `<td><span class="badge badge-gray">—</span></td>`;
+        const paid = rec && rec[kp.id];
+        return `<td><span class="badge ${paid?'badge-green':'badge-red'}">${paid?'✓ Lunas':'✗ Belum'}</span></td>`;
+      }).join('')}
+      <td style="font-weight:700;color:var(--success)">${rec ? fmt(totalIuranRecord(rec)) : fmt(0)}</td>
+    </tr>`;
+  });
+
+  el.innerHTML = `
+    <div style="font-weight:700;font-size:.95rem;margin-bottom:12px;color:var(--text)">
+      <i class="fas fa-user" style="color:var(--primary)"></i> ${esc(warga.nama)} — Tahun ${fth}
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>Bulan</th>
+          ${k.map(kp=>`<th>${esc(kp.nama)}</th>`).join('')}
+          <th>Total</th>
+        </tr></thead>
+        <tbody>${rows.join('')}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function bayarOtomatis() {
+  const wId = document.getElementById('mtrx-warga')?.value;
+  const fth = document.getElementById('mtrx-tahun')?.value || String(CUR_YEAR);
+  if (!wId) return Toast('warning', 'Pilih warga dulu');
+  const k = getKomponen();
+  const iuran = [...STATE.iuran];
+  let added = 0;
+
+  for (let bulan = 1; bulan <= CUR_MONTH; bulan++) {
+    const existIdx = iuran.findIndex(x => String(x.wargaId)===String(wId) && String(x.bulan)===String(bulan) && String(x.tahun)===fth);
+    if (existIdx >= 0) {
+      const rec = iuran[existIdx];
+      const needsUpdate = k.some(kp => !rec[kp.id]);
+      if (needsUpdate) { k.forEach(kp => { if(!rec[kp.id]) { rec[kp.id]=true; added++; } }); iuran[existIdx]=rec; }
+    } else {
+      const rec = { id:uid(), wargaId:wId, bulan:String(bulan), tahun:fth, tglBayar:new Date().toISOString().split('T')[0] };
+      k.forEach(kp => rec[kp.id] = true);
+      iuran.push(rec); added += k.length;
+    }
+  }
+
+  STATE.iuran = iuran;
+  Toast('success', `${added} komponen dilunasin otomatis!`);
+  renderMatriksWarga(); renderMatriksGlobal(); renderMatriksStats();
+
+  // Open WA receipt
+  const warga = STATE.warga.find(x=>String(x.id)===String(wId));
+  if (warga?.telp) {
+    const msg = `Assalamu'alaikum ${warga.nama},\n\nKami informasikan bahwa pembayaran iuran Anda tahun ${fth} telah dilunasi secara otomatis oleh bendahara.\n\nTotal: ${fmt(k.reduce((s,kp)=>s+kp.nominal,0)*CUR_MONTH)}\n\nTerima kasih atas partisipasinya. 🙏\n\n– Bendahara ${STATE.settings.noRT||'RT 005'}`;
+    window.open('https://wa.me/' + warga.telp.replace(/\D/g,'').replace(/^0/,'62') + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+  }
+}
+
+function waRekap() {
+  const wId = document.getElementById('mtrx-warga')?.value;
+  const fth = document.getElementById('mtrx-tahun')?.value || String(CUR_YEAR);
+  if (!wId) return Toast('warning', 'Pilih warga dulu');
+  const k = getKomponen();
+  const warga = STATE.warga.find(x=>String(x.id)===String(wId));
+  if (!warga?.telp) return Toast('warning', 'Warga tidak memiliki nomor HP terdaftar');
+
+  const iuran = STATE.iuran;
+  let rekapLines = [];
+  MONTHS_FULL.forEach((m,mi) => {
+    const bulan = mi+1;
+    if (parseInt(fth)===CUR_YEAR && bulan > CUR_MONTH) return;
+    const rec = iuran.find(x=>String(x.wargaId)===String(wId)&&String(x.bulan)===String(bulan)&&String(x.tahun)===fth);
+    const baris = k.map(kp => (rec&&rec[kp.id]?'✓':'✗') + ' ' + kp.nama.replace('Uang ','')).join(' | ');
+    rekapLines.push(`  ${m}: ${baris}`);
+  });
+
+  const msg = `Assalamu'alaikum Bapak/Ibu *${warga.nama}*,\n\nBerikut rekap pembayaran iuran Anda tahun *${fth}*:\n\n${rekapLines.join('\n')}\n\nKeterangan: ✓ Lunas · ✗ Belum Bayar\n\nMohon segera melunasi tunggakan yang ada. Terima kasih atas partisipasinya 🙏\n\n_${STATE.settings.noRT||'RT 005'} – ${STATE.settings.namaBen||'Bendahara'}_`;
+  window.open('https://wa.me/' + warga.telp.replace(/\D/g,'').replace(/^0/,'62') + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+}
+
+// ─────────────── PANEL: BEN-ALISA ───────────────
+let chartKas = null, chartPie = null;
+
+function renderAlisa() {
+  renderAlisaStats();
+  renderAlisaCharts();
+  renderAlisaProgress();
+  renderAlisaTopWarga();
+}
+
+function renderAlisaStats() {
+  const kas = STATE.kas;
+  const iuran = STATE.iuran;
+  const k = getKomponen();
+  const saldo = STATE.saldoAwal;
+  const masuk = kas.filter(x=>x.tipe==='masuk').reduce((s,x)=>s+x.nominal,0);
+  const keluar = kas.filter(x=>x.tipe==='keluar').reduce((s,x)=>s+x.nominal,0);
+  const totalIuranAll = iuran.reduce((s,r)=>s+totalIuranRecord(r),0);
+  const akhir = saldo + masuk + totalIuranAll - keluar;
+  const defisit = akhir < 0 ? Math.abs(akhir) : 0;
+
+  const el = document.getElementById('alisa-stats');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="stat-box" style="border-left:4px solid var(--success)">
+      <i class="fas fa-vault sb-icon" style="color:var(--success)"></i>
+      <div class="sb-label">Total Saldo Akhir</div>
+      <div class="sb-val" style="color:var(--success)">${fmt(akhir)}</div>
+    </div>
+    <div class="stat-box" style="border-left:4px solid var(--primary)">
+      <i class="fas fa-hand-holding-dollar sb-icon" style="color:var(--primary)"></i>
+      <div class="sb-label">Total Iuran Terkumpul</div>
+      <div class="sb-val" style="color:var(--primary)">${fmt(totalIuranAll)}</div>
+    </div>
+    <div class="stat-box" style="border-left:4px solid var(--warn)">
+      <i class="fas fa-arrow-trend-up sb-icon" style="color:var(--warn)"></i>
+      <div class="sb-label">Kas Masuk Manual</div>
+      <div class="sb-val" style="color:var(--warn)">${fmt(masuk)}</div>
+    </div>
+    <div class="stat-box" style="border-left:4px solid var(--danger)">
+      <i class="fas fa-triangle-exclamation sb-icon" style="color:var(--danger)"></i>
+      <div class="sb-label">Defisit Kas</div>
+      <div class="sb-val" style="color:var(--danger)">${fmt(defisit)}</div>
+      <div class="sb-sub">${defisit>0?'⚠ Pengeluaran melebihi pemasukan':'Tidak ada defisit'}</div>
+    </div>
+  `;
+}
+
+function renderAlisaCharts() {
+  // Tren bulanan kas
+  const kas = STATE.kas;
+  const labels = MONTHS;
+  const masukData = MONTHS.map((_,mi) => kas.filter(x=>x.tipe==='masuk'&&new Date(x.tgl).getMonth()===mi).reduce((s,x)=>s+x.nominal,0));
+  const keluarData = MONTHS.map((_,mi) => kas.filter(x=>x.tipe==='keluar'&&new Date(x.tgl).getMonth()===mi).reduce((s,x)=>s+x.nominal,0));
+
+  const ctxKas = document.getElementById('chart-kas');
+  if (ctxKas) {
+    if (chartKas) chartKas.destroy();
+    chartKas = new Chart(ctxKas, {
+      type:'bar',
+      data:{ labels, datasets:[
+        { label:'Pemasukan', data:masukData, backgroundColor:'rgba(16,185,129,0.7)', borderRadius:6 },
+        { label:'Pengeluaran', data:keluarData, backgroundColor:'rgba(239,68,68,0.7)', borderRadius:6 },
+      ]},
+      options:{ responsive:true, plugins:{ legend:{ position:'top' } }, scales:{ y:{ ticks:{ callback:v => 'Rp'+v.toLocaleString('id-ID') } } } }
+    });
+  }
+
+  // Pie iuran
+  const k = getKomponen();
+  const iuran = STATE.iuran;
+  const pieData = k.map(kp => iuran.reduce((s,r)=>s+(r[kp.id]?kp.nominal:0),0));
+  const ctxPie = document.getElementById('chart-iuran-pie');
+  if (ctxPie) {
+    if (chartPie) chartPie.destroy();
+    chartPie = new Chart(ctxPie, {
+      type:'doughnut',
+      data:{ labels: k.map(kp=>kp.nama), datasets:[{ data:pieData, backgroundColor:['#2563eb','#10b981','#f59e0b','#8b5cf6'], borderWidth:2 }] },
+      options:{ responsive:true, plugins:{ legend:{ position:'bottom' } } }
+    });
+  }
+}
+
+function renderAlisaProgress() {
+  const k = getKomponen();
+  const iuran = STATE.iuran;
+  const warga = getWargaList();
+  const n = warga.length || 1;
+  const totalBulan = CUR_MONTH;
+  const el = document.getElementById('alisa-progress');
+  if (!el) return;
+
+  const colors = { utama:'#2563eb', agustus:'#f59e0b', sosial:'#8b5cf6', default:'#0d9488' };
+
+  el.innerHTML = k.map(kp => {
+    const total = n * totalBulan;
+    const lunas = iuran.filter(r=>r[kp.id]).length;
+    const pct = total ? Math.min(100,Math.round(lunas/total*100)) : 0;
+    const color = colors[kp.pos]||colors.default;
+    return `
+      <div style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:.85rem;font-weight:700">${esc(kp.nama)}</span>
+          <span style="font-size:.85rem;font-weight:800;color:${color}">${pct}% (${lunas}/${total} record)</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar" style="width:${pct}%;background:${color}"></div>
+        </div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:4px">Total terkumpul: ${fmt(lunas*kp.nominal)}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderAlisaTopWarga() {
+  const k = getKomponen();
+  const iuran = STATE.iuran;
+  const warga = getWargaList();
+  const el = document.getElementById('alisa-top-warga');
+  if (!el) return;
+
+  const scores = warga.map(w => {
+    const recs = iuran.filter(x=>String(x.wargaId)===String(w.id));
+    const lunas = recs.reduce((s,r)=>s+k.filter(kp=>r[kp.id]).length,0);
+    return { nama: w.nama, lunas };
+  }).sort((a,b)=>b.lunas-a.lunas).slice(0,10);
+
+  if (!scores.length) { el.innerHTML='<p style="color:var(--muted);font-size:.88rem">Belum ada data</p>'; return; }
+
+  el.innerHTML = scores.map((w,i)=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f1f5f9">
+      <div style="width:28px;height:28px;border-radius:50%;background:${i<3?'linear-gradient(135deg,#f59e0b,#d97706)':'#f1f5f9'};color:${i<3?'#fff':'var(--muted)'};display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;flex-shrink:0">${i+1}</div>
+      <div style="flex:1"><b style="font-size:.88rem">${esc(w.nama)}</b></div>
+      <div style="font-size:.82rem;font-weight:700;color:var(--success)">${w.lunas} record lunas</div>
+    </div>
+  `).join('');
+}
+
+// ─────────────── PANEL: BEN-ARSIP ───────────────
+function renderArsip() {
+  const arsip = STATE.arsip;
+  const tbody = document.getElementById('tbody-arsip');
+  if (!tbody) return;
+  // update panel header badge
+  const phab = document.getElementById('ph-arsip-badge');
+  if (phab) phab.textContent = arsip.length + ' Dokumen';
+  if (!arsip.length) { tbody.innerHTML=`<tr><td colspan="6" class="tbl-empty"><i class="fas fa-folder-open"></i><br>Arsip masih kosong. Simpan laporan dari menu Laporan Kas.</td></tr>`; return; }
+  tbody.innerHTML = arsip.map((a,i)=>`
+    <tr>
+      <td style="color:var(--muted);font-size:.8rem">${i+1}</td>
+      <td><b>${esc(a.judul)}</b></td>
+      <td><span class="badge badge-blue">${esc(a.tipe)}</span></td>
+      <td>${fmtTgl(a.tgl)}</td>
+      <td><span class="badge badge-gray">${a.ukuran||'-'}</span></td>
+      <td style="text-align:center">
+        <div style="display:flex;gap:6px;justify-content:center">
+          <button class="btn btn-primary btn-sm" onclick="previewArsip('${a.id}')"><i class="fas fa-eye"></i></button>
+          <button class="btn btn-warn btn-sm" onclick="downloadArsipPDF('${a.id}')"><i class="fas fa-download"></i></button>
+          <button class="btn btn-danger btn-sm" onclick="hapusArsip('${a.id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function previewArsip(id) {
+  const a = STATE.arsip.find(x=>x.id===id);
+  if (!a) return;
+  Swal.fire({ title:a.judul, html:`<div style="max-height:500px;overflow-y:auto;text-align:left;font-size:.85rem">${a.html}</div>`, width:700, confirmButtonText:'Tutup', confirmButtonColor:'#2563eb' });
+}
+
+async function downloadArsipPDF(id) {
+  const a = STATE.arsip.find(x=>x.id===id);
+  if (!a) return;
+  Toast('info','Membuat PDF...');
+  const div = document.createElement('div');
+  div.innerHTML = a.html;
+  div.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:800px;background:#fff;padding:20px;font-family:sans-serif;font-size:13px';
+  document.body.appendChild(div);
+  const canvas = await html2canvas(div, { scale:2, useCORS:true });
+  document.body.removeChild(div);
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  const imgW=210, imgH=canvas.height*imgW/canvas.width;
+  let y=0;
+  while(y<imgH){if(y>0)pdf.addPage();pdf.addImage(canvas.toDataURL('image/jpeg',.92),'JPEG',0,-y,imgW,imgH);y+=297;}
+  pdf.save(a.judul.replace(/\s+/g,'-')+'.pdf');
+  Toast('success','PDF diunduh!');
+}
+
+function hapusArsip(id) {
+  Swal.fire({ title:'Hapus arsip ini?', icon:'warning', showCancelButton:true, confirmButtonText:'Hapus', confirmButtonColor:'#ef4444', cancelButtonText:'Batal' })
+    .then(r => { if(!r.isConfirmed) return; STATE.arsip = STATE.arsip.filter(x=>x.id!==id); renderArsip(); Toast('success','Arsip dihapus'); });
+}
+
+// ─────────────── PANEL: BEN-SETTING ───────────────
+function simpanSetting() {
+  const s = STATE.settings;
+  s.namaBen = document.getElementById('set-nama-ben').value;
+  s.namaBen2 = document.getElementById('set-nama-ben2').value;
+  s.noRT = document.getElementById('set-no-rt').value;
+  s.noRW = document.getElementById('set-no-rw').value;
+  STATE.settings = s;
+  document.getElementById('sb-nama-ben').textContent = s.namaBen || 'Bendahara';
+  // Sync ke main portal db_settings
+  try {
+    const main = JSON.parse(localStorage.getItem('db_settings')||'{}');
+    main.namaBen = s.namaBen;
+    localStorage.setItem('db_settings', JSON.stringify(main));
+  } catch(e) {}
+  Toast('success','Pengaturan disimpan!');
+}
+
+let editingKomponenIdx = null;
+
+function renderKomponenSetting() {
+  const k = getKomponen();
+  const el = document.getElementById('list-iuran-komponen');
+  if (!el) return;
+  if (!k.length) { el.innerHTML='<p style="color:var(--muted);font-size:.85rem">Belum ada komponen iuran.</p>'; return; }
+
+  const posLabel = { utama:'Kas Utama', agustus:'Kas 17 Agustus', sosial:'Kas Sosial' };
+  const posBadge = { utama:'badge-blue', agustus:'badge-yellow', sosial:'badge-green' };
+
+  el.innerHTML = `
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>Nama Komponen</th><th>Nominal/Bulan</th><th>Pos Kas</th><th>Efektif</th><th style="text-align:center">Aksi</th>
+        </tr></thead>
+        <tbody>${k.map((kp,i) => i === editingKomponenIdx ? `
+          <tr style="background:#eff6ff">
+            <td><input class="kp-edit-input" id="edit-kp-nama" value="${esc(kp.nama)}" placeholder="Nama komponen"></td>
+            <td><input class="kp-edit-input" id="edit-kp-nom" type="number" value="${kp.nominal}" placeholder="Nominal" style="max-width:120px"></td>
+            <td>
+              <select id="edit-kp-pos" class="kp-edit-input" style="max-width:140px">
+                <option value="utama" ${kp.pos==='utama'?'selected':''}>Kas Utama</option>
+                <option value="agustus" ${kp.pos==='agustus'?'selected':''}>Kas 17 Agustus</option>
+                <option value="sosial" ${kp.pos==='sosial'?'selected':''}>Kas Sosial</option>
+              </select>
+            </td>
+            <td><input class="kp-edit-input" id="edit-kp-tgl" type="month" value="${kp.tgl||''}" style="max-width:130px"></td>
+            <td style="text-align:center;white-space:nowrap">
+              <button class="btn btn-success btn-sm" onclick="saveKomponenIuran(${i})"><i class="fas fa-save"></i> Simpan</button>
+              <button class="btn btn-ghost btn-sm" style="margin-left:4px" onclick="cancelEditKomponenIuran()"><i class="fas fa-times"></i></button>
+            </td>
+          </tr>` : `
+          <tr>
+            <td><b>${esc(kp.nama)}</b></td>
+            <td style="color:var(--success);font-weight:700">${fmt(kp.nominal)}</td>
+            <td><span class="badge ${posBadge[kp.pos]||'badge-gray'}">${posLabel[kp.pos]||kp.pos}</span></td>
+            <td style="color:var(--muted);font-size:.82rem">${kp.tgl||'-'}</td>
+            <td style="text-align:center;white-space:nowrap">
+              <button class="btn btn-primary btn-sm" onclick="editKomponenIuran(${i})" title="Edit komponen"><i class="fas fa-pen"></i></button>
+              <button class="btn btn-danger btn-sm" style="margin-left:4px" onclick="hapusKomponenIuran(${i})" title="Hapus komponen"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>`
+        ).join('')}</tbody>
+        <tfoot><tr style="background:#f0fdf4;font-weight:700;border-top:2px solid #bbf7d0">
+          <td style="padding:10px 14px">Total Iuran per Bulan</td>
+          <td style="padding:10px 14px;color:var(--success);font-size:1rem">${fmt(k.reduce((s,x)=>s+x.nominal,0))}</td>
+          <td colspan="3" style="padding:10px 14px;font-size:.78rem;color:var(--muted)">${k.length} komponen aktif</td>
+        </tr></tfoot>
+      </table>
+    </div>
+  `;
+}
+
+function editKomponenIuran(idx) {
+  editingKomponenIdx = idx;
+  renderKomponenSetting();
+  // Fokus ke input nama
+  setTimeout(() => { const el = document.getElementById('edit-kp-nama'); if(el) el.focus(); }, 50);
+}
+
+function cancelEditKomponenIuran() {
+  editingKomponenIdx = null;
+  renderKomponenSetting();
+}
+
+function saveKomponenIuran(idx) {
+  const nama   = (document.getElementById('edit-kp-nama')?.value || '').trim();
+  const nominal = parseInt(document.getElementById('edit-kp-nom')?.value) || 0;
+  const pos    = document.getElementById('edit-kp-pos')?.value || 'utama';
+  const tgl    = document.getElementById('edit-kp-tgl')?.value || '';
+  if (!nama) return Toast('warning','Nama komponen tidak boleh kosong');
+  if (nominal < 0) return Toast('warning','Nominal tidak boleh negatif');
+  const k = getKomponen();
+  k[idx] = { ...k[idx], nama, nominal, pos, tgl };
+  STATE.komponen = k;
+  editingKomponenIdx = null;
+  renderKomponenSetting();
+  renderCheckGroupIuran();
+  Toast('success', `Komponen "${nama}" berhasil diperbarui!`);
+}
+
+function tambahKomponenIuran() {
+  const nama = document.getElementById('new-iur-nama').value.trim();
+  const nom = parseInt(document.getElementById('new-iur-nom').value)||0;
+  const pos = document.getElementById('new-iur-pos').value;
+  const tgl = document.getElementById('new-iur-tgl').value;
+  if (!nama) return Toast('warning','Nama komponen wajib diisi');
+  const k = getKomponen();
+  const id = nama.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
+  k.push({ id, nama, nominal:nom, pos, tgl });
+  STATE.komponen = k;
+  document.getElementById('new-iur-nama').value='';
+  document.getElementById('new-iur-nom').value='';
+  renderKomponenSetting();
+  renderCheckGroupIuran();
+  Toast('success','Komponen iuran ditambahkan!');
+}
+
+function hapusKomponenIuran(idx) {
+  const k = getKomponen();
+  const nm = k[idx]?.nama;
+  Swal.fire({ title:`Hapus komponen "${nm}"?`, icon:'warning', showCancelButton:true, confirmButtonText:'Hapus', confirmButtonColor:'#ef4444', cancelButtonText:'Batal' })
+    .then(r => { if(!r.isConfirmed) return; k.splice(idx,1); STATE.komponen=k; renderKomponenSetting(); renderCheckGroupIuran(); Toast('success','Komponen dihapus'); });
+}
+
+// ─────────────── RESET & EXPORT ───────────────
+function resetData(type) {
+  const labels = { kas:'Data Kas', iuran:'Data Iuran', arsip:'Arsip BA' };
+  const keyMap  = { kas:'db_kas', iuran:'ben_iuran', arsip:'ben_arsip' };
+  Swal.fire({ title:`Reset ${labels[type]}?`, text:'Semua data akan dihapus permanen dari server.', icon:'warning', showCancelButton:true, confirmButtonText:'Reset!', confirmButtonColor:'#ef4444', cancelButtonText:'Batal' })
+    .then(r => {
+      if (!r.isConfirmed) return;
+      const key = keyMap[type];
+      localStorage.removeItem(key);
+      BEN_SYNC.del(key);   // hapus juga dari PostgreSQL
+      onStateChange();
+      Toast('success',labels[type]+' berhasil direset');
+    });
+}
+
+function exportData() {
+  const data = { settings:STATE.settings, kas:STATE.kas, iuran:STATE.iuran, arsip:STATE.arsip.map(a=>({...a,html:'[html omitted]'})), komponen:STATE.komponen };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'bendahara-export-'+new Date().toISOString().split('T')[0]+'.json';
+  a.click();
+  Toast('success','Data diekspor!');
+}
+
+// ═══════════════════════════════════════════════════
+//  EXCEL EXPORT FUNCTIONS
+// ═══════════════════════════════════════════════════
+
+// ── helper: buat workbook dan download ──
+function xlDownload(wb, filename) {
+  XLSX.writeFile(wb, filename + '-' + new Date().toISOString().split('T')[0] + '.xlsx');
+  Toast('success', 'File Excel berhasil diunduh!');
+}
+
+// ── helper: style header row ──
+function xlHeaderRow(ws, rowIdx, cols) {
+  cols.forEach((_, ci) => {
+    const cellRef = XLSX.utils.encode_cell({ r: rowIdx, c: ci });
+    if (!ws[cellRef]) return;
+    ws[cellRef].s = {
+      font: { bold: true, color: { rgb: 'FFFFFF' } },
+      fill: { fgColor: { rgb: '2563EB' } },
+      alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+      border: { bottom: { style: 'thin', color: { rgb: 'CCCCCC' } } }
+    };
+  });
+}
+
+// ── helper: tambahkan info kop ──
+function xlKop(s) {
+  return [
+    ['LAPORAN KEUANGAN RT 005 - TEGALASARI, CANDISARI, SEMARANG'],
+    ['Bendahara: ' + (s.namaBen||'-') + '   |   Pembantu: ' + (s.namaBen2||'-')],
+    ['Dicetak: ' + new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})],
+    [],
+  ];
+}
+
+// ── 1. EXPORT KAS — Detail semua transaksi ──
+function excelKas() {
+  const kas = STATE.kas.slice().sort((a,b)=>(a.tgl||'').localeCompare(b.tgl||''));
+  const s = STATE.settings;
+  const saldo = STATE.saldoAwal;
+  const masuk = kas.filter(x=>x.tipe==='masuk').reduce((t,x)=>t+x.nominal,0);
+  const keluar = kas.filter(x=>x.tipe==='keluar').reduce((t,x)=>t+x.nominal,0);
+
+  const header = ['No','Tanggal','Keterangan','Kategori','Jenis','Nominal (Rp)','Saldo Berjalan (Rp)'];
+  let saldoRun = saldo;
+  const rows = kas.map((x,i) => {
+    saldoRun += x.tipe==='masuk' ? x.nominal : -x.nominal;
+    return [i+1, x.tgl||'-', x.uraian||'-', x.kategori||'-', x.tipe==='masuk'?'Pemasukan':'Pengeluaran', x.nominal||0, saldoRun];
+  });
+
+  const data = [
+    ...xlKop(s),
+    ['RIWAYAT TRANSAKSI KAS MANUAL'],
+    header,
+    ...rows,
+    [],
+    ['','','','','Saldo Awal', saldo, ''],
+    ['','','','','Total Pemasukan', masuk, ''],
+    ['','','','','Total Pengeluaran', keluar, ''],
+    ['','','','','SALDO AKHIR', saldo+masuk-keluar, ''],
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:5},{wch:14},{wch:40},{wch:18},{wch:14},{wch:18},{wch:18}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Transaksi Kas');
+  xlDownload(wb, 'Riwayat-Kas');
+}
+
+// ── 2. EXPORT KAS — Ringkasan Bulanan ──
+function excelKasRingkasan() {
+  const kas = STATE.kas;
+  const s = STATE.settings;
+  const header = ['Bulan','Tahun','Jml Pemasukan','Total Masuk (Rp)','Jml Pengeluaran','Total Keluar (Rp)','Selisih (Rp)'];
+
+  const byMonth = {};
+  kas.forEach(x => {
+    if (!x.tgl) return;
+    const d = new Date(x.tgl);
+    const key = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    if (!byMonth[key]) byMonth[key] = { masuk:[], keluar:[] };
+    byMonth[key][x.tipe==='masuk'?'masuk':'keluar'].push(x.nominal||0);
+  });
+
+  const rows = Object.keys(byMonth).sort().map(key => {
+    const [yr,mo] = key.split('-');
+    const m = byMonth[key];
+    const totalM = m.masuk.reduce((a,b)=>a+b,0);
+    const totalK = m.keluar.reduce((a,b)=>a+b,0);
+    return [MONTHS_FULL[parseInt(mo)-1], parseInt(yr), m.masuk.length, totalM, m.keluar.length, totalK, totalM-totalK];
+  });
+
+  const data = [...xlKop(s), ['RINGKASAN KAS BULANAN'], header, ...rows];
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:14},{wch:8},{wch:16},{wch:18},{wch:18},{wch:18},{wch:16}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Ringkasan Bulanan');
+  xlDownload(wb, 'Ringkasan-Kas-Bulanan');
+}
+
+// ── 3. EXPORT IURAN — Detail per record ──
+function excelIuranDetail() {
+  const iuran = STATE.iuran;
+  const k = getKomponen();
+  const s = STATE.settings;
+
+  const header = ['No','Nama Warga','Tahun','Bulan', ...k.map(kp=>kp.nama+' ('+fmt(kp.nominal)+')'), 'Total (Rp)', 'Tgl Bayar'];
+  const rows = iuran.slice().sort((a,b)=>{
+    const ka = a.tahun+String(a.bulan).padStart(2,'0');
+    const kb = b.tahun+String(b.bulan).padStart(2,'0');
+    return ka.localeCompare(kb);
+  }).map((x,i) => [
+    i+1,
+    getWargaNama(x.wargaId),
+    x.tahun,
+    MONTHS_FULL[parseInt(x.bulan)-1]||x.bulan,
+    ...k.map(kp => x[kp.id] ? kp.nominal : 0),
+    totalIuranRecord(x),
+    x.tglBayar||'-',
+  ]);
+
+  const data = [...xlKop(s), ['DETAIL PEMBAYARAN IURAN KOLEKTIF'], header, ...rows];
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:5},{wch:28},{wch:7},{wch:12},...k.map(()=>({wch:22})),{wch:14},{wch:14}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Detail Iuran');
+  xlDownload(wb, 'Detail-Iuran');
+}
+
+// ── 4. EXPORT IURAN — Rekap Per Warga ──
+function excelIuranPerWarga() {
+  const iuran = STATE.iuran;
+  const k = getKomponen();
+  const warga = getWargaList();
+  const s = STATE.settings;
+
+  const header = ['No','Nama Warga', ...k.map(kp=>kp.nama), 'Total Record Lunas', 'Total Dibayar (Rp)'];
+  const rows = warga.map((w,i) => {
+    const recs = iuran.filter(x=>String(x.wargaId)===String(w.id));
+    const perKomp = k.map(kp => recs.filter(r=>r[kp.id]).length + ' bln');
+    const totalRec = recs.reduce((s,r)=>s+k.filter(kp=>r[kp.id]).length,0);
+    const totalRp = recs.reduce((s,r)=>s+totalIuranRecord(r),0);
+    return [i+1, w.nama, ...perKomp, totalRec, totalRp];
+  });
+
+  // Summary total
+  const totalAll = warga.reduce((s,w)=>{
+    return s + iuran.filter(x=>String(x.wargaId)===String(w.id)).reduce((t,r)=>t+totalIuranRecord(r),0);
+  },0);
+
+  const data = [
+    ...xlKop(s),
+    ['REKAP IURAN PER WARGA (SEMUA PERIODE)'],
+    header,
+    ...rows,
+    [],
+    ['','TOTAL KESELURUHAN', ...k.map(()=>''), '', totalAll],
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:5},{wch:28},...k.map(()=>({wch:18})),{wch:18},{wch:18}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Rekap Per Warga');
+  xlDownload(wb, 'Rekap-Iuran-Per-Warga');
+}
+
+// ── 5. EXPORT IURAN — Matriks 12 Bulan Per Komponen ──
+function excelIuranMatriks() {
+  const iuran = STATE.iuran;
+  const k = getKomponen();
+  const warga = getWargaList();
+  const s = STATE.settings;
+  const wb = XLSX.utils.book_new();
+
+  const years = [...new Set(iuran.map(x=>x.tahun))].sort().reverse();
+  if (!years.length) years.push(String(CUR_YEAR));
+
+  years.forEach(thn => {
+    k.forEach(kp => {
+      const header = ['Nama Warga', ...MONTHS_FULL, 'Total Bulan Lunas', 'Total (Rp)'];
+      const rows = warga.map(w => {
+        let lunas = 0;
+        const cells = MONTHS_FULL.map((_,mi)=>{
+          const rec = iuran.find(x=>String(x.wargaId)===String(w.id)&&String(x.bulan)===String(mi+1)&&String(x.tahun)===thn);
+          const paid = rec && rec[kp.id];
+          if(paid) lunas++;
+          return paid ? '✓' : (parseInt(thn)===CUR_YEAR&&(mi+1)>CUR_MONTH ? '-' : '✗');
+        });
+        return [w.nama, ...cells, lunas, lunas*kp.nominal];
+      });
+
+      // Footer: total per bulan
+      const footer = ['TOTAL', ...MONTHS_FULL.map((_,mi)=>{
+        return warga.filter(w=>{
+          const rec=iuran.find(x=>String(x.wargaId)===String(w.id)&&String(x.bulan)===String(mi+1)&&String(x.tahun)===thn);
+          return rec&&rec[kp.id];
+        }).length + ' warga';
+      }), '', ''];
+
+      const data = [
+        ...xlKop(s),
+        [`MATRIKS IURAN — ${kp.nama.toUpperCase()} — TAHUN ${thn}`],
+        [`Nominal per bulan: ${fmt(kp.nominal)}`],
+        [],
+        header,
+        ...rows,
+        [],
+        footer,
+      ];
+
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      ws['!cols'] = [{wch:28},...MONTHS_FULL.map(()=>({wch:6})),{wch:16},{wch:16}];
+      const sheetName = (kp.nama.replace(/[^a-zA-Z0-9]/g,'-').substring(0,20) + '-' + thn).substring(0,31);
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    });
+  });
+
+  xlDownload(wb, 'Matriks-Iuran-Tahunan');
+}
+
+// ── 6. EXPORT MATRIKS — Global (tampilan saat ini) ──
+function excelMatriksGlobal() {
+  const fth = document.getElementById('f-mtrx-tahun')?.value || String(CUR_YEAR);
+  const komp = document.getElementById('f-mtrx-komponen')?.value || 'pembangunan';
+  const k = getKomponen();
+  const kp = k.find(x=>x.id===komp)||k[0];
+  if (!kp) return Toast('warning','Tidak ada komponen iuran');
+
+  const iuran = STATE.iuran;
+  const warga = getWargaList();
+  const s = STATE.settings;
+
+  const header = ['No','Nama Warga', ...MONTHS, 'Total Lunas', 'Total (Rp)', 'Status'];
+  const maxBln = parseInt(fth)<CUR_YEAR ? 12 : CUR_MONTH;
+
+  const rows = warga.map((w,i) => {
+    let lunas = 0;
+    const cells = MONTHS.map((_,mi) => {
+      const bulan = mi+1;
+      const rec = iuran.find(x=>String(x.wargaId)===String(w.id)&&String(x.bulan)===String(bulan)&&String(x.tahun)===fth);
+      const paid = rec && rec[kp.id];
+      const future = parseInt(fth)===CUR_YEAR && bulan>CUR_MONTH;
+      if(paid) lunas++;
+      return future ? '-' : (paid ? '✓' : '✗');
+    });
+    const status = lunas===maxBln ? 'LUNAS' : lunas===0 ? 'BELUM BAYAR' : 'SEBAGIAN';
+    return [i+1, w.nama, ...cells, lunas+'/'+maxBln, lunas*kp.nominal, status];
+  });
+
+  // Footer total
+  const footerCells = MONTHS.map((_,mi)=>{
+    const bulan=mi+1;
+    if(parseInt(fth)===CUR_YEAR&&bulan>CUR_MONTH) return '-';
+    return warga.filter(w=>{
+      const rec=iuran.find(x=>String(x.wargaId)===String(w.id)&&String(x.bulan)===String(bulan)&&String(x.tahun)===fth);
+      return rec&&rec[kp.id];
+    }).length + ' org';
+  });
+
+  const data = [
+    ...xlKop(s),
+    [`MATRIKS IURAN GLOBAL — ${kp.nama.toUpperCase()} — TAHUN ${fth}`],
+    [`Nominal: ${fmt(kp.nominal)} / bulan / warga`],
+    [],
+    header,
+    ...rows,
+    [],
+    ['','TOTAL PER BULAN', ...footerCells, '', '', ''],
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:5},{wch:28},...MONTHS.map(()=>({wch:6})),{wch:12},{wch:14},{wch:14}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Matriks ' + fth);
+  xlDownload(wb, 'Matriks-Global-' + kp.id + '-' + fth);
+}
+
+// ── 7. EXPORT LAPORAN UTAMA ──
+function excelLaporanUtama() {
+  const { saldo, masukKas, keluarKas, iuranByPos, k } = getLaporanData();
+  const s = STATE.settings;
+  const kas = STATE.kas;
+  const utamaK = k.filter(kp=>kp.pos==='utama');
+  const iuranUtama = utamaK.reduce((t,kp)=>t+(iuranByPos[kp.id]||0),0);
+  const akhir = saldo + masukKas + iuranUtama - keluarKas;
+
+  // Sheet 1: Ringkasan
+  const dataSummary = [
+    ...xlKop(s),
+    ['LAPORAN KAS UTAMA'],
+    [],
+    ['POS', 'NOMINAL (Rp)'],
+    ['Saldo Awal', saldo],
+    ...utamaK.map(kp=>['+ Iuran '+kp.nama, iuranByPos[kp.id]||0]),
+    ['+ Pemasukan Kas Manual', masukKas],
+    ['- Pengeluaran Kas', keluarKas],
+    ['SALDO AKHIR', akhir],
+  ];
+
+  // Sheet 2: Detail transaksi
+  const dataDetail = [
+    ['DETAIL TRANSAKSI KAS MANUAL'],
+    ['Tanggal','Keterangan','Kategori','Jenis','Nominal (Rp)'],
+    ...kas.sort((a,b)=>(a.tgl||'').localeCompare(b.tgl||'')).map(x=>[
+      x.tgl||'-', x.uraian||'-', x.kategori||'-', x.tipe==='masuk'?'Pemasukan':'Pengeluaran', x.nominal||0
+    ]),
+  ];
+
+  const wb = XLSX.utils.book_new();
+  const ws1 = XLSX.utils.aoa_to_sheet(dataSummary);
+  ws1['!cols'] = [{wch:30},{wch:20}];
+  const ws2 = XLSX.utils.aoa_to_sheet(dataDetail);
+  ws2['!cols'] = [{wch:14},{wch:40},{wch:16},{wch:14},{wch:16}];
+  XLSX.utils.book_append_sheet(wb, ws1, 'Laporan Utama');
+  XLSX.utils.book_append_sheet(wb, ws2, 'Detail Transaksi');
+  xlDownload(wb, 'Laporan-Kas-Utama');
+}
+
+// ── 8. EXPORT LAPORAN TERPISAH ──
+function excelLaporanTerpisah() {
+  const { iuranByPos, k } = getLaporanData();
+  const s = STATE.settings;
+  const wb = XLSX.utils.book_new();
+
+  const posGroups = [
+    { key:'agustus', label:'17 Agustus' },
+    { key:'sosial',  label:'Sosial' },
+  ];
+
+  posGroups.forEach(pg => {
+    const kps = k.filter(x=>x.pos===pg.key);
+    const total = kps.reduce((t,kp)=>t+(iuranByPos[kp.id]||0),0);
+
+    const iuran = STATE.iuran;
+    const warga = getWargaList();
+    const header = ['No','Nama Warga', ...kps.map(kp=>kp.nama+' (Rp)'), 'Total (Rp)'];
+    const rowsData = warga.map((w,i)=>{
+      const recs = iuran.filter(x=>String(x.wargaId)===String(w.id));
+      const perKomp = kps.map(kp => recs.reduce((s,r)=>s+(r[kp.id]?kp.nominal:0),0));
+      const tot = perKomp.reduce((a,b)=>a+b,0);
+      return [i+1, w.nama, ...perKomp, tot];
+    });
+
+    const data = [
+      ...xlKop(s),
+      [`LAPORAN KAS TERPISAH — ${pg.label.toUpperCase()}`],
+      [],
+      ['Saldo Awal', 0],
+      ...kps.map(kp=>['+ Iuran '+kp.nama, iuranByPos[kp.id]||0]),
+      ['SALDO AKHIR', total],
+      [],
+      header,
+      ...rowsData,
+      [],
+      ['','TOTAL', ...kps.map(kp=>iuranByPos[kp.id]||0), total],
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    ws['!cols'] = [{wch:5},{wch:28},...kps.map(()=>({wch:20})),{wch:16}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Kas ' + pg.label);
+  });
+
+  xlDownload(wb, 'Laporan-Kas-Terpisah');
+}
+
+// ── 9. EXPORT LAPORAN LENGKAP — Semua dalam 1 file ──
+function excelLaporanLengkap() {
+  Toast('info', 'Menyusun laporan lengkap...');
+  setTimeout(() => {
+    try {
+      const s = STATE.settings;
+      const k = getKomponen();
+      const kas = STATE.kas;
+      const iuran = STATE.iuran;
+      const warga = getWargaList();
+      const { saldo, masukKas, keluarKas, iuranByPos } = getLaporanData();
+      const wb = XLSX.utils.book_new();
+
+      // ── Sheet 1: Dashboard Ringkasan ──
+      const totalIuranAll = iuran.reduce((s,r)=>s+totalIuranRecord(r),0);
+      const masuk = masukKas + totalIuranAll;
+      const akhir = saldo + masukKas + k.filter(kp=>kp.pos==='utama').reduce((t,kp)=>t+(iuranByPos[kp.id]||0),0) - keluarKas;
+      const ws1Data = [
+        ...xlKop(s),
+        ['DASHBOARD KEUANGAN RINGKASAN'],
+        [],
+        ['INDIKATOR','NILAI'],
+        ['Saldo Awal Periode', saldo],
+        ['Total Pemasukan Kas Manual', masukKas],
+        ['Total Iuran Terkumpul', totalIuranAll],
+        ['Total Pengeluaran', keluarKas],
+        ['Saldo Kas Akhir', akhir],
+        [],
+        ['KOMPONEN IURAN','NOMINAL/BLN','TOTAL TERKUMPUL','JML RECORD'],
+        ...k.map(kp=>[kp.nama, kp.nominal, iuranByPos[kp.id]||0, iuran.filter(r=>r[kp.id]).length]),
+      ];
+      const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
+      ws1['!cols'] = [{wch:30},{wch:20},{wch:20},{wch:16}];
+      XLSX.utils.book_append_sheet(wb, ws1, '1. Dashboard');
+
+      // ── Sheet 2: Semua Transaksi Kas ──
+      const ws2Data = [
+        ['SEMUA TRANSAKSI KAS MANUAL'],
+        ['No','Tanggal','Keterangan','Kategori','Jenis','Nominal (Rp)'],
+        ...kas.sort((a,b)=>(a.tgl||'').localeCompare(b.tgl||'')).map((x,i)=>[
+          i+1, x.tgl||'-', x.uraian||'-', x.kategori||'-', x.tipe==='masuk'?'Pemasukan':'Pengeluaran', x.nominal||0
+        ]),
+        [],['','','','','Total Masuk',kas.filter(x=>x.tipe==='masuk').reduce((t,x)=>t+x.nominal,0)],
+        ['','','','','Total Keluar',kas.filter(x=>x.tipe==='keluar').reduce((t,x)=>t+x.nominal,0)],
+      ];
+      const ws2 = XLSX.utils.aoa_to_sheet(ws2Data);
+      ws2['!cols'] = [{wch:5},{wch:14},{wch:40},{wch:16},{wch:14},{wch:16}];
+      XLSX.utils.book_append_sheet(wb, ws2, '2. Transaksi Kas');
+
+      // ── Sheet 3: Detail Iuran ──
+      const hdr3 = ['No','Nama Warga','Tahun','Bulan',...k.map(kp=>kp.nama),'Total (Rp)','Tgl Bayar'];
+      const ws3Data = [
+        ['DETAIL PEMBAYARAN IURAN'],
+        hdr3,
+        ...iuran.sort((a,b)=>(a.tahun+a.bulan).localeCompare(b.tahun+b.bulan)).map((x,i)=>[
+          i+1, getWargaNama(x.wargaId), x.tahun, MONTHS_FULL[parseInt(x.bulan)-1],
+          ...k.map(kp=>x[kp.id]?kp.nominal:0), totalIuranRecord(x), x.tglBayar||'-'
+        ]),
+      ];
+      const ws3 = XLSX.utils.aoa_to_sheet(ws3Data);
+      ws3['!cols'] = [{wch:5},{wch:28},{wch:7},{wch:12},...k.map(()=>({wch:18})),{wch:14},{wch:14}];
+      XLSX.utils.book_append_sheet(wb, ws3, '3. Detail Iuran');
+
+      // ── Sheet 4: Rekap Per Warga ──
+      const hdr4 = ['No','Nama Warga',...k.map(kp=>kp.nama+' (bln lunas)'),'Total Dibayar (Rp)'];
+      const ws4Data = [
+        ['REKAP IURAN PER WARGA'],
+        hdr4,
+        ...warga.map((w,i)=>{
+          const recs = iuran.filter(x=>String(x.wargaId)===String(w.id));
+          return [i+1, w.nama, ...k.map(kp=>recs.filter(r=>r[kp.id]).length), recs.reduce((s,r)=>s+totalIuranRecord(r),0)];
+        }),
+      ];
+      const ws4 = XLSX.utils.aoa_to_sheet(ws4Data);
+      ws4['!cols'] = [{wch:5},{wch:28},...k.map(()=>({wch:20})),{wch:18}];
+      XLSX.utils.book_append_sheet(wb, ws4, '4. Rekap Per Warga');
+
+      // ── Sheet 5+: Matriks per komponen tahun ini ──
+      k.forEach((kp,ki) => {
+        const hdrM = ['Nama Warga',...MONTHS,'Lunas','Total (Rp)'];
+        const wsData = [
+          [`MATRIKS ${kp.nama.toUpperCase()} — ${CUR_YEAR}`],
+          hdrM,
+          ...warga.map(w => {
+            let lunas = 0;
+            const cells = MONTHS.map((_,mi) => {
+              const rec = iuran.find(x=>String(x.wargaId)===String(w.id)&&String(x.bulan)===String(mi+1)&&String(x.tahun)===String(CUR_YEAR));
+              const paid = rec&&rec[kp.id];
+              if(paid) lunas++;
+              return mi+1>CUR_MONTH ? '-' : (paid?'✓':'✗');
+            });
+            return [w.nama,...cells,lunas,lunas*kp.nominal];
+          }),
+        ];
+        const wsM = XLSX.utils.aoa_to_sheet(wsData);
+        wsM['!cols'] = [{wch:28},...MONTHS.map(()=>({wch:5})),{wch:8},{wch:14}];
+        const sn = ((ki+5)+'. '+kp.nama).substring(0,31);
+        XLSX.utils.book_append_sheet(wb, wsM, sn);
+      });
+
+      xlDownload(wb, 'Laporan-Lengkap-Bendahara');
+    } catch(err) {
+      console.error(err);
+      Toast('error','Gagal membuat Excel: '+err.message);
+    }
+  }, 100);
+}
+</script>
+</body>
+</html>
