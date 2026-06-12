@@ -3285,11 +3285,12 @@ html[data-theme="dark"] select option {
                 <div class="logo-3d-container no-print"><img src="/Lambang_Kota_Semarang.png" class="logo-3d" onerror="this.onerror=null; this.src='/Lambang_Kota_Semarang.png';"></div>
             </div>
             <div class="stats-grid">
-                <div class="stat-box">
+                <div class="stat-box" onclick="bukaRekapKas()" style="cursor:pointer;" title="Klik untuk lihat rekap transaksi kas">
                     <i class="fa-solid fa-vault bg-icon"></i>
                     <h4>Saldo Kas Lingkungan</h4>
                     <h2 id="warga-saldo-kas">Rp 0</h2>
                     <div class="last-update-text" id="upd-kas"><i class="fa-solid fa-rotate"></i> Memuat waktu...</div>
+                    <div style="font-size:0.72rem;color:var(--accent-gold);margin-top:6px;font-weight:600;"><i class="fa-solid fa-chart-bar"></i> Klik untuk rekap bulanan</div>
                 </div>
                 <div class="stat-box" style="border-color: var(--success);">
                     <i class="fa-solid fa-gift bg-icon" style="color: var(--success) !important;"></i>
@@ -3520,7 +3521,7 @@ html[data-theme="dark"] select option {
 
         <div id="ben-input" class="ben-tab-content active">
             <div class="stats-grid">
-                <div class="stat-box" style="border-color:var(--success);"><i class="fa-solid fa-vault bg-icon" style="color:var(--success) !important;"></i><h4>Total Saldo Kas Akhir</h4><h2 id="ben-saldo-kas-input">Rp 0</h2></div>
+                <div class="stat-box" onclick="bukaRekapKas()" style="border-color:var(--success); cursor:pointer;" title="Klik untuk lihat rekap transaksi kas"><i class="fa-solid fa-vault bg-icon" style="color:var(--success) !important;"></i><h4>Total Saldo Kas Akhir</h4><h2 id="ben-saldo-kas-input">Rp 0</h2><div style="font-size:0.72rem;color:var(--success);margin-top:4px;font-weight:600;"><i class="fa-solid fa-chart-bar"></i> Lihat Rekap</div></div>
                 <div class="stat-box" style="border-color:var(--primary-blue);"><i class="fa-solid fa-clock-rotate-left bg-icon" style="color:var(--primary-blue) !important;"></i><h4>Saldo Bawaan (Awal)</h4><h2 id="ben-display-saldo-awal">Rp 0</h2></div>
             </div>
             <div class="card" style="border-top: 4px solid var(--primary-blue);"><div class="card-title-header"><h3><i class="fa-solid fa-lock"></i> Kunci Saldo Awal Pembukuan</h3></div><div style="display: flex; gap: 15px; margin-top: 10px;"><input type="number" id="ben-saldo-awal-input" class="search-box" placeholder="Masukkan nominal saldo sisa periode lalu..." style="flex: 1;"><button class="btn-submit bg-blue" style="width:auto; margin-top:0;" onclick="simpanSaldoAwal()"><i class="fa-solid fa-save"></i> Kunci</button></div></div>
@@ -8738,6 +8739,163 @@ window.copyTelDarurat = function(tel) {
         document.body.removeChild(ta);
         if(window.Toast) Toast.fire({icon:'success', title:'Nomor ' + tel + ' disalin!', timer:1500});
     });
+};
+
+
+// ============================================================
+// REKAP KAS BULANAN — bukaRekapKas() + renderRekapKas()
+// ============================================================
+window.bukaRekapKas = function() {
+    var modal = document.getElementById("modal-rekap-kas");
+    if (!modal) return;
+    // Build month + year options
+    var kas = JSON.parse(localStorage.getItem("db_kas") || "[]");
+    var now = new Date();
+    var years = new Set(), months = new Set();
+    kas.forEach(function(k) {
+        if (!k.tgl) return;
+        var d = new Date(k.tgl);
+        years.add(d.getFullYear());
+        months.add(d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0"));
+    });
+    // If no data, at least show current year/month
+    years.add(now.getFullYear());
+    var selBulan = document.getElementById("rekap-kas-bulan");
+    var selTahun = document.getElementById("rekap-kas-tahun");
+    var BULAN_NAMES = ["","Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    // Populate year select
+    var sortedYears = Array.from(years).sort(function(a,b){return b-a;});
+    selTahun.innerHTML = sortedYears.map(function(y){
+        return "<option value=\"" + y + "\">" + y + "</option>";
+    }).join("");
+    selTahun.value = now.getFullYear();
+    // Populate month select
+    selBulan.innerHTML = "<option value=\"00\">Semua Bulan</option>" +
+        BULAN_NAMES.slice(1).map(function(n,i){
+            return "<option value=\"" + String(i+1).padStart(2,"0") + "\">" + n + "</option>";
+        }).join("");
+    selBulan.value = String(now.getMonth()+1).padStart(2,"0");
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    renderRekapKas();
+};
+
+window.tutupRekapKas = function() {
+    var modal = document.getElementById("modal-rekap-kas");
+    if (modal) modal.style.display = "none";
+    document.body.style.overflow = "";
+};
+
+window.renderRekapKas = function() {
+    var selBulan = document.getElementById("rekap-kas-bulan");
+    var selTahun = document.getElementById("rekap-kas-tahun");
+    if (!selBulan || !selTahun) return;
+    var bulan = selBulan.value; // "00" = semua, "01"-"12"
+    var tahun = parseInt(selTahun.value);
+    var kas = JSON.parse(localStorage.getItem("db_kas") || "[]");
+    var filtered = kas.filter(function(k) {
+        if (!k.tgl) return false;
+        var d = new Date(k.tgl);
+        if (d.getFullYear() !== tahun) return false;
+        if (bulan !== "00" && String(d.getMonth()+1).padStart(2,"0") !== bulan) return false;
+        return true;
+    }).sort(function(a,b){ return new Date(a.tgl)-new Date(b.tgl); });
+    var fmtRp = function(v) { return "Rp " + Math.abs(Number(v)||0).toLocaleString("id-ID"); };
+    var totalMasuk = 0, totalKeluar = 0, saldoAwal = 0;
+    // Saldo awal: akumulasi semua transaksi SEBELUM periode filter
+    kas.forEach(function(k) {
+        if (!k.tgl) return;
+        var d = new Date(k.tgl);
+        var inPeriod = d.getFullYear() === tahun && (bulan === "00" || String(d.getMonth()+1).padStart(2,"0") === bulan);
+        if (!inPeriod && d.getFullYear() <= tahun) {
+            if (bulan === "00") { /* all year, skip */ return; }
+            var bulanNum = parseInt(bulan);
+            var dBulan = d.getFullYear()*100 + (d.getMonth()+1);
+            var filterBulan = tahun*100 + bulanNum;
+            if (dBulan < filterBulan) {
+                if ((k.tipe||"").toLowerCase() === "masuk") saldoAwal += Number(k.nominal||0);
+                else saldoAwal -= Number(k.nominal||0);
+            }
+        }
+    });
+    filtered.forEach(function(k) {
+        if ((k.tipe||"").toLowerCase() === "masuk") totalMasuk += Number(k.nominal||0);
+        else totalKeluar += Number(k.nominal||0);
+    });
+    var saldoAkhir = (bulan === "00" ? 0 : saldoAwal) + totalMasuk - totalKeluar;
+    // Summary cards
+    var summaryEl = document.getElementById("rekap-kas-summary");
+    var summaryCards = [
+        {label:"Saldo Awal", val: bulan==="00"? "-" : fmtRp(saldoAwal), color:"#64748b", bg:"#f1f5f9"},
+        {label:"Total Masuk", val: fmtRp(totalMasuk), color:"#059669", bg:"#f0fdf4"},
+        {label:"Total Keluar", val: fmtRp(totalKeluar), color:"#dc2626", bg:"#fef2f2"},
+        {label:"Saldo Akhir", val: fmtRp(saldoAkhir), color:"#0f2848", bg:"#eff6ff", bold:true}
+    ];
+    summaryEl.innerHTML = summaryCards.map(function(c) {
+        return "<div style=\"flex:1;min-width:120px;background:" + c.bg + ";border-radius:10px;padding:12px 14px;border:1.5px solid " + c.color + "22;\">" +
+            "<div style=\"font-size:0.72rem;font-weight:600;color:" + c.color + ";text-transform:uppercase;letter-spacing:0.04em;\">" + c.label + "</div>" +
+            "<div style=\"font-size:" + (c.bold?"1.05rem":"0.95rem") + ";font-weight:" + (c.bold?"800":"700") + ";color:" + c.color + ";margin-top:4px;\">" + c.val + "</div>" +
+            "</div>";
+    }).join("");
+    // Transaction table
+    var tableWrap = document.getElementById("rekap-kas-table-wrap");
+    if (filtered.length === 0) {
+        tableWrap.innerHTML = "<div style=\"text-align:center;padding:50px 20px;color:#94a3b8;\">" +
+            "<i class=\"fa-solid fa-receipt\" style=\"font-size:2.5rem;margin-bottom:12px;display:block;\"></i>" +
+            "<p style=\"font-size:1rem;font-weight:600;\">Belum ada transaksi di periode ini</p>" +
+            "<p style=\"font-size:0.85rem;\">Coba pilih bulan atau tahun lain</p></div>";
+        return;
+    }
+    var runSaldo = bulan === "00" ? 0 : saldoAwal;
+    var rows = filtered.map(function(k, idx) {
+        var masuk = (k.tipe||"").toLowerCase() === "masuk";
+        if (masuk) runSaldo += Number(k.nominal||0);
+        else runSaldo -= Number(k.nominal||0);
+        var d = new Date(k.tgl);
+        var tglStr = d.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"});
+        return "<tr style=\"background:" + (idx%2===0?"#fff":"#f8fafc") + ";\">" +
+            "<td style=\"padding:10px 12px;font-size:0.82rem;color:#64748b;white-space:nowrap;\">" + tglStr + "</td>" +
+            "<td style=\"padding:10px 12px;font-size:0.88rem;color:#1e293b;\">" + (k.uraian||"-") + "</td>" +
+            "<td style=\"padding:10px 12px;text-align:center;\">" +
+                "<span style=\"display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;" +
+                (masuk ? "background:#dcfce7;color:#059669;\">" : "background:#fee2e2;color:#dc2626;\">" ) +
+                (masuk ? "MASUK" : "KELUAR") + "</span></td>" +
+            "<td style=\"padding:10px 12px;text-align:right;font-weight:700;font-size:0.9rem;" +
+                (masuk ? "color:#059669;\">" : "color:#dc2626;\">" ) +
+                (masuk ? "+" : "-") + fmtRp(k.nominal) + "</td>" +
+            "<td style=\"padding:10px 12px;text-align:right;font-weight:700;font-size:0.9rem;color:" +
+                (runSaldo>=0?"#0f2848":"#dc2626") + ";\">" + fmtRp(runSaldo) + "</td>" +
+        "</tr>";
+    }).join("");
+    tableWrap.innerHTML = "<table style=\"width:100%;border-collapse:collapse;margin-top:14px;\">" +
+        "<thead><tr style=\"background:#1e3a5f;color:#fff;\">" +
+        "<th style=\"padding:11px 12px;text-align:left;font-size:0.78rem;font-weight:700;border-radius:8px 0 0 0;\">Tanggal</th>" +
+        "<th style=\"padding:11px 12px;text-align:left;font-size:0.78rem;font-weight:700;\">Uraian Transaksi</th>" +
+        "<th style=\"padding:11px 12px;text-align:center;font-size:0.78rem;font-weight:700;\">Tipe</th>" +
+        "<th style=\"padding:11px 12px;text-align:right;font-size:0.78rem;font-weight:700;\">Nominal</th>" +
+        "<th style=\"padding:11px 12px;text-align:right;font-size:0.78rem;font-weight:700;border-radius:0 8px 0 0;\">Saldo Berjalan</th>" +
+        "</tr></thead><tbody>" + rows + "</tbody></table>";
+};
+
+window.downloadRekapKasPDF = function() {
+    var selBulan = document.getElementById("rekap-kas-bulan");
+    var selTahun = document.getElementById("rekap-kas-tahun");
+    var BULAN_NAMES = ["","Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    var bulan = selBulan ? selBulan.value : "00";
+    var tahun = selTahun ? selTahun.value : new Date().getFullYear();
+    var periodeLabel = bulan === "00" ? "Tahun " + tahun : BULAN_NAMES[parseInt(bulan)] + " " + tahun;
+    var wrap = document.getElementById("rekap-kas-table-wrap");
+    var sum = document.getElementById("rekap-kas-summary");
+    var html = "<div style=\"font-family:Arial,sans-serif;padding:20px;\">" +
+        "<div style=\"text-align:center;border-bottom:3px solid #1e3a5f;padding-bottom:12px;margin-bottom:16px;\">" +
+        "<h2 style=\"margin:0;color:#1e3a5f;font-size:1.3rem;\">REKAPITULASI KAS RT 005 TEGALSARI</h2>" +
+        "<p style=\"margin:4px 0 0;color:#475569;font-size:0.9rem;\">Periode: " + periodeLabel + "</p></div>" +
+        (sum ? sum.outerHTML : "") + (wrap ? wrap.innerHTML : "") + "</div>";
+    if (typeof window.downloadPdfFromHtml === "function") {
+        window.downloadPdfFromHtml(html, "Rekap-Kas-RT005-" + periodeLabel.replace(/ /g,"_"));
+    } else {
+        Swal.fire("Info", "Fitur download PDF belum tersedia.", "info");
+    }
 };
 
 </script>
