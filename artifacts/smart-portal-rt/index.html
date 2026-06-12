@@ -3249,7 +3249,6 @@ html[data-theme="dark"] select option {
             <div id="sync-dot" style="width:12px; height:12px; border-radius:50%; background:var(--text-muted); transition:0.4s;"></div>
             <span id="sync-text" class="hide-on-mobile" style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">Siap</span>
         </div>
-            </button>
             <div id="realtime-clock" class="hide-on-mobile"><i class="fa-regular fa-clock"></i> <span></span></div>
             <button class="btn-logout btn-header-icon" onclick="logout()" title="Keluar">
                 <i class="fa-solid fa-right-from-bracket" style="color:var(--danger) !important;"></i> <span class="hide-on-mobile">Keluar</span>
@@ -3270,6 +3269,11 @@ html[data-theme="dark"] select option {
             <button class="admin-tab-btn" onclick="openWargaTab('warga-darurat')">
     <i class="fa-solid fa-truck-medical icon-darurat-glow" style="color:#ef4444 !important;"></i>
     <span style="color:#ef4444; font-weight:800;">Call Darurat</span>
+</button>
+
+           <button class="admin-tab-btn" onclick="openWargaTab('warga-agenda')">
+   <i class="fa-solid fa-calendar-days" style="color:#6366f1;"></i>
+   <span style="color:#6366f1; font-weight:700;">Agenda RT</span>
 </button>
 
            
@@ -3496,6 +3500,17 @@ html[data-theme="dark"] select option {
                 <div class="stats-grid" id="container-darurat-warga" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px;"></div>
             </div>
         </div>
+
+        <div id="warga-agenda" class="warga-tab-content">
+            <div class="card">
+                <div class="card-title-header">
+                    <h3><i class="fa-solid fa-calendar-days" style="color:#6366f1;"></i> Agenda &amp; Jadwal Kegiatan RT</h3>
+                </div>
+                <div id="warga-agenda-list" style="min-height:80px;">
+                    <div style="text-align:center;padding:24px;color:#94a3b8;"><i class="fa-solid fa-spinner fa-spin"></i> Memuat...</div>
+                </div>
+            </div>
+        </div>
     </div>
         <div id="view-bendahara" class="tab-view">
         <div class="admin-nav-tabs no-print" style="display:flex;align-items:center;gap:10px;">
@@ -3614,6 +3629,11 @@ html[data-theme="dark"] select option {
     <i class="fa-solid fa-truck-medical icon-darurat-glow" style="color:#ef4444 !important;"></i>
     <span style="color:#ef4444; font-weight:800;">Call Darurat</span>
 </button>
+
+       <button class="admin-tab-btn" onclick="openAdminTab('admin-agenda')">
+   <i class="fa-solid fa-calendar-days" style="color:#6366f1;"></i>
+   <span style="color:#6366f1; font-weight:700;">Agenda RT</span>
+</button>
         </div>
 
                 <div id="admin-datakk" class="admin-tab-content active">
@@ -3642,6 +3662,7 @@ html[data-theme="dark"] select option {
 <button class="btn-action" style="background:#059669;color:#fff;border:none;" onclick="exportExcelWarga()"><i class="fa-solid fa-file-excel"></i> Export Excel</button><button class="btn-action bg-green" onclick="tampilFormKKAdmin(true)"><i class="fa-solid fa-plus"></i> Tambah KK Manual</button>
                         </div>
                     </div>
+                    <div style="margin:10px 0 8px 0;display:flex;align-items:center;gap:8px;"><input id="warga-search-input" type="search" placeholder="&#128269; Cari nama, NIK, alamat..." style="flex:1;padding:8px 12px;border:1.5px solid #cbd5e1;border-radius:20px;font-size:0.9rem;outline:none;" oninput="quickFilterWarga(this.value)"><span id="warga-filter-info" style="font-size:0.8rem;color:#6366f1;font-weight:600;white-space:nowrap;"></span></div>
                     <div class="table-responsive">
                         <table class="data-table">
                             <thead><tr><th>No</th><th>Kepala Keluarga & NIK</th><th>Alamat / Blok</th><th>Anggota Keluarga</th><th>Aksi Otoritas</th></tr></thead>
@@ -3803,6 +3824,42 @@ html[data-theme="dark"] select option {
                 </form>
             </div>
             <div class="card"><div class="card-title-header"><h3><i class="fa-solid fa-address-book"></i> Daftar Kontak Siaga</h3></div><div class="table-responsive"><table><thead><tr><th>Instansi</th><th>No. Telp</th><th>WA / Maps</th><th>Aksi</th></tr></thead><tbody id="tbody-admin-darurat"></tbody></table></div></div>
+        </div>
+
+        <div id="admin-agenda" class="admin-tab-content">
+            <div class="card form-input-section" style="border-top:4px solid #6366f1;">
+                <div class="card-title-header">
+                    <h3><i class="fa-solid fa-calendar-plus" style="color:#6366f1;"></i> Tambah Agenda Kegiatan</h3>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group"><label>Judul Kegiatan</label><input type="text" id="agenda-judul" placeholder="Contoh: Rapat Bulanan RT 005" maxlength="100"></div>
+                    <div class="form-group"><label>Tanggal &amp; Waktu</label><input type="datetime-local" id="agenda-tgl"></div>
+                    <div class="form-group"><label>Lokasi</label><input type="text" id="agenda-lokasi" placeholder="Contoh: Balai RT 005, Rumah Pak Ketua..." maxlength="80"></div>
+                    <div class="form-group"><label>Jenis Kegiatan</label>
+                        <select id="agenda-jenis">
+                            <option value="Rapat">&#128101; Rapat Warga</option>
+                            <option value="Kerja Bakti">&#129527; Kerja Bakti</option>
+                            <option value="Arisan">&#127881; Arisan</option>
+                            <option value="Pengumuman">&#128227; Pengumuman</option>
+                            <option value="Lainnya">&#128197; Lainnya</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group"><label>Keterangan</label><textarea id="agenda-ket" rows="2" placeholder="Detail tambahan..." style="resize:vertical;"></textarea></div>
+                <div style="display:flex;gap:10px;margin-top:12px;">
+                    <button class="btn-submit bg-blue" style="max-width:220px;" onclick="simpanAgenda()"><i class="fa-solid fa-floppy-disk"></i> Simpan Agenda</button>
+                    <button class="btn-action bg-red" style="max-width:160px;display:none;" id="btn-cancel-agenda" onclick="batalEditAgenda()"><i class="fa-solid fa-xmark"></i> Batal Edit</button>
+                </div>
+            </div>
+            <div class="card" style="margin-top:16px;">
+                <div class="card-title-header">
+                    <h3><i class="fa-solid fa-list-check" style="color:#6366f1;"></i> Daftar Agenda</h3>
+                    <button class="btn-action bg-gold" onclick="loadAgendaAdmin()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                </div>
+                <div id="admin-agenda-list" style="min-height:60px;">
+                    <div style="text-align:center;padding:24px;color:#94a3b8;"><i class="fa-solid fa-spinner fa-spin"></i> Memuat...</div>
+                </div>
+            </div>
         </div>
 
         <div id="pengaturan" class="admin-tab-content">
@@ -5435,6 +5492,7 @@ html[data-theme="dark"] select option {
         'warga-koperasi':   function(){ if(typeof loadKoperasiData==='function') loadKoperasiData(); },
         'warga-struktur':   function(){ if(typeof loadPengurus==='function') loadPengurus(); },
         'warga-darurat':    function(){ if(typeof loadDaruratWarga==='function') loadDaruratWarga(); },
+        'warga-agenda':    function(){ if(typeof loadAgendaWarga==='function') loadAgendaWarga(); },
     };
     if(wLoaders[t]) wLoaders[t]();
 };
@@ -5471,6 +5529,7 @@ html[data-theme="dark"] select option {
         'admin-struktur':   function(){ if(typeof loadPengurus==='function') loadPengurus(); },
         'notulen':          function(){ if(typeof loadNotulenAdmin==='function') loadNotulenAdmin(); },
         'darurat':          function(){ if(typeof loadDaruratAdmin==='function') loadDaruratAdmin(); },
+        'admin-agenda':    function(){ if(typeof loadAgendaAdmin==='function') loadAgendaAdmin(); },
         'pengaturan':       function(){ if(typeof loadPengaturan==='function') loadPengaturan(); },
     };
     if(aLoaders[t]) aLoaders[t]();
@@ -7952,8 +8011,11 @@ window.loadDaruratWarga = function() {
             return;
         }
         container.innerHTML = data.map(function(d){
-            return '<div class="card" style="border-left:4px solid #dc2626;margin-bottom:12px;">' +
+            return '<div class="card" style="border-left:4px solid #dc2626;margin-bottom:12px;padding:14px 16px;">' +
+                '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">' +
                 '<b style="color:#dc2626;"><i class="fa-solid fa-triangle-exclamation"></i> '+(d.judul||d.jenis||'Darurat')+'</b>' +
+                ((d.telepon && d.telepon !== '-') ? '<button data-tel="'+d.telepon+'" onclick="copyTelDarurat(this.dataset.tel)" title="Salin nomor" style="background:none;border:1px solid #dc2626;border-radius:20px;padding:3px 10px;cursor:pointer;font-size:0.78rem;color:#dc2626;white-space:nowrap;"><i class="fa-solid fa-copy"></i> '+d.telepon+'</button>' : '') +
+                '</div>' +
                 '<p style="margin:6px 0 0;">'+(d.isi||d.keterangan||'-')+'</p>' +
                 '<small style="color:#94a3b8;">'+(d.tanggal||'')+'</small>' +
                 '</div>';
@@ -8025,6 +8087,659 @@ window.loadArsipBA = window.loadArsipBA || function() {
         console.log('[SmartPortal] db_darurat sudah ada (' + existing.length + ' data), skip injeksi.');
     }
 })();
+
+// ============================================================
+// PHASE 7 — BUG FIX BLOCK: 11 missing onclick functions + 3 new features
+// ============================================================
+
+// ─── 1. closeModalBaca ───────────────────────────────────────
+window.closeModalBaca = function() {
+    var m = document.getElementById('modal-baca');
+    if (m) m.classList.remove('show');
+};
+
+// ─── 2. simpanPasswordSistem ─────────────────────────────────
+window.simpanPasswordSistem = function() {
+    var pwAdmin     = (document.getElementById('set_pw_admin')     || {}).value || '';
+    var pwBendahara = (document.getElementById('set_pw_bendahara') || {}).value || '';
+    var pwKoperasi  = (document.getElementById('set_pw_koperasi')  || {}).value || '';
+    var pwWarga     = (document.getElementById('set_pw_warga')     || {}).value || '';
+    var db = JSON.parse(localStorage.getItem('db_passwords') || '{}');
+    if (pwAdmin)     db.admin     = pwAdmin;
+    if (pwBendahara) db.bendahara = pwBendahara;
+    if (pwKoperasi)  db.koperasi  = pwKoperasi;
+    if (pwWarga)     db.warga     = pwWarga;
+    if (!pwAdmin && !pwBendahara && !pwKoperasi && !pwWarga) {
+        if (window.Toast) Toast.fire({ icon:'warning', title:'Isi minimal satu field password.' });
+        return;
+    }
+    localStorage.setItem('db_passwords', JSON.stringify(db));
+    if (window.safeSet) safeSet('db_passwords', JSON.stringify(db));
+    if (window.Toast) Toast.fire({ icon:'success', title:'Password berhasil disimpan!', text:'Refresh halaman untuk menerapkan.' });
+    // Clear inputs
+    ['set_pw_admin','set_pw_bendahara','set_pw_koperasi','set_pw_warga']
+        .forEach(function(id){ var el = document.getElementById(id); if(el) el.value = ''; });
+};
+
+// ─── 3. exportData — download backup JSON dari PostgreSQL ─────
+window.exportData = function() {
+    if (window.Toast) Toast.fire({ icon:'info', title:'Mengambil data dari server...', timer:1500 });
+    fetch('/api/kv').then(function(r){ return r.json(); }).then(function(data) {
+        var rows = data.data || data || [];
+        var obj = {};
+        rows.forEach(function(row){ if(row.key && !['isLoggedIn','loggedInAs','loggedInWarga'].includes(row.key)) obj[row.key] = row.value; });
+        var blob = new Blob([JSON.stringify({
+            version: 2, exportedAt: new Date().toISOString(), source: 'SmartPortal RT 005',
+            data: obj, meta: { rowCount: Object.keys(obj).length }
+        }, null, 2)], { type: 'application/json' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'backup_rt005_' + new Date().toISOString().slice(0,10) + '.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        if (window.Toast) Toast.fire({ icon:'success', title:'Backup berhasil diunduh!' });
+    }).catch(function(err){
+        if (window.Toast) Toast.fire({ icon:'error', title:'Gagal mengambil data: ' + err.message });
+    });
+};
+
+// ─── 4. prosesImportData — restore dari JSON backup ──────────
+window.prosesImportData = function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+        try {
+            var parsed = JSON.parse(ev.target.result);
+            var obj = parsed.version === 2 ? parsed.data : parsed;
+            if (!obj || typeof obj !== 'object') throw new Error('Format tidak dikenali');
+            Swal.fire({
+                title: 'Restore Data?',
+                html: '<p>File: <b>' + file.name + '</b><br>Jumlah key: <b>' + Object.keys(obj).length + '</b></p><p style="color:#ef4444;font-size:0.85rem;"><i class="fa-solid fa-triangle-exclamation"></i> Data yang ada akan ditimpa oleh data backup.</p>',
+                icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya, Restore!',
+                cancelButtonText: 'Batal', confirmButtonColor: '#ef4444'
+            }).then(function(r){ if (!r.isConfirmed) return;
+                var pairs = Object.entries(obj).map(function(kv){ return {key:kv[0], value:kv[1]}; });
+                fetch('/api/kv', { method:'PUT', headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify({ pairs: pairs })
+                }).then(function(res){ return res.json(); }).then(function(){
+                    // Also update localStorage
+                    Object.entries(obj).forEach(function(kv){ localStorage.setItem(kv[0], kv[1]); });
+                    Swal.fire('Berhasil!','Data berhasil di-restore dari backup. Halaman akan di-refresh.','success')
+                        .then(function(){ setTimeout(function(){ location.reload(); }, 800); });
+                }).catch(function(err){ Swal.fire('Error', 'Gagal restore: ' + err.message, 'error'); });
+            });
+        } catch(err) { Swal.fire('Format Salah','Bukan file backup yang valid: ' + err.message,'error'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+};
+
+// ─── 5. exportExcelWarga — export KK to Excel ─────────────────
+window.exportExcelWarga = function() {
+    var data = JSON.parse(localStorage.getItem('db_warga') || '[]');
+    if (!data.length) { if(window.Toast) Toast.fire({icon:'warning',title:'Belum ada data warga.'}); return; }
+    if (!window.XLSX) { if(window.Toast) Toast.fire({icon:'error',title:'Library XLSX belum dimuat.'}); return; }
+    var rows = [['No','Nama KK','NIK','Alamat/Blok RT','No. HP','Status','Jumlah Anggota']];
+    data.forEach(function(w, i){
+        var anggota = JSON.parse(localStorage.getItem('db_anggota_' + w.id) || '[]').length;
+        rows.push([i+1, w.nama||'-', w.nik||'-', (w.alamat||'-'), w.hp||'-', w.status||'Aktif', anggota]);
+    });
+    var ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [{wch:5},{wch:30},{wch:20},{wch:25},{wch:15},{wch:10},{wch:15}];
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Data Warga RT005');
+    XLSX.writeFile(wb, 'data_warga_rt005_' + new Date().toISOString().slice(0,10) + '.xlsx');
+    if(window.Toast) Toast.fire({icon:'success', title:'Export berhasil!'});
+};
+
+// ─── 6. exportExcelIuran — export iuran pribadi warga ─────────
+window.exportExcelIuran = function() {
+    // Ambil data dari tabel yang sudah di-render
+    var tbody = document.getElementById('tbody-iuran-pribadi');
+    if (!tbody || !tbody.rows.length) { if(window.Toast) Toast.fire({icon:'warning',title:'Belum ada data iuran.'}); return; }
+    if (!window.XLSX) { if(window.Toast) Toast.fire({icon:'error',title:'Library XLSX belum dimuat.'}); return; }
+    var rows = [['Bulan Periode','Tanggal Tercatat','Nominal','Status Validasi']];
+    Array.from(tbody.rows).forEach(function(tr){
+        var cells = Array.from(tr.cells).map(function(td){ return td.innerText.trim(); });
+        rows.push(cells);
+    });
+    var ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [{wch:18},{wch:20},{wch:15},{wch:18}];
+    var wb = XLSX.utils.book_new();
+    var nama = (window.loggedInWarga && window.loggedInWarga.nama) ? window.loggedInWarga.nama.replace(/\s+/g,'_') : 'warga';
+    XLSX.utils.book_append_sheet(wb, ws, 'Iuran ' + nama);
+    XLSX.writeFile(wb, 'riwayat_iuran_' + nama + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
+    if(window.Toast) Toast.fire({icon:'success', title:'Export iuran berhasil!'});
+};
+
+// ─── 7. hapusDarurat(id) — hapus kontak darurat ───────────────
+window.hapusDarurat = function(id) {
+    Swal.fire({
+        title:'Hapus Kontak?', text:'Kontak ini akan dihapus permanen.',
+        icon:'warning', showCancelButton:true,
+        confirmButtonText:'Ya, Hapus', cancelButtonText:'Batal',
+        confirmButtonColor:'#ef4444'
+    }).then(function(r){ if(!r.isConfirmed) return;
+        var db = JSON.parse(localStorage.getItem('db_darurat') || '[]');
+        db = db.filter(function(d){ return d.id !== id; });
+        localStorage.setItem('db_darurat', JSON.stringify(db));
+        if (window.safeSet) safeSet('db_darurat', JSON.stringify(db));
+        if (window.Toast) Toast.fire({icon:'success', title:'Kontak darurat dihapus.'});
+        if (typeof loadDaruratAdmin === 'function') loadDaruratAdmin();
+        if (typeof loadDaruratWarga === 'function') loadDaruratWarga();
+    });
+};
+
+// ─── 8. refreshInfoAplikasi ───────────────────────────────────
+window.refreshInfoAplikasi = function() {
+    var btn = document.querySelector('[onclick="refreshInfoAplikasi()"]');
+    if(btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memuat...'; }
+    fetch('/api/audit').then(function(r){ return r.json(); }).then(function(d){
+        var syncEl = document.getElementById('info-last-sync');
+        var sseEl  = document.getElementById('info-sse-status');
+        if(syncEl) syncEl.textContent = d.serverTime ? new Date(d.serverTime).toLocaleTimeString('id-ID') : '-';
+        if(sseEl)  sseEl.textContent  = (d.sseSubscribers || 0) + ' perangkat aktif';
+        // Update row count badge if available
+        var countEl = document.getElementById('info-row-count');
+        if(countEl && d.rowCount !== undefined) countEl.textContent = d.rowCount + ' key';
+        if(window.Toast) Toast.fire({icon:'success',title:'Info aplikasi diperbarui!', timer:1500});
+    }).catch(function(err){
+        if(window.Toast) Toast.fire({icon:'error',title:'Gagal ambil info: '+err.message});
+    }).finally(function(){
+        if(btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Refresh Info'; }
+    });
+};
+
+// ─── 9. refreshPushCount ─────────────────────────────────────
+window.refreshPushCount = function() {
+    fetch('/api/push/count').then(function(r){ return r.json(); }).then(function(d){
+        var el = document.getElementById('push-sub-count');
+        var count = d.count || 0;
+        if(el) el.textContent = count + ' subscriber';
+        if(window.Toast) Toast.fire({icon:'info',title: count + ' perangkat berlangganan notifikasi.', timer:1800});
+    }).catch(function(){
+        if(window.Toast) Toast.fire({icon:'error',title:'Gagal ambil jumlah subscriber.'});
+    });
+};
+
+// ─── 10. kirimPushNotifikasi ──────────────────────────────────
+window.kirimPushNotifikasi = function() {
+    var title = (document.getElementById('push-title') || {}).value || '';
+    var body  = (document.getElementById('push-body')  || {}).value || '';
+    if (!title.trim() || !body.trim()) {
+        if(window.Toast) Toast.fire({icon:'warning',title:'Isi Judul dan Pesan terlebih dahulu.'});
+        return;
+    }
+    var btn = document.querySelector('[onclick="kirimPushNotifikasi()"]');
+    if(btn){ btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...'; }
+    fetch('/api/push/send', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ title: title, body: body, icon: '/Lambang_Kota_Semarang.png', url: '/' })
+    }).then(function(r){ return r.json(); }).then(function(d){
+        Swal.fire({
+            icon:'success', title:'Notifikasi Terkirim!',
+            html:'<b>' + (d.sent||0) + '</b> perangkat berhasil, <b>' + (d.failed||0) + '</b> gagal.<br><small>Subscriber tidak aktif dihapus otomatis.</small>'
+        });
+        // Clear form
+        ['push-title','push-body'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+        refreshPushCount();
+    }).catch(function(err){
+        Swal.fire('Gagal','Notifikasi gagal dikirim: '+err.message,'error');
+    }).finally(function(){
+        if(btn){ btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Kirim ke Semua Perangkat'; }
+    });
+};
+
+// ─── 11. togglePushSubscription (warga) ───────────────────────
+window.togglePushSubscription = function() {
+    var btn = document.getElementById('btn-toggle-push');
+    var statusEl = document.getElementById('push-status-warga');
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        Swal.fire('Tidak Didukung','Browser Anda tidak mendukung notifikasi push.','warning'); return;
+    }
+    navigator.serviceWorker.ready.then(function(reg) {
+        return reg.pushManager.getSubscription().then(function(existing) {
+            if (existing) {
+                // Unsubscribe
+                return existing.unsubscribe().then(function(){
+                    return fetch('/api/push/unsubscribe', {
+                        method:'DELETE', headers:{'Content-Type':'application/json'},
+                        body: JSON.stringify({ endpoint: existing.endpoint })
+                    });
+                }).then(function(){
+                    if(btn){ btn.innerHTML='<i class="fa-solid fa-bell-slash"></i> Aktifkan Notifikasi'; btn.style.background='#7c3aed'; }
+                    if(statusEl) statusEl.textContent = 'Nonaktif — klik tombol untuk mengaktifkan kembali';
+                    if(window.Toast) Toast.fire({icon:'info', title:'Notifikasi push dinonaktifkan.'});
+                });
+            } else {
+                // Subscribe — get VAPID key first
+                return fetch('/api/push/vapid-public-key').then(function(r){ return r.json(); }).then(function(d){
+                    var vapidKey = d.publicKey || d.vapidPublicKey || d.key;
+                    // Convert base64 to Uint8Array
+                    var raw = atob(vapidKey.replace(/-/g,'+').replace(/_/g,'/'));
+                    var key = new Uint8Array(new ArrayBuffer(raw.length));
+                    for(var i=0;i<raw.length;i++) key[i]=raw.charCodeAt(i);
+                    return reg.pushManager.subscribe({
+                        userVisibleOnly: true, applicationServerKey: key
+                    }).then(function(sub){
+                        var wargaNama = (window.loggedInWarga && window.loggedInWarga.nama) ? window.loggedInWarga.nama : 'Warga';
+                        return fetch('/api/push/subscribe', {
+                            method:'POST', headers:{'Content-Type':'application/json'},
+                            body: JSON.stringify(sub.toJSON())
+                        }).then(function(){
+                            if(btn){ btn.innerHTML='<i class="fa-solid fa-bell"></i> Nonaktifkan Notifikasi'; btn.style.background='#10b981'; }
+                            if(statusEl) statusEl.textContent = 'Aktif di perangkat ini ✓';
+                            Toast.fire({icon:'success', title:'Notifikasi push berhasil diaktifkan!'});
+                        });
+                    });
+                });
+            }
+        });
+    }).catch(function(err){
+        var msg = err.name === 'NotAllowedError'
+            ? 'Izin notifikasi ditolak. Aktifkan izin di pengaturan browser.'
+            : 'Gagal: ' + err.message;
+        Swal.fire('Gagal', msg, 'error');
+    });
+};
+
+// ─── 12. bukaMenuResetData ────────────────────────────────────
+window.bukaMenuResetData = function() {
+    Swal.fire({
+        title: '<i class="fa-solid fa-trash-can" style="color:#ef4444;"></i> Hapus / Reset Data',
+        html: `
+            <div style="text-align:left;font-size:0.9rem;">
+            <p style="color:#64748b;margin-bottom:12px;">Pilih data yang akan dihapus. Tindakan ini <b>tidak dapat dibatalkan</b>.</p>
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;">
+                <input type="checkbox" id="reset-warga" style="width:16px;height:16px;"> Data Warga (db_warga)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;">
+                <input type="checkbox" id="reset-kas" style="width:16px;height:16px;"> Data Kas RT (db_kas)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;">
+                <input type="checkbox" id="reset-iuran" style="width:16px;height:16px;"> Data Iuran (db_iuran)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;">
+                <input type="checkbox" id="reset-surat" style="width:16px;height:16px;"> Data Surat (riwayatSurat)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;">
+                <input type="checkbox" id="reset-aduan" style="width:16px;height:16px;"> Data Aduan (db_aduan)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;">
+                <input type="checkbox" id="reset-berita" style="width:16px;height:16px;"> Data Berita/Publikasi (db_berita)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="checkbox" id="reset-all" style="width:16px;height:16px;accent-color:#ef4444;"> <b style="color:#ef4444;">Reset Semua Data (Factory Reset)</b>
+            </label>
+            </div>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-trash-can"></i> Hapus Terpilih',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#ef4444',
+        didOpen: function(){
+            document.getElementById('reset-all').addEventListener('change', function(){
+                ['reset-warga','reset-kas','reset-iuran','reset-surat','reset-aduan','reset-berita']
+                    .forEach(function(id){ var el=document.getElementById(id); if(el) el.checked = document.getElementById('reset-all').checked; });
+            });
+        }
+    }).then(function(result){
+        if (!result.isConfirmed) return;
+        var keys = [];
+        if(document.getElementById('reset-warga') && document.getElementById('reset-warga').checked) keys.push('db_warga');
+        if(document.getElementById('reset-kas') && document.getElementById('reset-kas').checked) keys.push('db_kas');
+        if(document.getElementById('reset-iuran') && document.getElementById('reset-iuran').checked) keys.push('db_iuran');
+        if(document.getElementById('reset-surat') && document.getElementById('reset-surat').checked) keys.push('riwayatSurat','dataSurat');
+        if(document.getElementById('reset-aduan') && document.getElementById('reset-aduan').checked) keys.push('db_aduan');
+        if(document.getElementById('reset-berita') && document.getElementById('reset-berita').checked) keys.push('db_berita');
+        if (!keys.length) { Toast.fire({icon:'info',title:'Tidak ada yang dipilih.'}); return; }
+        // Delete from server
+        var delPromises = keys.map(function(k){
+            return fetch('/api/kv?key=' + encodeURIComponent(k), {method:'DELETE'})
+                .then(function(){ localStorage.removeItem(k); })
+                .catch(function(){ localStorage.removeItem(k); });
+        });
+        Promise.all(delPromises).then(function(){
+            Swal.fire('Selesai!', keys.length + ' data berhasil dihapus. Halaman akan di-refresh.', 'success')
+                .then(function(){ setTimeout(function(){ location.reload(); }, 1000); });
+        });
+    });
+};
+
+// ─── 13. initPushStatusWarga — inisialisasi status tombol notif ─
+window.initPushStatusWarga = function() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    navigator.serviceWorker.ready.then(function(reg){
+        return reg.pushManager.getSubscription();
+    }).then(function(sub){
+        var btn = document.getElementById('btn-toggle-push');
+        var statusEl = document.getElementById('push-status-warga');
+        if (sub) {
+            if(btn){ btn.innerHTML='<i class="fa-solid fa-bell"></i> Nonaktifkan Notifikasi'; btn.style.background='#10b981'; }
+            if(statusEl) statusEl.textContent = 'Aktif di perangkat ini ✓';
+        } else {
+            if(btn){ btn.innerHTML='<i class="fa-solid fa-bell-slash"></i> Aktifkan Notifikasi'; btn.style.background='#7c3aed'; }
+            if(statusEl) statusEl.textContent = 'Belum aktif di perangkat ini';
+        }
+    }).catch(function(){});
+};
+
+// Auto-init push status saat tab warga-profil dibuka
+(function(){
+    var origOpen = window.openWargaTab;
+    if (origOpen) {
+        window.openWargaTab = function(tab) {
+            origOpen.apply(this, arguments);
+            if (tab === 'warga-profil') setTimeout(initPushStatusWarga, 200);
+        };
+    }
+    // Also init on DOMContentLoaded if profil is active
+    setTimeout(initPushStatusWarga, 1000);
+})();
+
+// ─── auto-call refreshPushCount when push accordion opens ──────
+(function(){
+    var origToggleAcc = window.toggleAcc;
+    if (origToggleAcc) {
+        window.toggleAcc = function(id, el) {
+            origToggleAcc.apply(this, arguments);
+            if (id === 'acc-push') setTimeout(refreshPushCount, 200);
+            if (id === 'acc-info' || id === 'acc-aplikasi') setTimeout(refreshInfoAplikasi, 200);
+        };
+    }
+})();
+
+// ============================================================
+// FEATURE A — Warga Quick Search Filter (admin Data KK)
+// ============================================================
+window.quickFilterWarga = function(query) {
+    var q = (query || '').toLowerCase().trim();
+    var rows = document.querySelectorAll('#body-tabel-kk-admin tr');
+    var count = 0;
+    rows.forEach(function(tr){
+        var text = tr.innerText.toLowerCase();
+        var show = !q || text.includes(q);
+        tr.style.display = show ? '' : 'none';
+        if (show) count++;
+    });
+    var info = document.getElementById('warga-filter-info');
+    if(info) info.textContent = q ? ('Menampilkan ' + count + ' dari ' + rows.length + ' KK') : '';
+};
+
+// ============================================================
+// FEATURE B — Keyboard shortcut Ctrl+K global search
+// ============================================================
+(function(){
+    document.addEventListener('keydown', function(e){
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            // If admin portal is open, focus search box
+            var adminView = document.getElementById('view-admin');
+            if (adminView && adminView.style.display !== 'none') {
+                var srchInput = document.getElementById('admin-global-search');
+                if (srchInput) { srchInput.focus(); srchInput.select(); return; }
+            }
+            // Otherwise show quick search popup
+            Swal.fire({
+                title: '<i class="fa-solid fa-magnifying-glass"></i> Cari Cepat',
+                html: '<input id="quick-search-input" type="text" placeholder="Nama warga, bulan iuran, nomor surat..." style="width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:8px;font-size:1rem;">',
+                showConfirmButton: false, showCloseButton: true,
+                didOpen: function(){ 
+                    document.getElementById('quick-search-input').focus();
+                    document.getElementById('quick-search-input').addEventListener('input', function(){
+                        var q = this.value.toLowerCase();
+                        // Search warga
+                        var warga = JSON.parse(localStorage.getItem('db_warga') || '[]');
+                        var hasil = warga.filter(function(w){ return (w.nama||'').toLowerCase().includes(q) || (w.nik||'').includes(q) || (w.alamat||'').toLowerCase().includes(q); });
+                        var result = document.getElementById('quick-search-result');
+                        if(!result){ result=document.createElement('div'); result.id='quick-search-result'; result.style.cssText='margin-top:10px;max-height:200px;overflow-y:auto;text-align:left;'; document.getElementById('quick-search-input').parentNode.appendChild(result); }
+                        if(q.length < 2){ result.innerHTML=''; return; }
+                        if(!hasil.length){ result.innerHTML='<p style="color:#94a3b8;text-align:center;padding:10px;">Tidak ditemukan.</p>'; return; }
+                        result.innerHTML = hasil.slice(0,8).map(function(w){ return '<div style="padding:8px 12px;border-bottom:1px solid #f1f5f9;cursor:pointer;border-radius:6px;" onclick="Swal.close()">' + '<b>' + (w.nama||'-') + '</b> <span style="color:#94a3b8;font-size:0.82rem;">' + (w.alamat||'-') + '</span></div>'; }).join('');
+                    });
+                }
+            });
+        }
+    });
+})();
+
+// ============================================================
+// FEATURE C — Dashboard Stats Auto-Refresh (setiap 60 detik)
+// ============================================================
+(function(){
+    function refreshDashboardStats() {
+        // Hitung dari localStorage
+        var warga  = JSON.parse(localStorage.getItem('db_warga')  || '[]').length;
+        var kas    = JSON.parse(localStorage.getItem('db_kas')    || '[]').length;
+        var aduan  = JSON.parse(localStorage.getItem('db_aduan')  || '[]').filter(function(a){ return a.status !== 'selesai'; }).length;
+        var surat  = JSON.parse(localStorage.getItem('riwayatSurat') || '[]').filter(function(s){ return s.status === 'menunggu'; }).length;
+        // Update elemen dashboard jika ada
+        function trySet(id, val) { var el=document.getElementById(id); if(el) el.textContent=val; }
+        trySet('dash-total-warga',   warga  + ' KK');
+        trySet('dash-total-kas',     kas    + ' transaksi');
+        trySet('dash-aduan-aktif',   aduan  + ' aduan aktif');
+        trySet('dash-surat-pending', surat  + ' surat pending');
+    }
+    // Run once after all data is loaded
+    setTimeout(refreshDashboardStats, 2000);
+    setInterval(refreshDashboardStats, 60000);
+    // Re-run on data sync
+    var origRefresh = window.runRefreshers;
+    if (typeof origRefresh === 'function') {
+        window.runRefreshers = function() {
+            origRefresh.apply(this, arguments);
+            setTimeout(refreshDashboardStats, 500);
+        };
+    }
+})();
+
+
+// openBenTab fallback (inline mini-bendahara tabs)
+if (typeof window.openBenTab === 'undefined') {
+    window.openBenTab = function(tabId) {
+        var benView = document.getElementById('view-bendahara');
+        if (benView && benView.style.display !== 'none') {
+            document.querySelectorAll('#view-bendahara .ben-tab-content').forEach(function(el){ el.style.display = 'none'; });
+            document.querySelectorAll('#view-bendahara .admin-tab-btn').forEach(function(el){ el.classList.remove('active'); });
+            var target = document.getElementById(tabId);
+            if (target) { target.style.display = 'block'; }
+            document.querySelectorAll('.admin-tab-btn').forEach(function(btn){
+                var oc = btn.getAttribute('onclick') || '';
+                if (oc.indexOf(tabId) !== -1) btn.classList.add('active');
+            });
+        }
+    };
+}
+
+
+// ============================================================
+// SCROLL-TO-TOP BUTTON WIRING
+// ============================================================
+(function(){
+    var scrollBtn = document.getElementById('btn-scroll-top');
+    if (!scrollBtn) return;
+    window.addEventListener('scroll', function(){
+        if (window.scrollY > 300) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
+    }, { passive: true });
+})();
+
+// ============================================================
+// FEATURE: AGENDA RT
+// ============================================================
+var _editAgendaId = null;
+
+window.simpanAgenda = function() {
+    var judul  = (document.getElementById('agenda-judul') || {}).value || '';
+    var tgl    = (document.getElementById('agenda-tgl')   || {}).value || '';
+    var lokasi = (document.getElementById('agenda-lokasi')|| {}).value || '';
+    var jenis  = (document.getElementById('agenda-jenis') || {}).value || 'Lainnya';
+    var ket    = (document.getElementById('agenda-ket')   || {}).value || '';
+    if (!judul.trim() || !tgl) {
+        if(window.Toast) Toast.fire({icon:'warning',title:'Isi Judul dan Tanggal terlebih dahulu.'});
+        return;
+    }
+    var db = JSON.parse(localStorage.getItem('db_agenda') || '[]');
+    if (_editAgendaId !== null) {
+        // Edit existing
+        db = db.map(function(a){ return a.id === _editAgendaId ? Object.assign({}, a, {judul:judul,tgl:tgl,lokasi:lokasi,jenis:jenis,ket:ket}) : a; });
+        _editAgendaId = null;
+        var cancelBtn = document.getElementById('btn-cancel-agenda');
+        if(cancelBtn) cancelBtn.style.display = 'none';
+    } else {
+        var newId = db.length ? Math.max.apply(null, db.map(function(a){return a.id;})) + 1 : 1;
+        db.push({id:newId, judul:judul, tgl:tgl, lokasi:lokasi, jenis:jenis, ket:ket, createdAt: new Date().toISOString()});
+    }
+    // Sort by date ascending
+    db.sort(function(a,b){ return new Date(a.tgl) - new Date(b.tgl); });
+    localStorage.setItem('db_agenda', JSON.stringify(db));
+    if(window.safeSet) safeSet('db_agenda', JSON.stringify(db));
+    ['agenda-judul','agenda-tgl','agenda-lokasi','agenda-ket'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+    var jenisEl = document.getElementById('agenda-jenis'); if(jenisEl) jenisEl.selectedIndex = 0;
+    if(window.Toast) Toast.fire({icon:'success',title:'Agenda disimpan!'});
+    loadAgendaAdmin();
+    loadAgendaWarga();
+};
+
+window.batalEditAgenda = function() {
+    _editAgendaId = null;
+    ['agenda-judul','agenda-tgl','agenda-lokasi','agenda-ket'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+    var cancelBtn = document.getElementById('btn-cancel-agenda'); if(cancelBtn) cancelBtn.style.display='none';
+};
+
+window.editAgendaItem = function(id) {
+    var db = JSON.parse(localStorage.getItem('db_agenda') || '[]');
+    var a = db.find(function(x){ return x.id === id; });
+    if (!a) return;
+    _editAgendaId = id;
+    var set = function(eid, val){ var el=document.getElementById(eid); if(el) el.value = val||''; };
+    set('agenda-judul', a.judul); set('agenda-tgl', a.tgl); set('agenda-lokasi', a.lokasi);
+    set('agenda-ket', a.ket);
+    var jenisEl = document.getElementById('agenda-jenis');
+    if(jenisEl) { Array.from(jenisEl.options).forEach(function(o,i){ if(o.value===a.jenis) jenisEl.selectedIndex=i; }); }
+    var cancelBtn = document.getElementById('btn-cancel-agenda'); if(cancelBtn) cancelBtn.style.display='';
+    openAdminTab('admin-agenda');
+    document.getElementById('agenda-judul').scrollIntoView({behavior:'smooth'});
+};
+
+window.hapusAgendaItem = function(id) {
+    Swal.fire({title:'Hapus Agenda?',text:'Agenda ini akan dihapus.',icon:'warning',
+        showCancelButton:true,confirmButtonText:'Hapus',confirmButtonColor:'#ef4444',cancelButtonText:'Batal'
+    }).then(function(r){ if(!r.isConfirmed) return;
+        var db = JSON.parse(localStorage.getItem('db_agenda') || '[]').filter(function(a){ return a.id !== id; });
+        localStorage.setItem('db_agenda', JSON.stringify(db));
+        if(window.safeSet) safeSet('db_agenda', JSON.stringify(db));
+        Toast.fire({icon:'success',title:'Agenda dihapus.'});
+        loadAgendaAdmin(); loadAgendaWarga();
+    });
+};
+
+var JENIS_ICON = {Rapat:'&#128101;','Kerja Bakti':'&#129527;',Arisan:'&#127881;',Pengumuman:'&#128227;',Lainnya:'&#128197;'};
+var JENIS_COLOR = {Rapat:'#3b82f6','Kerja Bakti':'#10b981',Arisan:'#f59e0b',Pengumuman:'#8b5cf6',Lainnya:'#64748b'};
+
+window.loadAgendaAdmin = function() {
+    var el = document.getElementById('admin-agenda-list');
+    if (!el) return;
+    var db = JSON.parse(localStorage.getItem('db_agenda') || '[]');
+    if (!db.length) {
+        el.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:20px;"><i class="fa-solid fa-calendar-xmark"></i> Belum ada agenda. Tambahkan agenda di atas.</p>';
+        return;
+    }
+    var now = new Date();
+    el.innerHTML = db.map(function(a){
+        var d = new Date(a.tgl);
+        var isPast = d < now;
+        var dateStr = d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+        var timeStr = d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+        var color = JENIS_COLOR[a.jenis] || '#64748b';
+        var icon  = JENIS_ICON[a.jenis]  || '&#128197;';
+        return '<div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid #f1f5f9;opacity:' + (isPast?'0.55':'1') + ';">' +
+            '<div style="min-width:44px;height:44px;border-radius:10px;background:' + color + '1a;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">' + icon + '</div>' +
+            '<div style="flex:1;">' +
+                '<div style="font-weight:700;color:' + (isPast?'#94a3b8':color) + ';font-size:0.95rem;">' + (a.judul||'-') + (isPast?' <span style="background:#f1f5f9;padding:2px 7px;border-radius:10px;font-size:0.72rem;font-weight:600;color:#94a3b8;">Selesai</span>':'') + '</div>' +
+                '<div style="font-size:0.82rem;color:#64748b;margin-top:3px;"><i class="fa-regular fa-calendar"></i> ' + dateStr + ' &bull; ' + timeStr + '</div>' +
+                (a.lokasi ? '<div style="font-size:0.82rem;color:#64748b;"><i class="fa-solid fa-location-dot"></i> ' + a.lokasi + '</div>' : '') +
+                (a.ket ? '<div style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">' + a.ket + '</div>' : '') +
+            '</div>' +
+            '<div style="display:flex;gap:6px;">' +
+                '<button class="btn-table btn-tbl-edit" onclick="editAgendaItem(' + a.id + ')" title="Edit"><i class="fa-solid fa-pen"></i></button>' +
+                '<button class="btn-table btn-tbl-del" onclick="hapusAgendaItem(' + a.id + ')" title="Hapus"><i class="fa-solid fa-trash"></i></button>' +
+            '</div>' +
+            '</div>';
+    }).join('');
+};
+
+window.loadAgendaWarga = function() {
+    var el = document.getElementById('warga-agenda-list');
+    if (!el) return;
+    var db = JSON.parse(localStorage.getItem('db_agenda') || '[]');
+    var now = new Date();
+    // Show all, future first then past
+    var upcoming = db.filter(function(a){ return new Date(a.tgl) >= now; });
+    var past     = db.filter(function(a){ return new Date(a.tgl) < now; });
+    var sorted   = upcoming.concat(past);
+    if (!sorted.length) {
+        el.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:24px;"><i class="fa-solid fa-calendar-xmark" style="font-size:2rem;display:block;margin-bottom:8px;"></i> Belum ada agenda kegiatan RT.</p>';
+        return;
+    }
+    el.innerHTML = sorted.map(function(a){
+        var d = new Date(a.tgl);
+        var isPast = d < now;
+        var dateStr = d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+        var timeStr = d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+        var color = JENIS_COLOR[a.jenis] || '#64748b';
+        var icon  = JENIS_ICON[a.jenis]  || '&#128197;';
+        return '<div style="display:flex;align-items:flex-start;gap:14px;padding:14px;border-radius:12px;background:' + (isPast?'#f8fafc':'linear-gradient(135deg,' + color + '0d,' + color + '05)') + ';border:1px solid ' + (isPast?'#f1f5f9':color+'33') + ';margin-bottom:12px;">' +
+            '<div style="min-width:48px;height:48px;border-radius:12px;background:' + color + (isPast?'22':'33') + ';display:flex;align-items:center;justify-content:center;font-size:1.5rem;">' + icon + '</div>' +
+            '<div style="flex:1;">' +
+                '<div style="font-weight:800;color:' + (isPast?'#94a3b8':color) + ';font-size:1rem;">' + (a.judul||'-') + (isPast?' <span style="background:#e2e8f0;padding:2px 8px;border-radius:10px;font-size:0.72rem;color:#94a3b8;">Selesai</span>':'') + '</div>' +
+                '<div style="font-size:0.85rem;color:' + (isPast?'#cbd5e1':'#64748b') + ';margin-top:4px;"><i class="fa-regular fa-calendar"></i> ' + dateStr + ' &bull; <i class="fa-regular fa-clock"></i> ' + timeStr + '</div>' +
+                (a.lokasi ? '<div style="font-size:0.85rem;color:#64748b;margin-top:2px;"><i class="fa-solid fa-location-dot" style="color:' + color + ';"></i> ' + a.lokasi + '</div>' : '') +
+                (a.ket ? '<div style="font-size:0.82rem;color:#94a3b8;margin-top:6px;background:#fff;padding:8px 12px;border-radius:8px;border-left:3px solid ' + color + ';">' + a.ket + '</div>' : '') +
+            '</div></div>';
+    }).join('');
+};
+
+// Hook agenda load into tab open
+(function(){
+    var origOpenWargaTab = window.openWargaTab;
+    if (origOpenWargaTab) {
+        window.openWargaTab = function(tab) {
+            origOpenWargaTab.apply(this, arguments);
+            if (tab === 'warga-agenda') setTimeout(loadAgendaWarga, 50);
+        };
+    }
+    var origOpenAdminTab = window.openAdminTab;
+    if (origOpenAdminTab) {
+        window.openAdminTab = function(tab) {
+            origOpenAdminTab.apply(this, arguments);
+            if (tab === 'admin-agenda') setTimeout(loadAgendaAdmin, 50);
+        };
+    }
+})();
+
+// ============================================================
+// COPY TELEFON DARURAT
+// ============================================================
+window.copyTelDarurat = function(tel) {
+    if (!tel || tel === '-') return;
+    navigator.clipboard.writeText(tel).then(function(){
+        if(window.Toast) Toast.fire({icon:'success', title:'Nomor ' + tel + ' disalin!', timer:1500});
+    }).catch(function(){
+        // Fallback
+        var ta = document.createElement('textarea');
+        ta.value = tel; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta);
+        if(window.Toast) Toast.fire({icon:'success', title:'Nomor ' + tel + ' disalin!', timer:1500});
+    });
+};
+
 </script>
 
 </body>

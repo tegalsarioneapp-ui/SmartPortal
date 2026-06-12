@@ -1,0 +1,2 @@
+- [Phase 7 bug fixes](phase7-fixes.md) — 11 missing onclick functions added + stray </button> removed; injected code must use \r\n endings to avoid browser/Node line-count mismatch
+- [JS injection pattern](js-injection-pattern.md) — always inject multi-line JS blocks into index.html as individual \r\n-split lines, never as a single multiline string with \n — or the orphan-line replacement bug recurs
