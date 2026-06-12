@@ -2453,42 +2453,44 @@ nav.nav-tabs.hidden-footer {
 
 /* === A) RESTORE legacy "pull-tab" hide/show toggle ============ */
 /* Override v7 that disabled the tab. Selectors are more specific. */
-.admin-nav-tabs .pull-tab-bca,
-.nav-tabs .pull-tab-bca {
-  display: flex !important;
-  position: absolute !important;
-  top: -30px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 64px !important;
-  height: 30px !important;
-  background: var(--navy-dark, #001f5b) !important;
-  border: 3px solid var(--gold-luxury, #f59e0b) !important;
-  border-bottom: none !important;
-  border-radius: 18px 18px 0 0 !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: var(--gold-luxury, #f59e0b) !important;
-  font-size: 1.1rem !important;
-  cursor: pointer !important;
-  z-index: 1001 !important;
-  box-shadow: 0 -4px 10px rgba(0,0,0,0.25) !important;
-}
-/* When the user collapses the bar, slide the whole bar down. The
-   pull-tab is positioned at top:-30px so it sticks up above the screen
-   bottom edge as a 30px handle the user can tap to bring it back. */
-.admin-nav-tabs.hidden-footer,
-.nav-tabs.hidden-footer,
-nav.admin-nav-tabs.hidden-footer,
-nav.nav-tabs.hidden-footer {
-  transform: translateY(100%) !important;
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.55s ease !important;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.18) !important;
-}
-.admin-nav-tabs.hidden-footer .pull-tab-bca,
-.nav-tabs.hidden-footer  .pull-tab-bca {
-  /* Keep the handle visible and centered when collapsed */
-  pointer-events: auto !important;
+@media (max-width: 768px) {
+  .admin-nav-tabs .pull-tab-bca,
+  .nav-tabs .pull-tab-bca {
+    display: flex !important;
+    position: absolute !important;
+    top: -30px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 64px !important;
+    height: 30px !important;
+    background: var(--navy-dark, #001f5b) !important;
+    border: 3px solid var(--gold-luxury, #f59e0b) !important;
+    border-bottom: none !important;
+    border-radius: 18px 18px 0 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--gold-luxury, #f59e0b) !important;
+    font-size: 1.1rem !important;
+    cursor: pointer !important;
+    z-index: 1001 !important;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.25) !important;
+  }
+  /* When the user collapses the bar, slide the whole bar down. The
+     pull-tab is positioned at top:-30px so it sticks up above the screen
+     bottom edge as a 30px handle the user can tap to bring it back. */
+  .admin-nav-tabs.hidden-footer,
+  .nav-tabs.hidden-footer,
+  nav.admin-nav-tabs.hidden-footer,
+  nav.nav-tabs.hidden-footer {
+    transform: translateY(100%) !important;
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.55s ease !important;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.18) !important;
+  }
+  .admin-nav-tabs.hidden-footer .pull-tab-bca,
+  .nav-tabs.hidden-footer  .pull-tab-bca {
+    /* Keep the handle visible and centered when collapsed */
+    pointer-events: auto !important;
+  }
 }
 /* Container needs visible overflow so the handle pokes above */
 @media (max-width: 768px) {
@@ -2865,22 +2867,24 @@ html[data-theme="dark"] .swal2-popup.swal2-toast .swal2-title { color: #f1f5f9 !
   .gt-service-card:active { transform: none !important; }
 }
 
-.admin-nav-tabs .pull-tab-bca,
-.nav-tabs .pull-tab-bca {
-  transition: background 0.3s ease, color 0.3s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
-}
-.admin-nav-tabs .pull-tab-bca:hover,
-.nav-tabs .pull-tab-bca:hover {
-  background: var(--gold-luxury, #f59e0b) !important;
-  color: var(--navy-dark, #001f5b) !important;
-}
-.admin-nav-tabs .pull-tab-bca i,
-.nav-tabs .pull-tab-bca i {
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
-}
-.admin-nav-tabs.hidden-footer .pull-tab-bca i,
-.nav-tabs.hidden-footer  .pull-tab-bca i {
-  transform: rotate(180deg);
+@media (max-width: 768px) {
+  .admin-nav-tabs .pull-tab-bca,
+  .nav-tabs .pull-tab-bca {
+    transition: background 0.3s ease, color 0.3s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  .admin-nav-tabs .pull-tab-bca:hover,
+  .nav-tabs .pull-tab-bca:hover {
+    background: var(--gold-luxury, #f59e0b) !important;
+    color: var(--navy-dark, #001f5b) !important;
+  }
+  .admin-nav-tabs .pull-tab-bca i,
+  .nav-tabs .pull-tab-bca i {
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  .admin-nav-tabs.hidden-footer .pull-tab-bca i,
+  .nav-tabs.hidden-footer  .pull-tab-bca i {
+    transform: rotate(180deg);
+  }
 }
 /* === end smoothing === */
 
@@ -4827,6 +4831,8 @@ html[data-theme="dark"] select option {
         // Undo the v7 "strip pull-tab" behavior: re-create the handle
         // on every nav we see, if it's missing.
         function ensurePullTab(){
+            // Hanya buat pull-tab di mode mobile (max 768px)
+            if (window.innerWidth > 768) return;
             try {
                 document.querySelectorAll('.admin-nav-tabs, .nav-tabs').forEach(function(footer){
                     if (footer.querySelector('.pull-tab-bca')) return;
@@ -6870,6 +6876,8 @@ window.cetakPDFSurat = function(id, isSalinan) {
       async function loadFromCloud() { return true; }
 // === FITUR HIDE & SEEK FOOTER GAYA MY BCA ===
     setTimeout(() => {
+        // Hanya inject pull-tab di mode mobile
+        if (window.innerWidth > 768) return;
         const footers = document.querySelectorAll('.admin-nav-tabs, .nav-tabs');
         footers.forEach(footer => {
             // Cegah pembuatan tombol ganda
@@ -6883,7 +6891,7 @@ window.cetakPDFSurat = function(id, isSalinan) {
                 position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
                 width: 60px; height: 30px; background: var(--navy-dark);
                 border: 3px solid var(--gold-luxury); border-bottom: none;
-                border-radius: 20px 20px 0 0; display: flex; align-items: center;
+                border-radius: 20px 20px 0 0; align-items: center;
                 justify-content: center; color: var(--gold-luxury); font-size: 1.2rem; cursor: pointer;
             `;
 
